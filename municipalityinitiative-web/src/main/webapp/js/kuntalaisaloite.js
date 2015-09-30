@@ -184,7 +184,7 @@ $(document).ready(function () {
 			$('.auto-hide').fadeOut(speedSlow);
 		}, speedAutoHide);
 	}
-	if (showSuperSearch && !isIE6 && !isIE7 && !isIE8 && !isIE9) {
+	if (typeof showSuperSearch !== 'undefined' && showSuperSearch && !isIE6 && !isIE7 && !isIE8 && !isIE9) {
 		$(".super-search-placeholder").show();
 		$(".super-search-placeholder").append("<iframe id=\"searchIframe\" src=" + superSearchUrl  + "</iframe>");
 		$(".om-header").hide();

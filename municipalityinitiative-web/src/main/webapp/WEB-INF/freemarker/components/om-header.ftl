@@ -5,9 +5,9 @@
 		var showSuperSearch = true;
 		var superSearchUrl = "${urls.getSuperSearchIframeUrl()}";
 	<#else>
-	var showSuperSearch = false;
+		var showSuperSearch = false;
 	</#if>
-</script>
+</script> 
 
 <#if superSearchEnabled>
 	<style>
