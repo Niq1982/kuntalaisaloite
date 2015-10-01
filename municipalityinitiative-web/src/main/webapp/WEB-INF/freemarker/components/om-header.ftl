@@ -32,12 +32,9 @@
 
 		window.onmessage = function(e){
             if (e.origin === "${urls.superSearchIFrameOrigin()}") {
-                var message = e.data;
-				if (message) {
-                    var height = message.height;
-                    if (height) {
-                        $("#searchIframe").height(height);
-                    }
+                var newHeight = e.data;
+				if (newHeight) {
+					$("#searchIframe").height(newHeight);
 				}
 			}
 		};
