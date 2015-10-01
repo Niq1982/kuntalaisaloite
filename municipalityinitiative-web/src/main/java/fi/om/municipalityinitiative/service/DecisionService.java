@@ -3,8 +3,11 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.DecisionAttachmentDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
+import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.util.ImageModifier;
@@ -15,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.IOException;
 
 
 public class DecisionService {
@@ -80,5 +84,18 @@ public class DecisionService {
         return new AttachmentUtil.Attachments(decisionAttachmentDao.findAllAttachments(initiativeId));
     }
 
+    @Transactional(readOnly = true)
+    public AttachmentFile getThumbnail(Long attachmentId, LoginUserHolder<User> loginUserHolder) throws IOException {
+        DecisionAttachmentFile attachmentInfo = decisionAttachmentDao.getAttachment(attachmentId);
+        // TODO assert that decision is public
+        return AttachmentUtil.getThumbnailForImageAttachment(attachmentId, attachmentInfo, attachmentDir);
+    }
 
+    @Transactional(readOnly = true)
+    public AttachmentFile getAttachment(Long attachmentId, String fileName, LoginUserHolder loginUserHolder) throws IOException {
+        DecisionAttachmentFile attachmentInfo = decisionAttachmentDao.getAttachment(attachmentId);
+        // TODO check that the decision is public
+        return AttachmentUtil.getAttachmentFile(attachmentId, fileName, attachmentInfo, attachmentDir);
+
+    }
 }

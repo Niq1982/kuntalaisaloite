@@ -392,9 +392,9 @@ public class PublicInitiativeController extends BaseController {
     }
 
     @RequestMapping(value = Urls.ATTACHMENT)
-    public void getImage(@PathVariable Long id,
-                         @PathVariable String fileName,
-                         HttpServletRequest request, HttpServletResponse response) throws IOException {
+         public void getImage(@PathVariable Long id,
+                              @PathVariable String fileName,
+                              HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             AttachmentFile attachment = attachmentService.getAttachment(id, fileName, userService.getLoginUserHolder(request));
             attachmentFileResponse(response, attachment);
@@ -411,6 +411,32 @@ public class PublicInitiativeController extends BaseController {
 
         try {
             AttachmentFile thumbnail = attachmentService.getThumbnail(id, userService.getLoginUserHolder(request));
+            attachmentFileResponse(response, thumbnail);
+        } catch (Throwable t) {
+            log.error("Thumbnail not found: " + id, t);
+            throw new AccessDeniedException("Thumbnail not found: " + id);
+        }
+    }
+    @RequestMapping(value = Urls.DECISION_ATTACHMENT)
+    public void getImageForDecision(@PathVariable Long id,
+                         @PathVariable String fileName,
+                         HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            AttachmentFile attachment = decisionService.getAttachment(id, fileName, userService.getLoginUserHolder(request));
+            // TODO ensure that the decision has been published
+        } catch (AccessDeniedException e) {
+            throw e;
+        } catch (Throwable t) {
+            log.error("Attachment not found: " + id + "," + fileName, t);
+            throw new AccessDeniedException("Attachment not found: " + id + ", "+fileName);
+        }
+    }
+
+    @RequestMapping(value = Urls.DECISION_ATTACHMENT_THUMBNAIL)
+    public void getThumbnailForDecision(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        try {
+            AttachmentFile thumbnail = decisionService.getThumbnail(id, userService.getLoginUserHolder(request));
             attachmentFileResponse(response, thumbnail);
         } catch (Throwable t) {
             log.error("Thumbnail not found: " + id, t);

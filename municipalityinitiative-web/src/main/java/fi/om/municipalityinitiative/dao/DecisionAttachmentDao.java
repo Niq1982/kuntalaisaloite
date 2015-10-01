@@ -12,4 +12,6 @@ public interface DecisionAttachmentDao {
     void removeAttachment(Long attachmentId);
 
     List<DecisionAttachmentFile> findAllAttachments(Long initiativeId);
+
+    DecisionAttachmentFile getAttachment(Long attachmentId);
 }

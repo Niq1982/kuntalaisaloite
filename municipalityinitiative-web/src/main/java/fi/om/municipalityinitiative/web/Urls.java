@@ -324,6 +324,10 @@ public final class Urls {
 
     public static final String ATTACHMENT_THUMBNAIL = "/thumbnail/" + ID_PARAMETER;
 
+    public static final String DECISION_ATTACHMENT = "/decision/attachment/" + ID_PARAMETER + "/" + FILENAME_PARAMETER;
+
+    public static final String DECISION_ATTACHMENT_THUMBNAIL = "/decision/thumbnail/" + ID_PARAMETER;
+
     public static final String SUPPORTS_BY_DATE = API+"/v1/supports-by-date/" + ID_PARAMETER;
 
     private final String baseUrl;

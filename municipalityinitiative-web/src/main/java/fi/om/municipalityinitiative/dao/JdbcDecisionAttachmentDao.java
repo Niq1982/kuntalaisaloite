@@ -5,7 +5,9 @@ import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
+import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
+import fi.om.municipalityinitiative.service.AttachmentUtil;
 import org.joda.time.DateTime;
 
 import javax.annotation.Resource;
@@ -38,6 +40,14 @@ public class JdbcDecisionAttachmentDao implements DecisionAttachmentDao {
         return  queryFactory.from(decisionAttachment)
                 .where(decisionAttachment.initiativeId.eq(initiativeId))
                 .list(attachmentMapper);
+    }
+
+    @Override
+    public DecisionAttachmentFile getAttachment(Long attachmentId) {
+        return AttachmentUtil.notNull(queryFactory.from(decisionAttachment)
+                        .where(decisionAttachment.id.eq(attachmentId))
+                        .uniqueResult(attachmentMapper),
+                AttachmentFileInfo.class, attachmentId);
     }
 
     private static Expression<DecisionAttachmentFile> attachmentMapper

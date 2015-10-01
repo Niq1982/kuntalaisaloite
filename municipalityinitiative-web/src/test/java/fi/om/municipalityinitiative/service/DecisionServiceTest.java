@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
@@ -51,28 +52,29 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
         testMunicipalityId = testHelper.createTestMunicipality("Some municipality");
     }
 
+
     @Test
     public void save_decision_and_get_decision() {
         Long initiativeId = createVerifiedInitiativeWithAuthor();
 
-        MunicipalityDecisionDto decision;
-
+        DecisionAttachmentFile fileInfo = null;
         try {
 
-            decision = createDefaultMunicipalityDecisionWithAttachment(initiativeId);
+            MunicipalityDecisionDto decision = createDefaultMunicipalityDecisionWithAttachment(initiativeId);
+
+            AttachmentUtil.Attachments decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
+
+            assertThat(decisionAttachments.getAll().size(), is(1));
+
+            fileInfo = (DecisionAttachmentFile)decisionAttachments.getAll().get(0);
+
+
 
         } catch (Exception e) {
 
             e.printStackTrace();
 
         } finally {
-
-            AttachmentUtil.Attachments decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
-
-            assertThat(decisionAttachments.getAll().size(), is(1));
-
-            DecisionAttachmentFile fileInfo = (DecisionAttachmentFile)decisionAttachments.getAll().get(0);
-
             assertThat(fileInfo.getFileType(), is(FILE_TYPE));
 
             assertThat(fileInfo.getContentType(), is(CONTENT_TYPE));
@@ -88,6 +90,44 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
             assertThat(initiative.getDecisionText().isPresent(), is(true));
 
             assertThat(initiative.getDecisionText().getValue(), is(DECISION_DESCRIPTION));
+
+
+        }
+
+    }
+
+
+    @Test
+    public void save_decision_and_get_attachment() {
+        Long initiativeId = createVerifiedInitiativeWithAuthor();
+
+        DecisionAttachmentFile fileInfo = null;
+        AttachmentFile attachmentFile = null;
+        try {
+
+            MunicipalityDecisionDto decision = createDefaultMunicipalityDecisionWithAttachment(initiativeId);
+
+            AttachmentUtil.Attachments decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
+
+            assertThat(decisionAttachments.getPdfs().size(), is(1));
+
+            fileInfo = (DecisionAttachmentFile)decisionAttachments.getPdfs().get(0);
+
+            attachmentFile = decisionService.getAttachment(fileInfo.getAttachmentId(), TESTI_PDF, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+
+
+
+        } catch (Exception e) {
+
+            assertThat(attachmentFile.getInitiativeId(), is(initiativeId));
+            assertThat(attachmentFile.getAttachmentId(), is(fileInfo.getAttachmentId()));
+            assertThat(attachmentFile.getFileName(), is(TESTI_PDF));
+            assertThat(attachmentFile.getContentType(), is(CONTENT_TYPE));
+            e.printStackTrace();
+
+        } finally {
+
+
         }
 
     }

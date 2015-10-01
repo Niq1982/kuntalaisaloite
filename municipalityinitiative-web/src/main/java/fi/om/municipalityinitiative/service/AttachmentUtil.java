@@ -2,9 +2,13 @@ package fi.om.municipalityinitiative.service;
 
 
 import com.google.common.collect.Lists;
+import com.google.common.io.Files;
+import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.AttachmentFileBase;
 import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
+import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.util.ImageModifier;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.aspectj.util.FileUtil;
@@ -12,7 +16,10 @@ import org.im4java.core.IM4JavaException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
 public final class AttachmentUtil {
@@ -86,18 +93,84 @@ public final class AttachmentUtil {
     }
 
     public static void assertRealFileContent(File tempFile, String fileType) throws IOException, InvalidAttachmentException {
-        if ((fileType.equalsIgnoreCase("jpg") || fileType.equalsIgnoreCase("jpeg")) && AttachmentService.isJPEG(tempFile)) {
+        if ((fileType.equalsIgnoreCase("jpg") || fileType.equalsIgnoreCase("jpeg")) && isJPEG(tempFile)) {
             return;
         }
-        if (fileType.equalsIgnoreCase("png") && AttachmentService.isPNG(tempFile)) {
+        if (fileType.equalsIgnoreCase("png") && isPNG(tempFile)) {
             return;
         }
-        if (fileType.equalsIgnoreCase("pdf") && AttachmentService.isPDF(tempFile)) {
+        if (fileType.equalsIgnoreCase("pdf") && isPDF(tempFile)) {
             return;
         }
         else {
             throw new InvalidAttachmentException("File content was invalid for filetype: " + fileType);
         }
+    }
+
+    public static AttachmentFile getThumbnailForImageAttachment(Long attachmentId, AttachmentFileBase attachmentInfo, String attachmentDir) throws IOException {
+        if (attachmentInfo.isPdf()) {
+            throw new AccessDeniedException("no thumbnail for pdf");
+        }
+
+        byte[] attachmentBytes = getFileBytes(getThumbnailPath(attachmentId, attachmentInfo.getFileType(), attachmentDir));
+        return new AttachmentFile(attachmentInfo, attachmentBytes);
+    }
+
+    public static byte[] getFileBytes(String filePath) throws IOException {
+        File file = new File(filePath);
+        byte[] bytes = FileUtil.readAsByteArray(file);
+        return Arrays.copyOf(bytes, bytes.length);
+    }
+
+    static AttachmentFile getAttachmentFile(Long attachmentId, String fileName, AttachmentFileBase attachmentInfo, String attachmentDir) throws IOException {
+        if (!attachmentInfo.getFileName().equals(fileName)) {
+            throw new AccessDeniedException("Invalid filename for attachment " + attachmentId + " - " + fileName);
+        }
+
+        byte[] attachmentBytes = getFileBytes(getFilePath(attachmentId, attachmentInfo.getFileType(), attachmentDir));
+        return new AttachmentFile(attachmentInfo, attachmentBytes);
+    }
+
+    static boolean isPDF(File file) throws IOException {
+
+        byte[] ba = Files.toByteArray(file);
+        return ba[0] == 37
+                && ba[1] == 80
+                && ba[2] == 68
+                && ba[3] == 70;
+    }
+
+    static boolean isJPEG(File file) throws IOException {
+        byte[] ba = Files.toByteArray(file);
+        return (ba[0] & 255) == 255 && (ba[1] & 255) == 216 && (ba[ba.length - 2] & 255) == 255
+                && (ba[ba.length - 1] & 255) == 217;
+    }
+
+    static boolean isPNG(File file) throws IOException {
+        int numRead;
+        byte[] signature = new byte[8];
+        byte[] pngIdBytes = { -119, 80, 78, 71, 13, 10, 26, 10 };
+
+        try (InputStream is = new FileInputStream(file)) {
+            numRead = is.read(signature);
+            if (numRead == -1)
+                throw new IOException("Trying to read from 0 byte stream");
+        }
+        return numRead == 8 && Arrays.equals(signature, pngIdBytes);
+    }
+
+    static void assertFileSize(MultipartFile file) throws InvalidAttachmentException {
+        // Double check, is checked at validation also
+        if (file.getSize() > ImageProperties.MAX_FILESIZE_IN_BYTES) {
+            throw new InvalidAttachmentException("Too large file: " + file.getSize());
+        }
+    }
+
+    public static <T extends Object> T notNull(T object, Class clazz, Long id) {
+        if (object == null) {
+            throw new NotFoundException(clazz.toString(), id);
+        }
+        return object;
     }
 
 

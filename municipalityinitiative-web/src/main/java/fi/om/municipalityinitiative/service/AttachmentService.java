@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.service;
 
-import com.google.common.io.Files;
 import fi.om.municipalityinitiative.dao.AttachmentDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
@@ -9,12 +8,10 @@ import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.AttachmentCreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
-import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.util.ImageModifier;
-import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 
 public class AttachmentService {
@@ -60,7 +55,7 @@ public class AttachmentService {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         assertPrivilege(initiativeId);
-        assertFileSize(file);
+        AttachmentUtil.assertFileSize(file);
 
 
         String fileType = AttachmentUtil.getFileType(file);
@@ -88,62 +83,15 @@ public class AttachmentService {
         }
     }
 
-    private void assertPrivilege(Long initiativeId) {
-        if (!ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowAddAttachments()) {
-            throw new OperationNotAllowedException("Add attachments");
-        }
-    }
-
-    private void assertFileSize(MultipartFile file) throws InvalidAttachmentException {
-        // Double check, is checked at validation also
-        if (file.getSize() > AttachmentUtil.ImageProperties.MAX_FILESIZE_IN_BYTES) {
-            throw new InvalidAttachmentException("Too large file: " + file.getSize());
-        }
-    }
-
-
-    static boolean isPDF(File file) throws IOException {
-
-        byte[] ba = Files.toByteArray(file);
-        return ba[0] == 37
-                && ba[1] == 80
-                && ba[2] == 68
-                && ba[3] == 70;
-    }
-
-    static boolean isJPEG(File file) throws IOException {
-        byte[] ba = Files.toByteArray(file);
-        return (ba[0] & 255) == 255 && (ba[1] & 255) == 216 && (ba[ba.length - 2] & 255) == 255
-                && (ba[ba.length - 1] & 255) == 217;
-    }
-
-    static boolean isPNG(File file) throws IOException {
-        int numRead;
-        byte[] signature = new byte[8];
-        byte[] pngIdBytes = { -119, 80, 78, 71, 13, 10, 26, 10 };
-
-        try (InputStream is = new FileInputStream(file)) {
-            numRead = is.read(signature);
-            if (numRead == -1)
-                throw new IOException("Trying to read from 0 byte stream");
-        }
-        return numRead == 8 && Arrays.equals(signature, pngIdBytes);
-    }
-
-
 
     @Transactional(readOnly = true)
     // TODO: Cache
     public AttachmentFile getAttachment(Long attachmentId, String fileName, LoginUserHolder loginUserHolder) throws IOException {
         AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(attachmentId);
 
-        if (!attachmentInfo.getFileName().equals(fileName)) {
-            throw new AccessDeniedException("Invalid filename for attachment " + attachmentId + " - " + fileName);
-        }
-
         assertViewAllowance(loginUserHolder, attachmentInfo);
-        byte[] attachmentBytes = getFileBytes(AttachmentUtil.getFilePath(attachmentId, attachmentInfo.getFileType(), attachmentDir));
-        return new AttachmentFile(attachmentInfo, attachmentBytes);
+
+        return AttachmentUtil.getAttachmentFile(attachmentId, fileName, attachmentInfo, attachmentDir);
     }
 
     @Transactional(readOnly = true)
@@ -151,12 +99,7 @@ public class AttachmentService {
     public AttachmentFile getThumbnail(Long attachmentId, LoginUserHolder loginUserHolder) throws IOException {
         AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(attachmentId);
         assertViewAllowance(loginUserHolder, attachmentInfo);
-        if (attachmentInfo.isPdf()) {
-            throw new AccessDeniedException("no thumbnail for pdf");
-        }
-
-        byte[] attachmentBytes = getFileBytes(AttachmentUtil.getThumbnailPath(attachmentId, attachmentInfo.getFileType(), attachmentDir));
-        return new AttachmentFile(attachmentInfo, attachmentBytes);
+        return AttachmentUtil.getThumbnailForImageAttachment(attachmentId, attachmentInfo, attachmentDir);
     }
 
     private void assertViewAllowance(LoginUserHolder loginUserHolder, AttachmentFileInfo attachmentInfo) {
@@ -164,13 +107,11 @@ public class AttachmentService {
             loginUserHolder.assertViewRightsForInitiative(attachmentInfo.getInitiativeId());
         }
     }
-
-    private byte[] getFileBytes(String filePath) throws IOException {
-        File file = new File(filePath);
-        byte[] bytes = FileUtil.readAsByteArray(file);
-        return Arrays.copyOf(bytes, bytes.length);
+    private void assertPrivilege(Long initiativeId) {
+        if (!ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowAddAttachments()) {
+            throw new OperationNotAllowedException("Add attachments");
+        }
     }
-
 
     private static String parseFileType(String fileName) throws InvalidAttachmentException {
         String[] split = fileName.split("\\.");
