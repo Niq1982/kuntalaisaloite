@@ -15,10 +15,7 @@ import org.springframework.mail.MailException;
 import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
@@ -140,7 +137,18 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
             });
         }
 
-        executor.invokeAll(executions, 1, TimeUnit.SECONDS);
+        List<Future<Boolean>> futures = executor.invokeAll(executions);
+
+        for (Future future : futures) {
+            try {
+                future.get(1, TimeUnit.SECONDS);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private void createRandomEmails(int count) {
