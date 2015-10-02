@@ -155,7 +155,7 @@
  * @param attachments is all attachments
  * @param manage boolean for showing delete-button. Default is false
 -->
-<#macro attachmentsView attachments manage=false>
+<#macro attachmentsView attachments manage=false municipality=false>
 	<#if (attachments.images?size + attachments.pdfs?size) gt 0>
 		<div class="initiative-content-row thumbnail-list cf">
     	<h3><@u.message "attachments.title" /></h3>
@@ -164,8 +164,8 @@
 
 		    	<div class="column col-1of4 ${((attachment_index + 1) % 4 == 0)?string("last","")}">
 		    		<span class="thumbnail">
-				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" target="_blank">
-				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="<@u.stripHtmlTags attachment.description />" />
+				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName, municipality)}" target="_blank">
+				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId,  municipality)}" alt="<@u.stripHtmlTags attachment.description />" />
 			            </a>
 		            </span>
 		            <span class="img-label"><@u.stripHtmlTags attachment.description />
@@ -174,7 +174,7 @@
 		                        data-id="${attachment.attachmentId}"
 		                        data-name="<@u.stripHtmlTags attachment.description />"
 		                        data-type="image"
-		                        data-src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
+		                        data-src="${urls.getAttachmentThumbnail(attachment.attachmentId, municipality)}" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
 						    </a>
 				        </#if>
 			        </span>
@@ -189,7 +189,7 @@
 	    		<#if attachment_index == 0><ul class="no-style"></#if>
 
 			        <li class="pdf-attachment">
-			        	<a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" target="_blank">
+			        	<a href="${urls.attachment(attachment.attachmentId, attachment.fileName, municipality)}" target="_blank">
 				            <@u.fileIcon type="pdf" />
 				            <span class="pdf-label"><@u.stripHtmlTags attachment.description /></span>
 			            </a>
@@ -378,7 +378,7 @@
         <div class="initiative-content-row last">
             <h2><@u.message "municipality.decision" /></h2>
             <p>${decisionInfo.getDecisionText()}</p>
-            <@attachmentsView attachments=decisionInfo.attachments manage=true />
+            <@attachmentsView attachments=decisionInfo.attachments manage=true municipality=true/>
         </div>
     </div>
 </#macro>

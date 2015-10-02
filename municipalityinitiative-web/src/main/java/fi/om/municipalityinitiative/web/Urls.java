@@ -590,11 +590,17 @@ public final class Urls {
         return getLocalizedPageUrl(MODERATOR_LOGIN, MODERATOR_LOGIN) + "?" + TARGET + "=" + urlEncode(MODERATION_FI.replace(ID_PARAMETER, initiativeId.toString()));
     }
 
-    public String attachment(Long id, String fileName) {
+    public String attachment(Long id, String fileName, boolean municipality) {
+        if (municipality) {
+            return baseUrl + DECISION_ATTACHMENT.replace(ID_PARAMETER, id.toString()).replace(FILENAME_PARAMETER, fileName);
+        }
         return baseUrl + ATTACHMENT.replace(ID_PARAMETER, id.toString()).replace(FILENAME_PARAMETER, fileName);
     }
 
-    public String getAttachmentThumbnail(Long id) {
+    public String getAttachmentThumbnail(Long id, boolean municipality) {
+        if (municipality) {
+            return baseUrl + DECISION_ATTACHMENT_THUMBNAIL.replace(ID_PARAMETER, id.toString());
+        }
         return baseUrl + ATTACHMENT_THUMBNAIL.replace(ID_PARAMETER, id.toString());
     }
 

@@ -145,11 +145,11 @@
  * @param list is attachments object list
  * @param id is attachment's id
 -->
-<#macro attachmentDetailsById id>
+<#macro attachmentDetailsById id municipality=false>
     <#list attachments.images as attachment>
         <#if attachment.attachmentId?string == id>
             <h4 class="header">${attachment.description}</h4>
-            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="${attachment.description}" />
+            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId, municipality)}" alt="${attachment.description}" />
         </#if>
     </#list>
     
@@ -167,7 +167,7 @@
  *
  * @param modal is a boolean for selecting either JS- or NOSCRIPT-version
 -->
-<#macro deleteAattachmentForm modal=true>
+<#macro deleteAattachmentForm modal=true >
 	<#if !modal><#assign attachmentId = RequestParameters['deleteAttachment']?number /></#if>
 
     <form id="delete-attachment-form" action="<#if !modal>${urls.getManageAttachments(initiative.id)}</#if>" method="POST">
