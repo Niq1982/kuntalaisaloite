@@ -22,7 +22,7 @@
     -->
 
     <#if decisionInfo.isPresent()>
-        <@e.decisionBlock decisionInfo.getValue() />
+        <@e.decisionBlock decisionInfo=decisionInfo.getValue() manage=true/>
     </#if>
     <#--
      * Show Municipality decision form

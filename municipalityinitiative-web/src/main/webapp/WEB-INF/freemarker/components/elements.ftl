@@ -169,7 +169,7 @@
 			            </a>
 		            </span>
 		            <span class="img-label"><@u.stripHtmlTags attachment.description />
-			            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
+			            <#if manage && user.hasRightToInitiative(initiative.id) >
 		                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment delete-attachment trigger-tooltip"
 		                        data-id="${attachment.attachmentId}"
 		                        data-name="<@u.stripHtmlTags attachment.description />"
@@ -373,12 +373,12 @@
 </#macro>
 
 
-<#macro decisionBlock decisionInfo>
+<#macro decisionBlock decisionInfo manage=false>
     <div class="view-block cf">
         <div class="initiative-content-row last">
             <h2><@u.message "municipality.decision" /></h2>
             <p>${decisionInfo.getDecisionText()}</p>
-            <@attachmentsView attachments=decisionInfo.attachments manage=true municipality=true/>
+            <@attachmentsView attachments=decisionInfo.attachments manage=manage municipality=true/>
         </div>
     </div>
 </#macro>

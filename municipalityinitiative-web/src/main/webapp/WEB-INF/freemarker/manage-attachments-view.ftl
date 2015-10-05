@@ -58,7 +58,7 @@
 		        </div>
 		    </#if>
 	    
-	    	<@e.attachmentsView attachments=attachments manage=true />
+	    	<@e.attachmentsView attachments=attachments manage=managementSettings.allowAddAttachments />
 	    	
 	    	<div class="initiative-content-row cf last">
 	        	<a href="${managementURL}" class="small-button" ><@u.message "attachment.ready" /></a>
