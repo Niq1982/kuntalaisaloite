@@ -423,6 +423,7 @@ public class PublicInitiativeController extends BaseController {
                          HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             AttachmentFile attachment = decisionService.getAttachment(id, fileName, userService.getLoginUserHolder(request));
+            attachmentFileResponse(response, attachment);
             // TODO ensure that the decision has been published
         } catch (AccessDeniedException e) {
             throw e;
