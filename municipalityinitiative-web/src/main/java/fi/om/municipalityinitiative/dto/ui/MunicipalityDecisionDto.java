@@ -41,4 +41,10 @@ public class MunicipalityDecisionDto {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public static MunicipalityDecisionDto build(String description) {
+        MunicipalityDecisionDto municipalityDecisionDto = new MunicipalityDecisionDto();
+        municipalityDecisionDto.setDescription(description);
+        return municipalityDecisionDto;
+    }
 }

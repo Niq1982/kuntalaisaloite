@@ -17,44 +17,51 @@
 
 <@l.main page="page.moderation" pageTitle=initiative.name!"">
 
+    <#if decisionInfo.isPresent() && !showDecisionForm>
+        <div class="msg-block cf">
+            <h2>Kunnan vastaus on julkaistu <@u.localDate decisionInfo.getValue().getDate() /></h2>
+            <p>Voit muokata kunnan vastausta. Kaikki muokkaukset ovat julkisia.</p>
+            <a class="small-button " href="${urls.openDecisionForEdit(initiative.id)}"><span class="small-icon edit">Muokkaa vastausta.</span></a>
+        </div>
+    </#if>
+
     <#--
-     * Show decision
+      * Municipality decision form
     -->
+    <#if showDecisionForm>
+        <div class="msg-block cf">
+            <h2><@u.message "municipality.decision.giveDecision" /></h2>
+            <p><@u.message key="municipality.decision.description" /></p>
+
+            <div>
+                <form action="${urls.getMunicipalityDecisionView(initiative.id)}" method="POST" id="form-accept" class="sodirty" enctype="multipart/form-data">
+                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+
+                    <@spring.bind "decision" />
+
+                    <div class="input-block-content no-top-margin">
+                        <textarea path="decision.description" name="description" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"></textarea>
+                    </div>
+
+                    <input type="hidden" name="locale" value="${locale}"/>
+
+                    <div class="input-block-content">
+                        <@f.uploadField path="decision.files" cssClass="multi" name="files" multiple=false/>
+                    </div>
+
+                    <div class="input-block-content">
+                        <button type="submit" class="small-button"><span class="small-icon save-and-send"><@u.message "decision.submit" /></span></button>
+                    </div>
+                    <br/><br/>
+                </form>
+            </div>
+        </div>
+    </#if>
 
     <#if decisionInfo.isPresent()>
-        <@e.decisionBlock decisionInfo=decisionInfo.getValue() manage=true/>
+        <@e.decisionBlock decisionInfo=decisionInfo.getValue() manage=false/>
     </#if>
-    <#--
-     * Show Municipality decision form
-    -->
 
-    <div class="msg-block cf">
-        <h2><@u.message "municipality.decision.giveDecision" /></h2>
-        <p><@u.message key="municipality.decision.description" /></p>
-
-        <div>
-            <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-accept" class="sodirty" enctype="multipart/form-data">
-                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-
-                <@spring.bind "decision" />
-
-                <div class="input-block-content no-top-margin">
-                    <textarea path="decision.description" name="description" id="commentAccept" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"></textarea>
-                </div>
-
-                <input type="hidden" name="locale" value="${locale}"/>
-
-                <div class="input-block-content">
-                    <@f.uploadField path="decision.files" cssClass="multi" name="files" multiple=false/>
-                </div>
-
-                <div class="input-block-content">
-                    <button type="submit" class="small-button"><span class="small-icon save-and-send"><@u.message "decision.submit" /></span></button>
-                </div>
-                <br/><br/>
-            </form>
-        </div>
-    </div>
 
     <#--
      * Renew author management hash

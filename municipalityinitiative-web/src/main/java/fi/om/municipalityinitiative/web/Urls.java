@@ -262,6 +262,10 @@ public final class Urls {
 
     public static final String MUNICIPALITY_DECISION_SV = MUNICIPALITY_DECISION_SV_BASE_URL + ID_PARAMETER;
 
+    public static final String EDIT_MUNICIPALITY_DECISION_FI = MUNICIPALITY_DECISION_FI_BASE_URL + "edit/" + ID_PARAMETER;
+
+    public static final String EDIT_MUNICIPALITY_DECISION_SV = MUNICIPALITY_DECISION_SV_BASE_URL + "edit/" + ID_PARAMETER;
+
     public static final String MUNICIPALITY_LOGIN_FI = "/fi/municipality-login";
 
     public static final String MUNICIPALITY_LOGIN_SV = "/sv/municipality-login";
@@ -714,5 +718,9 @@ public final class Urls {
 
     public String getMunicipalityDecisionView(Long initiativeId) {
         return getLocalizedPageUrl(MUNICIPALITY_DECISION_FI, MUNICIPALITY_DECISION_SV).replace(ID_PARAMETER, initiativeId.toString());
+    }
+
+    public String openDecisionForEdit(Long initiativeId) {
+        return getLocalizedPageUrl(EDIT_MUNICIPALITY_DECISION_FI, EDIT_MUNICIPALITY_DECISION_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 }

@@ -25,8 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
-import static fi.om.municipalityinitiative.web.Urls.MUNICIPALITY_DECISION_FI;
-import static fi.om.municipalityinitiative.web.Urls.MUNICIPALITY_DECISION_SV;
+import static fi.om.municipalityinitiative.web.Urls.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -60,7 +59,7 @@ public class MunicipalityDecisionController extends BaseController{
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
 
         if (initiative.getDecisionText().isPresent()) {
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), decisionService.getDecisionAttachments(initiativeId)));
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), decisionService.getDecisionAttachments(initiativeId)));
         }
 
         return ViewGenerator.municipalityDecisionView(
@@ -68,9 +67,34 @@ public class MunicipalityDecisionController extends BaseController{
                 normalInitiativeService.getManagementSettings(initiativeId),
                 authorService.findAuthors(initiativeId, loginUserHolder),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
-                decisionInfo
+                new MunicipalityDecisionDto(),
+                decisionInfo,
+                decisionInfo.isNotPresent()
         ).view(model, Urls.get(locale).alt().municipalityModeration());
 
+    }
+
+    @RequestMapping(value = {EDIT_MUNICIPALITY_DECISION_FI, EDIT_MUNICIPALITY_DECISION_SV}, method = GET)
+    public String editDecision(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+
+        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+
+        InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
+
+        Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
+        if (initiative.getDecisionText().isPresent()) {
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), decisionService.getDecisionAttachments(initiativeId)));
+        }
+
+        return ViewGenerator.municipalityDecisionView(
+                normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
+                normalInitiativeService.getManagementSettings(initiativeId),
+                authorService.findAuthors(initiativeId, loginUserHolder),
+                attachmentService.findAllAttachments(initiativeId, loginUserHolder),
+                MunicipalityDecisionDto.build(initiative.getDecisionText().getValue()),
+                decisionInfo,
+                true
+        ).view(model, Urls.get(locale).alt().municipalityModeration());
     }
 
     @RequestMapping(value = {MUNICIPALITY_DECISION_FI, MUNICIPALITY_DECISION_SV}, method = POST)
@@ -83,20 +107,29 @@ public class MunicipalityDecisionController extends BaseController{
 
         // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
         SecurityFilter.verifyAndGetCurrentCSRFToken(request);
+        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+        Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
         try {
             decisionService.setDecision(decision, initiativeId);
+            InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
+
+            if (initiative.getDecisionText().isPresent()) {
+                decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), decisionService.getDecisionAttachments(initiativeId)));
+            }
         } catch (InvalidAttachmentException e) {
             e.printStackTrace();
         } catch (FileUploadException e) {
             e.printStackTrace();
         }
-        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+
         return ViewGenerator.municipalityDecisionView(
                 normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
                 normalInitiativeService.getManagementSettings(initiativeId),
                 authorService.findAuthors(initiativeId, loginUserHolder),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
-                Maybe.of(MunicipalityDecisionInfo.build(decision.getDescription(), decisionService.getDecisionAttachments(initiativeId)))
+                new MunicipalityDecisionDto(),
+                decisionInfo,
+                decisionInfo.isNotPresent()
                 ).view(model, Urls.get(locale).alt().municipalityModeration());
     }
 

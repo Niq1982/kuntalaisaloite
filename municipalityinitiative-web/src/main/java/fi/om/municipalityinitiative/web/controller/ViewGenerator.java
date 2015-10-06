@@ -157,16 +157,19 @@ public final class ViewGenerator {
         );
     }
 
-    public static ViewGenerator municipalityDecisionView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors,  AttachmentUtil.Attachments allAttachments, Maybe<MunicipalityDecisionInfo> decisionInfoMaybe){
+    public static ViewGenerator municipalityDecisionView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings,
+                                                         List<? extends Author> authors,  AttachmentUtil.Attachments allAttachments, MunicipalityDecisionDto decisionDraft,
+                                                         Maybe<MunicipalityDecisionInfo> decisionInfoMaybe, boolean showDecisionForm){
         return new ViewGenerator("municipality-decision-view",
                 new AttributeBuilder()
                     .add("initiative", initiativeInfo)
                     .add("managementSettings", managementSettings)
                     .add("authors", authors)
                     .add("attachments", allAttachments)
-                    .add("decision", new MunicipalityDecisionDto())
+                    .add("decision", decisionDraft)
                     .add("decisionInfo", decisionInfoMaybe)
-                    .build()
+                    .add("showDecisionForm", showDecisionForm)
+                        .build()
                 );
         }
 
