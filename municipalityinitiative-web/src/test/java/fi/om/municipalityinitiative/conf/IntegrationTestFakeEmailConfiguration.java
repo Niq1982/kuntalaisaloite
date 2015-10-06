@@ -15,9 +15,9 @@ public class IntegrationTestFakeEmailConfiguration {
     
     public static final String EMAIL_DEFAULT_OM = "om@example.com";
 
-    private String googleMapsApiKey = "googlemapsapikey";
+    private String googleMapsApiKey = "AIzaSyB7ZfM7ihPAIP586CN0AZgp5QbF9OAMBeI";
 
-    private boolean googleMapsEnabled = false;
+    private boolean googleMapsEnabled = true;
 
     private boolean superSearchEnabled  = false;
 
