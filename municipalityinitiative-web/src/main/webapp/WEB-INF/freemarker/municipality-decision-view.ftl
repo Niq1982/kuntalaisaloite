@@ -40,7 +40,7 @@
                     <@spring.bind "decision" />
 
                     <div class="input-block-content no-top-margin">
-                        <textarea path="decision.description" name="description" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"></textarea>
+                        <@f.textarea required="" optional=false path="decision.description" key="decision.description.label" maxLength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}" />
                     </div>
 
                     <input type="hidden" name="locale" value="${locale}"/>
