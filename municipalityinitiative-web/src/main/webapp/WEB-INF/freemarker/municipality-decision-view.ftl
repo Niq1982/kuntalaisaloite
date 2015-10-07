@@ -22,6 +22,7 @@
             <h2>Kunnan vastaus on julkaistu <@u.localDate decisionInfo.getValue().getDate() /></h2>
             <p>Voit muokata kunnan vastausta. Kaikki muokkaukset ovat julkisia.</p>
             <a class="small-button " href="${urls.openDecisionForEdit(initiative.id)}"><span class="small-icon edit">Muokkaa vastausta.</span></a>
+            <a class="small-button " href=""><span class="small-icon edit">Ylläpidä liitteitä.</span></a>
         </div>
     </#if>
 
@@ -56,10 +57,11 @@
                 </form>
             </div>
         </div>
+
     </#if>
 
     <#if decisionInfo.isPresent()>
-        <@e.decisionBlock decisionInfo=decisionInfo.getValue() manage=false/>
+        <@e.decisionBlock decisionInfo=decisionInfo.getValue() manage=false     />
     </#if>
 
 
