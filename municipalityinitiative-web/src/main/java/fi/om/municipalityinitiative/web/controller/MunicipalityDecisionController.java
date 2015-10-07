@@ -17,10 +17,8 @@ import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import javax.annotation.Resource;
@@ -181,6 +179,12 @@ public class MunicipalityDecisionController extends BaseController{
                 decisionInfo.isNotPresent(),
                 editAttachments
                 ).view(model, Urls.get(locale).alt().municipalityModeration());
+    }
+
+    // http://stackoverflow.com/questions/22391064/why-is-spring-mvc-inserting-an-empty-object-into-what-should-be-an-empty-list
+    @InitBinder
+    public void init(WebDataBinder binder) {
+        binder.setBindEmptyMultipartFiles(false);
     }
 
 }

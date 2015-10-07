@@ -7,11 +7,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MunicipalityDecisionDto {
 
-    private List<MultipartFile> files;
+    private List<MultipartFile> files = Arrays.asList();
 
     private String locale;
 
