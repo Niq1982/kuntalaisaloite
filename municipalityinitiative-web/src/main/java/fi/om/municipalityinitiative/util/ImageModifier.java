@@ -1,12 +1,12 @@
 package fi.om.municipalityinitiative.util;
 
-import org.apache.commons.io.IOUtils;
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IM4JavaException;
 import org.im4java.core.IMOperation;
 import org.im4java.core.Info;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 
 public class ImageModifier {
@@ -22,7 +22,9 @@ public class ImageModifier {
         op.addImage(tempFile.getAbsolutePath());
         op.resize(size.getWidth(), size.getHeight());
         op.addImage(resultFilePath);
-
+        //THIS is a windows fix <3
+        String imPath="C:\\Program Files\\ImageMagick-6.9.2-Q16";
+        cmd.setSearchPath(imPath);
         cmd.run(op);
 
     }

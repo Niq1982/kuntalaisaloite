@@ -226,12 +226,24 @@
 </#macro>
 
 <#macro attachments type>
-    <#if (attachmentCount > 0)>
+    <#if (attachmentCount > 0) || hasLocationAttached>
         <#if type == "html">
-            <h4 style="${h4!""}"><@u.messageHTML key="email.attachmentCount.total" args=[attachmentCount] /></h4>
+            <h4 style="${h4!""}">
+                <#if (attachmentCount > 0)>
+                    <@u.messageHTML key="email.attachmentCount.total" args=[attachmentCount] />
+                </#if>
+                <#if hasLocationAttached>
+                    <@u.messageHTML key="email.mapAttached" args=[attachmentCount] />
+                </#if>
+            </h4>
             <p style="${pBottomMargin!""}"><@u.message "email.attachmentCount.info" /></p>
         <#else>
+            <#if (attachmentCount > 0)>
             <@u.message key="email.attachmentCount.total" /> ${attachmentCount}
+            </#if>
+            <#if hasLocationAttached>
+                <@u.message key="email.mapAttached" /> ${attachmentCount}
+            </#if>
             <@u.message "email.attachmentCount.info" />
         </#if>
     </#if>
