@@ -152,11 +152,64 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
 
             DecisionAttachmentFile fileInfo = (DecisionAttachmentFile) decisionAttachments.getAll().get(0);
 
-            decisionService.removeAttachmentFromDecision(fileInfo.getAttachmentId(),null);
+            decisionService.removeAttachmentFromDecision(fileInfo.getAttachmentId(), new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
             decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
 
             assertThat(decisionAttachments.getAll().size(), is(0));
+
+
+        }
+    }
+
+    @Test
+    public void cant_remove_attachment_from_decision_if_no_access() {
+
+        Long initiativeId = createVerifiedInitiativeWithAuthor();
+
+        try {
+
+            createDefaultMunicipalityDecisionWithAttachment(initiativeId);
+
+            AttachmentUtil.Attachments decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
+
+            assertThat(decisionAttachments.getAll().size(), is(1));
+
+            DecisionAttachmentFile fileInfo = (DecisionAttachmentFile) decisionAttachments.getAll().get(0);
+
+            decisionService.removeAttachmentFromDecision(fileInfo.getAttachmentId(), new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId + 1)));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+            AttachmentUtil.Attachments decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
+
+            assertThat(decisionAttachments.getAll().size(), is(1));
+
+
+        }
+    }
+    @Test
+    public void cant_edit_decision_if_no_access() {
+
+        Long initiativeId = createVerifiedInitiativeWithAuthor();
+
+        try {
+
+            createDefaultMunicipalityDecisionWithAttachment(initiativeId);
+
+            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build("Edited text");
+
+            decisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId + 1)));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+            InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+
+            assertThat(initiative.getDecisionText().getValue(), is(DECISION_DESCRIPTION));
 
 
         }
@@ -174,7 +227,7 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
 
         decision.setDescription(DECISION_DESCRIPTION);
 
-        decisionService.setDecision(decision, initiativeId, null);
+        decisionService.setDecision(decision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
         return decision;
     }

@@ -48,6 +48,7 @@ public class DecisionService {
 
     @Transactional
     public void removeAttachmentFromDecision(Long attachmentId, MunicipalityUserHolder user){
+
         decisionAttachmentDao.removeAttachment(attachmentId);
         // TODO actually remove file from disk
     }

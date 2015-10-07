@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MunicipalityDecisionDto {
@@ -45,6 +46,7 @@ public class MunicipalityDecisionDto {
     public static MunicipalityDecisionDto build(String description) {
         MunicipalityDecisionDto municipalityDecisionDto = new MunicipalityDecisionDto();
         municipalityDecisionDto.setDescription(description);
+        municipalityDecisionDto.setFiles(new ArrayList<MultipartFile>());
         return municipalityDecisionDto;
     }
 }
