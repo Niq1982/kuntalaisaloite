@@ -22,9 +22,7 @@ public class ImageModifier {
         op.addImage(tempFile.getAbsolutePath());
         op.resize(size.getWidth(), size.getHeight());
         op.addImage(resultFilePath);
-        //THIS is a windows fix <3
-        String imPath="C:\\Program Files\\ImageMagick-6.9.2-Q16";
-        cmd.setSearchPath(imPath);
+       
         cmd.run(op);
 
     }
