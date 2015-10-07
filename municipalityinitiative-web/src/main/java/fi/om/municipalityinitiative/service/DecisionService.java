@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
@@ -46,13 +47,13 @@ public class DecisionService {
     }
 
     @Transactional
-    public void removeAttachmentFromDecision(Long attachmentId, Long initiativeId){
+    public void removeAttachmentFromDecision(Long attachmentId, MunicipalityUserHolder user){
         decisionAttachmentDao.removeAttachment(attachmentId);
         // TODO actually remove file from disk
     }
 
     @Transactional(readOnly = false, rollbackFor = Throwable.class)
-    public void setDecision(MunicipalityDecisionDto decision, Long initiativeId) throws InvalidAttachmentException, FileUploadException {
+    public void setDecision(MunicipalityDecisionDto decision, Long initiativeId, MunicipalityUserHolder user) throws InvalidAttachmentException, FileUploadException {
 
         initiativeDao.updateInitiativeDecision(initiativeId, decision.getDescription());
 

@@ -22,7 +22,7 @@
             <h2>Kunnan vastaus on julkaistu <@u.localDate decisionInfo.getValue().getDate() /></h2>
             <p>Voit muokata kunnan vastausta. Kaikki muokkaukset ovat julkisia.</p>
             <a class="small-button " href="${urls.openDecisionForEdit(initiative.id)}"><span class="small-icon edit">Muokkaa vastausta.</span></a>
-            <a class="small-button " href=""><span class="small-icon edit">Ylläpidä liitteitä.</span></a>
+            <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit">Ylläpidä liitteitä.</span></a>
         </div>
     </#if>
 
@@ -60,8 +60,14 @@
 
     </#if>
 
+    <#if editAttachments>
+        <div class="msg-block cf">
+            <@e.attachmentsView attachments=decisionInfo.getValue().attachments manage=true municipality=true/>
+        </div>
+    </#if>
+
     <#if decisionInfo.isPresent()>
-        <@e.decisionBlock decisionInfo=decisionInfo.getValue() manage=false     />
+        <@e.decisionBlock decisionInfo=decisionInfo.getValue() manage=false/>
     </#if>
 
 
@@ -105,6 +111,11 @@
         </div>
     </div>
 
+    <#assign deleteAattachment>
+        <@compress single_line=true>
+            <@e.deleteAattachmentForm />
+        </@compress>
+    </#assign>
     <#--
      * Moderation VIEW modals
      *
@@ -159,6 +170,15 @@
                 content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[moderationURL] /></div>'
             }]
         };
+
+        <#-- Modal: Confirm remove attachment -->
+        modalData.deleteAttachment = function() {
+            return [{
+                title:      '<@u.message "deleteAttachment.confirm.title" />',
+                content:    '<#noescape>${deleteAattachment?replace("'","&#39;")}</#noescape>'
+            }]
+        };
+
     </script>
 
 </@l.main>

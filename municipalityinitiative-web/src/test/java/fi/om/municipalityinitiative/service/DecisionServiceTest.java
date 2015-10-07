@@ -152,7 +152,7 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
 
             DecisionAttachmentFile fileInfo = (DecisionAttachmentFile) decisionAttachments.getAll().get(0);
 
-            decisionService.removeAttachmentFromDecision(fileInfo.getAttachmentId(), initiativeId);
+            decisionService.removeAttachmentFromDecision(fileInfo.getAttachmentId(),null);
 
             decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
 
@@ -174,7 +174,7 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
 
         decision.setDescription(DECISION_DESCRIPTION);
 
-        decisionService.setDecision(decision, initiativeId);
+        decisionService.setDecision(decision, initiativeId, null);
 
         return decision;
     }

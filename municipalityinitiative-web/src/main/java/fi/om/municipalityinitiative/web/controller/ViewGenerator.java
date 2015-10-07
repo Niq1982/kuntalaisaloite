@@ -159,7 +159,7 @@ public final class ViewGenerator {
 
     public static ViewGenerator municipalityDecisionView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings,
                                                          List<? extends Author> authors,  AttachmentUtil.Attachments allAttachments, MunicipalityDecisionDto decisionDraft,
-                                                         Maybe<MunicipalityDecisionInfo> decisionInfoMaybe, boolean showDecisionForm){
+                                                         Maybe<MunicipalityDecisionInfo> decisionInfoMaybe, boolean showDecisionForm, boolean editAttachments){
         return new ViewGenerator("municipality-decision-view",
                 new AttributeBuilder()
                     .add("initiative", initiativeInfo)
@@ -169,6 +169,7 @@ public final class ViewGenerator {
                     .add("decision", decisionDraft)
                     .add("decisionInfo", decisionInfoMaybe)
                     .add("showDecisionForm", showDecisionForm)
+                    .add("editAttachments", editAttachments)
                         .build()
                 );
         }

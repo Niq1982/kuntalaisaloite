@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QDecisionAttachment.decisionAttachment;
 
 public class JdbcDecisionAttachmentDao implements DecisionAttachmentDao {
@@ -32,7 +33,9 @@ public class JdbcDecisionAttachmentDao implements DecisionAttachmentDao {
 
     @Override
     public void removeAttachment(Long attachmentId) {
-
+        assertSingleAffection(queryFactory.delete(decisionAttachment)
+                .where(decisionAttachment.id.eq(attachmentId))
+                .execute());
     }
 
     @Override
