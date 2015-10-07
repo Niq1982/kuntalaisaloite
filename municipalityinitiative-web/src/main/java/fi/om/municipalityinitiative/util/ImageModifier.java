@@ -22,7 +22,7 @@ public class ImageModifier {
         op.addImage(tempFile.getAbsolutePath());
         op.resize(size.getWidth(), size.getHeight());
         op.addImage(resultFilePath);
-       
+
         cmd.run(op);
 
     }

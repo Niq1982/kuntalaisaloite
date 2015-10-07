@@ -136,6 +136,7 @@ public final class ViewGenerator {
                         .add("initiative", initiativePageView.initiative)
                         .add("authors", initiativePageView.authors)
                         .add("attachments", initiativePageView.attachments)
+                        .add("locations", initiativePageView.locations)
                         .build());
     }
 
