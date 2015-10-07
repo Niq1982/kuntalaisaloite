@@ -47,7 +47,7 @@
                     <input type="hidden" name="locale" value="${locale}"/>
 
                     <div class="input-block-content">
-                        <@f.uploadField path="decision.files" cssClass="multi" name="files" multiple=false/>
+                        <@f.uploadField path="decision.files[0].file" cssClass="multi" name="files[0].file" multiple=false/>
                     </div>
 
                     <div class="input-block-content">

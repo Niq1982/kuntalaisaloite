@@ -15,7 +15,6 @@ import fi.om.municipalityinitiative.util.ImageModifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -58,17 +57,18 @@ public class DecisionService {
 
         initiativeDao.updateInitiativeDecision(initiativeId, decision.getDescription());
 
-        for (MultipartFile attachment: decision.getFiles()) {
+        for (MunicipalityDecisionDto.FileWithName attachment: decision.getFiles()) {
+
             File tempFile = null;
             try {
-                tempFile = AttachmentUtil.createTempFile(attachment, AttachmentUtil.getFileType(attachment));
+                tempFile = AttachmentUtil.createTempFile(attachment.getFile(), AttachmentUtil.getFileType(attachment.getFile()));
 
-                Long attachmentId = decisionAttachmentDao.addAttachment(initiativeId, new DecisionAttachmentFile(attachment.getOriginalFilename(), AttachmentUtil.getFileType(attachment), attachment.getContentType(), initiativeId));
+                Long attachmentId = decisionAttachmentDao.addAttachment(initiativeId, new DecisionAttachmentFile(attachment.getName(), AttachmentUtil.getFileType(attachment.getFile()), attachment.getFile().getContentType(), initiativeId));
 
-                AttachmentUtil.saveFileToDisk(imageModifier, attachment, AttachmentUtil.getFileType(attachment), tempFile, attachmentId, attachmentDir);
+                AttachmentUtil.saveFileToDisk(imageModifier, attachment.getFile(), AttachmentUtil.getFileType(attachment.getFile()), tempFile, attachmentId, attachmentDir);
 
             } catch (Throwable t) {
-                log.error("Error while uploading file: " + attachment.getOriginalFilename(), t);
+                log.error("Error while uploading file: " + attachment.getFile().getOriginalFilename(), t);
                 throw new FileUploadException(t);
             } finally {
                 if (tempFile != null){

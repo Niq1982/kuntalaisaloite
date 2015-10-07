@@ -7,12 +7,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MunicipalityDecisionDto {
 
-    private List<MultipartFile> files = Arrays.asList();
+
+
+    private List<FileWithName> files = new ArrayList<FileWithName>();
 
     private String locale;
 
@@ -20,11 +21,11 @@ public class MunicipalityDecisionDto {
     @Size(max = InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX)
     private String description;
 
-    public List<MultipartFile> getFiles() {
+    public List<FileWithName> getFiles() {
         return files;
     }
 
-    public void setFiles(List<MultipartFile> files) {
+    public void setFiles(List<FileWithName> files) {
         this.files = files;
     }
 
@@ -47,7 +48,31 @@ public class MunicipalityDecisionDto {
     public static MunicipalityDecisionDto build(String description) {
         MunicipalityDecisionDto municipalityDecisionDto = new MunicipalityDecisionDto();
         municipalityDecisionDto.setDescription(description);
-        municipalityDecisionDto.setFiles(new ArrayList<MultipartFile>());
+        municipalityDecisionDto.setFiles(new ArrayList<FileWithName>());
         return municipalityDecisionDto;
+    }
+
+    public static class FileWithName {
+        private MultipartFile file;
+        private String name;
+
+        public FileWithName() {
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public MultipartFile getFile() {
+            return file;
+        }
+
+        public void setFile(MultipartFile file) {
+            this.file = file;
+        }
     }
 }

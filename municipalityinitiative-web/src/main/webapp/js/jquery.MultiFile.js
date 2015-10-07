@@ -238,13 +238,13 @@
           // we can disable the empty ones before submission
           // See: http://plugins.jquery.com/node/1495
           newEle.addClass('MultiFile');
-          
+
           // Handle error
           if(ERROR!=''){
             // Handle error
             MultiFile.error(ERROR);
 												
-            // 2007-06-24: BUG FIX - Thanks to Adrian Wróbel <adrian [dot] wrobel [at] gmail.com>
+            // 2007-06-24: BUG FIX - Thanks to Adrian Wrï¿½bel <adrian [dot] wrobel [at] gmail.com>
             // Ditch the trouble maker and add a fresh new element
             MultiFile.n--;
             MultiFile.addSlave(newEle[0], slave_count);
@@ -258,7 +258,7 @@
           
           // Add new element to the form
           slave.after(newEle);
-          
+
           // Update list
           MultiFile.addToList( this, slave_count );
           
@@ -291,14 +291,16 @@
         var
          r = $('<div class="MultiFile-label"></div>'),
          v = String(slave.value || ''/*.attr('value)*/),
+         title = MultiFile.STRING.file.replace('$file', v.match(/[^\/\\]+$/gi)[0]),
          a = $('<span class="MultiFile-title" title="'+MultiFile.STRING.selected.replace('$file', v)+'">'+MultiFile.STRING.file.replace('$file', v.match(/[^\/\\]+$/gi)[0])+'</span>'),
-         b = $('<a class="MultiFile-remove" href="#'+MultiFile.wrapID+'">'+MultiFile.STRING.remove+'</a>');
-        
+         b = $('<a class="MultiFile-remove" href="#'+MultiFile.wrapID+'">'+MultiFile.STRING.remove+'</a>'),
+         hiddenNameField = $('<input name=files['+ slave_count +'].name value="'+ title +'"/>');
+
         // Insert label
         MultiFile.list.append(
-         r.append(b, ' ', a)
+         r.append(b, ' ', a, hiddenNameField)
         );
-        
+
         b
 								.click(function(){
          
@@ -466,9 +468,9 @@
 	$.fn.MultiFile.options = { //$.extend($.fn.MultiFile, { options: {
 		accept: '', // accepted file extensions
 		max: -1,    // maximum number of selectable files
-		
+
 		// name to use for newly created elements
-		namePattern: '$name', // same name by default (which creates an array)
+		namePattern:  "files[$i].file", // same name by default (which creates an array)
          /*master name*/ // use $name
          /*master id  */ // use $id
          /*group count*/ // use $g
