@@ -236,7 +236,12 @@
                     <@u.messageHTML key="email.mapAttached" args=[attachmentCount] />
                 </#if>
             </h4>
-            <p style="${pBottomMargin!""}"><@u.message "email.attachmentCount.info" /></p>
+            <#if (attachmentCount > 0)>
+                <p style="${pBottomMargin!""}"><@u.message "email.attachmentCount.info" /></p>
+            </#if>
+            <#if hasLocationAttached>
+                <p style="${pBottomMargin!""}"><@u.message "email.mapAttached.info" /></p>
+            </#if>
         <#else>
             <#if (attachmentCount > 0)>
             <@u.message key="email.attachmentCount.total" /> ${attachmentCount}
@@ -244,7 +249,12 @@
             <#if hasLocationAttached>
                 <@u.message key="email.mapAttached" /> ${attachmentCount}
             </#if>
-            <@u.message "email.attachmentCount.info" />
+            <#if (attachmentCount > 0)>
+                <@u.message "email.attachmentCount.info" />
+            </#if>
+            <#if hasLocationAttached>
+                <@u.message "email.mapAttached.info" />
+            </#if>
         </#if>
     </#if>
 </#macro>
