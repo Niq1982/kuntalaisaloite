@@ -1,7 +1,7 @@
 <#import "utils.ftl" as u />
 
 <script type="text/javascript">
-	<#if superSearchEnabled>
+	<#if superSearchEnabled?? && superSearchEnabled>
 		var showSuperSearch = true;
 		var superSearchUrl = "${urls.getSuperSearchIframeUrl()}";
 	<#else>
@@ -9,7 +9,7 @@
 	</#if>
 </script>
 
-<#if superSearchEnabled>
+<#if superSearchEnabled?? && superSearchEnabled>
 	<style>
 		#searchIframe {
 			width: 100%;
