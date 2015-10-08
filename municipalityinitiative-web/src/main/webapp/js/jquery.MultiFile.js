@@ -294,12 +294,23 @@
          title = MultiFile.STRING.file.replace('$file', v.match(/[^\/\\]+$/gi)[0]),
          a = $('<span class="MultiFile-title" title="'+MultiFile.STRING.selected.replace('$file', v)+'">'+MultiFile.STRING.file.replace('$file', v.match(/[^\/\\]+$/gi)[0])+'</span>'),
          b = $('<a class="MultiFile-remove" href="#'+MultiFile.wrapID+'">'+MultiFile.STRING.remove+'</a>'),
-         hiddenNameField = $('<input name=files['+ slave_count +'].name value="'+ title +'"/>');
+         nameField = $('<input style="display:none" name=files['+ slave_count +'].name value="'+ title +'"/>');
 
         // Insert label
         MultiFile.list.append(
-         r.append(b, ' ', a, hiddenNameField)
+         r.append(b, ' ', a, nameField)
         );
+        a.click(function() {
+           nameField.show();
+           nameField.focus();
+           a.hide();
+        });
+        nameField.focusout(function(){
+            a.show();
+            nameField.hide();
+            a.text(nameField.val());
+        });
+
 
         b
 								.click(function(){
@@ -466,7 +477,7 @@
 		$.fn.MultiFile.options.accept = 'gif|jpg';
 	*/
 	$.fn.MultiFile.options = { //$.extend($.fn.MultiFile, { options: {
-		accept: '', // accepted file extensions
+		accept: 'pdf, jpg, jpeg, png', // accepted file extensions
 		max: -1,    // maximum number of selectable files
 
 		// name to use for newly created elements
