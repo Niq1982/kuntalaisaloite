@@ -158,6 +158,8 @@
 <#macro attachmentsView attachments manage=false municipality=false>
 	<#if (attachments.images?size + attachments.pdfs?size) gt 0>
 		<div class="initiative-content-row thumbnail-list cf">
+
+        <#assign userCanRemoveAttachments = manage && user.hasRightToInitiative(initiative.id)/>
     	<h3><@u.message "attachments.title" /></h3>
 
 		    <#list attachments.images as attachment>
@@ -169,7 +171,7 @@
 			            </a>
 		            </span>
 		            <span class="img-label"><@u.stripHtmlTags attachment.description />
-			            <#if manage && user.hasRightToInitiative(initiative.id) >
+			            <#if userCanRemoveAttachments >
 		                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment delete-attachment trigger-tooltip"
 		                        data-id="${attachment.attachmentId}"
 		                        data-name="<@u.stripHtmlTags attachment.description />"
@@ -194,7 +196,7 @@
 				            <span class="pdf-label"><@u.stripHtmlTags attachment.description /></span>
 			            </a>
 
-			            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
+			            <#if userCanRemoveAttachments >
 		                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment trigger-tooltip"
 		                        data-id="${attachment.attachmentId}"
 		                        data-name="<@u.stripHtmlTags attachment.description />"
