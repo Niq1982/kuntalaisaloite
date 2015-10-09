@@ -23,6 +23,8 @@ public abstract class AttachmentFileBase {
 
     public abstract String getDescription();
 
+    public abstract boolean isMunicipalityAttachment();
+
     public static boolean isPdfContentType(String contentType) {
         return contentType.equals(MediaType.PDF.toString());
     }

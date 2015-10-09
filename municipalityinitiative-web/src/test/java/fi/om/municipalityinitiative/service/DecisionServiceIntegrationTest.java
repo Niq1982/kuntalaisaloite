@@ -25,33 +25,40 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class DecisionServiceTest extends ServiceIntegrationTestBase  {
+public class DecisionServiceIntegrationTest extends ServiceIntegrationTestBase  {
 
 
 
     @Resource
-    private DecisionService decisionService;
+    protected DecisionService decisionService;
 
     @Resource
     private NormalInitiativeService normalInitiativeService;
 
-    private Long testMunicipalityId;
+    protected Long testMunicipalityId;
 
-    private String DECISION_DESCRIPTION = "Kunnalla ei ole rahaa.";
+    protected String DECISION_DESCRIPTION = "Kunnalla ei ole rahaa.";
 
-    public static final File TEST_PDF_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/testi.pdf");
+    protected static String CUSTOM_ATTACHMENT_NAME_GIVEN_BY_USER = "Custom name given by user";
 
-    private String TESTI_PDF = "test.pdf";
+    protected static final File TEST_PDF_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/testi.pdf");
 
-    private String CONTENT_TYPE = "application/pdf";
+    protected static String TESTI_PDF = "test.pdf";
 
-    private String FILE_TYPE = "pdf";
+    protected static String CONTENT_TYPE = "application/pdf";
+
+    protected static String FILE_TYPE = "pdf";
+
+    protected String decisionAttachmentFileDir;
+
 
     @Override
     protected void childSetup()  {
-        testMunicipalityId = testHelper.createTestMunicipality("Some municipality");
-    }
 
+        testMunicipalityId = testHelper.createTestMunicipality("Some municipality");
+
+        decisionAttachmentFileDir  = decisionService.attachmentDir;
+    }
 
     @Test
     public void save_decision_and_get_decision() {
@@ -215,14 +222,15 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
         }
     }
 
-    private MunicipalityDecisionDto createDefaultMunicipalityDecisionWithAttachment(Long initiativeId) throws IOException, InvalidAttachmentException, FileUploadException {
+    protected MunicipalityDecisionDto createDefaultMunicipalityDecisionWithAttachment(Long initiativeId) throws IOException, InvalidAttachmentException, FileUploadException {
         MunicipalityDecisionDto decision = new MunicipalityDecisionDto();
 
         List<MunicipalityDecisionDto.FileWithName> files = new ArrayList<MunicipalityDecisionDto.FileWithName>();
 
-
-       // files.add(multiPartFileMock(
-        //        TESTI_PDF, CONTENT_TYPE, TEST_PDF_FILE));
+        MunicipalityDecisionDto.FileWithName fileWithName = new MunicipalityDecisionDto.FileWithName();
+        fileWithName.setFile(createDefaultFile());
+        fileWithName.setName(CUSTOM_ATTACHMENT_NAME_GIVEN_BY_USER);
+        files.add(fileWithName);
 
         decision.setFiles(files);
 
@@ -235,11 +243,15 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
 
 
 
-    private Long createVerifiedInitiativeWithAuthor() {
+    protected  Long createVerifiedInitiativeWithAuthor() {
         return testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().toInitiativeDraft());
     }
 
-    private static MultipartFile multiPartFileMock(String fileName, String contentType, final File file) throws IOException {
+    protected static MultipartFile createDefaultFile() throws IOException {
+        return multiPartFileMock(TESTI_PDF, CONTENT_TYPE, TEST_PDF_FILE);
+    }
+
+    protected static MultipartFile multiPartFileMock(String fileName, String contentType, final File file) throws IOException {
 
         return new MockMultipartFile(fileName, fileName, contentType, FileUtil.readAsByteArray(file));
 

@@ -73,6 +73,11 @@ public class DecisionAttachmentFile extends AttachmentFileBase{
         return fileName;
     }
 
+    @Override
+    public boolean isMunicipalityAttachment() {
+        return true;
+    }
+
     public void setFileType(String fileType) {
         this.fileType = fileType;
     }

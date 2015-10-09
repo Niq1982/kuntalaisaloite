@@ -56,8 +56,10 @@ public final class AttachmentUtil {
         throw new InvalidAttachmentException("Invalid fileName: "+givenFileType);
     }
 
-    public static void saveFileToDisk(ImageModifier imageModifier, MultipartFile file, String fileType, File tempFile, Long attachmentId, String attachmentDir) throws IOException, IM4JavaException, InterruptedException {
-        if (AttachmentFileInfo.isPdfContentType(file.getContentType())) {
+
+
+    public static void saveAttachmentToDiskAndCreateThumbnail(ImageModifier imageModifier, String contentType, String fileType, File tempFile, Long attachmentId, String attachmentDir) throws IOException, IM4JavaException, InterruptedException {
+        if (AttachmentFileInfo.isPdfContentType(contentType)) {
             FileUtil.copyValidFiles(tempFile, new File(AttachmentUtil.getFilePath(attachmentId, fileType, attachmentDir)));
         }
         else {
@@ -65,12 +67,57 @@ public final class AttachmentUtil {
             imageModifier.modify(tempFile, AttachmentUtil.getThumbnailPath(attachmentId, fileType, attachmentDir), AttachmentUtil.ImageProperties.THUMBNAIL_MAX_WIDTH, AttachmentUtil.ImageProperties.THUMBNAIL_MAX_HEIGHT);
         }
     }
+    public static void saveMunicipalityAttachmentToDiskAndCreateThumbnail(ImageModifier imageModifier, String contentType, String fileType, File tempFile, Long attachmentId, String attachmentDir) throws IOException, IM4JavaException, InterruptedException {
+        if (AttachmentFileInfo.isPdfContentType(contentType)) {
+            FileUtil.copyValidFiles(tempFile, new File(AttachmentUtil.getFilePathForMunicipalityAttachment(attachmentId, fileType, attachmentDir)));
+        }
+        else {
+            imageModifier.modify(tempFile, AttachmentUtil.getFilePathForMunicipalityAttachment(attachmentId, fileType, attachmentDir), AttachmentUtil.ImageProperties.MAX_WIDTH, AttachmentUtil.ImageProperties.MAX_HEIGHT);
+            imageModifier.modify(tempFile, AttachmentUtil.getThumbnailFilePathForMunicipalityAttachment(attachmentId, fileType, attachmentDir), AttachmentUtil.ImageProperties.THUMBNAIL_MAX_WIDTH, AttachmentUtil.ImageProperties.THUMBNAIL_MAX_HEIGHT);
+        }
+    }
+
+    public static AttachmentFile getAttachmentFile(String fileName, AttachmentFileBase attachmentInfo, String attachmentDir) throws IOException {
+        if (!attachmentInfo.getFileName().equals(fileName)) {
+            throw new AccessDeniedException("Invalid filename for attachment " + attachmentInfo.getAttachmentId() + " - " + fileName);
+        }
+        String attachmentPath;
+        if (attachmentInfo.isMunicipalityAttachment()) {
+            attachmentPath = getFilePathForMunicipalityAttachment(attachmentInfo.getAttachmentId(), attachmentInfo.getFileType(), attachmentDir);
+        } else {
+            attachmentPath = getFilePath(attachmentInfo.getAttachmentId(), attachmentInfo.getFileType(), attachmentDir);
+        }
+        byte[] attachmentBytes = getFileBytes(attachmentPath);
+        return new AttachmentFile(attachmentInfo, attachmentBytes);
+    }
+
+    public static AttachmentFile getThumbnailForImageAttachment(Long attachmentId, AttachmentFileBase attachmentInfo, String attachmentDir) throws IOException {
+        if (attachmentInfo.isPdf()) {
+            throw new AccessDeniedException("no thumbnail for pdf");
+        }
+        String thumbnailPath;
+        if (attachmentInfo.isMunicipalityAttachment()) {
+            thumbnailPath = getThumbnailFilePathForMunicipalityAttachment(attachmentId, attachmentInfo.getFileType(), attachmentDir);
+        } else {
+            thumbnailPath = getThumbnailPath(attachmentId, attachmentInfo.getFileType(), attachmentDir);
+        }
+        byte[] attachmentBytes = getFileBytes(thumbnailPath);
+        return new AttachmentFile(attachmentInfo, attachmentBytes);
+    }
+
     public static String getFilePath(Long attachmentId, String fileType, String attachmentDir) {
         return attachmentDir + "/" + attachmentId + "." + fileType;
     }
 
     public static String getThumbnailPath(Long attachmentId, String fileType, String attachmentDir ) {
         return attachmentDir + "/" + attachmentId + "_thumbnail" + "." + fileType;
+    }
+
+    public static String getFilePathForMunicipalityAttachment(long attachmentId, String fileType, String attachmentDir) {
+        return attachmentDir + "/" + "decision_" + attachmentId + "." + fileType;
+    }
+    public static String getThumbnailFilePathForMunicipalityAttachment(long attachmentId, String fileType, String attachmentDir) {
+        return attachmentDir + "/" +  "decision_" + attachmentId + "_thumbnail" + "." + fileType;
     }
 
     private static void assertContentType(String contentType) throws InvalidAttachmentException {
@@ -107,14 +154,7 @@ public final class AttachmentUtil {
         }
     }
 
-    public static AttachmentFile getThumbnailForImageAttachment(Long attachmentId, AttachmentFileBase attachmentInfo, String attachmentDir) throws IOException {
-        if (attachmentInfo.isPdf()) {
-            throw new AccessDeniedException("no thumbnail for pdf");
-        }
 
-        byte[] attachmentBytes = getFileBytes(getThumbnailPath(attachmentId, attachmentInfo.getFileType(), attachmentDir));
-        return new AttachmentFile(attachmentInfo, attachmentBytes);
-    }
 
     public static byte[] getFileBytes(String filePath) throws IOException {
         File file = new File(filePath);
@@ -122,14 +162,7 @@ public final class AttachmentUtil {
         return Arrays.copyOf(bytes, bytes.length);
     }
 
-    static AttachmentFile getAttachmentFile(Long attachmentId, String fileName, AttachmentFileBase attachmentInfo, String attachmentDir) throws IOException {
-        if (!attachmentInfo.getFileName().equals(fileName)) {
-            throw new AccessDeniedException("Invalid filename for attachment " + attachmentId + " - " + fileName);
-        }
 
-        byte[] attachmentBytes = getFileBytes(getFilePath(attachmentId, attachmentInfo.getFileType(), attachmentDir));
-        return new AttachmentFile(attachmentInfo, attachmentBytes);
-    }
 
     static boolean isPDF(File file) throws IOException {
 
@@ -172,6 +205,8 @@ public final class AttachmentUtil {
         }
         return object;
     }
+
+
 
 
     public static final class ImageProperties {

@@ -23,7 +23,7 @@ import java.io.IOException;
 
 public class DecisionService {
 
-    private String attachmentDir;
+    public String attachmentDir;
 
     private static final Logger log = LoggerFactory.getLogger(DecisionService.class);
 
@@ -47,9 +47,7 @@ public class DecisionService {
 
     @Transactional
     public void removeAttachmentFromDecision(Long attachmentId, MunicipalityUserHolder user){
-
         decisionAttachmentDao.removeAttachment(attachmentId);
-        // TODO actually remove file from disk
     }
 
     @Transactional(readOnly = false, rollbackFor = Throwable.class)
@@ -65,7 +63,7 @@ public class DecisionService {
 
                 Long attachmentId = decisionAttachmentDao.addAttachment(initiativeId, new DecisionAttachmentFile(attachment.getName(), AttachmentUtil.getFileType(attachment.getFile()), attachment.getFile().getContentType(), initiativeId));
 
-                AttachmentUtil.saveFileToDisk(imageModifier, attachment.getFile(), AttachmentUtil.getFileType(attachment.getFile()), tempFile, attachmentId, attachmentDir);
+                AttachmentUtil.saveMunicipalityAttachmentToDiskAndCreateThumbnail(imageModifier, attachment.getFile().getContentType(), AttachmentUtil.getFileType(attachment.getFile()), tempFile, attachmentId, attachmentDir);
 
             } catch (Throwable t) {
                 log.error("Error while uploading file: " + attachment.getFile().getOriginalFilename(), t);
@@ -89,15 +87,13 @@ public class DecisionService {
     @Transactional(readOnly = true)
     public AttachmentFile getThumbnail(Long attachmentId, LoginUserHolder<User> loginUserHolder) throws IOException {
         DecisionAttachmentFile attachmentInfo = decisionAttachmentDao.getAttachment(attachmentId);
-        // TODO assert that decision is public
         return AttachmentUtil.getThumbnailForImageAttachment(attachmentId, attachmentInfo, attachmentDir);
     }
 
     @Transactional(readOnly = true)
     public AttachmentFile getAttachment(Long attachmentId, String fileName, LoginUserHolder loginUserHolder) throws IOException {
         DecisionAttachmentFile attachmentInfo = decisionAttachmentDao.getAttachment(attachmentId);
-        // TODO check that the decision is public
-        return AttachmentUtil.getAttachmentFile(attachmentId, fileName, attachmentInfo, attachmentDir);
+        return AttachmentUtil.getAttachmentFile(fileName, attachmentInfo,  attachmentDir);
 
     }
 }

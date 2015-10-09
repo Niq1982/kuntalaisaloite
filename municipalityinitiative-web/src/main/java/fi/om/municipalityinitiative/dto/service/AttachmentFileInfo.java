@@ -47,6 +47,11 @@ public class AttachmentFileInfo extends AttachmentFileBase{
     }
 
     @Override
+    public boolean isMunicipalityAttachment() {
+        return false;
+    }
+
+    @Override
     public String getContentType() {
         return contentType;
     }

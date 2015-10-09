@@ -67,7 +67,7 @@ public class AttachmentService {
 
             Long attachmentId = attachmentDao.addAttachment(initiativeId, description, file.getContentType(), fileType);
 
-            AttachmentUtil.saveFileToDisk(imageModifier, file, fileType, tempFile, attachmentId, attachmentDir);
+            AttachmentUtil.saveAttachmentToDiskAndCreateThumbnail(imageModifier, file.getContentType(), fileType, tempFile, attachmentId, attachmentDir);
 
         } catch (InvalidAttachmentException e) {
             throw e;
@@ -91,7 +91,7 @@ public class AttachmentService {
 
         assertViewAllowance(loginUserHolder, attachmentInfo);
 
-        return AttachmentUtil.getAttachmentFile(attachmentId, fileName, attachmentInfo, attachmentDir);
+        return AttachmentUtil.getAttachmentFile(fileName, attachmentInfo, attachmentDir);
     }
 
     @Transactional(readOnly = true)
