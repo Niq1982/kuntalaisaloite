@@ -26,4 +26,13 @@ public class JdbcMunicipalityUserDao implements MunicipalityUserDao {
                 .uniqueResult(QMunicipalityUser.municipalityUser.initiativeId);
         return initiativeId;
     }
+
+    @Override
+    public String getMunicipalityUserHashAttachedToInitiative(Long initiativeId) {
+        String hash =  queryFactory.from(QMunicipalityUser.municipalityUser)
+                .where(QMunicipalityUser.municipalityUser.initiativeId.eq(initiativeId))
+                .uniqueResult(QMunicipalityUser.municipalityUser.managementHash);
+
+        return hash;
+    }
 }

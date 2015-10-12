@@ -13,6 +13,7 @@ import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.service.MunicipalityUserService;
 import fi.om.municipalityinitiative.service.YouthInitiativeWebServiceNotifier;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
@@ -51,6 +52,9 @@ public class InitiativeManagementService {
 
     @Resource
     private YouthInitiativeWebServiceNotifier youthInitiativeWebServiceNotifier;
+
+    @Resource
+    private MunicipalityUserService municipalityUserService;
 
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
@@ -262,6 +266,7 @@ public class InitiativeManagementService {
             youthInitiativeWebServiceNotifier.informInitiativeSentToMunicipality(initiative);
         }
 
+        municipalityUserService.createMunicipalityUser(initiativeId);
     }
 
     @Transactional(readOnly = true)
