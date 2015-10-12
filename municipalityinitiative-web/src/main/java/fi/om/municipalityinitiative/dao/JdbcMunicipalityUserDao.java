@@ -13,7 +13,10 @@ public class JdbcMunicipalityUserDao implements MunicipalityUserDao {
 
     @Override
     public Long createMunicipalityUser(Long initiativeId, String managementHash) {
-        return null;
+        return queryFactory.insert(QMunicipalityUser.municipalityUser)
+                .set(QMunicipalityUser.municipalityUser.initiativeId, initiativeId)
+                .set(QMunicipalityUser.municipalityUser.managementHash, managementHash)
+                .executeWithKey(QMunicipalityUser.municipalityUser.id);
     }
 
     @Override
