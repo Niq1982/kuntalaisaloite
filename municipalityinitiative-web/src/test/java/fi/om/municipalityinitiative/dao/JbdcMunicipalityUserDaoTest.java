@@ -37,8 +37,10 @@ public class JbdcMunicipalityUserDaoTest {
     }
 
     @Test
+    @Transactional
     public void add_municipality_user(){
 
+        municipalityUserDao.createMunicipalityUser(initiativeId, MANAGEMENT_HASH);
         Long id = municipalityUserDao.getInitiativeId(MANAGEMENT_HASH);
         assertThat(initiativeId.equals(id), is(true));
 

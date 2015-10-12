@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrationTestBase  {
@@ -124,14 +125,16 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
 
         } catch (Exception e) {
+            e.printStackTrace();
 
+
+        } finally {
+            assertThat(attachmentFile, notNullValue());
             assertThat(attachmentFile.getInitiativeId(), is(initiativeId));
             assertThat(attachmentFile.getAttachmentId(), is(fileInfo.getAttachmentId()));
             assertThat(attachmentFile.getFileName(), is(TESTI_PDF));
             assertThat(attachmentFile.getContentType(), is(CONTENT_TYPE));
-            e.printStackTrace();
 
-        } finally {
 
 
         }
