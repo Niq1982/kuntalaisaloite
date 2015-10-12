@@ -61,9 +61,11 @@ public class DecisionService {
             try {
                 tempFile = AttachmentUtil.createTempFile(attachment.getFile(), AttachmentUtil.getFileType(attachment.getFile()));
 
-                Long attachmentId = decisionAttachmentDao.addAttachment(initiativeId, new DecisionAttachmentFile(attachment.getName(), AttachmentUtil.getFileType(attachment.getFile()), attachment.getFile().getContentType(), initiativeId));
+                DecisionAttachmentFile fileInfo = new DecisionAttachmentFile(attachment.getName(), AttachmentUtil.getFileType(attachment.getFile()), attachment.getFile().getContentType(), initiativeId);
 
-                AttachmentUtil.saveMunicipalityAttachmentToDiskAndCreateThumbnail(imageModifier, attachment.getFile().getContentType(), AttachmentUtil.getFileType(attachment.getFile()), tempFile, attachmentId, attachmentDir);
+                Long attachmentId = decisionAttachmentDao.addAttachment(initiativeId, fileInfo);
+
+                AttachmentUtil.saveMunicipalityAttachmentToDiskAndCreateThumbnail(imageModifier, fileInfo.getContentType(), fileInfo.getFileType(), tempFile, attachmentId, attachmentDir);
 
             } catch (Throwable t) {
                 log.error("Error while uploading file: " + attachment.getFile().getOriginalFilename(), t);
