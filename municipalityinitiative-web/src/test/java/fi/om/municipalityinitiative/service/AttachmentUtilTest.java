@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class AttachmentUtilTest extends  DecisionServiceIntegrationTest  {
+public class AttachmentUtilTest extends MunicipalityDecisionServiceIntegrationTest {
 
     public static final long ATTACHMENT_ID = 1L;
     public static final String FILE_TYPE = "pdf";
@@ -54,7 +54,7 @@ public class AttachmentUtilTest extends  DecisionServiceIntegrationTest  {
             e.printStackTrace();
         } finally {
 
-            AttachmentUtil.Attachments attachments = decisionService.getDecisionAttachments(initiativeId);
+            AttachmentUtil.Attachments attachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
             assertThat(attachments.getAll().size(), is(1));
             AttachmentFileBase attachment = attachments.getAll().get(0);
             AttachmentFile attachmentFile = null;

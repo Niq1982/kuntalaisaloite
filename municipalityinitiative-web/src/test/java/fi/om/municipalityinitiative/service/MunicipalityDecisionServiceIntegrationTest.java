@@ -25,12 +25,12 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class DecisionServiceIntegrationTest extends ServiceIntegrationTestBase  {
+public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrationTestBase  {
 
 
 
     @Resource
-    protected DecisionService decisionService;
+    protected MunicipalityDecisionService municipalityDecisionService;
 
     @Resource
     private NormalInitiativeService normalInitiativeService;
@@ -68,7 +68,7 @@ public class DecisionServiceIntegrationTest extends ServiceIntegrationTestBase  
 
             MunicipalityDecisionDto decision = createDefaultMunicipalityDecisionWithAttachment(initiativeId);
 
-            AttachmentUtil.Attachments decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
+            AttachmentUtil.Attachments decisionAttachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
 
             assertThat(decisionAttachments.getAll().size(), is(1));
 
@@ -113,13 +113,13 @@ public class DecisionServiceIntegrationTest extends ServiceIntegrationTestBase  
 
             MunicipalityDecisionDto decision = createDefaultMunicipalityDecisionWithAttachment(initiativeId);
 
-            AttachmentUtil.Attachments decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
+            AttachmentUtil.Attachments decisionAttachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
 
             assertThat(decisionAttachments.getPdfs().size(), is(1));
 
             fileInfo = (DecisionAttachmentFile)decisionAttachments.getPdfs().get(0);
 
-            attachmentFile = decisionService.getAttachment(fileInfo.getAttachmentId(), TESTI_PDF, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+            attachmentFile = municipalityDecisionService.getAttachment(fileInfo.getAttachmentId(), TESTI_PDF, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
 
 
@@ -152,15 +152,15 @@ public class DecisionServiceIntegrationTest extends ServiceIntegrationTestBase  
             e.printStackTrace();
         } finally {
 
-            AttachmentUtil.Attachments decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
+            AttachmentUtil.Attachments decisionAttachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
 
             assertThat(decisionAttachments.getAll().size(), is(1));
 
             DecisionAttachmentFile fileInfo = (DecisionAttachmentFile) decisionAttachments.getAll().get(0);
 
-            decisionService.removeAttachmentFromDecision(fileInfo.getAttachmentId(), new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+            municipalityDecisionService.removeAttachmentFromDecision(fileInfo.getAttachmentId(), new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
-            decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
+            decisionAttachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
 
             assertThat(decisionAttachments.getAll().size(), is(0));
 
@@ -177,19 +177,19 @@ public class DecisionServiceIntegrationTest extends ServiceIntegrationTestBase  
 
             createDefaultMunicipalityDecisionWithAttachment(initiativeId);
 
-            AttachmentUtil.Attachments decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
+            AttachmentUtil.Attachments decisionAttachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
 
             assertThat(decisionAttachments.getAll().size(), is(1));
 
             DecisionAttachmentFile fileInfo = (DecisionAttachmentFile) decisionAttachments.getAll().get(0);
 
-            decisionService.removeAttachmentFromDecision(fileInfo.getAttachmentId(), new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId + 1)));
+            municipalityDecisionService.removeAttachmentFromDecision(fileInfo.getAttachmentId(), new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId + 1)));
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
 
-            AttachmentUtil.Attachments decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
+            AttachmentUtil.Attachments decisionAttachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
 
             assertThat(decisionAttachments.getAll().size(), is(1));
 
@@ -207,7 +207,7 @@ public class DecisionServiceIntegrationTest extends ServiceIntegrationTestBase  
 
             MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build("Edited text");
 
-            decisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId + 1)));
+            municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId + 1)));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -235,7 +235,7 @@ public class DecisionServiceIntegrationTest extends ServiceIntegrationTestBase  
 
         decision.setDescription(DECISION_DESCRIPTION);
 
-        decisionService.setDecision(decision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+        municipalityDecisionService.setDecision(decision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
         return decision;
     }

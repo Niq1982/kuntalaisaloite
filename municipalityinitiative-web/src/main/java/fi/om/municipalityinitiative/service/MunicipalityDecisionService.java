@@ -24,11 +24,11 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class DecisionService {
+public class MunicipalityDecisionService {
 
     private String attachmentDir;
 
-    private static final Logger log = LoggerFactory.getLogger(DecisionService.class);
+    private static final Logger log = LoggerFactory.getLogger(MunicipalityDecisionService.class);
 
     @Resource
     private DecisionAttachmentDao decisionAttachmentDao;
@@ -43,11 +43,11 @@ public class DecisionService {
     @Resource
     private ValidationService validationService;
 
-    public DecisionService(String attachmentDir) {
+    public MunicipalityDecisionService(String attachmentDir) {
         this.attachmentDir = attachmentDir;
     }
 
-    public DecisionService() { // For spring AOP
+    public MunicipalityDecisionService() { // For spring AOP
     }
 
     @Transactional

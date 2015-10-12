@@ -209,6 +209,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public MunicipalityUserService municipalityUserService() {
+        return new MunicipalityUserService();
+    }
+
+    @Bean
     public ParticipantService participantService() {
         return new ParticipantService();
     }
@@ -227,8 +232,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public DecisionService decisionService() {
-        return new DecisionService(env.getRequiredProperty(PropertyNames.decisionAttachmentDir));
+    public MunicipalityDecisionService decisionService() {
+        return new MunicipalityDecisionService(env.getRequiredProperty(PropertyNames.decisionAttachmentDir));
     }
 
     @Bean

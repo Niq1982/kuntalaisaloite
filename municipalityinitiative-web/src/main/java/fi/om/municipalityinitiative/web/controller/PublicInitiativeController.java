@@ -70,7 +70,7 @@ public class PublicInitiativeController extends BaseController {
     private AttachmentService attachmentService;
 
     @Resource
-    private DecisionService decisionService;
+    private MunicipalityDecisionService municipalityDecisionService;
 
     @Resource
     private SupportCountService supportCountService;
@@ -133,7 +133,7 @@ public class PublicInitiativeController extends BaseController {
             municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
                     initiativePageView.initiative.getDecisionText().getValue(),
                     initiativePageView.initiative.getDecisionDate().getValue(),
-                    decisionService.getDecisionAttachments(initiativeId)));
+                    municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
         return municipalityDecisionInfo;
     }
@@ -425,7 +425,7 @@ public class PublicInitiativeController extends BaseController {
                          @PathVariable String fileName,
                          HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            AttachmentFile attachment = decisionService.getAttachment(id, fileName, userService.getLoginUserHolder(request));
+            AttachmentFile attachment = municipalityDecisionService.getAttachment(id, fileName, userService.getLoginUserHolder(request));
             attachmentFileResponse(response, attachment);
         } catch (AccessDeniedException e) {
             throw e;
@@ -439,7 +439,7 @@ public class PublicInitiativeController extends BaseController {
     public void getThumbnailImageAttachedForDecision(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
-            AttachmentFile thumbnail = decisionService.getThumbnail(id, userService.getLoginUserHolder(request));
+            AttachmentFile thumbnail = municipalityDecisionService.getThumbnail(id, userService.getLoginUserHolder(request));
             attachmentFileResponse(response, thumbnail);
         } catch (Throwable t) {
             log.error("Thumbnail not found: " + id, t);

@@ -6,7 +6,7 @@ import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.AttachmentService;
-import fi.om.municipalityinitiative.service.DecisionService;
+import fi.om.municipalityinitiative.service.MunicipalityDecisionService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
@@ -42,7 +42,7 @@ public class MunicipalityDecisionController extends BaseController{
     private AttachmentService attachmentService;
 
     @Resource
-    private DecisionService decisionService;
+    private MunicipalityDecisionService municipalityDecisionService;
 
 
 
@@ -61,7 +61,7 @@ public class MunicipalityDecisionController extends BaseController{
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
 
         if (initiative.getDecisionText().isPresent()) {
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), decisionService.getDecisionAttachments(initiativeId)));
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
 
         boolean editAttachments = false;
@@ -87,7 +87,7 @@ public class MunicipalityDecisionController extends BaseController{
 
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
         if (initiative.getDecisionText().isPresent()) {
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), decisionService.getDecisionAttachments(initiativeId)));
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
 
         boolean ediDecision = true;
@@ -113,7 +113,7 @@ public class MunicipalityDecisionController extends BaseController{
 
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
         if (initiative.getDecisionText().isPresent()) {
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), decisionService.getDecisionAttachments(initiativeId)));
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
 
 
@@ -141,7 +141,7 @@ public class MunicipalityDecisionController extends BaseController{
         // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
         SecurityFilter.verifyAndGetCurrentCSRFToken(request);
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
-        decisionService.removeAttachmentFromDecision(attachmentId, loginUserHolder);
+        municipalityDecisionService.removeAttachmentFromDecision(attachmentId, loginUserHolder);
         return redirectWithMessage(Urls.get(locale).openDecisionAttachmentsForEdit(initiativeId), RequestMessage.ATTACHMENT_DELETED, request);
     }
 
@@ -163,9 +163,9 @@ public class MunicipalityDecisionController extends BaseController{
 
         boolean showDecisionForm = false;
 
-        if (!decisionService.validate(decision, bindingResult, model)) {
+        if (!municipalityDecisionService.validate(decision, bindingResult, model)) {
             InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), decisionService.getDecisionAttachments(initiativeId)));
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
             showDecisionForm = true;
 
             return ViewGenerator.municipalityDecisionView(
@@ -181,10 +181,10 @@ public class MunicipalityDecisionController extends BaseController{
         }
 
         try {
-            decisionService.setDecision(decision, initiativeId, loginUserHolder);
+            municipalityDecisionService.setDecision(decision, initiativeId, loginUserHolder);
 
             InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), decisionService.getDecisionAttachments(initiativeId)));
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
 
         } catch (InvalidAttachmentException e) {
             e.printStackTrace();
