@@ -266,9 +266,9 @@ public final class Urls {
 
     public static final String EDIT_MUNICIPALITY_DECISION_SV = MUNICIPALITY_DECISION_SV_BASE_URL + "edit/" + ID_PARAMETER;
 
-    public static final String EDIT_MUNICIPALITY_DECISION_ATTACHHMENTS_FI = MUNICIPALITY_DECISION_FI_BASE_URL + "attachments/" + ID_PARAMETER;
+    public static final String EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI = MUNICIPALITY_DECISION_FI_BASE_URL + "attachments/" + ID_PARAMETER;
 
-    public static final String EDIT_MUNICIPALITY_DECISION_ATTACHHMENTS_SV = MUNICIPALITY_DECISION_SV_BASE_URL + "attachments/" + ID_PARAMETER;
+    public static final String EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV = MUNICIPALITY_DECISION_SV_BASE_URL + "attachments/" + ID_PARAMETER;
 
     public static final String MUNICIPALITY_LOGIN_FI = "/fi/municipality-login";
 
@@ -729,6 +729,6 @@ public final class Urls {
     }
 
     public String openDecisionAttachmentsForEdit(Long initiativeId) {
-        return getLocalizedPageUrl(EDIT_MUNICIPALITY_DECISION_ATTACHHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHHMENTS_SV).replace(ID_PARAMETER, initiativeId.toString());
+        return getLocalizedPageUrl(EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 }

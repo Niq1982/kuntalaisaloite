@@ -23,7 +23,7 @@ import java.io.IOException;
 
 public class DecisionService {
 
-    public String attachmentDir;
+    private String attachmentDir;
 
     private static final Logger log = LoggerFactory.getLogger(DecisionService.class);
 

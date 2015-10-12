@@ -102,7 +102,7 @@ public class MunicipalityDecisionController extends BaseController{
         ).view(model, Urls.get(locale).alt().municipalityModeration());
     }
 
-    @RequestMapping(value = {EDIT_MUNICIPALITY_DECISION_ATTACHHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHHMENTS_SV}, method = GET)
+    @RequestMapping(value = {EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV}, method = GET)
     public String editDecisionAttachments(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
 
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
@@ -130,7 +130,7 @@ public class MunicipalityDecisionController extends BaseController{
     }
 
 
-    @RequestMapping(value = {EDIT_MUNICIPALITY_DECISION_ATTACHHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHHMENTS_SV}, method = POST, params = ACTION_DELETE_ATTACHMENT)
+    @RequestMapping(value = {EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV}, method = POST, params = ACTION_DELETE_ATTACHMENT)
     public String deleteAttachment(@PathVariable("id") Long initiativeId,
                                    @RequestParam(PARAM_ATTACHMENT_ID) Long attachmentId,
                                    HttpServletRequest request,
