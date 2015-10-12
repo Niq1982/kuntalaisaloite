@@ -45,6 +45,8 @@ public class MunicipalityDecisionController extends BaseController{
     private DecisionService decisionService;
 
 
+
+
     public MunicipalityDecisionController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
@@ -153,22 +155,41 @@ public class MunicipalityDecisionController extends BaseController{
 
         // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
         SecurityFilter.verifyAndGetCurrentCSRFToken(request);
+
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
+
+        boolean editAttachments = false;
+
+        // validate data
+        if (!decisionService.validate(decision, bindingResult, model)) {
+            InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), decisionService.getDecisionAttachments(initiativeId)));
+
+            return ViewGenerator.municipalityDecisionView(
+                    normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
+                    normalInitiativeService.getManagementSettings(initiativeId),
+                    authorService.findAuthors(initiativeId, loginUserHolder),
+                    attachmentService.findAllAttachments(initiativeId, loginUserHolder),
+                    decision,
+                    decisionInfo,
+                    true,
+                    editAttachments
+            ).view(model, Urls.get(locale).alt().municipalityModeration());
+        }
+
         try {
             decisionService.setDecision(decision, initiativeId, loginUserHolder);
             InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), decisionService.getDecisionAttachments(initiativeId)));
 
-            if (initiative.getDecisionText().isPresent()) {
-                decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), decisionService.getDecisionAttachments(initiativeId)));
-            }
         } catch (InvalidAttachmentException e) {
             e.printStackTrace();
         } catch (FileUploadException e) {
             e.printStackTrace();
         }
 
-        boolean editAttachments = false;
+
         return ViewGenerator.municipalityDecisionView(
                 normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
                 normalInitiativeService.getManagementSettings(initiativeId),

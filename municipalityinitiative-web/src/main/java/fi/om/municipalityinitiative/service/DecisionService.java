@@ -15,6 +15,9 @@ import fi.om.municipalityinitiative.util.ImageModifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -37,6 +40,8 @@ public class DecisionService {
     @Resource
     private ImageModifier imageModifier;
 
+    @Resource
+    private ValidationService validationService;
 
     public DecisionService(String attachmentDir) {
         this.attachmentDir = attachmentDir;
@@ -95,7 +100,19 @@ public class DecisionService {
     @Transactional(readOnly = true)
     public AttachmentFile getAttachment(Long attachmentId, String fileName, LoginUserHolder loginUserHolder) throws IOException {
         DecisionAttachmentFile attachmentInfo = decisionAttachmentDao.getAttachment(attachmentId);
-        return AttachmentUtil.getAttachmentFile(fileName, attachmentInfo,  attachmentDir);
+        return AttachmentUtil.getAttachmentFile(fileName, attachmentInfo, attachmentDir);
 
+    }
+
+    public boolean validate(MunicipalityDecisionDto decision, BindingResult bindingResult, Model model) {
+
+        for (MunicipalityDecisionDto.FileWithName file : decision.getFiles()) {
+            if (file.getName() == null || file.getName().isEmpty()) {
+                bindingResult.addError(new FieldError("decision", "files[0].name", "", false, new String[]{"NotEmpty"}, new String[]{"NotEmpty"}, ""));
+            }
+        }
+        validationService.validationSuccessful(decision, bindingResult, model);
+
+        return bindingResult.getErrorCount() == 0;
     }
 }

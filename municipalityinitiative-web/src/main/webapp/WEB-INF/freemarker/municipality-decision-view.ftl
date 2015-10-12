@@ -40,6 +40,8 @@
 
                     <@spring.bind "decision" />
 
+                    <@u.errorsSummary path="decision.*" prefix="decision."/>
+
                     <div class="input-block-content no-top-margin">
                         <@f.textarea required="" optional=false path="decision.description" key="decision.description.label" maxLength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}" />
                     </div>
