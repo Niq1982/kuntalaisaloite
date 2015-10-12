@@ -57,7 +57,6 @@ public class DecisionServiceIntegrationTest extends ServiceIntegrationTestBase  
 
         testMunicipalityId = testHelper.createTestMunicipality("Some municipality");
 
-        decisionAttachmentFileDir  = decisionService.attachmentDir;
     }
 
     @Test

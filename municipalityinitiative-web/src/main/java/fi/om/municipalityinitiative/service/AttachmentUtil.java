@@ -3,9 +3,9 @@ package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
+import com.google.common.net.MediaType;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.AttachmentFileBase;
-import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
@@ -59,7 +59,7 @@ public final class AttachmentUtil {
 
 
     public static void saveAttachmentToDiskAndCreateThumbnail(ImageModifier imageModifier, String contentType, String fileType, File tempFile, Long attachmentId, String attachmentDir) throws IOException, IM4JavaException, InterruptedException {
-        if (AttachmentFileInfo.isPdfContentType(contentType)) {
+        if (isPdfContentType(contentType)) {
             FileUtil.copyValidFiles(tempFile, new File(AttachmentUtil.getFilePath(attachmentId, fileType, attachmentDir)));
         }
         else {
@@ -68,7 +68,7 @@ public final class AttachmentUtil {
         }
     }
     public static void saveMunicipalityAttachmentToDiskAndCreateThumbnail(ImageModifier imageModifier, String contentType, String fileType, File tempFile, Long attachmentId, String attachmentDir) throws IOException, IM4JavaException, InterruptedException {
-        if (AttachmentFileInfo.isPdfContentType(contentType)) {
+        if (isPdfContentType(contentType)) {
             FileUtil.copyValidFiles(tempFile, new File(AttachmentUtil.getFilePathForMunicipalityAttachment(attachmentId, fileType, attachmentDir)));
         }
         else {
@@ -206,7 +206,9 @@ public final class AttachmentUtil {
         return object;
     }
 
-
+    public static boolean isPdfContentType(String contentType) {
+        return contentType.equals(MediaType.PDF.toString());
+    }
 
 
     public static final class ImageProperties {

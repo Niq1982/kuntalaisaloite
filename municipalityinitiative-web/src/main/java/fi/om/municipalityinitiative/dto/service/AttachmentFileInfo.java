@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dto.service;
 
+import fi.om.municipalityinitiative.service.AttachmentUtil;
 import org.joda.time.DateTime;
 
 public class AttachmentFileInfo extends AttachmentFileBase{
@@ -80,7 +81,7 @@ public class AttachmentFileInfo extends AttachmentFileBase{
     }
 
     public boolean isPdf() {
-        return isPdfContentType(contentType);
+        return AttachmentUtil.isPdfContentType(contentType);
     }
 
 

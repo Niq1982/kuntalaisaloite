@@ -35,6 +35,10 @@ public class AttachmentUtilTest extends  DecisionServiceIntegrationTest  {
         assertThat(AttachmentUtil.getThumbnailFilePathForMunicipalityAttachment(ATTACHMENT_ID, FILE_TYPE, ATTACHMENT_DIR), is("C:/dummypath/decision_1_thumbnail.pdf"));
     }
 
+    @Test
+    public void is_pdf_type() {
+        assertThat(AttachmentUtil.isPdfContentType("application/pdf"), is(true));
+    }
     /*@Test
     public void get_attachment_file(){
         Long initiativeId = createVerifiedInitiativeWithAuthor();
