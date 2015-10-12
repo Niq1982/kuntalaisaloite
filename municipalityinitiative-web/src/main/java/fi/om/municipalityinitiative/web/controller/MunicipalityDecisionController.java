@@ -161,10 +161,12 @@ public class MunicipalityDecisionController extends BaseController{
 
         boolean editAttachments = false;
 
-        // validate data
+        boolean showDecisionForm = false;
+
         if (!decisionService.validate(decision, bindingResult, model)) {
             InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
             decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), decisionService.getDecisionAttachments(initiativeId)));
+            showDecisionForm = true;
 
             return ViewGenerator.municipalityDecisionView(
                     normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
@@ -173,23 +175,25 @@ public class MunicipalityDecisionController extends BaseController{
                     attachmentService.findAllAttachments(initiativeId, loginUserHolder),
                     decision,
                     decisionInfo,
-                    true,
+                    showDecisionForm,
                     editAttachments
             ).view(model, Urls.get(locale).alt().municipalityModeration());
         }
 
         try {
             decisionService.setDecision(decision, initiativeId, loginUserHolder);
+
             InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
             decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), decisionService.getDecisionAttachments(initiativeId)));
 
         } catch (InvalidAttachmentException e) {
             e.printStackTrace();
+
         } catch (FileUploadException e) {
             e.printStackTrace();
         }
 
-
+        showDecisionForm = decisionInfo.isNotPresent();
         return ViewGenerator.municipalityDecisionView(
                 normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
                 normalInitiativeService.getManagementSettings(initiativeId),
@@ -197,7 +201,7 @@ public class MunicipalityDecisionController extends BaseController{
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
                 new MunicipalityDecisionDto(),
                 decisionInfo,
-                decisionInfo.isNotPresent(),
+                showDecisionForm,
                 editAttachments
                 ).view(model, Urls.get(locale).alt().municipalityModeration());
     }

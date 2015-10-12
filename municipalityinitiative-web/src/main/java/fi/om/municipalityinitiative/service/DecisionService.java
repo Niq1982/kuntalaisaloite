@@ -108,11 +108,15 @@ public class DecisionService {
 
         for (MunicipalityDecisionDto.FileWithName file : decision.getFiles()) {
             if (file.getName() == null || file.getName().isEmpty()) {
-                bindingResult.addError(new FieldError("decision", "files[0].name", "", false, new String[]{"NotEmpty"}, new String[]{"NotEmpty"}, ""));
+                bindError(bindingResult, "files", "NotEmpty");
             }
         }
         validationService.validationSuccessful(decision, bindingResult, model);
 
         return bindingResult.getErrorCount() == 0;
+    }
+
+    public void bindError(BindingResult bindingResult, String field, String error) {
+        bindingResult.addError(new FieldError("decision", field, "", false, new String[]{error}, new String[]{error}, ""));
     }
 }
