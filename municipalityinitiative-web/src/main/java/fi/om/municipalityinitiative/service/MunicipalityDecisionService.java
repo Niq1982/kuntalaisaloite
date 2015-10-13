@@ -22,6 +22,7 @@ import org.springframework.validation.FieldError;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 
 public class MunicipalityDecisionService {
@@ -104,11 +105,20 @@ public class MunicipalityDecisionService {
 
     }
 
-    public boolean validate(MunicipalityDecisionDto decision, BindingResult bindingResult, Model model) {
+    public boolean validationSuccesfull(MunicipalityDecisionDto decision, BindingResult bindingResult, Model model) {
 
         for (MunicipalityDecisionDto.FileWithName file : decision.getFiles()) {
             if (file.getName() == null || file.getName().isEmpty()) {
-                bindError(bindingResult, "files", "NotEmpty");
+                addAttachmentValidationError(bindingResult, "files", "NotEmpty");
+            }
+            try {
+                AttachmentUtil.assertValidFileType(AttachmentUtil.parseFileType(file.getFile().getOriginalFilename()));
+            } catch (InvalidAttachmentException e) {
+                addAttachmentValidationError(bindingResult, "attachment.error.invalid.file.type", Arrays.toString(AttachmentUtil.ImageProperties.FILE_TYPES));
+            }
+
+            if (file.getFile().getSize() > AttachmentUtil.ImageProperties.MAX_FILESIZE_IN_BYTES) {
+                addAttachmentValidationError(bindingResult, "attachment.error.too.large.file", AttachmentUtil.ImageProperties.MAX_FILESIZE_IN_KILOBYTES);
             }
         }
         validationService.validationSuccessful(decision, bindingResult, model);
@@ -116,7 +126,7 @@ public class MunicipalityDecisionService {
         return bindingResult.getErrorCount() == 0;
     }
 
-    public void bindError(BindingResult bindingResult, String field, String error) {
+    public void addAttachmentValidationError(BindingResult bindingResult, String field, String error) {
         bindingResult.addError(new FieldError("decision", field, "", false, new String[]{error}, new String[]{error}, ""));
     }
 }

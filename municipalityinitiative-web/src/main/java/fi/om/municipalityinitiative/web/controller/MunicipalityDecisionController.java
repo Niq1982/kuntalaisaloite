@@ -163,7 +163,7 @@ public class MunicipalityDecisionController extends BaseController{
 
         boolean showDecisionForm = false;
 
-        if (!municipalityDecisionService.validate(decision, bindingResult, model)) {
+        if (!municipalityDecisionService.validationSuccesfull(decision, bindingResult, model)) {
             InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
             decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
             showDecisionForm = true;

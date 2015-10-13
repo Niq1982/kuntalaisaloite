@@ -33,22 +33,14 @@ public final class AttachmentUtil {
     public static String getFileType(MultipartFile file) throws InvalidAttachmentException {
         // Some checks for valid filename
         String fileType = parseFileType(file.getOriginalFilename());
-        assertFileType(fileType);
-        assertContentType(file.getContentType());
+        assertValidFileType(fileType);
+        assertValidContentType(file.getContentType());
         return fileType;
     }
 
 
-    private static String parseFileType(String fileName) throws InvalidAttachmentException {
-        String[] split = fileName.split("\\.");
-        if (split.length == 1) {
-            throw new InvalidAttachmentException("Invalid filename: " + fileName);
-        }
 
-        return split[split.length-1];
-    }
-
-    public static void assertFileType(String givenFileType) throws InvalidAttachmentException {
+    public static void assertValidFileType(String givenFileType) throws InvalidAttachmentException {
         for (String fileType : ImageProperties.FILE_TYPES) {
             if (fileType.equalsIgnoreCase(givenFileType))
                 return;
@@ -120,7 +112,7 @@ public final class AttachmentUtil {
         return attachmentDir + "/" +  "decision_" + attachmentId + "_thumbnail" + "." + fileType;
     }
 
-    private static void assertContentType(String contentType) throws InvalidAttachmentException {
+    private static void assertValidContentType(String contentType) throws InvalidAttachmentException {
         for (String type : ImageProperties.CONTENT_TYPES) {
             if (type.equalsIgnoreCase(contentType))
                 return;
@@ -208,6 +200,15 @@ public final class AttachmentUtil {
 
     public static boolean isPdfContentType(String contentType) {
         return contentType.equals(MediaType.PDF.toString());
+    }
+
+    static String parseFileType(String fileName) throws InvalidAttachmentException {
+        String[] split = fileName.split("\\.");
+        if (split.length == 1) {
+            throw new InvalidAttachmentException("Invalid filename: " + fileName);
+        }
+
+        return split[split.length-1];
     }
 
 

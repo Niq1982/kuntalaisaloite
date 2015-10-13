@@ -113,15 +113,6 @@ public class AttachmentService {
         }
     }
 
-    private static String parseFileType(String fileName) throws InvalidAttachmentException {
-        String[] split = fileName.split("\\.");
-        if (split.length == 1) {
-            throw new InvalidAttachmentException("Invalid filename: " + fileName);
-        }
-
-        return split[split.length-1];
-    }
-
     private static void assertContentType(String contentType) throws InvalidAttachmentException {
         for (String type : AttachmentUtil.ImageProperties.CONTENT_TYPES) {
             if (type.equalsIgnoreCase(contentType))
@@ -177,7 +168,7 @@ public class AttachmentService {
             }
             else {
                 try {
-                    AttachmentUtil.assertFileType(parseFileType(attachmentCreateDto.getImage().getOriginalFilename()));
+                    AttachmentUtil.assertValidFileType(AttachmentUtil.parseFileType(attachmentCreateDto.getImage().getOriginalFilename()));
                 } catch (InvalidAttachmentException e) {
                     addAttachmentValidationError(bindingResult, "attachment.error.invalid.file.type", Arrays.toString(AttachmentUtil.ImageProperties.FILE_TYPES));
                 }
