@@ -18,7 +18,7 @@ public class MunicipalityDecisionDto {
     private String locale;
 
     @NotEmpty
-    @Size(max = InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX)
+    @Size(max = InitiativeConstants.MUNICIPALITY_DECISION_MAX)
     private String description;
 
     public List<FileWithName> getFiles() {

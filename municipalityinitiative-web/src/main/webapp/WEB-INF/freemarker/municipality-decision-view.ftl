@@ -37,7 +37,7 @@
     <#if showDecisionForm>
         <div class="msg-block cf">
             <h2><@u.message "municipality.decision.giveDecision" /></h2>
-            <p><@u.message key="municipality.decision.description" /></p>
+            <p class="full-width"><@u.message key="municipality.decision.description" /></p>
 
             <div>
                 <form action="${urls.getMunicipalityDecisionView(initiative.id)}" method="POST" id="form-accept" class="sodirty" enctype="multipart/form-data">
@@ -47,8 +47,8 @@
 
                     <@u.errorsSummary path="decision.*" prefix="decision."/>
 
-                    <div class="input-block-content no-top-margin">
-                        <@f.textarea required="" optional=false path="decision.description" key="decision.description.label" maxLength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}" />
+                    <div class="input-block-content no-top-margin full-width">
+                        <@f.textarea required="" optional=false path="decision.description" key="decision.description.label"/>
                     </div>
 
                     <input type="hidden" name="locale" value="${locale}"/>
