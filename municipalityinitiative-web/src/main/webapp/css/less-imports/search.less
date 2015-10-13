@@ -245,25 +245,57 @@ h3 {
     @media @mobile {
         display: none;
     }
-    @media @tablet {
-        width: 100%;
+
+
+    &.three-items {
+        @media @tablet {
+            width: 75%;
+        }
+        @media @desktop, @desktop-xl {
+            width: 60%;
+        }
+        a {
+            @media @tablet, @desktop, @desktop-xl {
+                width: 33.3333%;
+            }
+        }
     }
-    @media @desktop, @desktop-xl {
-        width: 80%;
+
+    &.four-items {
+        @media @tablet {
+            width: 100%;
+        }
+        @media @desktop, @desktop-xl {
+            width: 80%;
+        }
+        a {
+            @media @tablet, @desktop, @desktop-xl {
+                width: 25%;
+            }
+        }
     }
 
     a {
-
+        span {
+            display: none;
+        }
         display:inline-block;
         padding:5px 0px;
         //line-height:35px;
         color:#444;
         text-align:center;
 
-        @media @tablet, @desktop, @desktop-xl {
-            width: 25%;
+        @media @tablet {
+            height: 75px;
+            vertical-align: top;
+            span {
+                display: inline;
+            }
         }
-
+        @media @desktop {
+            height: 60px;
+            vertical-align: top;
+        }
         &:hover {
             .gradient (#fff, #ddd);
             color:#000;

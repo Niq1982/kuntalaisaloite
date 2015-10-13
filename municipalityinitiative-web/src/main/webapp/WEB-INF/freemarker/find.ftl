@@ -54,7 +54,7 @@
     <#if enableVerifiedInitiatives>
     <span class="search-parameters-title filter"><label for="municipality"><@u.message "searchParameters.type" /><a href="#" class="search-filter-toggle" ></a></label></span>
     <div class="search-parameters-container cf buttons">
-        <div class="search-parameters">
+        <div class="search-parameters four-items">
             <@u.searchLink parameter="withTypeAll" cssClass=(currentSearch.type == "all")?string('active','') tooltip=false />
             <@u.searchLink parameter="withTypeNormal" cssClass=(currentSearch.type == "normal")?string('active','') tooltip=false />
             <@u.searchLink parameter="withTypeCouncil" cssClass=(currentSearch.type == "council")?string('active','')  tooltip=false />
@@ -77,19 +77,20 @@
     -->
     <span class="search-parameters-title filter"><@u.message "searchOptions.filter" /><a href="#" class="search-filter-toggle" ></a></span>
         <div class="search-parameters-container buttons">
-            <div class="search-parameters">
-                <#if user.isOmUser()>
-                        <@u.searchLink parameter="withStateDraft" cssClass=(currentSearch.show == "draft")?string('active','') count=initiativeCounts.draft/>
-                        <@u.searchLink parameter="withStateReview" cssClass=(currentSearch.show == "review")?string('active','') count=initiativeCounts.review />
-                        <@u.searchLink parameter="withStateAccepted" cssClass=(currentSearch.show == "accepted")?string('active','') count=initiativeCounts.accepted />
-                        <@u.searchLink parameter="withStateFix" cssClass=(currentSearch.show == "fix")?string('active','') count=initiativeCounts.fix />
-                    </div>
-                    <div class="search-parameters">
-                </#if>
+
+            <#if user.isOmUser()>
+                <div class="search-parameters four-items">
+                    <@u.searchLink parameter="withStateDraft" cssClass=(currentSearch.show == "draft")?string('active','') count=initiativeCounts.draft/>
+                    <@u.searchLink parameter="withStateReview" cssClass=(currentSearch.show == "review")?string('active','') count=initiativeCounts.review />
+                    <@u.searchLink parameter="withStateAccepted" cssClass=(currentSearch.show == "accepted")?string('active','') count=initiativeCounts.accepted />
+                    <@u.searchLink parameter="withStateFix" cssClass=(currentSearch.show == "fix")?string('active','') count=initiativeCounts.fix />
+                </div>
+
+            </#if>
+            <div class="search-parameters three-items">
                 <@u.searchLink parameter="withStateAll" cssClass=(currentSearch.show == "all")?string('active','') count=initiativeCounts.all/>
                 <@u.searchLink parameter="withStateCollecting" cssClass=(currentSearch.show == "collecting")?string('active','') count=initiativeCounts.collecting />
                 <@u.searchLink parameter="withStateSent" cssClass=(currentSearch.show == "sent")?string('active','') count=initiativeCounts.sent/>
-
             </div>
             <br class="clear" />
     </div>
