@@ -105,7 +105,7 @@ public class MunicipalityDecisionService {
 
     }
 
-    public boolean validationSuccesfull(MunicipalityDecisionDto decision, BindingResult bindingResult, Model model) {
+    public boolean validationSuccessful(MunicipalityDecisionDto decision, BindingResult bindingResult, Model model) {
 
         for (MunicipalityDecisionDto.FileWithName file : decision.getFiles()) {
             if (file.getName() == null || file.getName().isEmpty()) {
