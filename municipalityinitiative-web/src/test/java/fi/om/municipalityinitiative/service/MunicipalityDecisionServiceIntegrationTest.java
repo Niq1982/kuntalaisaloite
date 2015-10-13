@@ -86,11 +86,9 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             assertThat(fileInfo.getContentType(), is(CONTENT_TYPE));
 
-            assertThat(fileInfo.getFileName(), is(TESTI_PDF));
+            assertThat(fileInfo.getFileName(), is(CUSTOM_ATTACHMENT_NAME_GIVEN_BY_USER));
 
             assertThat(fileInfo.getInitiativeId(), is(initiativeId));
-
-            assertThat(fileInfo.getFileName(), is(TESTI_PDF));
 
             InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
@@ -120,7 +118,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             fileInfo = (DecisionAttachmentFile)decisionAttachments.getPdfs().get(0);
 
-            attachmentFile = municipalityDecisionService.getAttachment(fileInfo.getAttachmentId(), TESTI_PDF, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+            attachmentFile = municipalityDecisionService.getAttachment(fileInfo.getAttachmentId(), CUSTOM_ATTACHMENT_NAME_GIVEN_BY_USER, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
 
 
@@ -132,7 +130,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
             assertThat(attachmentFile, notNullValue());
             assertThat(attachmentFile.getInitiativeId(), is(initiativeId));
             assertThat(attachmentFile.getAttachmentId(), is(fileInfo.getAttachmentId()));
-            assertThat(attachmentFile.getFileName(), is(TESTI_PDF));
+            assertThat(attachmentFile.getFileName(), is(CUSTOM_ATTACHMENT_NAME_GIVEN_BY_USER));
             assertThat(attachmentFile.getContentType(), is(CONTENT_TYPE));
 
 
