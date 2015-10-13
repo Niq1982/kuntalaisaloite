@@ -274,6 +274,10 @@ public final class AttachmentUtil {
         private final List<AttachmentFileBase> images = Lists.newArrayList();
         private final List<AttachmentFileBase> pdfs = Lists.newArrayList();
 
+        public int count() {
+            return getAll().size();
+        }
+
         public Attachments(List<? extends AttachmentFileBase> attachments) {
             for (AttachmentFileBase attachment : attachments) {
                 if (attachment.isPdf()) {

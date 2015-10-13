@@ -308,7 +308,12 @@
         nameField.focusout(function(){
             a.show();
             nameField.hide();
-            a.text(nameField.val());
+            if(nameField.val() && nameField.val() !== "") {
+                a.text(nameField.val());
+            } else {
+                nameField.val(a.text());
+            }
+
         });
 
 
