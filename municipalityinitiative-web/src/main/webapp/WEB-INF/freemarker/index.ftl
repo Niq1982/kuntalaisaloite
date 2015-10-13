@@ -30,7 +30,8 @@
 
 <div class="container">
     <div class="big-link-holder noprint">
-        <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="big-link"><@u.message "front.bigLink" /> <span class="arrow"></span></a>
+        <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="big-link hide-in-mobile "><@u.message "front.bigLink" /> <span class="arrow"></span></a>
+        <a href="${urls.search()}" class="big-link show-only-in-mobile "><@u.message "front.bigLinkMobile" /> <span class="arrow"></span></a>
     </div>
 
     <div id="content">

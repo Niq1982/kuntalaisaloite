@@ -68,7 +68,13 @@
 
     @media @mobile {
         width: 95%;
+
         .big-link {
+
+            &.hide-in-mobile {
+                display: none;
+            }
+
             position: absolute;
             bottom: 0;
             left: 0;
@@ -92,7 +98,7 @@
             .arrow {
                 position: relative;
                 top: 0.1em;
-                left: 0.45em;
+                left: 0.2em;
                 display: inline-block;
                 width: 29px;
                 height: 29px;
@@ -103,7 +109,12 @@
     @media @tablet, @desktop, @desktop-xl{
         width: 470px;
 
+
+
         .big-link {
+            &.show-only-in-mobile {
+                display: none;
+            }
             position: absolute;
             bottom: 0;
             left: 0;
