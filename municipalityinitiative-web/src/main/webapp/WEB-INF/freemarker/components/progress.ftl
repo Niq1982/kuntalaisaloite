@@ -57,7 +57,7 @@
  * @param initiative is initiative
  * @param public is boolean for public or management/moderation view
 -->
-<#macro progress initiative public=true>
+<#macro progress initiative public=true omOrMunicipality=false>
 	<#assign isDraftDone = true />
 	<#assign isSentDone = initiative.sentTime.present />
 	<#assign isCollectDone = !isSentDone && initiative.state == InitiativeState.PUBLISHED || isSentDone />
@@ -172,8 +172,17 @@
 				"icon": "sent"
 			}
 		]>
-	
-		<#-- COLLABORATIVE or UNDEFINED -->
+
+		<#if omOrMunicipality>
+			<#assign steps = steps + [{
+			"label": municipalityDecision,
+			"done": isMunicipalityDecision,
+			"icon": "decision"
+			}]/>
+		</#if>
+
+
+	<#-- COLLABORATIVE or UNDEFINED -->
 		<#if initiative.collaborative || (!initiative.collaborative && !initiative.single)>				
 	    <#assign steps = [
 				{
@@ -202,7 +211,15 @@
 					"icon": "sent"
 				}
 			]>
-	    </#if>
+			<#if omOrMunicipality>
+				<#assign steps = steps + [{
+				"label": municipalityDecision,
+				"done": isMunicipalityDecision,
+				"icon": "decision"
+				}]/>
+			</#if>
+
+		</#if>
    	</#if>
   
   	<#assign barItems = 4 />
@@ -210,7 +227,9 @@
         <#assign barItems = 3 />
     <#elseif steps?size == 5>
         <#assign barItems = 2 />
-    </#if>
+	<#elseif steps?size == 6>
+		<#assign  barItems = 2/>
+	</#if>
 
 	<div class="initiative-progress-container">
 	    <div class="initiative-progress steps-${steps?size}">

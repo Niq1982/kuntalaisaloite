@@ -144,7 +144,7 @@
 
     <@e.initiativeTitle initiative />
 
-    <@prog.progress initiative=initiative public=false />
+    <@prog.progress initiative=initiative public=false omOrMunicipality=true />
 
 
     <div class="view-block first">
