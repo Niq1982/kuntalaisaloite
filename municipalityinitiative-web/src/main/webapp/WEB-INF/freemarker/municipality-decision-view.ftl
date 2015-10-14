@@ -25,7 +25,7 @@
             <a class="small-button " href="${urls.openDecisionForEdit(initiative.id)}"><span class="small-icon edit">Muokkaa vastausta.</span></a>
 
             <#if !editAttachments>
-                <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit">Poista liitteitä.</span></a>
+                <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.removeAttachments" /></span></a>
             </#if>
 
         </div>
@@ -48,7 +48,7 @@
                     <@u.errorsSummary path="decision.*" prefix="decision."/>
 
                     <div class="input-block-content no-top-margin full-width">
-                        <@f.textarea required="" optional=false path="decision.description" key="decision.description.label"/>
+                        <@f.textarea required="" optional=false path="decision.description" key="decision.description"/>
                     </div>
 
                     <input type="hidden" name="locale" value="${locale}"/>
@@ -60,7 +60,7 @@
                     <div class="input-block-content">
                         <button type="submit" class="small-button"><span class="small-icon save-and-send"><@u.message "decision.submit" /></span></button>
                         <#if decisionInfo.isPresent() && decisionInfo.getValue().getAttachments()?? && decisionInfo.getValue().getAttachments().count() gt 0>
-                            <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit">Ylläpidä liitteitä.</span></a>
+                            <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.removeAttachments" /></span></a>
                         </#if>
                     </div>
 
@@ -73,7 +73,7 @@
 
     <#if editAttachments>
         <div class="msg-block cf">
-            <h2>Poista liitteitä</h2>
+            <h2><@u.message "municipality.decision.removeAttachments" /></h2>
             <p>Voit poistaa liitteitä klikkaamalla raksia</p>
             <@e.attachmentsView attachments=decisionInfo.getValue().attachments manage=true municipality=true/>
         </div>
