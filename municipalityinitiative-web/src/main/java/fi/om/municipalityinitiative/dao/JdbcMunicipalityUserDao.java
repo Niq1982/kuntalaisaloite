@@ -20,6 +20,13 @@ public class JdbcMunicipalityUserDao implements MunicipalityUserDao {
     }
 
     @Override
+    public void removeMunicipalityUser(Long initiativeId) {
+        queryFactory.delete(QMunicipalityUser.municipalityUser)
+                .where(QMunicipalityUser.municipalityUser.initiativeId.eq(initiativeId))
+                .execute();
+    }
+
+    @Override
     public Long getInitiativeId(String managementHash) {
         Long initiativeId = queryFactory.from(QMunicipalityUser.municipalityUser)
                 .where(QMunicipalityUser.municipalityUser.managementHash.eq(managementHash))

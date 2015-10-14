@@ -184,6 +184,8 @@ public final class Urls {
 
     public static final String ACTION_DELETE_ATTACHMENT = "action-delete-attachment";
 
+    public static final String ACTION_RENEW_MUNICIPALITY_MANAGEMENT_HASH = "action-renew-municipality-management-hash";
+
     // Actions for the content editor
 
     public static final String ACTION_EDITOR_SAVE_DRAFT = "action-editor-save-draft";

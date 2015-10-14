@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.LocationService;
+import fi.om.municipalityinitiative.service.MunicipalityUserService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.ModerationService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
@@ -47,6 +48,9 @@ public class ModerationController extends BaseController{
 
     @Resource
     private LocationService locationService;
+
+    @Resource
+    private MunicipalityUserService municipalityUserService;
 
     public ModerationController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
@@ -120,6 +124,15 @@ public class ModerationController extends BaseController{
                                             Locale locale, HttpServletRequest request) {
 
         moderationService.renewManagementHash(userService.getRequiredOmLoginUserHolder(request), authorId);
+        return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.MANAGEMENT_HASH_RENEWED, request);
+    }
+
+    @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_RENEW_MUNICIPALITY_MANAGEMENT_HASH)
+    public String renewMunicipalityManagementHash(@PathVariable("id") Long initiativeId,
+                                                  HttpServletRequest request,
+                                                  Locale locale) {
+
+        municipalityUserService.renewManagementHash(userService.getRequiredOmLoginUserHolder(request), initiativeId);
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.MANAGEMENT_HASH_RENEWED, request);
     }
 

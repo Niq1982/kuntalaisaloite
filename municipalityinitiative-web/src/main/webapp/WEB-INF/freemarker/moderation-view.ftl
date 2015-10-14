@@ -19,6 +19,18 @@
 
 <@l.main page="page.moderation" pageTitle=initiative.name!"">
 
+    <#if initiative.isSent()>
+        <div class="msg-block">
+            <h2>Aloite on lähetetty kunnalle käsiteltäväksi</h2>
+            <p>Kunta on saanut ylläpitolinkin sähköpostitse. <br/>
+            Voit lähettää uuden linkin tästä. Huomioi, että tämä mitätöi aiemman ylläpitolinkinlinkin.</p>
+            <a href="#" class="js-renew-municipality-management-hash trigger-tooltip" title="Uudista kunnan ylläpitolinkki">
+               <span class="icon-small icon-16 resend"></span>
+            </a>
+        </div>
+    </#if>
+
+
     <#--
      * Show moderation block
     -->
@@ -133,11 +145,31 @@
             <div id="selected-author" class="details"></div>
 
             <div class="input-block-content">
-                <button type="submit"value="<@u.message "action.renewManagementHash" />" class="small-button"><span class="small-icon save-and-send"><@u.message "action.renewManagementHash" /></button>
+                <button type="submit" value="<@u.message "action.renewManagementHash" />" class="small-button"><span class="small-icon save-and-send"><@u.message "action.renewManagementHash" /></button>
                 <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
             </div>
         </form>
     </@compress>
+    </#assign>
+
+    <#--
+     * Renew author municipality hash
+    -->
+    <#assign renewMunicipalityManagementHash>
+        <@compress single_line=true>
+        <form action="${springMacroRequestContext.requestUri}" method="POST">
+            <@f.securityFilters/>
+
+            <h3><@u.message "moderator.renewMunicipalityManagementHash.confirm" /></h3>
+
+            <div id="initiative-details" class="details"></div>
+
+            <div class="input-block-content">
+                <button type="submit" name="${UrlConstants.ACTION_RENEW_MUNICIPALITY_MANAGEMENT_HASH}" value="<@u.message "action.renewMunicipalityManagementHash" />" class="small-button"><span class="small-icon save-and-send"><@u.message "action.renewMunicipalityManagementHash" /></button>
+                <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+            </div>
+        </form>
+        </@compress>
     </#assign>
 
 
@@ -211,6 +243,14 @@
             return [{
                 type:      'warning',
                 content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[moderationURL] /></div>'
+            }]
+        };
+
+        <#-- Modal: Form modified notification. Uses dirtyforms jQuery-plugin. -->
+        modalData.renewMunicipalityManagementHash = function() {
+            return [{
+                title:      '<@u.message "moderator.renewMunicipalityManagementHash.confirm.title" />',
+                content:    '<#noescape>${renewMunicipalityManagementHash?replace("'","&#39;")}</#noescape>'
             }]
         };
     </script>

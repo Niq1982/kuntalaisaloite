@@ -16,11 +16,14 @@ create table decision_attachment (
 
 create table municipality_user (
   id bigserial,
-  initiative_id bigserial,
-  management_hash varchar(40),
+  initiative_id bigserial constraint municipality_user_initiative_id_nn not null ,
+  management_hash varchar(40) constraint municipality_user_management_hash_nn not null,
 
   constraint municipality_user_pk primary key (id),
   constraint municipality_user_initiative_id foreign key (initiative_id) references municipality_initiative(id),
-  constraint municipality_user_management_hash_u unique(management_hash)
+  constraint municipality_user_management_hash_u unique(management_hash),
+  constraint municipality_user_initiative_id_u unique(initiative_id)
 
 );
+
+create index municipality_user_hash_index on municipality_user(management_hash);

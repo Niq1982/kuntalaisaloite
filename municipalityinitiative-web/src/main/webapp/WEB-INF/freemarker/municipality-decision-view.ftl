@@ -84,27 +84,6 @@
     </#if>
 
 
-    <#--
-     * Renew author management hash
-    -->
-    <#assign renewManagementHash>
-    <@compress single_line=true>
-        <form action="${springMacroRequestContext.requestUri}" method="POST">
-            <@f.securityFilters/>
-            <input type="hidden" name="authorId" id="authorId" value="" />
-
-            <h3><@u.message "moderator.renewManagementHash.confirm.author" /></h3>
-
-            <div id="selected-author" class="details"></div>
-
-            <div class="input-block-content">
-                <button type="submit"value="<@u.message "action.renewManagementHash" />" class="small-button"><span class="small-icon save-and-send"><@u.message "action.renewManagementHash" /></button>
-                <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
-            </div>
-        </form>
-    </@compress>
-    </#assign>
-
 
 
     <@e.initiativeTitle initiative />
@@ -120,7 +99,7 @@
         <div class="initiative-content-row last">
             <h2><@u.message key="initiative.people.title" args=[authors?size] /></h2>
 
-            <@e.initiativeContactInfo authorList=authors showRenewManagementHash=!initiative.verifiable && !initiative.sent/>
+            <@e.initiativeContactInfo authorList=authors showRenewManagementHash=false/>
         </div>
     </div>
 
@@ -129,6 +108,9 @@
             <@e.deleteAattachmentForm />
         </@compress>
     </#assign>
+
+
+
     <#--
      * Moderation VIEW modals
      *
@@ -148,13 +130,6 @@
     <script type="text/javascript">
         var modalData = {};
 
-        <#-- Modal: Form modified notification. Uses dirtyforms jQuery-plugin. -->
-        modalData.renewManagementHash = function() {
-            return [{
-                title:      '<@u.message "moderator.renewManagementHash.confirm.title" />',
-                content:    '<#noescape>${renewManagementHash?replace("'","&#39;")}</#noescape>'
-            }]
-        };
 
         <#-- Modal: Request messages. Check for components/utils.ftl -->
         <#if requestMessageModalHTML??>
@@ -191,6 +166,7 @@
                 content:    '<#noescape>${deleteAattachment?replace("'","&#39;")}</#noescape>'
             }]
         };
+
 
     </script>
 

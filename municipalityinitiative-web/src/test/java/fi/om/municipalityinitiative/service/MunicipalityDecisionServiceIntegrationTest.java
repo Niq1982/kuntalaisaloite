@@ -1,12 +1,14 @@
 package fi.om.municipalityinitiative.service;
 
 
+import fi.om.municipalityinitiative.dao.MunicipalityUserDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
 import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
+import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
@@ -14,6 +16,7 @@ import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import org.aspectj.util.FileUtil;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -22,8 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrationTestBase  {
@@ -34,7 +36,13 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     protected MunicipalityDecisionService municipalityDecisionService;
 
     @Resource
+    protected MunicipalityUserService municipalityUserService;
+
+    @Resource
     private NormalInitiativeService normalInitiativeService;
+
+    @Resource
+    private MunicipalityUserDao municipalityUserDao;
 
     protected Long testMunicipalityId;
 
@@ -218,9 +226,27 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             assertThat(initiative.getDecisionText().getValue(), is(DECISION_DESCRIPTION));
 
-
         }
     }
+
+    @Test
+    @Transactional
+    public void renew_municipality_management_hash() {
+        Long initiativeId = createVerifiedInitiativeWithAuthor();
+
+        municipalityUserService.createMunicipalityUser(initiativeId);
+
+        String oldHash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(initiativeId);
+
+        OmLoginUserHolder omLoginUserHolder = new OmLoginUserHolder(User.omUser("om user"));
+
+        municipalityUserService.renewManagementHash(omLoginUserHolder, initiativeId);
+
+        String newHash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(initiativeId);
+
+        assertThat(oldHash, not(newHash));
+    }
+
 
     protected MunicipalityDecisionDto createDefaultMunicipalityDecisionWithAttachment(Long initiativeId) throws IOException, InvalidAttachmentException, FileUploadException {
         MunicipalityDecisionDto decision = new MunicipalityDecisionDto();
