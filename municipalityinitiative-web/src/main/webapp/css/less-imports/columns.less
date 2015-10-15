@@ -79,7 +79,12 @@
     &.single  { margin-bottom:1em; }
 }
 .input-block {
-    width: 866px; // Predefined width removes jumpyness bug in slideToggle. could be calculated with JS for dynamic widths.
+    @media @desktop-xl {
+        width: 866px; // Predefined width removes jumpyness bug in slideToggle. could be calculated with JS for dynamic widths.
+    }
+    @media @mobile, @tablet, @desktop {
+        width: auto;
+    }
 
     &.no-sidebar {
         background:#fff;

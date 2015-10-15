@@ -40,7 +40,13 @@
 }
 
 .input-block-content {
-    width: 585px;
+    @media @desktop-xl {
+        width: 585px;
+    }
+    @media @mobile, @tablet, @desktop{
+        width: 50%;
+    }
+
     position:relative;
     margin-top:2em;
 

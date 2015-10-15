@@ -1931,8 +1931,12 @@ $(window).on('resize', function () {
   }
 
   if ($(window).width() > MOBILE) {
-	  $(".municipality-filter").addClass("chzn-select");
-	  $(".municipality-filter").chosen();
+	  var municipalityFilter = $(".municipality-filter");
+	  if (municipalityFilter) {
+		  municipalityFilter.addClass("chzn-select");
+		  municipalityFilter.chosen();
+	  }
+
   }
 
 

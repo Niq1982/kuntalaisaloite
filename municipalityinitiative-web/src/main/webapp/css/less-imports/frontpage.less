@@ -313,6 +313,54 @@
         }
     }
 
+    @media @desktop-xl {
+        margin:0 -60px 0px -66px;
+        padding:0 0 0 66px;
+
+        .faux-columns {
+            width:960px;
+            margin-bottom: 50px;
+            background: url("@{imagesPath}/faux-columns.png?version=${timestamp}") 0 0 repeat-y;
+            background-size: 100%;
+
+            .col-1 {
+                width:470px;
+                float:left;
+
+            }
+            .col-2 {
+                width:470px;
+                float:right;
+            }
+        }
+        .front-block {
+            padding:0 50px 45px 100px;
+            margin-top: 37px;
+
+            background:url("@{imagesPath}/block-icons.png?version=${timestamp}") 30px 0 no-repeat;
+
+            &.block-2 {
+                padding-bottom:50px;
+                background-position:-970px 0;
+                border-bottom:20px solid @bodyBackground;
+            }
+            &.block-3 {
+                background-position:-1970px 0;
+            }
+
+            .bottom {
+                padding-top:1.8em;
+            }
+        }
+
+        h1 {
+            font-size: 1.3em;
+            margin:0 0 1.5em 0;
+            line-height: 1.25em;
+            color:#7a7a20;
+        }
+    
+    }
 
     .initiative-list {
         li {

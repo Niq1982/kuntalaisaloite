@@ -251,11 +251,11 @@ h3 {
         @media @tablet {
             width: 75%;
         }
-        @media @desktop, @desktop-xl {
+        @media @desktop {
             width: 60%;
         }
         a {
-            @media @tablet, @desktop, @desktop-xl {
+            @media @tablet, @desktop{
                 width: 33.3333%;
             }
         }
@@ -265,11 +265,11 @@ h3 {
         @media @tablet {
             width: 100%;
         }
-        @media @desktop, @desktop-xl {
+        @media @desktop {
             width: 80%;
         }
         a {
-            @media @tablet, @desktop, @desktop-xl {
+            @media @tablet, @desktop {
                 width: 25%;
             }
         }
@@ -281,6 +281,9 @@ h3 {
         }
         display:inline-block;
         padding:5px 0px;
+        @media @desktop-xl {
+            padding:5px 20px;
+        }
         //line-height:35px;
         color:#444;
         text-align:center;
