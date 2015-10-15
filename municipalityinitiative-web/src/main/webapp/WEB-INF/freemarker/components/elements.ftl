@@ -376,7 +376,7 @@
 
 
 <#macro decisionBlock decisionInfo manage=false>
-    <div class="view-block cf">
+    <div class="view-block first cf">
         <div class="initiative-content-row last">
             <h2><@u.message "municipality.decision" /></h2>
             <p>${decisionInfo.getDecisionText()}</p>
