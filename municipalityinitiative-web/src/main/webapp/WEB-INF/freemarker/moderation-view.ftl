@@ -21,10 +21,9 @@
 
     <#if initiative.isSent()>
         <div class="msg-block">
-            <h2>Aloite on lähetetty kunnalle käsiteltäväksi</h2>
-            <p>Kunta on saanut ylläpitolinkin sähköpostitse. <br/>
-            Voit lähettää uuden linkin tästä. Huomioi, että tämä mitätöi aiemman ylläpitolinkinlinkin.</p>
-            <a href="#" class="js-renew-municipality-management-hash trigger-tooltip" title="Uudista kunnan ylläpitolinkki">
+            <h2><@u.message "moderator.sentToMunicipality" /></h2>
+            <p><@u.message "moderator.renewMunicipalityHash.info"/></p>
+            <a href="#" class="js-renew-municipality-management-hash trigger-tooltip" title='<@u.message "moderator.renewMunicipalityHash" />'>
                <span class="icon-small icon-16 resend"></span>
             </a>
         </div>
