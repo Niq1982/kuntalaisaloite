@@ -54,7 +54,15 @@
 
 .input-block, .view-block {
     position: relative;
-    background: #fff url("@{imagesPath}/input-block-extra-bg.png?version=${timestamp}") repeat-y top right;
+    
+    @media @mobile {
+        background-color: white;
+    }
+    
+    @media @tablet, @desktop, @desktop-xl {
+        background: #fff url("@{imagesPath}/input-block-extra-bg.png?version=${timestamp}") repeat-y top right;
+    }
+
     border-left: 4px solid @mainColorLight;
 
     padding:0 3% 3% 5%;
