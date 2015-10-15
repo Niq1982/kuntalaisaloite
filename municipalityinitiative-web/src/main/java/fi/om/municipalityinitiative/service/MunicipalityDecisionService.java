@@ -53,11 +53,15 @@ public class MunicipalityDecisionService {
 
     @Transactional
     public void removeAttachmentFromDecision(Long attachmentId, MunicipalityUserHolder user){
+        DecisionAttachmentFile file = decisionAttachmentDao.getAttachment(attachmentId);
+        user.assertManagementRightsForInitiative(file.getInitiativeId());
         decisionAttachmentDao.removeAttachment(attachmentId);
     }
 
     @Transactional(readOnly = false, rollbackFor = Throwable.class)
     public void setDecision(MunicipalityDecisionDto decision, Long initiativeId, MunicipalityUserHolder user) throws InvalidAttachmentException, FileUploadException {
+
+        user.assertManagementRightsForInitiative(initiativeId);
 
         initiativeDao.updateInitiativeDecision(initiativeId, decision.getDescription());
 

@@ -178,7 +178,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test
-    public void cant_remove_attachment_from_decision_if_no_access() {
+    public void cant_remove_attachment_from_decision_if_not_correct_municipality_user() {
 
         Long initiativeId = createVerifiedInitiativeWithAuthor();
 
