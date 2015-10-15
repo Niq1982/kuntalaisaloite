@@ -461,6 +461,7 @@
                                 <jsSourceFile>jquery.participantgraph.js</jsSourceFile>
                                 <jsSourceFile>jquery.mainnav.js</jsSourceFile>
                                 <jsSourceFile>jquery.searchfilter.js</jsSourceFile>
+                                <jsSourceFile>jquery.searchsort.js</jsSourceFile>
 
                                 <jsSourceFile>kuntalaisaloite.js</jsSourceFile>
                             </jsSourceFiles>
