@@ -22,12 +22,6 @@
             <h2>Kunnan vastaus on julkaistu <@u.localDate decisionInfo.getValue().getDate() /></h2>
             <p>Voit muokata kunnan vastausta. Kaikki muokkaukset ovat julkisia.</p>
 
-            <a class="small-button " href="${urls.openDecisionForEdit(initiative.id)}"><span class="small-icon edit">Muokkaa vastausta.</span></a>
-
-            <#if !editAttachments>
-                <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.removeAttachments" /></span></a>
-            </#if>
-
         </div>
     </#if>
 
@@ -62,9 +56,6 @@
 
                     <div class="input-block-content">
                         <button type="submit" class="small-button"><span class="small-icon save-and-send"><@u.message "decision.submit" /></span></button>
-                        <#if decisionInfo.isPresent() && decisionInfo.getValue().getAttachments()?? && decisionInfo.getValue().getAttachments().count() gt 0>
-                            <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.removeAttachments" /></span></a>
-                        </#if>
                     </div>
 
                     <br/><br/>
@@ -83,7 +74,7 @@
     </#if>
 
     <#if decisionInfo.isPresent()>
-        <@e.decisionBlock decisionInfo=decisionInfo.getValue() manage=false/>
+        <@e.decisionBlock decisionInfo=decisionInfo.getValue() manage=true/>
     </#if>
 
 

@@ -380,7 +380,13 @@
         <div class="initiative-content-row last">
             <h2><@u.message "municipality.decision" /></h2>
             <p>${decisionInfo.getDecisionText()}</p>
-            <@attachmentsView attachments=decisionInfo.attachments manage=manage municipality=true/>
+            <#if manage>
+                <a class="small-button edit-decision" href="${urls.openDecisionForEdit(initiative.id)}"><span class="small-icon edit">Muokkaa vastausta.</span></a>
+            </#if>
+            <@attachmentsView attachments=decisionInfo.attachments municipality=true/>
+            <#if manage && (decisionInfo.attachments.count() gt 0)>
+                <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.removeAttachments" /></span></a>
+            </#if>
         </div>
     </div>
 </#macro>
