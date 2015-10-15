@@ -36,9 +36,12 @@
     -->
     <#if showDecisionForm>
         <div class="msg-block cf">
-            <h2><@u.message "municipality.decision.giveDecision" /></h2>
+            <#if decisionInfo.isPresent()>
+                <h2><@u.message "municipality.decision.editDecision" /></h2>
+            <#else>
+                <h2><@u.message "municipality.decision.giveDecision" /></h2>
+            </#if>
             <p class="full-width"><@u.message key="municipality.decision.description" /></p>
-
             <div>
                 <form action="${urls.getMunicipalityDecisionView(initiative.id)}" method="POST" id="form-accept" class="sodirty" enctype="multipart/form-data">
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
