@@ -43,7 +43,9 @@ public enum RequestMessage {
     INVALID_HOME_MUNICIPALITY(WARNING),
 
     ATTACHMENT_FAILURE(WARNING),
-    ATTACHMENT_INVALID(WARNING);
+    ATTACHMENT_INVALID(WARNING),
+
+    DECISION_UPDATED(SUCCESS);
 
     private final boolean modal;
     

@@ -64,6 +64,7 @@ public class MunicipalityDecisionController extends BaseController{
             decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
 
+        boolean ediDecision = decisionInfo.isNotPresent();
         boolean editAttachments = false;
         return ViewGenerator.municipalityDecisionView(
                 normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
@@ -72,7 +73,7 @@ public class MunicipalityDecisionController extends BaseController{
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
                 new MunicipalityDecisionDto(),
                 decisionInfo,
-                decisionInfo.isNotPresent(),
+                ediDecision,
                 editAttachments
         ).view(model, Urls.get(locale).alt().municipalityModeration());
 
@@ -193,17 +194,8 @@ public class MunicipalityDecisionController extends BaseController{
             e.printStackTrace();
         }
 
-        showDecisionForm = decisionInfo.isNotPresent();
-        return ViewGenerator.municipalityDecisionView(
-                normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
-                normalInitiativeService.getManagementSettings(initiativeId),
-                authorService.findAuthors(initiativeId, loginUserHolder),
-                attachmentService.findAllAttachments(initiativeId, loginUserHolder),
-                new MunicipalityDecisionDto(),
-                decisionInfo,
-                showDecisionForm,
-                editAttachments
-                ).view(model, Urls.get(locale).alt().municipalityModeration());
+        return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.DECISION_UPDATED, request);
+
     }
 
     // http://stackoverflow.com/questions/22391064/why-is-spring-mvc-inserting-an-empty-object-into-what-should-be-an-empty-list
