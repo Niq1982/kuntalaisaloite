@@ -45,7 +45,7 @@
                     <@u.errorsSummary path="decision.*" prefix="decision."/>
 
                     <div class="input-block-content no-top-margin full-width">
-                        <@f.textarea required="" optional=false path="decision.description" key="decision.description"/>
+                        <@f.textarea  required="" optional=false path="decision.description" key="decision.description"/>
                     </div>
 
                     <input type="hidden" name="locale" value="${locale}"/>

@@ -1,6 +1,9 @@
 package fi.om.municipalityinitiative.service;
 
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.DecisionAttachmentDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
@@ -23,6 +26,7 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class MunicipalityDecisionService {
@@ -110,8 +114,10 @@ public class MunicipalityDecisionService {
     }
 
     public boolean validationSuccessful(MunicipalityDecisionDto decision, BindingResult bindingResult, Model model) {
+        decision.setFiles(clearEmptyFiles(decision.getFiles()));
 
         for (MunicipalityDecisionDto.FileWithName file : decision.getFiles()) {
+
             if (file.getName() == null || file.getName().isEmpty()) {
                 addAttachmentValidationError(bindingResult, "files", "NotEmpty");
             }
@@ -128,6 +134,16 @@ public class MunicipalityDecisionService {
         validationService.validationSuccessful(decision, bindingResult, model);
 
         return bindingResult.getErrorCount() == 0;
+    }
+
+    private List<MunicipalityDecisionDto.FileWithName> clearEmptyFiles(List<MunicipalityDecisionDto.FileWithName> files) {
+        return Lists.newArrayList(Iterables.filter(files, new Predicate<MunicipalityDecisionDto.FileWithName>() {
+            @Override
+            public boolean apply(MunicipalityDecisionDto.FileWithName fileWithName) {
+                return fileWithName.getFile() != null;
+            }
+        }));
+
     }
 
     public void addAttachmentValidationError(BindingResult bindingResult, String field, String error) {
