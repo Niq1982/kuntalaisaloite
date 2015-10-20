@@ -2013,7 +2013,7 @@ var getMapContainer = function() {
 		enableSaveAndClose,
 		modified,
 		isModified,
-		getTempLocationByAddress,
+		getTempLocationByCoordinates,
 		getTempLocations,
 		centerMapToPosition,
 		removeMarkerByPosition;
@@ -2068,10 +2068,10 @@ var getMapContainer = function() {
 				mapOptions);
 
 			google.maps.event.addListener(map, 'click', function (e) {
-				var fallBackPosition = e.latLng.lat().toFixed(3) + ", " + e.latLng.lng().toFixed(3);
+				var fallBackAddress = e.latLng.lat().toFixed(3) + ", " + e.latLng.lng().toFixed(3);
 				tempLocations.push(e.latLng);
 
-				createSelectedLocationListElement(tempLocations[tempLocations.length - 1], fallBackPosition);
+				createSelectedLocationListElement(tempLocations[tempLocations.length - 1], fallBackAddress);
 				placeMarker(tempLocations[tempLocations.length - 1], map);
 				enableSaveAndClose(true);
 			});
@@ -2196,17 +2196,15 @@ var getMapContainer = function() {
 		return address;
 
 	};
-	createSelectedLocationListElement = function(location, fallbackLocation){
+	createSelectedLocationListElement = function(location, fallbackAddress){
 
 		getAddressFromLocation(location, function(results, status) {
 			if (results && results.length > 0) {
 				var address = parseAddressFromAddressComponents(results[0].address_components);
-				selectedLocationsVisualization.addLocation(address);
-				location.address = address;
+				selectedLocationsVisualization.addLocation(address, location);
 
 			} else {
-				selectedLocationsVisualization.addLocation(fallbackLocation);
-				location.address = fallbackLocation;
+				selectedLocationsVisualization.addLocation(fallbackAddress, location);
 
 			}
 		});
@@ -2287,9 +2285,9 @@ var getMapContainer = function() {
 		if (indexIsInSearchResultListRange(index)) {
 			var selectedListItem = searchresults[index];
 			var address = parseAddressFromAddressComponents(selectedListItem.address_components);
-			selectedLocationsVisualization.addLocation(address);
 			var location = selectedListItem.geometry.location;
-			location.address = address;
+
+			selectedLocationsVisualization.addLocation(address, location);
 			tempLocations.push(location);
 			placeMarker(location, map);
 			enableSaveAndClose(true);
@@ -2319,7 +2317,7 @@ var getMapContainer = function() {
 		var index = tempLocations.indexOf(location);
 		if (index !== -1) {
 			tempLocations.splice(index, 1);
-			selectedLocationsVisualization.removeLocation(location.address);
+			selectedLocationsVisualization.removeLocation(location);
 			removeMarkerByPosition(location);
 
 		}
@@ -2330,13 +2328,13 @@ var getMapContainer = function() {
 		return modified;
 	};
 
-	getTempLocationByAddress = function(address){
-		function hasAddress(address) {
-			return function(value) {return value.address === address};
+	getTempLocationByCoordinates = function(location){
+		function matchesLocation(location) {
+			return function(value) {return (value.lat() === location.lat()) && (value.lng() === location.lng());};
 		}
-		var locationsByAddress = tempLocations.filter(hasAddress(address));
-		if (locationsByAddress.length > 0) {
-			return locationsByAddress[0];
+		var locations = tempLocations.filter(matchesLocation(location));
+		if (locations.length > 0) {
+			return locations[0];
 		} else {
 			return null;
 		}
@@ -2359,7 +2357,7 @@ var getMapContainer = function() {
 		emptyResultList: emptyResultList,
 		selectResultFromList: selectResultFromList,
 		isModified: isModified,
-		getTempLocationByAddress: getTempLocationByAddress,
+		getTempLocationByCoordinates: getTempLocationByCoordinates,
 		getTempLocations: getTempLocations,
 		centerMapToPosition: centerMapToPosition,
 		removeLocation: removeLocation
@@ -2417,14 +2415,16 @@ var selectedLocationsVisualization = (function(){
 		init : function () {
 			locations = [];
 		},
-		addLocation : function(address) {
-			locations.push (address);
+		addLocation : function(address, coordinates) {
+
+			locations.push(coordinates);
 			var $li = $("<li class='map-marker'>"+ address +"<span class='icon-small icon-16 cancel'></span> </li>");
 			$li.data("address", address);
+			$li.data("coordinates", coordinates);
 			$("#selectedLocations ul").append($li);
 		},
-		removeLocation: function(address) {
-			var index = locations.indexOf(address);
+		removeLocation: function(coordinates) {
+			var index = locations.indexOf(coordinates);
 			if (index !== -1) {
 				locations.splice(index, 1);
 				//JQuery nth is 1 indexed
@@ -2557,9 +2557,9 @@ var renderMap;
 	});
 
 	$("#selectedLocations ul li ").live("click", function(e){
-		var address = $(this).data("address");
-		if (address) {
-			var location = mapContainer.getTempLocationByAddress(address);
+		var coordinates = $(this).data("coordinates");
+		if (coordinates) {
+			var location = mapContainer.getTempLocationByCoordinates(coordinates);
 			if (location) {
 				mapContainer.centerMapToPosition(location);
 			}
@@ -2568,9 +2568,9 @@ var renderMap;
 	});
 
 	$("#selectedLocations ul li.map-marker .cancel").live("click", function(e){
-		var address = $(this).parent().data("address");
-		if (address) {
-			var location =  mapContainer.getTempLocationByAddress(address);
+		var coordinates = $(this).parent().data("coordinates");
+		if (coordinates) {
+			var location =  mapContainer.getTempLocationByCoordinates(coordinates);
 			if (location) {
 				mapContainer.removeLocation(location);
 			}
