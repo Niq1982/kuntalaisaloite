@@ -53,7 +53,7 @@ public class MunicipalityDecisionController extends BaseController{
 
     @RequestMapping(value = {MUNICIPALITY_DECISION_FI, MUNICIPALITY_DECISION_SV}, method = GET)
     public String municipalityModerationView(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
-        //TODO write tests for getRequiredMunicipalityUserHolder
+
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
 
         InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
@@ -139,8 +139,6 @@ public class MunicipalityDecisionController extends BaseController{
                                    HttpServletRequest request,
                                    Locale locale) {
 
-        // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
-        SecurityFilter.verifyAndGetCurrentCSRFToken(request);
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
         municipalityDecisionService.removeAttachmentFromDecision(attachmentId, loginUserHolder);
         return redirectWithMessage(Urls.get(locale).openDecisionAttachmentsForEdit(initiativeId), RequestMessage.ATTACHMENT_DELETED, request);
