@@ -2106,7 +2106,7 @@ var getMapContainer = function() {
 	removeMarkerByPosition = function(location) {
 		var indexToRemove = -1;
 		for (var i = 0; i < markers.length; i++) {
-			if (markers[i].position === location) {
+			if (compareLocations(markers[i].position, location)) {
 				indexToRemove = i;
 			}
 		}
@@ -2201,11 +2201,12 @@ var getMapContainer = function() {
 		getAddressFromLocation(location, function(results, status) {
 			if (results && results.length > 0) {
 				var address = parseAddressFromAddressComponents(results[0].address_components);
+				location.address = address;
 				selectedLocationsVisualization.addLocation(address, location);
 
 			} else {
+				location.address = fallbackAddress;
 				selectedLocationsVisualization.addLocation(fallbackAddress, location);
-
 			}
 		});
 	};
@@ -2286,8 +2287,9 @@ var getMapContainer = function() {
 			var selectedListItem = searchresults[index];
 			var address = parseAddressFromAddressComponents(selectedListItem.address_components);
 			var location = selectedListItem.geometry.location;
-
+			location.address = address;
 			selectedLocationsVisualization.addLocation(address, location);
+
 			tempLocations.push(location);
 			placeMarker(location, map);
 			enableSaveAndClose(true);
@@ -2314,8 +2316,9 @@ var getMapContainer = function() {
 
 
 	removeLocation = function(location) {
-		var index = tempLocations.indexOf(location);
-		if (index !== -1) {
+		var index = findLocation(tempLocations, location);
+
+		if (index !== tempLocations.length) {
 			tempLocations.splice(index, 1);
 			selectedLocationsVisualization.removeLocation(location);
 			removeMarkerByPosition(location);
@@ -2330,7 +2333,7 @@ var getMapContainer = function() {
 
 	getTempLocationByCoordinates = function(location){
 		function matchesLocation(location) {
-			return function(value) {return (value.lat() === location.lat()) && (value.lng() === location.lng());};
+			return function(value) {return compareLocations(value, location);};
 		}
 		var locations = tempLocations.filter(matchesLocation(location));
 		if (locations.length > 0) {
@@ -2424,18 +2427,34 @@ var selectedLocationsVisualization = (function(){
 			$("#selectedLocations ul").append($li);
 		},
 		removeLocation: function(coordinates) {
-			var index = locations.indexOf(coordinates);
-			if (index !== -1) {
+			var index = findLocation(locations, coordinates);
+			if (index < locations.length) {
 				locations.splice(index, 1);
 				//JQuery nth is 1 indexed
 				$("#selectedLocations").find("ul li:nth-child("+ (index + 1) +")").remove();
 			}
 		}
+
 	}
 
 })();
 
 var renderMap;
+
+function compareLocations(location1, location2) {
+	if (!location1 || !location2) {
+		return false;
+	}
+	return (location1.lat() === location2.lat()) && (location1.lng() === location2.lng());
+}
+function findLocation(locations, location) {
+	for (var i = 0; i < locations.length; i++) {
+		if (compareLocations(locations[i], location)) {
+			return i;
+		}
+	}
+	return i;
+}
 
 (function() {
 	var ARROWUP = 38,
@@ -2471,9 +2490,8 @@ var renderMap;
 	});
 
 	$("#show-selected-location").click(function() {
-		if (mapContainer === undefined) {
-			mapContainer = getMapContainer();
-		}
+
+		mapContainer = getMapContainer();
 
 		renderMap = function() {mapContainer.initWithCoordinates(locationFormFields.getSelectedLocations());};
 
