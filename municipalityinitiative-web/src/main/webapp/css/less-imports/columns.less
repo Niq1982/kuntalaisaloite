@@ -5,7 +5,7 @@
 
 .container {
     @media @mobile, @tablet  {
-        width: 90%;
+        width: 100%;
     }
     @media  @desktop{
         width: 80%;
@@ -20,6 +20,9 @@
 
 #content {
     padding-bottom:250px;
+    @media @mobile {
+        position: relative;;
+    }
 }
 
 .two-column-content .content-column {

@@ -470,6 +470,17 @@
 </@compress>
 </#macro>
 
+<#macro searchLinkMobile parameter cssClass="" count=-1 >
+    <@compress single_line=true>
+    <div class="mobile-search-link">
+        <a class="mobile-checkbox"></a>
+        <a href="#"><@messageHTML "searchParameters."+parameter />
+        <#if (count > -1)><span class="count">(${count})</span></#if>
+        </a>
+    </div>
+    </@compress>
+</#macro>
+
 <#--
  * faqItem
  *  

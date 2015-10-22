@@ -243,10 +243,6 @@ $(document).ready(function () {
 	mainNav = $('#main-navigation');
 	mainNav.mainNav({});
 
-	$(".search-parameters").each(function(index, element) {
-		$(element).searchFilter();
-	});
-	$(".search-sort").searchSort();
 
 
 	/**
@@ -1910,13 +1906,12 @@ if (window.hasIGraphFrame) {
   });
 
 }());
+$(".open-filters").click(function() {
+	$(this).hide();
+	$(".search-options").addClass("open");
+});
 
 $(window).on('resize', function () {
-	// Break points (in pixels)
-	var MOBILE = 529;
-	var TABLET = 949;
-	var DESKTOP = 1128;
-	var DESKTOPXL = 1129;
 
   if (fireParticipantGraph !== undefined) {
     fireParticipantGraph();
@@ -1928,15 +1923,6 @@ $(window).on('resize', function () {
 
   if (mainNav !== undefined) {
 	  mainNav.mainNav('resize');
-  }
-
-  if ($(window).width() > MOBILE) {
-	  var municipalityFilter = $(".municipality-filter");
-	  if (municipalityFilter) {
-		  municipalityFilter.addClass("chzn-select");
-		  municipalityFilter.chosen();
-	  }
-
   }
 
 

@@ -27,108 +27,128 @@
         </#if>
     </h1>
 
+<div class="open-filters">Rajaa hakua</div>
 <div class="view-block search-options cf noprint">
-
-    <#--
-     * Municipality filter
-    -->
-    <span class="search-parameters-title filter"><label for="municipality"><@u.message "searchOptions.municipality" /></label></span>
-    <div class="search-parameters-container cf">
-        <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
-            <div>
-                <@f.municipalitySelect path="currentSearch.municipalities" options=municipalities required="" cssClass="municipality-filter" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true multiple=true customDropDown=false/>
-            </div>
-
-            <#-- Submit button for NOSCRIPT users -->
-            <noscript>
-            <div class="column col">
-                <button type="submit" class="small-button"><span class="small-icon search"><@u.message "btn.search" /></span></button>
-            </div>
-            </noscript>
-        </form>
-    </div>
-    
-    <#--
-     * Initiative type 
-    -->
-    <#if enableVerifiedInitiatives>
-    <span class="search-parameters-title filter"><label for="municipality"><@u.message "searchParameters.type" /><a href="#" class="search-filter-toggle" ></a></label></span>
-    <div class="search-parameters-container cf buttons">
-        <div class="search-parameters four-items">
-            <@u.searchLink parameter="withTypeAll" cssClass=(currentSearch.type == "all")?string('active','') tooltip=false />
-            <@u.searchLink parameter="withTypeNormal" cssClass=(currentSearch.type == "normal")?string('active','') tooltip=false />
-            <@u.searchLink parameter="withTypeCouncil" cssClass=(currentSearch.type == "council")?string('active','')  tooltip=false />
-            <@u.searchLink parameter="withTypeCitizen" cssClass=(currentSearch.type == "citizen")?string('active','')  tooltip=false />
-
-        </div>
-    </div>
-    </#if>
-    <#--
-     * Search filter and sort states
-     * currentSearch.show:      running, sentToMunicipality, closed, all
-                                draft, review, accepted, fix (OM view)
-     * currentSearch.orderBy:   id, mostTimeLeft, leastTimeLeft, mostSupports, leastSupports
-     * currentSearch.limit:     20, 100, 500
-     * currentSearch.offset
-    -->
-    
-    <#--
-     * Search filters for OM and public view
-    -->
-    <span class="search-parameters-title filter"><@u.message "searchOptions.filter" /><a href="#" class="search-filter-toggle" ></a></span>
-        <div class="search-parameters-container buttons">
-
-            <#if user.isOmUser()>
-                <div class="search-parameters four-items">
-                    <@u.searchLink parameter="withStateDraft" cssClass=(currentSearch.show == "draft")?string('active','') count=initiativeCounts.draft/>
-                    <@u.searchLink parameter="withStateReview" cssClass=(currentSearch.show == "review")?string('active','') count=initiativeCounts.review />
-                    <@u.searchLink parameter="withStateAccepted" cssClass=(currentSearch.show == "accepted")?string('active','') count=initiativeCounts.accepted />
-                    <@u.searchLink parameter="withStateFix" cssClass=(currentSearch.show == "fix")?string('active','') count=initiativeCounts.fix />
+    <div class="search-filters-title">Rajaa hakua</div>
+    <div class="search-parameters-wrapper">
+        <#--
+         * Municipality filter
+        -->
+        <span class="search-parameters-title filter"><label for="municipality"><@u.message "searchOptions.municipality" /></label></span>
+        <div class="search-parameters-container cf">
+            <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
+                <div>
+                    <@f.municipalitySelect path="currentSearch.municipalities" options=municipalities required="" cssClass="municipality-filter" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true multiple=true />
                 </div>
 
-            </#if>
-            <div class="search-parameters three-items">
-                <@u.searchLink parameter="withStateAll" cssClass=(currentSearch.show == "all")?string('active','') count=initiativeCounts.all/>
-                <@u.searchLink parameter="withStateCollecting" cssClass=(currentSearch.show == "collecting")?string('active','') count=initiativeCounts.collecting />
-                <@u.searchLink parameter="withStateSent" cssClass=(currentSearch.show == "sent")?string('active','') count=initiativeCounts.sent/>
+                <#-- Submit button for NOSCRIPT users -->
+                <noscript>
+                <div class="column col">
+                    <button type="submit" class="small-button"><span class="small-icon search"><@u.message "btn.search" /></span></button>
+                </div>
+                </noscript>
+            </form>
+        </div>
+
+        <#--
+         * Initiative type
+        -->
+        <#if enableVerifiedInitiatives>
+        <span class="search-parameters-title filter"><label for="municipality"><@u.message "searchParameters.type" /></label></span>
+        <div class="search-parameters-container cf buttons">
+            <div class="search-parameters four-items">
+
+                <@u.searchLink parameter="withTypeAll" cssClass=(currentSearch.type == "all")?string('active','') tooltip=false />
+                <@u.searchLink parameter="withTypeNormal" cssClass=(currentSearch.type == "normal")?string('active','') tooltip=false />
+                <@u.searchLink parameter="withTypeCouncil" cssClass=(currentSearch.type == "council")?string('active','')  tooltip=false />
+                <@u.searchLink parameter="withTypeCitizen" cssClass=(currentSearch.type == "citizen")?string('active','')  tooltip=false />
+
+                <#-- Mobile links, hidden in browser view -->
+                <@u.searchLinkMobile parameter="withTypeAll" />
+                <@u.searchLinkMobile parameter="withTypeNormal" />
+                <@u.searchLinkMobile parameter="withTypeCouncil" />
+                <@u.searchLinkMobile parameter="withTypeCitizen" />
             </div>
+        </div>
+        </#if>
+        <#--
+         * Search filter and sort states
+         * currentSearch.show:      running, sentToMunicipality, closed, all
+                                    draft, review, accepted, fix (OM view)
+         * currentSearch.orderBy:   id, mostTimeLeft, leastTimeLeft, mostSupports, leastSupports
+         * currentSearch.limit:     20, 100, 500
+         * currentSearch.offset
+        -->
+
+        <#--
+         * Search filters for OM and public view
+        -->
+        <span class="search-parameters-title filter"><@u.message "searchOptions.filter" /></span>
+            <div class="search-parameters-container buttons">
+
+                <#if user.isOmUser()>
+                    <div class="search-parameters four-items">
+                        <@u.searchLink parameter="withStateDraft" cssClass=(currentSearch.show == "draft")?string('active','') count=initiativeCounts.draft/>
+                        <@u.searchLink parameter="withStateReview" cssClass=(currentSearch.show == "review")?string('active','') count=initiativeCounts.review />
+                        <@u.searchLink parameter="withStateAccepted" cssClass=(currentSearch.show == "accepted")?string('active','') count=initiativeCounts.accepted />
+                        <@u.searchLink parameter="withStateFix" cssClass=(currentSearch.show == "fix")?string('active','') count=initiativeCounts.fix />
+
+                        <#-- Mobile links, hidden in browser view -->
+                        <@u.searchLinkMobile parameter="withStateDraft" count=initiativeCounts.draft />
+                        <@u.searchLinkMobile parameter="withStateReview" count=initiativeCounts.review />
+                        <@u.searchLinkMobile parameter="withStateAccepted" count=initiativeCounts.accepted/>
+                        <@u.searchLinkMobile parameter="withStateFix" count=initiativeCounts.fix/>
+                    </div>
+
+                </#if>
+                <div class="search-parameters three-items">
+                    <@u.searchLink parameter="withStateAll" cssClass=(currentSearch.show == "all")?string('active','') count=initiativeCounts.all/>
+                    <@u.searchLink parameter="withStateCollecting" cssClass=(currentSearch.show == "collecting")?string('active','') count=initiativeCounts.collecting />
+                    <@u.searchLink parameter="withStateSent" cssClass=(currentSearch.show == "sent")?string('active','') count=initiativeCounts.sent/>
+
+                    <#-- Mobile links, hidden in browser view -->
+                    <@u.searchLinkMobile parameter="withStateAll"  count=initiativeCounts.all/>
+                    <@u.searchLinkMobile parameter="withStateCollecting"  count=initiativeCounts.collecting />
+                    <@u.searchLinkMobile parameter="withStateSent"  count=initiativeCounts.sent/>
+                </div>
+                <br class="clear" />
+        </div>
+
+        <#--
+         * Search sort
+         *
+         * Sort only if more than 1 to sort
+        -->
+        <#--<#if (initiativeCounts[currentSearch.show] > 1)>-->
+            <span class="search-parameters-title sort"><@u.message "searchOptions.sort" /></span>
+            <div class="column search-sort">
+                <#if currentSearch.show == "sent">
+                    <span class="small-icon icon-search-sort by-date-accepted">&#160;</span>
+                    <div class="switch-buttons">
+                        <@u.searchLink parameter="withOrderByLatestSent" cssClass=(currentSearch.orderBy == "latestSent")?string('active','') tooltip=false />
+                        <@u.searchLink parameter="withOrderByOldestSent" cssClass=(currentSearch.orderBy == "oldestSent")?string('active','') tooltip=false />
+                    </div>
+                <#else>
+                    <span class="small-icon icon-search-sort by-date-accepted">&#160;</span>
+                    <div class="switch-buttons">
+                        <@u.searchLink parameter="withOrderByLatest" cssClass=(currentSearch.orderBy == "latest")?string('active','') tooltip=false />
+                        <@u.searchLink parameter="withOrderByOldest" cssClass=(currentSearch.orderBy == "oldest")?string('active','') tooltip=false />
+                    </div>
+                </#if>
+            </div>
+            <div class="column search-sort">
+                <span class="small-icon icon-search-sort by-support-statements"><span class="text-content"><@u.message "searchOptions.participants" /></span>&#160;</span>
+                <div class="switch-buttons">
+                    <@u.searchLink parameter="withOrderByMostParticipants" cssClass=(currentSearch.orderBy == "mostParticipants")?string('active','') tooltip=false />
+                    <@u.searchLink parameter="withOrderByLeastParticipants" cssClass=(currentSearch.orderBy == "leastParticipants")?string('active','') tooltip=false />
+                </div>
+            </div>
+            <span class="run-search-mobile">OK</span>
             <br class="clear" />
+
+
+        <#--</#if>-->
     </div>
-
-    <#--
-     * Search sort
-     *
-     * Sort only if more than 1 to sort
-    -->
-    <#--<#if (initiativeCounts[currentSearch.show] > 1)>-->
-        <span class="search-parameters-title sort"><@u.message "searchOptions.sort" /><a href="#" class="search-filter-toggle" ></a></span>
-        <div class="column search-sort">
-            <#if currentSearch.show == "sent">
-                <span class="small-icon icon-search-sort by-date-accepted">&#160;</span>
-                <div class="switch-buttons">
-                    <@u.searchLink parameter="withOrderByLatestSent" cssClass=(currentSearch.orderBy == "latestSent")?string('active','') tooltip=false />
-                    <@u.searchLink parameter="withOrderByOldestSent" cssClass=(currentSearch.orderBy == "oldestSent")?string('active','') tooltip=false />
-                </div>
-            <#else>
-                <span class="small-icon icon-search-sort by-date-accepted">&#160;</span>
-                <div class="switch-buttons">
-                    <@u.searchLink parameter="withOrderByLatest" cssClass=(currentSearch.orderBy == "latest")?string('active','') tooltip=false />
-                    <@u.searchLink parameter="withOrderByOldest" cssClass=(currentSearch.orderBy == "oldest")?string('active','') tooltip=false />
-                </div>
-            </#if>
-        </div>
-        <div class="column search-sort">
-            <span class="small-icon icon-search-sort by-support-statements"><span class="text-content"><@u.message "searchOptions.participants" /></span>&#160;</span>
-            <div class="switch-buttons">
-                <@u.searchLink parameter="withOrderByMostParticipants" cssClass=(currentSearch.orderBy == "mostParticipants")?string('active','') tooltip=false />
-                <@u.searchLink parameter="withOrderByLeastParticipants" cssClass=(currentSearch.orderBy == "leastParticipants")?string('active','') tooltip=false />
-            </div>
-        </div>
-        <br class="clear" />
-        
-        
-    <#--</#if>-->
-
 </div>
 
 <div class="search-terms">
