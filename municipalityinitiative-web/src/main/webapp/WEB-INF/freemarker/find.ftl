@@ -153,16 +153,8 @@
                     <@u.message "searchResults.initiativesInMunicipalities" />:
                 </#if>
                 <@u.printMunicipalities currentMunicipalities.value />
-
             </h2>
-
     </#if>
-
-    <#--
-    <#if searchTerm != "">
-        <p>Haun tulokset hakusanalle: "<span class="search-term">${searchTerm}</span>"</p>
-    </#if>
-    -->
 </div>
 
 <#assign paginationParams = {

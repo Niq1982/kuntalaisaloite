@@ -192,7 +192,7 @@
  * @param preSelected the predefined value for the select
  *
 -->
-<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true defaultOption="initiative.chooseMunicipality" allowSingleDeselect=false key="" onlyActive=false multiple=false >
+<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true defaultOption="initiative.chooseMunicipality" allowSingleDeselect=false key="" onlyActive=false multiple=false id="">
     <@spring.bind path />
     
     <#if showLabel>
@@ -211,7 +211,7 @@
         <#assign data = spring.status.value!"" />
     </#if>
 
-    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} ${required} class="${cssClass} chzn-select" data-initiative-municipality="${data}" data-placeholder="<@u.message defaultOption />" <#if allowSingleDeselect>data-allow-single-deselect="allow"</#if> <#if multiple> multiple</#if>>
+    <select name="${spring.status.expression}" <#if id=="">id="${spring.status.expression}" <#else> id="${id}"  </#if> ${attributes} ${required} class="${cssClass} chzn-select" data-initiative-municipality="${data}" data-placeholder="<@u.message defaultOption />" <#if allowSingleDeselect>data-allow-single-deselect="allow"</#if> <#if multiple> multiple</#if>>
         <option value=""><@u.message defaultOption /></option>
         <#list options as option>
         <#if !onlyActive || option.active>
