@@ -5,6 +5,7 @@
 <#import "components/pagination.ftl" as p />
 <#import "components/forms.ftl" as f />
 <#import "components/elements.ftl" as e />
+<#import "components/mobile-find.ftl" as mobile />
 
 <#escape x as x?html>
 
@@ -27,10 +28,13 @@
         </#if>
     </h1>
 
-<div class="open-filters">Rajaa hakua</div>
+
+
+<@mobile.mobileSearch />
+
+
 <div class="view-block search-options cf noprint">
     <div class="search-filters-title">Rajaa hakua</div>
-    <div class="search-parameters-wrapper">
         <#--
          * Municipality filter
         -->
@@ -63,11 +67,7 @@
                 <@u.searchLink parameter="withTypeCouncil" cssClass=(currentSearch.type == "council")?string('active','')  tooltip=false />
                 <@u.searchLink parameter="withTypeCitizen" cssClass=(currentSearch.type == "citizen")?string('active','')  tooltip=false />
 
-                <#-- Mobile links, hidden in browser view -->
-                <@u.searchLinkMobile parameter="withTypeAll" />
-                <@u.searchLinkMobile parameter="withTypeNormal" />
-                <@u.searchLinkMobile parameter="withTypeCouncil" />
-                <@u.searchLinkMobile parameter="withTypeCitizen" />
+
             </div>
         </div>
         </#if>
@@ -93,11 +93,7 @@
                         <@u.searchLink parameter="withStateAccepted" cssClass=(currentSearch.show == "accepted")?string('active','') count=initiativeCounts.accepted />
                         <@u.searchLink parameter="withStateFix" cssClass=(currentSearch.show == "fix")?string('active','') count=initiativeCounts.fix />
 
-                        <#-- Mobile links, hidden in browser view -->
-                        <@u.searchLinkMobile parameter="withStateDraft" count=initiativeCounts.draft />
-                        <@u.searchLinkMobile parameter="withStateReview" count=initiativeCounts.review />
-                        <@u.searchLinkMobile parameter="withStateAccepted" count=initiativeCounts.accepted/>
-                        <@u.searchLinkMobile parameter="withStateFix" count=initiativeCounts.fix/>
+
                     </div>
 
                 </#if>
@@ -106,10 +102,7 @@
                     <@u.searchLink parameter="withStateCollecting" cssClass=(currentSearch.show == "collecting")?string('active','') count=initiativeCounts.collecting />
                     <@u.searchLink parameter="withStateSent" cssClass=(currentSearch.show == "sent")?string('active','') count=initiativeCounts.sent/>
 
-                    <#-- Mobile links, hidden in browser view -->
-                    <@u.searchLinkMobile parameter="withStateAll"  count=initiativeCounts.all/>
-                    <@u.searchLinkMobile parameter="withStateCollecting"  count=initiativeCounts.collecting />
-                    <@u.searchLinkMobile parameter="withStateSent"  count=initiativeCounts.sent/>
+
                 </div>
                 <br class="clear" />
         </div>
@@ -143,12 +136,12 @@
                     <@u.searchLink parameter="withOrderByLeastParticipants" cssClass=(currentSearch.orderBy == "leastParticipants")?string('active','') tooltip=false />
                 </div>
             </div>
-            <span class="run-search-mobile">OK</span>
+
             <br class="clear" />
 
 
         <#--</#if>-->
-    </div>
+
 </div>
 
 <div class="search-terms">

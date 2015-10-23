@@ -41,22 +41,7 @@ h3 {
     @media @mobile {
         display: none;
 
-        &.open {
-            display: block;
-            height: 100vh;
-            position: absolute;
-            z-index: 100;
-            width: 100%;
-            padding: 0;
-            top: -10px;
-            border: none;
-            background-color: @mainColorLight;
-            color: white;
 
-        }
-        .search-parameters-wrapper {
-            padding: 10px;
-        }
     }
     
     @media @tablet  {
@@ -250,41 +235,7 @@ h3 {
 
 }
 
-.mobile-search-link{
-    display: none;
-    @media @mobile {
-        display: block;
-        margin-top: 1em;
-        a {
-            display: block;
-            color: white;
 
-        }
-    }
-    .mobile-checkbox {
-        display: none;
-        @media @mobile {
-            display: inline;
-            float: left;
-            height: 20px;
-            width: 20px;
-            margin-right: 5px;
-            background-color: white;
-        };
-    }
-}
-.run-search-mobile {
-    display: none;
-    @media @mobile {
-        display: block;
-        width: 100px;
-        margin: 1em auto;
-        background-color: white;
-        color: @mainColorLight;
-        text-align: center;
-        padding: 10px 0;
-    }
-}
 .search-parameters {
     @media @mobile {
         br {
@@ -509,6 +460,83 @@ h3 {
 
 }
 
+.search-options-mobile {
+    display: none;
+}
+@media @mobile {
+    .search-options-mobile {
+        display: none;
+        &.open{
+            display: block;
+        }
+        height: 100vh;
+        position: absolute;
+        z-index: 100;
+        width: 100%;
+        padding: 0;
+        top: -10px;
+        border: none;
+        background-color: @mainColorLight;
+        color: white;
+
+        .mobile-search-link{
+
+                display: block;
+                margin-top: 1em;
+                a {
+                    display: block;
+                    color: white;
+
+                }
+        }
+        input[type=radio] {
+            display: none;
+        }
+        label:before  {
+            content: "";
+            display: inline;
+            float: left;
+            height: 20px;
+            width: 20px;
+            margin-right: 10px;
+            background-color: white;
+            border-radius: 2px;
+
+        }
+        input[type=radio]:checked  + label:before {
 
 
+                background-image: url("@{imagesPath}/check-box-icon.svg?version=$(timestamp)");
+                background-color: @mainColorDark;
+                background-repeat: no-repeat;
+                background-position: 50% 50%;
+
+        }
+        .run-search-mobile {
+
+            display: block;
+            width: 125px;
+            margin: 1em auto;
+            background-color: white;
+            color: @mainColorLight;
+            text-align: center;
+            padding: 10px 0;
+            border: none;
+            border-radius: 2px;
+
+        }
+        .search-parameters-wrapper {
+            padding: 10px;
+
+            h3 {
+                margin: 20px 0 0 0;
+                font-weight: bold;
+                font-size: 14px;
+                color: white;
+            }
+        }
+    }
+
+
+}
 

@@ -1908,7 +1908,7 @@ if (window.hasIGraphFrame) {
 }());
 $(".open-filters").click(function() {
 	$(this).hide();
-	$(".search-options").addClass("open");
+	$(".search-options-mobile").addClass("open");
 });
 
 $(window).on('resize', function () {

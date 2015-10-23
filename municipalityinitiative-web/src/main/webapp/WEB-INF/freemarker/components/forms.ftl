@@ -371,4 +371,13 @@
 
 </#macro>
 
+<#macro mobileCheckBox path prefix name value id cssClass="">
+    <input type="radio" id=${id} name=${name} value=${value}
+        <#if (path == value)>
+           checked
+        </#if>>
+    </input>
+    <label for=${id}><@u.message key=prefix+".mobile.checkbox" /></label></br>
+</#macro>
+
 </#escape> 
