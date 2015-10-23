@@ -12,7 +12,11 @@
 h3 {
     .switch-view { font-size:0.855em; }
 }
-
+@media @mobile {
+    .switch-view {
+        display: none;
+    }
+}
 .search-options {
     margin-bottom:2em;
 
@@ -459,6 +463,7 @@ h3 {
 
         h1 {
             margin: 10px auto;
+
         }
         .arrow {
             position: absolute;

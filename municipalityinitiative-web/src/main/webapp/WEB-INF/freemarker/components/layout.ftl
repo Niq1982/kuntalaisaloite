@@ -267,10 +267,9 @@
             </div>
 
             <#if (naviItems?size > 0) >
-                <div id="main-navigation">
-
+                <a href="#" class="toggle-dropdown" > <i class="hamburger-nav-icon-black"></i></a>
+                <div id="main-navigation" >
                     <ul>
-                        <li><a href="#" class="toggle-dropdown" title="Näytä lisää"> <i class="hamburger-nav-icon-black"></i></a></li>
                         <#list naviItems as item>
                             <li <#if item.naviName == page>class="active"</#if>><a href="${item.naviUrl}"><@u.message item.naviName /></a></li>
                         </#list>
@@ -327,8 +326,6 @@
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.headernav.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.mainnav.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.participantgraph.js?version=${resourcesVersion}"></script>
-      <script type="text/javascript" src="${urls.baseUrl}/js/jquery.searchfilter.js?version=${resourcesVersion}"></script>
-      <script type="text/javascript" src="${urls.baseUrl}/js/jquery.searchsort.js?version=${resourcesVersion}"></script>
 
       <script type="text/javascript" src="${urls.baseUrl}/js/kuntalaisaloite.js?version=${resourcesVersion}"></script>
     </#if>

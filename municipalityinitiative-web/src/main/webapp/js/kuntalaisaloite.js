@@ -240,9 +240,6 @@ $(document).ready(function () {
       btnTitle: locale === 'sv' ? 'Visa mer' : 'Näytä lisää'
     });
 
-	mainNav = $('#main-navigation');
-	mainNav.mainNav({});
-
 
 
 	/**
@@ -1914,6 +1911,10 @@ $(".search-filters-title .arrow").click(function() {
 	$(".search-options-mobile").removeClass("open");
 });
 
+$(".toggle-dropdown").click(function() {
+	$("#main-navigation").toggleClass("open");
+});
+
 
 $(window).on('resize', function () {
 
@@ -1925,9 +1926,6 @@ $(window).on('resize', function () {
     headerNav.headerNav('resize');
   }
 
-  if (mainNav !== undefined) {
-	  mainNav.mainNav('resize');
-  }
 
 
 }).trigger('resize');
