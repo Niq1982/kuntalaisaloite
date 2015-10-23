@@ -1913,6 +1913,7 @@ $(".search-filters-title .arrow").click(function() {
 
 $(".toggle-dropdown").click(function() {
 	$("#main-navigation").toggleClass("open");
+	$(".search-options-mobile").removeClass("open");
 });
 
 
