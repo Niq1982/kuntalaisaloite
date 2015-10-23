@@ -185,6 +185,11 @@
     display: none;
 }
 
+.mobile-user-actions{
+    display: none;
+
+}
+
 @media @mobile {
     .header-content {
 
@@ -217,14 +222,14 @@
         display: none;
         &.open {
             display: block;
-            top: 9px;
+            top: 7px;
             z-index: 100;
             position: relative;
             background-color: @mainColorLight;
-            padding: 17px;
             font-size: 20px;
 
             ul {
+                padding: 17px;
                 li {
                     display: block;
                     padding: 10px;
@@ -234,44 +239,41 @@
                     }
                 }
             }
-        }
+            .mobile-user-actions {
+                display: block;
+                padding: 25px 17px;
+                background-color: @mainColorDark;
+                font-size: 14px;
+                span {
+                    color: white;
+                    display: block;
+                    margin: 13px 0;
+                }
 
+                a {
+                    &#logout{
+                        color: black;
+                    }
+                    &.login{
+                        width: 70%;
+                        margin: 5px auto 0 auto;
+                        display: block;
+                    }
+                    text-decoration: none;
+                    color: @mainColorLight;
+                    padding: 5px 0;
+                    background-color: white;
+                    border-radius: 1px;
+                    font-weight: bold;
+                    text-align: center;
+                    width: 49%;
+                    display: inline-block;
 
-     /*   position: absolute;
-        right: 0;
-        top: 40px;
+                }
 
-        text-align: left;
-        background: white;
-        border: 1px solid #c0c0c0;
-        border-top: 0px;
-        padding: 8px;
-        list-style: none;
-        z-index: 998;
-        font-size: 1em;
-        width: 80vw;
-        box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
-        text-transform: none;
-
-
-        a {
-            display: block;
-            color: #444;
-            border-bottom: 1px solid #f1f1f1;
-            padding: 20px;
-            margin: 0px;
-
-            &:hover {
-                color: black;
-                background: #f1f1f1;
             }
         }
-
-        li:last-child {
-            a {
-                border-bottom:none;
-            }
-        }*/
-
     }
 }
+
+

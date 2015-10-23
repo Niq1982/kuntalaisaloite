@@ -274,6 +274,17 @@
                             <li <#if item.naviName == page>class="active"</#if>><a href="${item.naviUrl}"><@u.message item.naviName /></a></li>
                         </#list>
                     </ul>
+                    <div class="mobile-user-actions">
+                        <#if user.isVerifiedUser()>
+                            <span>${userName}</span>
+                            <div class="user-actions-wrapper">
+                                <a href="${urls.ownInitiatives()}"><@u.message "page.ownInitiatives.mobile" /></a>
+                                <a href="${urls.logout()}" id="logout"><@u.message "common.logout"/></a>
+                            </div>
+                        <#else>
+                            <a href="${urls.authenticate(currentRequestUri)}" title="<@u.message "authenticate.title"/>" class="header-tool-link login">Kirjaudu</a>
+                        </#if>
+                    </div>
                 </div>
             </#if>
 
