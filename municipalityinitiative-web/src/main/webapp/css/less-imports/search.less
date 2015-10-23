@@ -12,36 +12,11 @@
 h3 {
     .switch-view { font-size:0.855em; }
 }
-.open-filters{
-    display: none;
-    h1 {
-        margin: 10px auto;
-    }
-    @media @mobile {
-        display: block;
-        width: 90%;
-        margin:  0 auto;
-        color: white;
-        padding: 7px 0 7px 15px ;
-        background-color: @mainColorLight;
-        border-radius: 2px;
 
-    }
-}
 .search-options {
     margin-bottom:2em;
 
-    .search-filters-title {
-        color: white;
-        text-align: center;
-        font-size: 18px;
-        font-weight: bold;
-        margin: 1em;
-        @media @tablet, @desktop, @desktop-xl {
-            display: none;
 
-        }
-    }
     @media @mobile {
         display: none;
 
@@ -467,10 +442,35 @@ h3 {
 
 }
 
-.search-options-mobile {
+.search-options-mobile, .open-filters {
     display: none;
 }
 @media @mobile {
+    .open-filters{
+
+        display: block;
+        width: 90%;
+        margin:  0 auto;
+        color: white;
+        padding: 7px 0 7px 15px ;
+        background-color: @mainColorLight;
+        border-radius: 2px;
+        position: relative;
+
+        h1 {
+            margin: 10px auto;
+        }
+        .arrow {
+            position: absolute;
+            display: inline-block;
+            width: 29px;
+            height: 29px;
+            right: 20px;
+            top: 12px;
+            background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -192px -96px no-repeat;
+        }
+    }
+
     .search-options-mobile {
         display: none;
         &.open{
@@ -485,6 +485,8 @@ h3 {
         border: none;
         background-color: @mainColorLight;
         color: white;
+
+
 
         .mobile-search-link{
 
@@ -541,6 +543,35 @@ h3 {
                 font-size: 14px;
                 color: white;
             }
+
+            .search-filters-title {
+                color: white;
+                text-align: center;
+                font-size: 18px;
+                font-weight: bold;
+                margin: 1em;
+                position: relative;
+                height: 29px;
+
+                .arrow {
+                    position: absolute;
+                    left: -0.7em;
+                    display: inline-block;
+                    width: 29px;
+                    height: 29px;
+                    background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -192px -96px no-repeat;
+
+                    -webkit-transform: rotate(180deg);
+                    -moz-transform: rotate(180deg);
+                    -ms-transform: rotate(180deg);
+                    -o-transform: rotate(180deg);
+                    transform: rotate(180deg);
+
+                }
+
+
+            }
+
         }
     }
 

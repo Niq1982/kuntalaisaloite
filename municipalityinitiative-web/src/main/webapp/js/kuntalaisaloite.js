@@ -1907,9 +1907,13 @@ if (window.hasIGraphFrame) {
 
 }());
 $(".open-filters").click(function() {
-	$(this).hide();
 	$(".search-options-mobile").addClass("open");
 });
+
+$(".search-filters-title .arrow").click(function() {
+	$(".search-options-mobile").removeClass("open");
+});
+
 
 $(window).on('resize', function () {
 

@@ -34,7 +34,7 @@
 
 
 <div class="view-block search-options cf noprint">
-    <div class="search-filters-title">Rajaa hakua</div>
+
         <#--
          * Municipality filter
         -->
