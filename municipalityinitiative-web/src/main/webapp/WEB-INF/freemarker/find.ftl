@@ -198,7 +198,9 @@
                         <span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
                     </#if>
                     <span class="bull">&bull;</span>
-                    <@u.message "initiative.initiativeType."+initiative.type />
+                    <span class="initiative-type">
+                        <@u.message "initiative.initiativeType."+initiative.type />
+                    </span>
                 </span>
             </a>
         </li>

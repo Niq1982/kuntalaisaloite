@@ -93,6 +93,58 @@ h3 {
         }
     }
 
+    @media @mobile {
+        ul {
+            border: none;
+        }
+        li {
+            background-color: white;
+            margin: 7px 0;
+            border: none;
+            height: 100px;
+            padding-left: 15px;
+            position:relative;
+            a {
+                height: 100px;
+                padding: 0;
+                .participants{
+                    border-left: solid;
+                    border-color: rgb(240, 240, 240);
+                    padding: 10px 3px;
+                    height: 100px;
+                    .participant-count{
+                        background: none;
+                    }
+
+                }
+                .title {
+                    position: absolute;
+                    top: 28px;
+                    font-weight: bold;
+                }
+                .date {
+                    position: absolute;
+                    top: 5px;
+                }
+                .info {
+                    position: absolute;
+                    top: 5px;
+                    left: 100px;
+                    .state{
+                        margin-left: 5px;
+                    }
+                    .bull {
+                        display: none;
+                    }
+                    .initiative-type{
+                        display: none;
+                    }
+                }
+
+            }
+        }
+
+    }
     @media @mobile, @tablet  {
         .date {
             color: @secondaryTextColor;
