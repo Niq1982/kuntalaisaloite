@@ -56,6 +56,7 @@
 
                     <div class="input-block-content">
                         <button type="submit" class="small-button"><span class="small-icon save-and-send"><@u.message "decision.submit" /></span></button>
+                        <a class="small-button" href="${urls.getMunicipalityDecisionView(initiative.id)}">Poistu</a>
                     </div>
 
                     <br/><br/>
