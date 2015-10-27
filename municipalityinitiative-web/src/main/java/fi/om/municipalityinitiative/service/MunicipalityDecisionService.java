@@ -114,7 +114,12 @@ public class MunicipalityDecisionService {
     }
 
     public boolean validationSuccessful(MunicipalityDecisionDto decision, BindingResult bindingResult, Model model) {
+
         decision.setFiles(clearEmptyFiles(decision.getFiles()));
+
+        if (decision.getFiles().size() == 0  & (decision.getDescription().isEmpty() || decision.getDescription().equals(""))) {
+            addAttachmentValidationError(bindingResult, "filesAndDescription", "DecisionDescriptionAndAttachmentsBothEmpty");
+        }
 
         for (MunicipalityDecisionDto.FileWithName file : decision.getFiles()) {
 

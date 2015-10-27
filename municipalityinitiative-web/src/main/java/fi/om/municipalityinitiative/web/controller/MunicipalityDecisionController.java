@@ -60,7 +60,7 @@ public class MunicipalityDecisionController extends BaseController{
 
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
 
-        if (initiative.getDecisionText().isPresent()) {
+        if (initiative.getDecisionDate().isPresent()) {
             decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
 
@@ -87,7 +87,7 @@ public class MunicipalityDecisionController extends BaseController{
         InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
-        if (initiative.getDecisionText().isPresent()) {
+        if (initiative.getDecisionDate().isPresent()) {
             decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
 
@@ -113,7 +113,7 @@ public class MunicipalityDecisionController extends BaseController{
         InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
-        if (initiative.getDecisionText().isPresent()) {
+        if (initiative.getDecisionDate().isPresent()) {
             decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
 

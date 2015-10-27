@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.dto.ui;
 
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
@@ -17,7 +16,6 @@ public class MunicipalityDecisionDto {
 
     private String locale;
 
-    @NotEmpty
     @Size(max = InitiativeConstants.MUNICIPALITY_DECISION_MAX)
     private String description;
 

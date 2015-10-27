@@ -129,7 +129,7 @@ public class PublicInitiativeController extends BaseController {
 
     private Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(@PathVariable("id") Long initiativeId, InitiativePageInfo initiativePageView) {
         Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
-        if (initiativePageView.initiative != null && initiativePageView.initiative.getDecisionText().isPresent()) {
+        if (initiativePageView.initiative != null && initiativePageView.initiative.getDecisionDate().isPresent()) {
             municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
                     initiativePageView.initiative.getDecisionText().getValue(),
                     initiativePageView.initiative.getDecisionDate().getValue(),
