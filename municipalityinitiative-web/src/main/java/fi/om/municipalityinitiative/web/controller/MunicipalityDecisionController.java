@@ -61,7 +61,7 @@ public class MunicipalityDecisionController extends BaseController{
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
 
         if (initiative.getDecisionDate().isPresent()) {
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().getValue(),initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
 
         boolean ediDecision = decisionInfo.isNotPresent();
@@ -88,7 +88,7 @@ public class MunicipalityDecisionController extends BaseController{
 
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
         if (initiative.getDecisionDate().isPresent()) {
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().getValue(), initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
 
         boolean ediDecision = true;
@@ -114,7 +114,7 @@ public class MunicipalityDecisionController extends BaseController{
 
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
         if (initiative.getDecisionDate().isPresent()) {
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().getValue(), initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
 
 
@@ -164,7 +164,7 @@ public class MunicipalityDecisionController extends BaseController{
 
         if (!municipalityDecisionService.validationSuccessful(decision, bindingResult, model)) {
             InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().getValue(), initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
             showDecisionForm = true;
 
             return ViewGenerator.municipalityDecisionView(

@@ -131,8 +131,9 @@ public class PublicInitiativeController extends BaseController {
         Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
         if (initiativePageView.initiative != null && initiativePageView.initiative.getDecisionDate().isPresent()) {
             municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
-                    initiativePageView.initiative.getDecisionText().getValue(),
+                    initiativePageView.initiative.getDecisionText(),
                     initiativePageView.initiative.getDecisionDate().getValue(),
+                    initiativePageView.initiative.getDecisionModifiedDate(),
                     municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
         return municipalityDecisionInfo;

@@ -19,7 +19,11 @@
 
     <#if decisionInfo.isPresent() && !showDecisionForm>
         <div class="msg-block cf">
-            <h2>Kunnan vastaus on julkaistu <@u.localDate decisionInfo.getValue().getDate() /></h2>
+            <h2>Kunnan vastaus on julkaistu <@u.localDate decisionInfo.getValue().getDate() />
+                <#if decisionInfo.getValue().getModifiedDate().isPresent()>
+                    (muokattu <@u.localDate decisionInfo.getValue().getModifiedDate().value />)
+                </#if>
+            </h2>
             <p>Voit muokata kunnan vastausta. Kaikki muokkaukset ovat julkisia.</p>
 
         </div>

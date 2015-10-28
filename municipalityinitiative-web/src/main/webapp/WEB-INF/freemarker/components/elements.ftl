@@ -379,7 +379,9 @@
     <div class="view-block first cf">
         <div class="initiative-content-row last">
             <h2><@u.message "municipality.decision" /></h2>
-            <@u.text decisionInfo.getDecisionText() />
+            <#if decisionInfo.getDecisionText().isPresent()>
+                <@u.text decisionInfo.getDecisionText().value />
+            </#if>
             <#if manage>
                 <a class="small-button edit-decision" href="${urls.openDecisionForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.editDecision" /> </span></a>
             </#if>

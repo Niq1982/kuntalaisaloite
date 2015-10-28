@@ -68,7 +68,8 @@
 	<#assign createTime><@u.localDate initiative.createTime /></#assign>
     <#assign initiativePublished><@u.message "progress.public.published" /><br/>${createTime}</#assign>
     <#assign sendToMunicipality><@u.message "progress.public.sent" /><#if initiative.sentTime.present><br/><@u.localDate initiative.sentTime.value /></#if></#assign>
-	<#assign municipalityDecision><@u.message "progress.public.decision"/><#if initiative.getDecisionDate().isPresent()><br/><@u.localDate initiative.getDecisionDate().value /></#if></#assign>
+	<#assign municipalityDecision><@u.message "progress.public.decision"/><#if initiative.getDecisionDate().isPresent()><br/><@u.localDate initiative.getDecisionDate().value /></#if>
+		<#if initiative.getDecisionModifiedDate().isPresent()><@u.message "progress.public.decision.modified"/><br/><@u.localDate initiative.getDecisionModifiedDate().value /></#if></#assign>
 
 	<#-- PUBLIC VIEW -->
 	<#if public>
