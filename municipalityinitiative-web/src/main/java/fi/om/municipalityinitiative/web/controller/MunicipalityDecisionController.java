@@ -182,14 +182,13 @@ public class MunicipalityDecisionController extends BaseController{
         try {
             municipalityDecisionService.setDecision(decision, initiativeId, loginUserHolder);
 
-            InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), initiative.getDecisionDate().getValue(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
-
         } catch (InvalidAttachmentException e) {
             e.printStackTrace();
+            return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.ATTACHMENT_INVALID, request);
 
         } catch (FileUploadException e) {
             e.printStackTrace();
+            return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.ATTACHMENT_FAILURE, request);
         }
 
         return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.DECISION_UPDATED, request);

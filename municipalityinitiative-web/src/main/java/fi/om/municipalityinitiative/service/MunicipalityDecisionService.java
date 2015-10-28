@@ -63,11 +63,17 @@ public class MunicipalityDecisionService {
     }
 
     @Transactional(readOnly = false, rollbackFor = Throwable.class)
-    public void setDecision(MunicipalityDecisionDto decision, Long initiativeId, MunicipalityUserHolder user) throws InvalidAttachmentException, FileUploadException {
+    public void setDecision(MunicipalityDecisionDto decision, Long initiativeId, MunicipalityUserHolder user) throws FileUploadException, InvalidAttachmentException {
 
         user.assertManagementRightsForInitiative(initiativeId);
 
         initiativeDao.updateInitiativeDecision(initiativeId, decision.getDescription());
+
+        saveAttachments(decision, initiativeId);
+
+    }
+
+    private void saveAttachments(MunicipalityDecisionDto decision, Long initiativeId) throws FileUploadException, InvalidAttachmentException {
 
         for (MunicipalityDecisionDto.FileWithName attachment: decision.getFiles()) {
 
@@ -81,6 +87,9 @@ public class MunicipalityDecisionService {
 
                 AttachmentUtil.saveMunicipalityAttachmentToDiskAndCreateThumbnail(imageModifier, fileInfo.getContentType(), fileInfo.getFileType(), tempFile, attachmentId, attachmentDir);
 
+            }catch (InvalidAttachmentException e) {
+                throw e;
+
             } catch (Throwable t) {
                 log.error("Error while uploading file: " + attachment.getFile().getOriginalFilename(), t);
                 throw new FileUploadException(t);
@@ -90,9 +99,7 @@ public class MunicipalityDecisionService {
                 }
 
             }
-
         }
-
     }
 
     @Transactional(readOnly = true)

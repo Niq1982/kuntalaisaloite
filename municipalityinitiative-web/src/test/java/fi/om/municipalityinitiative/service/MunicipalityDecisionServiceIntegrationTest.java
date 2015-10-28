@@ -206,6 +206,30 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
         }
     }
     @Test
+    public void can_edit_decision() {
+
+        Long initiativeId = createVerifiedInitiativeWithAuthor();
+
+        try {
+
+            createDefaultMunicipalityDecisionWithAttachment(initiativeId);
+
+            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build("Edited text");
+
+            municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+            InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+
+            assertThat(initiative.getDecisionText().getValue(), is("Edited text"));
+
+        }
+    }
+
+    @Test
     public void cant_edit_decision_if_no_access() {
 
         Long initiativeId = createVerifiedInitiativeWithAuthor();

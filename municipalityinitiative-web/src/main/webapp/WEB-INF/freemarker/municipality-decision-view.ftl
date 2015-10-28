@@ -78,25 +78,10 @@
         <@e.decisionBlock decisionInfo=decisionInfo.getValue() manage=true/>
     </#if>
 
-
-
-
     <@e.initiativeTitle initiative />
 
     <@prog.progress initiative=initiative public=false omOrMunicipality=true />
 
-
-    <div class="view-block first">
-        <@e.initiativeView initiative />
-    </div>
-
-    <div class="view-block">
-        <div class="initiative-content-row last">
-            <h2><@u.message key="initiative.people.title" args=[authors?size] /></h2>
-
-            <@e.initiativeContactInfo authorList=authors showRenewManagementHash=false/>
-        </div>
-    </div>
 
     <#assign deleteAattachment>
         <@compress single_line=true>
