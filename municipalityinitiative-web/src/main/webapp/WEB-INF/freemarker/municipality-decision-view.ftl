@@ -17,7 +17,7 @@
 
 <@l.main page="page.moderation" pageTitle=initiative.name!"">
 
-    <#if decisionInfo.isPresent() && !showDecisionForm>
+    <#if decisionInfo.isPresent() && !showDecisionForm && !editAttachments>
         <div class="msg-block cf">
             <h2>Kunnan vastaus on julkaistu <@u.localDate decisionInfo.getValue().getDate() />
                 <#if decisionInfo.getValue().getModifiedDate().isPresent()>
@@ -58,10 +58,16 @@
                         <@f.uploadField path="decision.files[0].file" cssClass="multi" name="files[0].file" multiple=false/>
                     </div>
 
-                    <div class="input-block-content">
-                        <button type="submit" class="small-button"><span class="small-icon save-and-send"><@u.message "decision.submit" /></span></button>
-                        <a class="small-button" href="${urls.getMunicipalityDecisionView(initiative.id)}">Poistu</a>
-                    </div>
+                    <#if decisionInfo.isPresent()>
+                        <div class="input-block-content">
+                            <button type="submit" class="small-button"><span class="small-icon save-and-send"><@u.message "decision.edit.submit" /></span></button>
+                            <a class="small-button" href="${urls.getMunicipalityDecisionView(initiative.id)}">Poistu</a>
+                        </div>
+                    <#else>
+                        <div class="input-block-content">
+                            <button type="submit" class="small-button"><span class="small-icon save-and-send"><@u.message "decision.submit" /></span></button>
+                        </div>
+                    </#if>
 
                     <br/><br/>
                 </form>
@@ -75,10 +81,11 @@
             <h2><@u.message "municipality.decision.removeAttachments" /></h2>
             <p>Voit poistaa liitteitä klikkaamalla raksia</p>
             <@e.attachmentsView attachments=decisionInfo.getValue().attachments manage=true municipality=true/>
+            <a class="small-button" href="${urls.getMunicipalityDecisionView(initiative.id)}">Poistu</a>
         </div>
     </#if>
 
-    <#if decisionInfo.isPresent()>
+    <#if decisionInfo.isPresent() && !showDecisionForm && !editAttachments>
         <@e.decisionBlock decisionInfo=decisionInfo.getValue() manage=true/>
     </#if>
 
