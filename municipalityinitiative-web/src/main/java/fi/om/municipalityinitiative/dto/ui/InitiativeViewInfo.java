@@ -100,10 +100,15 @@ public final class InitiativeViewInfo {
 
     public Maybe<DateTime> getDecisionDate() {return initiative.getDecisionDate();}
 
+    public Maybe<DateTime> getDecisionModifiedDate() {
+        return initiative.getDecisionModifiedDate();
+    }
     public ParticipantCount getParticipantCount() {
         ParticipantCount participantCount = new ParticipantCount();
         participantCount.setPrivateNames(initiative.getParticipantCount() - initiative.getParticipantCountPublic());
         participantCount.setPublicNames(initiative.getParticipantCountPublic());
         return participantCount;
     }
+
+
 }

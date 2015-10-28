@@ -102,6 +102,10 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             assertThat(initiative.getDecisionText().isPresent(), is(true));
 
+            assertThat(initiative.getDecisionDate().isPresent(), is(true));
+
+            assertThat(initiative.getDecisionModifiedDate().isNotPresent(), is(true));
+
             assertThat(initiative.getDecisionText().getValue(), is(DECISION_DESCRIPTION));
 
 
@@ -127,7 +131,6 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
             fileInfo = (DecisionAttachmentFile)decisionAttachments.getPdfs().get(0);
 
             attachmentFile = municipalityDecisionService.getAttachment(fileInfo.getAttachmentId(), CUSTOM_ATTACHMENT_NAME_GIVEN_BY_USER, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
-
 
 
         } catch (Exception e) {
@@ -173,7 +176,9 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             assertThat(decisionAttachments.getAll().size(), is(0));
 
+            InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
+            assertThat(initiative.getDecisionModifiedDate().isPresent(), is(true));
         }
     }
 
@@ -202,7 +207,9 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             assertThat(decisionAttachments.getAll().size(), is(1));
 
+            InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
+            assertThat(initiative.getDecisionModifiedDate().isNotPresent(), is(true));
         }
     }
     @Test
@@ -225,6 +232,8 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
             InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
             assertThat(initiative.getDecisionText().getValue(), is("Edited text"));
+
+            assertThat(initiative.getDecisionModifiedDate().isPresent(), is(true));
 
         }
     }
@@ -250,8 +259,40 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             assertThat(initiative.getDecisionText().getValue(), is(DECISION_DESCRIPTION));
 
+            assertThat(initiative.getDecisionModifiedDate().isNotPresent(), is(true));
         }
     }
+    @Test
+    public void can_add_attachments_to_decision() {
+
+        Long initiativeId = createVerifiedInitiativeWithAuthor();
+
+        try {
+
+            createDefaultMunicipalityDecisionWithAttachment(initiativeId);
+
+            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build(DECISION_DESCRIPTION);
+
+            addAttachmentToDecision(editedDecision);
+
+            municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+            InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+
+            assertThat(initiative.getDecisionText().getValue(), is(DECISION_DESCRIPTION));
+
+            assertThat(initiative.getDecisionModifiedDate().isPresent(), is(true));
+
+            AttachmentUtil.Attachments decisionAttachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
+
+            assertThat(decisionAttachments.getAll().size(), is(2));
+        }
+    }
+
 
     @Test
     @Transactional
@@ -271,10 +312,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
         assertThat(oldHash, not(newHash));
     }
 
-
-    protected MunicipalityDecisionDto createDefaultMunicipalityDecisionWithAttachment(Long initiativeId) throws IOException, InvalidAttachmentException, FileUploadException {
-        MunicipalityDecisionDto decision = new MunicipalityDecisionDto();
-
+    protected MunicipalityDecisionDto addAttachmentToDecision(MunicipalityDecisionDto decision) throws IOException {
         List<MunicipalityDecisionDto.FileWithName> files = new ArrayList<MunicipalityDecisionDto.FileWithName>();
 
         MunicipalityDecisionDto.FileWithName fileWithName = new MunicipalityDecisionDto.FileWithName();
@@ -283,6 +321,14 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
         files.add(fileWithName);
 
         decision.setFiles(files);
+
+        return decision;
+    }
+
+    protected MunicipalityDecisionDto createDefaultMunicipalityDecisionWithAttachment(Long initiativeId) throws IOException, InvalidAttachmentException, FileUploadException {
+        MunicipalityDecisionDto decision = new MunicipalityDecisionDto();
+
+        addAttachmentToDecision(decision);
 
         decision.setDescription(DECISION_DESCRIPTION);
 

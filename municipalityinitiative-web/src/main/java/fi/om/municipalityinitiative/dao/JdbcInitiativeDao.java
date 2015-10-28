@@ -113,6 +113,10 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     if(maybeDecisionDate != null) {
                         info.setDecisionDate(maybeDecisionDate);
                     }
+                    DateTime maybeDecisionModifiedDate = row.get(municipalityInitiative.municipalityDecisionModifiedDate);
+                    if(maybeDecisionModifiedDate != null) {
+                        info.setDecisionModifiedDate(maybeDecisionModifiedDate);
+                    }
                     return info;
                 }
             };
@@ -528,6 +532,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
             .set(municipalityInitiative.municipalityDecisionDate, DateTime.now())
             .where(municipalityInitiative.id.eq(initiativeId))
             .execute());
+    }
+
+    @Override
+    public void updateInitiativeDecisionModifiedDate(Long initiativeId) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.municipalityDecisionModifiedDate, DateTime.now())
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
     }
 
     @Override

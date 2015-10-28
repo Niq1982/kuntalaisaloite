@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.dao.DecisionAttachmentDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
+import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
@@ -41,7 +42,6 @@ public class MunicipalityDecisionService {
     @Resource
     private InitiativeDao initiativeDao;
 
-
     @Resource
     private ImageModifier imageModifier;
 
@@ -55,51 +55,24 @@ public class MunicipalityDecisionService {
     public MunicipalityDecisionService() { // For spring AOP
     }
 
+
+    @Transactional(readOnly = false, rollbackFor = Throwable.class)
+    public void setDecision(MunicipalityDecisionDto decision, Long initiativeId, MunicipalityUserHolder user) throws FileUploadException, InvalidAttachmentException {
+        user.assertManagementRightsForInitiative(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
+        if (initiative.getDecisionDate().isPresent()) {
+            initiativeDao.updateInitiativeDecisionModifiedDate(initiativeId);
+        }
+        initiativeDao.updateInitiativeDecision(initiativeId, decision.getDescription());
+        saveAttachments(decision, initiativeId);
+    }
+
     @Transactional
     public void removeAttachmentFromDecision(Long attachmentId, MunicipalityUserHolder user){
         DecisionAttachmentFile file = decisionAttachmentDao.getAttachment(attachmentId);
         user.assertManagementRightsForInitiative(file.getInitiativeId());
+        initiativeDao.updateInitiativeDecisionModifiedDate(file.getInitiativeId());
         decisionAttachmentDao.removeAttachment(attachmentId);
-    }
-
-    @Transactional(readOnly = false, rollbackFor = Throwable.class)
-    public void setDecision(MunicipalityDecisionDto decision, Long initiativeId, MunicipalityUserHolder user) throws FileUploadException, InvalidAttachmentException {
-
-        user.assertManagementRightsForInitiative(initiativeId);
-
-        initiativeDao.updateInitiativeDecision(initiativeId, decision.getDescription());
-
-        saveAttachments(decision, initiativeId);
-
-    }
-
-    private void saveAttachments(MunicipalityDecisionDto decision, Long initiativeId) throws FileUploadException, InvalidAttachmentException {
-
-        for (MunicipalityDecisionDto.FileWithName attachment: decision.getFiles()) {
-
-            File tempFile = null;
-            try {
-                tempFile = AttachmentUtil.createTempFile(attachment.getFile(), AttachmentUtil.getFileType(attachment.getFile()));
-
-                DecisionAttachmentFile fileInfo = new DecisionAttachmentFile(attachment.getName(), AttachmentUtil.getFileType(attachment.getFile()), attachment.getFile().getContentType(), initiativeId);
-
-                Long attachmentId = decisionAttachmentDao.addAttachment(initiativeId, fileInfo);
-
-                AttachmentUtil.saveMunicipalityAttachmentToDiskAndCreateThumbnail(imageModifier, fileInfo.getContentType(), fileInfo.getFileType(), tempFile, attachmentId, attachmentDir);
-
-            }catch (InvalidAttachmentException e) {
-                throw e;
-
-            } catch (Throwable t) {
-                log.error("Error while uploading file: " + attachment.getFile().getOriginalFilename(), t);
-                throw new FileUploadException(t);
-            } finally {
-                if (tempFile != null){
-                    tempFile.delete();
-                }
-
-            }
-        }
     }
 
     @Transactional(readOnly = true)
@@ -117,7 +90,6 @@ public class MunicipalityDecisionService {
     public AttachmentFile getAttachment(Long attachmentId, String fileName, LoginUserHolder loginUserHolder) throws IOException {
         DecisionAttachmentFile attachmentInfo = decisionAttachmentDao.getAttachment(attachmentId);
         return AttachmentUtil.getAttachmentFile(fileName, attachmentInfo, attachmentDir);
-
     }
 
     public boolean validationSuccessful(MunicipalityDecisionDto decision, BindingResult bindingResult, Model model) {
@@ -148,6 +120,10 @@ public class MunicipalityDecisionService {
         return bindingResult.getErrorCount() == 0;
     }
 
+    private void addAttachmentValidationError(BindingResult bindingResult, String field, String error) {
+        bindingResult.addError(new FieldError("decision", field, "", false, new String[]{error}, new String[]{error}, ""));
+    }
+
     private List<MunicipalityDecisionDto.FileWithName> clearEmptyFiles(List<MunicipalityDecisionDto.FileWithName> files) {
         return Lists.newArrayList(Iterables.filter(files, new Predicate<MunicipalityDecisionDto.FileWithName>() {
             @Override
@@ -157,8 +133,31 @@ public class MunicipalityDecisionService {
         }));
 
     }
+    private void saveAttachments(MunicipalityDecisionDto decision, Long initiativeId) throws FileUploadException, InvalidAttachmentException {
 
-    public void addAttachmentValidationError(BindingResult bindingResult, String field, String error) {
-        bindingResult.addError(new FieldError("decision", field, "", false, new String[]{error}, new String[]{error}, ""));
+        for (MunicipalityDecisionDto.FileWithName attachment: decision.getFiles()) {
+
+            File tempFile = null;
+            try {
+                tempFile = AttachmentUtil.createTempFile(attachment.getFile(), AttachmentUtil.getFileType(attachment.getFile()));
+
+                DecisionAttachmentFile fileInfo = new DecisionAttachmentFile(attachment.getName(), AttachmentUtil.getFileType(attachment.getFile()), attachment.getFile().getContentType(), initiativeId);
+
+                Long attachmentId = decisionAttachmentDao.addAttachment(initiativeId, fileInfo);
+
+                AttachmentUtil.saveMunicipalityAttachmentToDiskAndCreateThumbnail(imageModifier, fileInfo.getContentType(), fileInfo.getFileType(), tempFile, attachmentId, attachmentDir);
+
+            }catch (InvalidAttachmentException e) {
+                throw e;
+
+            } catch (Throwable t) {
+                log.error("Error while uploading file: " + attachment.getFile().getOriginalFilename(), t);
+                throw new FileUploadException(t);
+            } finally {
+                if (tempFile != null){
+                    tempFile.delete();
+                }
+            }
+        }
     }
 }

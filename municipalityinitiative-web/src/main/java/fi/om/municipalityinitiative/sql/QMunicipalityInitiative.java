@@ -43,6 +43,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final DateTimePath<org.joda.time.DateTime> municipalityDecisionDate = createDateTime("municipalityDecisionDate", org.joda.time.DateTime.class);
 
+    public final DateTimePath<org.joda.time.DateTime> municipalityDecisionModifiedDate = createDateTime("municipalityDecisionModifiedDate", org.joda.time.DateTime.class);
+
     public final NumberPath<Long> municipalityId = createNumber("municipalityId", Long.class);
 
     public final StringPath name = createString("name");
@@ -123,6 +125,7 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
         addMetadata(modified, ColumnMetadata.named("modified").ofType(93).withSize(29).withDigits(6).notNull());
         addMetadata(municipalityDecision, ColumnMetadata.named("municipality_decision").ofType(12).withSize(2147483647));
         addMetadata(municipalityDecisionDate, ColumnMetadata.named("municipality_decision_date").ofType(93).withSize(29).withDigits(6));
+        addMetadata(municipalityDecisionModifiedDate, ColumnMetadata.named("municipality_decision_modified_date").ofType(93).withSize(29).withDigits(6));
         addMetadata(municipalityId, ColumnMetadata.named("municipality_id").ofType(-5).withSize(19).notNull());
         addMetadata(name, ColumnMetadata.named("name").ofType(12).withSize(512));
         addMetadata(participantCount, ColumnMetadata.named("participant_count").ofType(4).withSize(10));

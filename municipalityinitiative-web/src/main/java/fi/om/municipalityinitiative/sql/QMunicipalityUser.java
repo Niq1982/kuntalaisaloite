@@ -49,7 +49,7 @@ public class QMunicipalityUser extends com.mysema.query.sql.RelationalPathBase<Q
     public void addMetadata() {
         addMetadata(id, ColumnMetadata.named("id").ofType(-5).withSize(19).notNull());
         addMetadata(initiativeId, ColumnMetadata.named("initiative_id").ofType(-5).withSize(19).notNull());
-        addMetadata(managementHash, ColumnMetadata.named("management_hash").ofType(12).withSize(40));
+        addMetadata(managementHash, ColumnMetadata.named("management_hash").ofType(12).withSize(40).notNull());
     }
 
 }
