@@ -155,7 +155,7 @@
  * @param attachments is all attachments
  * @param manage boolean for showing delete-button. Default is false
 -->
-<#macro attachmentsView attachments manage=false municipality=false>
+<#macro attachmentsView attachments manage=false>
 	<#if (attachments.images?size + attachments.pdfs?size) gt 0>
 		<div class="initiative-content-row thumbnail-list cf">
 
@@ -166,8 +166,8 @@
 
 		    	<div class="column col-1of4 ${((attachment_index + 1) % 4 == 0)?string("last","")}">
 		    		<span class="thumbnail">
-				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName, municipality)}" target="_blank">
-				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId,  municipality)}" alt="<@u.stripHtmlTags attachment.description />" />
+				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName, false)}" target="_blank">
+				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId,  false)}" alt="<@u.stripHtmlTags attachment.description />" />
 			            </a>
 		            </span>
 		            <span class="img-label"><@u.stripHtmlTags attachment.description />
@@ -176,7 +176,7 @@
 		                        data-id="${attachment.attachmentId}"
 		                        data-name="<@u.stripHtmlTags attachment.description />"
 		                        data-type="image"
-		                        data-src="${urls.getAttachmentThumbnail(attachment.attachmentId, municipality)}" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
+		                        data-src="${urls.getAttachmentThumbnail(attachment.attachmentId, false)}" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
 						    </a>
 				        </#if>
 			        </span>
@@ -191,7 +191,7 @@
 	    		<#if attachment_index == 0><ul class="no-style"></#if>
 
 			        <li class="pdf-attachment">
-			        	<a href="${urls.attachment(attachment.attachmentId, attachment.fileName, municipality)}" target="_blank">
+			        	<a href="${urls.attachment(attachment.attachmentId, attachment.fileName, false)}" target="_blank">
 				            <@u.fileIcon type="pdf" />
 				            <span class="pdf-label"><@u.stripHtmlTags attachment.description /></span>
 			            </a>
@@ -208,6 +208,69 @@
 		        <#if !attachment_has_next></ul></#if>
 		    </#list>
 	    </div>
+    </#if>
+</#macro>
+
+
+<#--
+ *
+ * Municipality attachmentsview
+ *
+ *
+ -->
+<#macro municipalityAttachmentsView attachments manage=false>
+    <#if (attachments.images?size + attachments.pdfs?size) gt 0>
+    <div class="initiative-content-row thumbnail-list cf">
+
+        <#assign userCanRemoveAttachments = manage && user.hasRightToInitiative(initiative.id)/>
+        <h3><@u.message "attachments.title" /></h3>
+
+        <#list attachments.images as attachment>
+
+            <div class="column col-1of4 ${((attachment_index + 1) % 4 == 0)?string("last","")}">
+                <span class="thumbnail">
+                    <a href="${urls.attachment(attachment.attachmentId, attachment.fileName, true)}" target="_blank">
+                        <img src="${urls.getAttachmentThumbnail(attachment.attachmentId,  true)}" alt="<@u.stripHtmlTags attachment.description />" />
+                    </a>
+                </span>
+            <span class="img-label"><@u.stripHtmlTags attachment.description />
+                <#if userCanRemoveAttachments >
+                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment delete-attachment trigger-tooltip"
+                        data-id="${attachment.attachmentId}"
+                        data-name="<@u.stripHtmlTags attachment.description />"
+                        data-type="image"
+                        data-src="${urls.getAttachmentThumbnail(attachment.attachmentId, true)}" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
+                    </a>
+                </#if>
+                </span>
+            </div>
+            <#if ((attachment_index + 1) % 4 == 0) || !attachment_has_next><br class="clear" /></#if>
+
+        </#list>
+    </div>
+
+    <div class="initiative-content-row">
+        <#list attachments.pdfs as attachment>
+            <#if attachment_index == 0><ul class="no-style"></#if>
+
+            <li class="pdf-attachment">
+                <a href="${urls.attachment(attachment.attachmentId, attachment.fileName, true)}" target="_blank">
+                    <@u.fileIcon type="pdf" />
+                    <span class="pdf-label"><@u.stripHtmlTags attachment.description /></span>
+                </a>
+
+                <#if userCanRemoveAttachments >
+                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment trigger-tooltip"
+                        data-id="${attachment.attachmentId}"
+                        data-name="<@u.stripHtmlTags attachment.description />"
+                        data-type="pdf" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
+                    </a>
+                </#if>
+            </li>
+
+            <#if !attachment_has_next></ul></#if>
+        </#list>
+    </div>
     </#if>
 </#macro>
 
@@ -385,7 +448,7 @@
             <#if manage>
                 <a class="small-button edit-decision" href="${urls.openDecisionForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.editDecision" /> </span></a>
             </#if>
-            <@attachmentsView attachments=decisionInfo.attachments municipality=true/>
+            <@municipalityAttachmentsView attachments=decisionInfo.attachments />
             <#if manage && (decisionInfo.attachments.count() gt 0)>
                 <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.removeAttachments" /></span></a>
             </#if>

@@ -80,7 +80,7 @@
         <div class="msg-block cf">
             <h2><@u.message "municipality.decision.removeAttachments" /></h2>
             <p>Voit poistaa liitteitä klikkaamalla raksia</p>
-            <@e.attachmentsView attachments=decisionInfo.getValue().attachments manage=true municipality=true/>
+            <@e.municipalityAttachmentsView attachments=decisionInfo.getValue().attachments manage=true/>
             <a class="small-button" href="${urls.getMunicipalityDecisionView(initiative.id)}">Poistu</a>
         </div>
     </#if>
