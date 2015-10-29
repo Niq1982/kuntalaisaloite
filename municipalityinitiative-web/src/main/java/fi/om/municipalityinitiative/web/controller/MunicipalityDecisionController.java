@@ -132,6 +132,29 @@ public class MunicipalityDecisionController extends BaseController{
         ).view(model, Urls.get(locale).alt().municipalityModeration());
     }
 
+    @RequestMapping(value = {EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV}, method = POST)
+    public String editDecisionAttachments(@PathVariable("id") Long initiativeId,
+                                          @ModelAttribute("decision") MunicipalityDecisionDto decision,
+                                          Model model,
+                                          Locale locale,
+                                          DefaultMultipartHttpServletRequest request) {
+
+        // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
+        SecurityFilter.verifyAndGetCurrentCSRFToken(request);
+
+        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+        try {
+            municipalityDecisionService.updateAttachments(initiativeId, decision.getFiles(), loginUserHolder);
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+            return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.ATTACHMENT_FAILURE, request);
+        } catch (InvalidAttachmentException e) {
+            e.printStackTrace();
+            return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.ATTACHMENT_INVALID, request);
+        }
+
+        return redirectWithMessage(Urls.get(locale).openDecisionAttachmentsForEdit(initiativeId), RequestMessage.ATTACHMENT_ADDED, request);
+    }
 
     @RequestMapping(value = {EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV}, method = POST, params = ACTION_DELETE_ATTACHMENT)
     public String deleteAttachment(@PathVariable("id") Long initiativeId,
@@ -156,16 +179,17 @@ public class MunicipalityDecisionController extends BaseController{
         SecurityFilter.verifyAndGetCurrentCSRFToken(request);
 
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+
+        InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
-
-        boolean editAttachments = false;
-
-        boolean showDecisionForm = false;
-
-        if (!municipalityDecisionService.validationSuccessful(decision, bindingResult, model)) {
-            InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
+        if (initiative.getDecisionDate().isPresent()) {
             decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().getValue(), initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
-            showDecisionForm = true;
+        }
+
+        if (!municipalityDecisionService.validationSuccessful(decision,decisionInfo.isPresent(), bindingResult, model)) {
+
+            boolean editAttachments = false;
+            boolean showDecisionForm = true;
 
             return ViewGenerator.municipalityDecisionView(
                     normalInitiativeService.getInitiative(initiativeId, loginUserHolder),

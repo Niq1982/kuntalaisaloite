@@ -166,7 +166,11 @@ public class SecurityFilter implements Filter {
             Urls.MANAGE_ATTACHMENTS_SV,
 
             Urls.MUNICIPALITY_DECISION_FI_BASE_URL,
-            Urls.MUNICIPALITY_DECISION_SV_BASE_URL
+            Urls.MUNICIPALITY_DECISION_SV_BASE_URL,
+
+            Urls.EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI,
+            Urls.EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV
+
 
     };
 

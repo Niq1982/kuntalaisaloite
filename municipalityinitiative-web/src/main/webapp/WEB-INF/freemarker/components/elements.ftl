@@ -223,8 +223,9 @@
     <div class="initiative-content-row thumbnail-list cf">
 
         <#assign userCanRemoveAttachments = manage && user.hasRightToInitiative(initiative.id)/>
-        <h3><@u.message "attachments.title" /></h3>
-
+        <#if !manage>
+            <h3><@u.message "attachments.title" /></h3>
+        </#if>
         <#list attachments.images as attachment>
 
             <div class="column col-1of4 ${((attachment_index + 1) % 4 == 0)?string("last","")}">
@@ -449,9 +450,8 @@
                 <a class="small-button edit-decision" href="${urls.openDecisionForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.editDecision" /> </span></a>
             </#if>
             <@municipalityAttachmentsView attachments=decisionInfo.attachments />
-            <#if manage && (decisionInfo.attachments.count() gt 0)>
-                <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.removeAttachments" /></span></a>
-            </#if>
+            <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "decision.edit.attachments" /></span></a>
+
         </div>
     </div>
 </#macro>

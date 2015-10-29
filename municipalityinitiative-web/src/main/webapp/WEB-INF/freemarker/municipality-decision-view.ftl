@@ -54,14 +54,16 @@
 
                     <input type="hidden" name="locale" value="${locale}"/>
 
-                    <div class="input-block-content">
-                        <@f.uploadField path="decision.files[0].file" cssClass="multi" name="files[0].file" multiple=false/>
-                    </div>
+                    <#if !decisionInfo.isPresent()>
+                        <div class="input-block-content">
+                            <@f.uploadField path="decision.files[0].file" cssClass="multi" name="files[0].file" multiple=false/>
+                        </div>
+                    </#if>
 
                     <#if decisionInfo.isPresent()>
                         <div class="input-block-content">
                             <button type="submit" class="small-button"><span class="small-icon save-and-send"><@u.message "decision.edit.submit" /></span></button>
-                            <a class="small-button" href="${urls.getMunicipalityDecisionView(initiative.id)}">Poistu</a>
+                            <a class="small-button" href="${urls.getMunicipalityDecisionView(initiative.id)}"><@u.message "decision.edit.cancel" /></a>
                         </div>
                     <#else>
                         <div class="input-block-content">
@@ -78,10 +80,21 @@
 
     <#if editAttachments>
         <div class="msg-block cf">
-            <h2><@u.message "municipality.decision.removeAttachments" /></h2>
-            <p>Voit poistaa liitteitä klikkaamalla raksia</p>
+            <h2><@u.message "decision.edit.attachments" /></h2>
             <@e.municipalityAttachmentsView attachments=decisionInfo.getValue().attachments manage=true/>
-            <a class="small-button" href="${urls.getMunicipalityDecisionView(initiative.id)}">Poistu</a>
+            <form action="${urls.openDecisionAttachmentsForEdit(initiative.id)}" method="POST" id="form-accept" class="sodirty" enctype="multipart/form-data">
+                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                <@spring.bind "decision" />
+                <div class="input-block-content">
+                    <@f.uploadField path="decision.files[0].file" cssClass="multi" name="files[0].file" multiple=false/>
+                    <br>
+                    <button type="submit" class="small-button"><span class="small-icon save-and-send"><@u.message "decision.upload.attachments"/></span></button>
+                    <a class="small-button" href="${urls.getMunicipalityDecisionView(initiative.id)}"><@u.message "decision.edit.cancel" /></a>
+                </div>
+
+            </form>
+
+
         </div>
     </#if>
 
@@ -93,6 +106,7 @@
 
     <@prog.progress initiative=initiative public=false omOrMunicipality=true />
 
+    <br class="cf"/>
 
     <#assign deleteAattachment>
         <@compress single_line=true>

@@ -64,7 +64,18 @@ public class MunicipalityDecisionService {
             initiativeDao.updateInitiativeDecisionModifiedDate(initiativeId);
         }
         initiativeDao.updateInitiativeDecision(initiativeId, decision.getDescription());
-        saveAttachments(decision, initiativeId);
+        saveAttachments(decision.getFiles(), initiativeId);
+    }
+
+    @Transactional(readOnly = false, rollbackFor = Throwable.class)
+    public void updateAttachments(Long initiativeId, List<MunicipalityDecisionDto.FileWithName> files, MunicipalityUserHolder user) throws FileUploadException, InvalidAttachmentException {
+        user.assertManagementRightsForInitiative(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
+        if (initiative.getDecisionDate().isNotPresent()) {
+            throw new InvalidAttachmentException("Can't attach files to decision that doesn't exist");
+        }
+        initiativeDao.updateInitiativeDecisionModifiedDate(initiativeId);
+        saveAttachments(files, initiativeId);
     }
 
     @Transactional
@@ -92,14 +103,26 @@ public class MunicipalityDecisionService {
         return AttachmentUtil.getAttachmentFile(fileName, attachmentInfo, attachmentDir);
     }
 
-    public boolean validationSuccessful(MunicipalityDecisionDto decision, BindingResult bindingResult, Model model) {
+    public boolean validationSuccessful(MunicipalityDecisionDto decision, boolean edit, BindingResult bindingResult, Model model) {
 
         decision.setFiles(clearEmptyFiles(decision.getFiles()));
 
-        if (decision.getFiles().size() == 0  & (decision.getDescription().isEmpty() || decision.getDescription().equals(""))) {
-            addAttachmentValidationError(bindingResult, "filesAndDescription", "DecisionDescriptionAndAttachmentsBothEmpty");
+        if (edit) {
+            if (decision.getDescription().isEmpty() || decision.getDescription().equals("")){
+                addAttachmentValidationError(bindingResult, "description", "NotEmpty");
+            }
+        }
+        else  {
+            if (decision.getFiles().size() == 0  && (decision.getDescription().isEmpty() || decision.getDescription().equals(""))) {
+                addAttachmentValidationError(bindingResult, "filesAndDescription", "DecisionDescriptionAndAttachmentsBothEmpty");
+            }
+            validateFiles(decision, bindingResult);
         }
 
+        return validationService.validationSuccessful(decision, bindingResult, model);
+    }
+
+    private void validateFiles(MunicipalityDecisionDto decision, BindingResult bindingResult) {
         for (MunicipalityDecisionDto.FileWithName file : decision.getFiles()) {
 
             if (file.getName() == null || file.getName().isEmpty()) {
@@ -115,9 +138,6 @@ public class MunicipalityDecisionService {
                 addAttachmentValidationError(bindingResult, "attachment.error.too.large.file", AttachmentUtil.ImageProperties.MAX_FILESIZE_IN_KILOBYTES);
             }
         }
-        validationService.validationSuccessful(decision, bindingResult, model);
-
-        return bindingResult.getErrorCount() == 0;
     }
 
     private void addAttachmentValidationError(BindingResult bindingResult, String field, String error) {
@@ -133,9 +153,11 @@ public class MunicipalityDecisionService {
         }));
 
     }
-    private void saveAttachments(MunicipalityDecisionDto decision, Long initiativeId) throws FileUploadException, InvalidAttachmentException {
 
-        for (MunicipalityDecisionDto.FileWithName attachment: decision.getFiles()) {
+    @Transactional(readOnly = false, rollbackFor = Throwable.class)
+    private void saveAttachments(List<MunicipalityDecisionDto.FileWithName> files, Long initiativeId) throws FileUploadException, InvalidAttachmentException {
+
+        for (MunicipalityDecisionDto.FileWithName attachment: files) {
 
             File tempFile = null;
             try {
