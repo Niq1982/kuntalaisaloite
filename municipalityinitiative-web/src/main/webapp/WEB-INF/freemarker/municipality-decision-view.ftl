@@ -85,6 +85,7 @@
             <form action="${urls.openDecisionAttachmentsForEdit(initiative.id)}" method="POST" id="form-accept" class="sodirty" enctype="multipart/form-data">
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                 <@spring.bind "decision" />
+                <@u.errorsSummary path="decision.*" prefix="decision."/>
                 <div class="input-block-content">
                     <@f.uploadField path="decision.files[0].file" cssClass="multi" name="files[0].file" multiple=false/>
                     <br>

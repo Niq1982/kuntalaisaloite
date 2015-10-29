@@ -136,6 +136,7 @@ public class MunicipalityDecisionController extends BaseController{
     public String editDecisionAttachments(@PathVariable("id") Long initiativeId,
                                           @ModelAttribute("decision") MunicipalityDecisionDto decision,
                                           Model model,
+                                          BindingResult bindingResult,
                                           Locale locale,
                                           DefaultMultipartHttpServletRequest request) {
 
@@ -143,6 +144,27 @@ public class MunicipalityDecisionController extends BaseController{
         SecurityFilter.verifyAndGetCurrentCSRFToken(request);
 
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+        if(!municipalityDecisionService.validationSuccessful(decision.getFiles(), bindingResult, model)) {
+            boolean editAttachments = true;
+            boolean showDecisionForm = false;
+
+            InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
+            Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
+            if (initiative.getDecisionDate().isPresent()) {
+                decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().getValue(), initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
+            }
+
+            return ViewGenerator.municipalityDecisionView(
+                    normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
+                    normalInitiativeService.getManagementSettings(initiativeId),
+                    authorService.findAuthors(initiativeId, loginUserHolder),
+                    attachmentService.findAllAttachments(initiativeId, loginUserHolder),
+                    decision,
+                    decisionInfo,
+                    showDecisionForm,
+                    editAttachments
+            ).view(model, Urls.get(locale).alt().municipalityModeration());
+        }
         try {
             municipalityDecisionService.updateAttachments(initiativeId, decision.getFiles(), loginUserHolder);
         } catch (FileUploadException e) {

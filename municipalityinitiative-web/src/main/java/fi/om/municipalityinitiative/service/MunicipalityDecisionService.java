@@ -113,20 +113,32 @@ public class MunicipalityDecisionService {
             }
         }
         else  {
-            if (decision.getFiles().size() == 0  && (decision.getDescription().isEmpty() || decision.getDescription().equals(""))) {
+            if (decision.getFiles().isEmpty()  && (decision.getDescription().isEmpty() || decision.getDescription().equals(""))) {
                 addAttachmentValidationError(bindingResult, "filesAndDescription", "DecisionDescriptionAndAttachmentsBothEmpty");
             }
-            validateFiles(decision, bindingResult);
+            validateFiles(decision.getFiles(), bindingResult);
+
         }
 
         return validationService.validationSuccessful(decision, bindingResult, model);
     }
 
-    private void validateFiles(MunicipalityDecisionDto decision, BindingResult bindingResult) {
-        for (MunicipalityDecisionDto.FileWithName file : decision.getFiles()) {
+    public boolean validationSuccessful(List<MunicipalityDecisionDto.FileWithName> files, BindingResult bindingResult, Model model) {
+
+        if(files.isEmpty()) {
+            addAttachmentValidationError(bindingResult, "files", "AttachmentsEmpty");
+        } else {
+            validateFiles(files, bindingResult);
+        }
+        return validationService.validationSuccessful(files, bindingResult, model);
+    }
+
+    private void validateFiles(List<MunicipalityDecisionDto.FileWithName> files, BindingResult bindingResult) {
+
+        for (MunicipalityDecisionDto.FileWithName file : files) {
 
             if (file.getName() == null || file.getName().isEmpty()) {
-                addAttachmentValidationError(bindingResult, "files", "NotEmpty");
+                addAttachmentValidationError(bindingResult, "file.name", "NotEmpty");
             }
             try {
                 AttachmentUtil.assertValidFileType(AttachmentUtil.parseFileType(file.getFile().getOriginalFilename()));
