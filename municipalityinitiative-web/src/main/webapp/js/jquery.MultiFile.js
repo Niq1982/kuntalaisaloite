@@ -293,28 +293,40 @@
          v = String(slave.value || ''/*.attr('value)*/),
          title = MultiFile.STRING.file.replace('$file', v.match(/[^\/\\]+$/gi)[0]),
          a = $('<span class="MultiFile-title" title="'+MultiFile.STRING.selected.replace('$file', v)+'">'+MultiFile.STRING.file.replace('$file', v.match(/[^\/\\]+$/gi)[0])+'</span>'),
-         b = $('<a class="MultiFile-remove" href="#'+MultiFile.wrapID+'">'+MultiFile.STRING.remove+'</a>'),
-         nameField = $('<input style="display:none" name=files['+ slave_count +'].name value="'+ title +'"/>');
+         b = $('<a class="MultiFile-remove icon-small icon-16 cancel" href="#'+MultiFile.wrapID+'"></a>'),
+         nameField = $('<input style="display:none" name=files['+ slave_count +'].name value="'+ title +'"/>'),
+         editButton = $('<a class=" small-icon edit" id="edit"></a>'),
+         saveButton = $('<a style="display:none" class="small-icon save-and-send" id="save"></a>');
 
         // Insert label
         MultiFile.list.append(
-         r.append(b, ' ', a, nameField)
+         r.append(b, ' ', a, nameField, editButton, saveButton)
         );
-        a.click(function() {
-           nameField.show();
-           nameField.focus();
-           a.hide();
-        });
-        nameField.focusout(function(){
-            a.show();
-            nameField.hide();
-            if(nameField.val() && nameField.val() !== "") {
-                a.text(nameField.val());
-            } else {
-                nameField.val(a.text());
-            }
 
-        });
+        var openForEdit = function(event) {
+            nameField.show();
+            nameField.focus();
+            a.hide();
+            editButton.hide();
+            saveButton.show();
+        };
+
+        var saveChanges = function(){
+           a.show();
+           editButton.show();
+           nameField.hide();
+           saveButton.hide();
+           if(nameField.val() && nameField.val() !== "") {
+               a.text(nameField.val());
+           } else {
+               nameField.val(a.text());
+           }
+        };
+
+        editButton.click(openForEdit);
+        a.click(openForEdit);
+        saveButton.click(saveChanges);
+        nameField.focusout(saveChanges);
 
 
         b
