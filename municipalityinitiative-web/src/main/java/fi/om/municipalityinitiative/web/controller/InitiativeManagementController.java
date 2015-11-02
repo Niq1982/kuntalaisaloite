@@ -7,10 +7,7 @@ import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
-import fi.om.municipalityinitiative.service.AttachmentService;
-import fi.om.municipalityinitiative.service.LocationService;
-import fi.om.municipalityinitiative.service.ParticipantService;
-import fi.om.municipalityinitiative.service.ValidationService;
+import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
@@ -127,7 +124,7 @@ public class InitiativeManagementController extends BaseController {
                 normalInitiativeService.getManagementSettings(initiativeId),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
                 new AttachmentCreateDto(),
-                AttachmentService.ImageProperties.instance()).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+                AttachmentUtil.ImageProperties.instance()).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
@@ -428,7 +425,7 @@ public class InitiativeManagementController extends BaseController {
                     normalInitiativeService.getManagementSettings(initiativeId),
                     attachmentService.findAttachments(initiativeId, loginUserHolder),
                     attachmentCreateDto,
-                    AttachmentService.ImageProperties.instance())
+                    AttachmentUtil.ImageProperties.instance())
                     .view(model, Urls.get(locale).alt().manageAttachments(initiativeId));
 
         }

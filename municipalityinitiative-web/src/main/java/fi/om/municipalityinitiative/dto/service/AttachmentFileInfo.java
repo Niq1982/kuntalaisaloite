@@ -1,9 +1,9 @@
 package fi.om.municipalityinitiative.dto.service;
 
-import com.google.common.net.MediaType;
+import fi.om.municipalityinitiative.service.AttachmentUtil;
 import org.joda.time.DateTime;
 
-public class AttachmentFileInfo {
+public class AttachmentFileInfo extends AttachmentFileBase{
     private Long initiativeId;
     private Long attachmentId;
     private String description;
@@ -32,26 +32,37 @@ public class AttachmentFileInfo {
         this.createTime = createTime;
     }
 
+    @Override
     public Long getInitiativeId() {
         return initiativeId;
     }
 
+    @Override
     public Long getAttachmentId() {
         return attachmentId;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
+    @Override
+    public boolean isMunicipalityAttachment() {
+        return false;
+    }
+
+    @Override
     public String getContentType() {
         return contentType;
     }
 
+    @Override
     public DateTime getCreateTime() {
         return createTime;
     }
 
+    @Override
     public boolean isAccepted() {
         return accepted;
     }
@@ -64,17 +75,15 @@ public class AttachmentFileInfo {
         this.fileType = fileType;
     }
 
+    @Override
     public String getFileType() {
         return fileType;
     }
 
     public boolean isPdf() {
-        return isPdfContentType(contentType);
+        return AttachmentUtil.isPdfContentType(contentType);
     }
 
-    public static boolean isPdfContentType(String contentType) {
-        return contentType.equals(MediaType.PDF.toString());
-    }
 
     public String getFileName() {
         return description

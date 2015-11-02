@@ -4,10 +4,10 @@ import org.joda.time.DateTime;
 
 public class AttachmentFile {
 
-    private AttachmentFileInfo info;
+    private AttachmentFileBase info;
     private byte[] bytes;
 
-    public AttachmentFile(AttachmentFileInfo info, byte[] bytes) {
+    public AttachmentFile(AttachmentFileBase info, byte[] bytes) {
         this.info = info;
         this.bytes = bytes;
     }

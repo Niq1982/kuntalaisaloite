@@ -58,7 +58,7 @@
 		        </div>
 		    </#if>
 	    
-	    	<@e.attachmentsView attachments=attachments manage=true />
+	    	<@e.attachmentsView attachments=attachments manage=managementSettings.allowAddAttachments />
 	    	
 	    	<div class="initiative-content-row cf last">
 	        	<a href="${managementURL}" class="small-button" ><@u.message "attachment.ready" /></a>
@@ -73,7 +73,7 @@
         	<div class="system-msg msg-info cf">
             	<h2><@u.message "deleteAttachment.confirm.title" /></h2>
         	
-            	<@deleteAattachmentForm modal=false />
+            	<@e.deleteAattachmentForm modal=false />
             </div>
         </div>
     </#if>
@@ -83,7 +83,7 @@
     <#-- HTML for confirm delete Modal -->
     <#assign deleteAattachment>
         <@compress single_line=true>
-            <@deleteAattachmentForm />
+            <@e.deleteAattachmentForm />
         </@compress>
     </#assign>
     
@@ -145,11 +145,11 @@
  * @param list is attachments object list
  * @param id is attachment's id
 -->
-<#macro attachmentDetailsById id>
+<#macro attachmentDetailsById id municipality=false>
     <#list attachments.images as attachment>
         <#if attachment.attachmentId?string == id>
             <h4 class="header">${attachment.description}</h4>
-            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="${attachment.description}" />
+            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId, municipality)}" alt="${attachment.description}" />
         </#if>
     </#list>
     
@@ -160,32 +160,5 @@
     </#list>
 </#macro>
 
-<#-- 
- * deleteAattachmentForm
- *
- * Generates a form for deleting attachment
- *
- * @param modal is a boolean for selecting either JS- or NOSCRIPT-version
--->
-<#macro deleteAattachmentForm modal=true>
-	<#if !modal><#assign attachmentId = RequestParameters['deleteAttachment']?number /></#if>
-
-    <form id="delete-attachment-form" action="<#if !modal>${urls.getManageAttachments(initiative.id)}</#if>" method="POST">
-        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-        <input type="hidden" id="attachmentId" name="${UrlConstants.PARAM_ATTACHMENT_ID}" value="<#if !modal>${RequestParameters['deleteAttachment']}</#if>"/>
-        
-        <#if modal>
-            <div id="selected-attachment" class="details"></div>
-            <br/>
-        <#else>
-            <@attachmentDetailsById RequestParameters['deleteAttachment'] />
-        </#if>
-        
-        <div class="input-block-content">
-            <button type="submit" name="${UrlConstants.ACTION_DELETE_ATTACHMENT}" class="small-button"><span class="small-icon cancel"><@u.message "deleteAttachment.btn" /></button>
-            <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
-        </div>
-    </form>
-</#macro>
 
 </#escape> 

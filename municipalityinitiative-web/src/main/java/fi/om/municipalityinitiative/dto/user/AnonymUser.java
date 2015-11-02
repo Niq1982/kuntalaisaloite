@@ -35,4 +35,9 @@ public class AnonymUser extends User {
     public boolean isLoggedIn() {
         return false;
     }
+
+    @Override
+    public boolean isMunicipalityUser() {
+        return false;
+    }
 }

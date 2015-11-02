@@ -168,6 +168,9 @@ public class AppConfiguration {
     public LocationDao locationDao() {return new JdbcLocationDao();}
 
     @Bean
+    public MunicipalityUserDao municipalityUserDao() {return new JdbcMunicipalityUserDao() ;}
+
+    @Bean
     public AuthorService authorService() {
         return new AuthorService();
     }
@@ -206,6 +209,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public MunicipalityUserService municipalityUserService() {
+        return new MunicipalityUserService();
+    }
+
+    @Bean
     public ParticipantService participantService() {
         return new ParticipantService();
     }
@@ -221,6 +229,16 @@ public class AppConfiguration {
     @Bean
     public UserService userService() {
         return new UserService(env.getRequiredProperty(PropertyNames.omUserSalt));
+    }
+
+    @Bean
+    public MunicipalityDecisionService decisionService() {
+        return new MunicipalityDecisionService(env.getRequiredProperty(PropertyNames.decisionAttachmentDir));
+    }
+
+    @Bean
+    public DecisionAttachmentDao decisionAttachmentDao(){
+        return new JdbcDecisionAttachmentDao();
     }
 
     @Bean

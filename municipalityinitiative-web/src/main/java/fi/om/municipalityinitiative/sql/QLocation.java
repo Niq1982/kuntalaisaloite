@@ -1,14 +1,13 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
-import com.mysema.query.types.path.*;
-
-import com.mysema.query.types.PathMetadata;
-import javax.annotation.Generated;
-import com.mysema.query.types.Path;
-
 import com.mysema.query.sql.ColumnMetadata;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
+import com.mysema.query.types.path.NumberPath;
+
+import javax.annotation.Generated;
+
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -51,8 +50,8 @@ public class QLocation extends com.mysema.query.sql.RelationalPathBase<QLocation
     public void addMetadata() {
         addMetadata(id, ColumnMetadata.named("id").ofType(-5).withSize(19).notNull());
         addMetadata(initiativeId, ColumnMetadata.named("initiative_id").ofType(-5).withSize(19).notNull());
-        addMetadata(locationLat, ColumnMetadata.named("location_lat").ofType(2).withSize(9).withDigits(6));
-        addMetadata(locationLng, ColumnMetadata.named("location_lng").ofType(2).withSize(9).withDigits(6));
+        addMetadata(locationLat, ColumnMetadata.named("location_lat").ofType(2).withSize(9).withDigits(6).notNull());
+        addMetadata(locationLng, ColumnMetadata.named("location_lng").ofType(2).withSize(9).withDigits(6).notNull());
     }
 
 }

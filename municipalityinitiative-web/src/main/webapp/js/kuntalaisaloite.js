@@ -1346,6 +1346,16 @@ $('.municipality-filter').change( function() {
 		}
 	});
 
+	$('.js-renew-municipality-management-hash').click(function(){
+		try {
+			generateModal(modalData.renewMunicipalityManagementHash(), 'full', renewManagementHash.getInitiativeInformation);
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+
+
 	// Edit municipality
 	$('.js-edit-municipality').click(function(){
 		$('.municipalities .active').removeClass('active');
@@ -1487,7 +1497,7 @@ $.DirtyForms.dialog = {
 
 (function() {
 	var ignoreHelper = {
-		ignoreAnchorSelector: 'a[rel="external"], .modal a, a#openMap, .map-marker a,  #open-remove-location a'
+		ignoreAnchorSelector: 'a[rel="external"], .modal a, a#openMap, .map-marker a,  #open-remove-location a, #edit, #save'
 	};
 
 	$.DirtyForms.helpers.push(ignoreHelper);
@@ -1673,6 +1683,17 @@ var renewManagementHash = (function() {
 		}
 	};
 
+}());
+
+/**
+ *  Renew municipality management hash
+ */
+var renewMunicipalityManagementHash = (function() {
+	return {
+		getInitiativeInformation: function() {
+
+		}
+	}
 }());
 
 /**

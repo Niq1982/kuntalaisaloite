@@ -158,23 +158,25 @@
 <#macro attachmentsView attachments manage=false>
 	<#if (attachments.images?size + attachments.pdfs?size) gt 0>
 		<div class="initiative-content-row thumbnail-list cf">
+
+        <#assign userCanRemoveAttachments = manage && user.hasRightToInitiative(initiative.id)/>
     	<h3><@u.message "attachments.title" /></h3>
 
 		    <#list attachments.images as attachment>
 
 		    	<div class="column col-1of4 ${((attachment_index + 1) % 4 == 0)?string("last","")}">
 		    		<span class="thumbnail">
-				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" target="_blank">
-				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="<@u.stripHtmlTags attachment.description />" />
+				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName, false)}" target="_blank">
+				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId,  false)}" alt="<@u.stripHtmlTags attachment.description />" />
 			            </a>
 		            </span>
 		            <span class="img-label"><@u.stripHtmlTags attachment.description />
-			            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
+			            <#if userCanRemoveAttachments >
 		                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment delete-attachment trigger-tooltip"
 		                        data-id="${attachment.attachmentId}"
 		                        data-name="<@u.stripHtmlTags attachment.description />"
 		                        data-type="image"
-		                        data-src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
+		                        data-src="${urls.getAttachmentThumbnail(attachment.attachmentId, false)}" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
 						    </a>
 				        </#if>
 			        </span>
@@ -189,12 +191,12 @@
 	    		<#if attachment_index == 0><ul class="no-style"></#if>
 
 			        <li class="pdf-attachment">
-			        	<a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" target="_blank">
+			        	<a href="${urls.attachment(attachment.attachmentId, attachment.fileName, false)}" target="_blank">
 				            <@u.fileIcon type="pdf" />
 				            <span class="pdf-label"><@u.stripHtmlTags attachment.description /></span>
 			            </a>
 
-			            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
+			            <#if userCanRemoveAttachments >
 		                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment trigger-tooltip"
 		                        data-id="${attachment.attachmentId}"
 		                        data-name="<@u.stripHtmlTags attachment.description />"
@@ -206,6 +208,70 @@
 		        <#if !attachment_has_next></ul></#if>
 		    </#list>
 	    </div>
+    </#if>
+</#macro>
+
+
+<#--
+ *
+ * Municipality attachmentsview
+ *
+ *
+ -->
+<#macro municipalityAttachmentsView attachments manage=false>
+    <#if (attachments.images?size + attachments.pdfs?size) gt 0>
+    <div class="initiative-content-row thumbnail-list cf">
+
+        <#assign userCanRemoveAttachments = manage && user.hasRightToInitiative(initiative.id)/>
+        <#if !manage>
+            <h3><@u.message "attachments.title" /></h3>
+        </#if>
+        <#list attachments.images as attachment>
+
+            <div class="column col-1of4 ${((attachment_index + 1) % 4 == 0)?string("last","")}">
+                <span class="thumbnail">
+                    <a href="${urls.attachment(attachment.attachmentId, attachment.fileName, true)}" target="_blank">
+                        <img src="${urls.getAttachmentThumbnail(attachment.attachmentId,  true)}" alt="<@u.stripHtmlTags attachment.description />" />
+                    </a>
+                </span>
+            <span class="img-label"><@u.stripHtmlTags attachment.description />
+                <#if userCanRemoveAttachments >
+                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment delete-attachment trigger-tooltip"
+                        data-id="${attachment.attachmentId}"
+                        data-name="<@u.stripHtmlTags attachment.description />"
+                        data-type="image"
+                        data-src="${urls.getAttachmentThumbnail(attachment.attachmentId, true)}" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
+                    </a>
+                </#if>
+                </span>
+            </div>
+            <#if ((attachment_index + 1) % 4 == 0) || !attachment_has_next><br class="clear" /></#if>
+
+        </#list>
+    </div>
+
+    <div class="initiative-content-row">
+        <#list attachments.pdfs as attachment>
+            <#if attachment_index == 0><ul class="no-style"></#if>
+
+            <li class="pdf-attachment">
+                <a href="${urls.attachment(attachment.attachmentId, attachment.fileName, true)}" target="_blank">
+                    <@u.fileIcon type="pdf" />
+                    <span class="pdf-label"><@u.stripHtmlTags attachment.description /></span>
+                </a>
+
+                <#if userCanRemoveAttachments >
+                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment trigger-tooltip"
+                        data-id="${attachment.attachmentId}"
+                        data-name="<@u.stripHtmlTags attachment.description />"
+                        data-type="pdf" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
+                    </a>
+                </#if>
+            </li>
+
+            <#if !attachment_has_next></ul></#if>
+        </#list>
+    </div>
     </#if>
 </#macro>
 
@@ -370,6 +436,54 @@
             </span>
     </div>
     <br class="clear" />
+</#macro>
+
+
+<#macro decisionBlock decisionInfo manage=false>
+    <div class="view-block first cf">
+        <div class="initiative-content-row last">
+            <h2><@u.message "municipality.decision" /></h2>
+            <#if decisionInfo.getDecisionText().isPresent()>
+                <@u.text decisionInfo.getDecisionText().value />
+            </#if>
+            <#if manage>
+                <a class="small-button edit-decision" href="${urls.openDecisionForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.editDecision" /> </span></a>
+            </#if>
+            <@municipalityAttachmentsView attachments=decisionInfo.attachments />
+            <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "decision.edit.attachments" /></span></a>
+
+        </div>
+    </div>
+</#macro>
+
+
+<#--
+ * deleteAattachmentForm
+ *
+ * Generates a form for deleting attachment
+ *
+ * @param modal is a boolean for selecting either JS- or NOSCRIPT-version
+ * @param municipality whether this attachment is related to municipality decision
+-->
+<#macro deleteAattachmentForm modal=true municipality=false>
+    <#if !modal><#assign attachmentId = RequestParameters['deleteAttachment']?number /></#if>
+
+    <form id="delete-attachment-form" action="<#if !modal>${urls.getManageAttachments(initiative.id)}</#if>" method="POST">
+        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+        <input type="hidden" id="attachmentId" name="${UrlConstants.PARAM_ATTACHMENT_ID}" value="<#if !modal>${RequestParameters['deleteAttachment']}</#if>"/>
+
+        <#if modal>
+            <div id="selected-attachment" class="details"></div>
+            <br/>
+        <#else>
+            <@attachmentDetailsById RequestParameters['deleteAttachment'] />
+        </#if>
+
+        <div class="input-block-content">
+            <button type="submit" name="${UrlConstants.ACTION_DELETE_ATTACHMENT}" class="small-button"><span class="small-icon cancel"><@u.message "deleteAttachment.btn" /></button>
+            <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+        </div>
+    </form>
 </#macro>
 
 

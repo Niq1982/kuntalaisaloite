@@ -12,10 +12,7 @@ import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.*;
-import fi.om.municipalityinitiative.service.ui.AuthorService;
-import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
-import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
-import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
+import fi.om.municipalityinitiative.service.ui.*;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
@@ -72,6 +69,8 @@ public class PublicInitiativeController extends BaseController {
     @Resource
     private AttachmentService attachmentService;
 
+    @Resource
+    private MunicipalityDecisionService municipalityDecisionService;
 
     @Resource
     private SupportCountService supportCountService;
@@ -111,17 +110,33 @@ public class PublicInitiativeController extends BaseController {
         addPiwicIdIfNotAuthenticated(model, request);
 
         InitiativePageInfo initiativePageView = publicInitiativeService.getInitiativePageDto(initiativeId, loginUserHolder);
-            if (initiativePageView.isCollaborative()) {
+
+        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageView);
+
+        if (initiativePageView.isCollaborative()) {
 
             return ViewGenerator.collaborativeView(initiativePageView,
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
                     new AuthorUIMessage(),
-                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
+                    supportCountService.getSupportVotesPerDateJson(initiativeId),
+                    municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
-            return ViewGenerator.singleView(initiativePageView).view(model, Urls.get(locale).alt().view(initiativeId));
+            return ViewGenerator.singleView(initiativePageView, municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
         }
+    }
+
+    private Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(@PathVariable("id") Long initiativeId, InitiativePageInfo initiativePageView) {
+        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
+        if (initiativePageView.initiative != null && initiativePageView.initiative.getDecisionDate().isPresent()) {
+            municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
+                    initiativePageView.initiative.getDecisionText(),
+                    initiativePageView.initiative.getDecisionDate().getValue(),
+                    initiativePageView.initiative.getDecisionModifiedDate(),
+                    municipalityDecisionService.getDecisionAttachments(initiativeId)));
+        }
+        return municipalityDecisionInfo;
     }
 
 
@@ -219,7 +234,8 @@ public class PublicInitiativeController extends BaseController {
                     municipalityService.findAllMunicipalities(locale),
                     participant,
                     new AuthorUIMessage(),
-                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
+                    supportCountService.getSupportVotesPerDateJson(initiativeId),
+                    getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo)).view(model, Urls.get(locale).alt().view(initiativeId));
 
         }
     }
@@ -361,11 +377,14 @@ public class PublicInitiativeController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
         else {
-            return ViewGenerator.collaborativeView(publicInitiativeService.getInitiativePageInfo(initiativeId),
+            InitiativePageInfo initiativePageInfo = publicInitiativeService.getInitiativePageInfo(initiativeId);
+            return ViewGenerator.collaborativeView(initiativePageInfo,
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
                     authorUIMessage,
-                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
+                    supportCountService.getSupportVotesPerDateJson(initiativeId),
+                    getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo)
+            ).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 
@@ -377,9 +396,9 @@ public class PublicInitiativeController extends BaseController {
     }
 
     @RequestMapping(value = Urls.ATTACHMENT)
-    public void getImage(@PathVariable Long id,
-                         @PathVariable String fileName,
-                         HttpServletRequest request, HttpServletResponse response) throws IOException {
+         public void getImage(@PathVariable Long id,
+                              @PathVariable String fileName,
+                              HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             AttachmentFile attachment = attachmentService.getAttachment(id, fileName, userService.getLoginUserHolder(request));
             attachmentFileResponse(response, attachment);
@@ -396,6 +415,32 @@ public class PublicInitiativeController extends BaseController {
 
         try {
             AttachmentFile thumbnail = attachmentService.getThumbnail(id, userService.getLoginUserHolder(request));
+            attachmentFileResponse(response, thumbnail);
+        } catch (Throwable t) {
+            log.error("Thumbnail not found: " + id, t);
+            throw new AccessDeniedException("Thumbnail not found: " + id);
+        }
+    }
+    @RequestMapping(value = Urls.DECISION_ATTACHMENT)
+    public void getImageAttachedToDecision(@PathVariable Long id,
+                         @PathVariable String fileName,
+                         HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            AttachmentFile attachment = municipalityDecisionService.getAttachment(id, fileName, userService.getLoginUserHolder(request));
+            attachmentFileResponse(response, attachment);
+        } catch (AccessDeniedException e) {
+            throw e;
+        } catch (Throwable t) {
+            log.error("Attachment not found: " + id + "," + fileName, t);
+            throw new AccessDeniedException("Attachment not found: " + id + ", "+fileName);
+        }
+    }
+
+    @RequestMapping(value = Urls.DECISION_ATTACHMENT_THUMBNAIL)
+    public void getThumbnailImageAttachedForDecision(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        try {
+            AttachmentFile thumbnail = municipalityDecisionService.getThumbnail(id, userService.getLoginUserHolder(request));
             attachmentFileResponse(response, thumbnail);
         } catch (Throwable t) {
             log.error("Thumbnail not found: " + id, t);

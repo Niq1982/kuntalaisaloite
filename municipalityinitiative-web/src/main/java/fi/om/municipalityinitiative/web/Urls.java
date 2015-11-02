@@ -184,6 +184,8 @@ public final class Urls {
 
     public static final String ACTION_DELETE_ATTACHMENT = "action-delete-attachment";
 
+    public static final String ACTION_RENEW_MUNICIPALITY_MANAGEMENT_HASH = "action-renew-municipality-management-hash";
+
     // Actions for the content editor
 
     public static final String ACTION_EDITOR_SAVE_DRAFT = "action-editor-save-draft";
@@ -254,6 +256,26 @@ public final class Urls {
 
     public static final String MUNICIPALITY_MODERATION = "/fi/kuntahallinta";
 
+    public static final String MUNICIPALITY_DECISION_FI_BASE_URL = "/fi/kunnanvastaus" + "/";
+
+    public static final String MUNICIPALITY_DECISION_SV_BASE_URL = "/sv/kunnanvastaus" + "/";
+
+    public static final String MUNICIPALITY_DECISION_FI = MUNICIPALITY_DECISION_FI_BASE_URL + ID_PARAMETER;
+
+    public static final String MUNICIPALITY_DECISION_SV = MUNICIPALITY_DECISION_SV_BASE_URL + ID_PARAMETER;
+
+    public static final String EDIT_MUNICIPALITY_DECISION_FI = MUNICIPALITY_DECISION_FI_BASE_URL + "edit/" + ID_PARAMETER;
+
+    public static final String EDIT_MUNICIPALITY_DECISION_SV = MUNICIPALITY_DECISION_SV_BASE_URL + "edit/" + ID_PARAMETER;
+
+    public static final String EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI = MUNICIPALITY_DECISION_FI_BASE_URL + "attachments/" + ID_PARAMETER;
+
+    public static final String EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV = MUNICIPALITY_DECISION_SV_BASE_URL + "attachments/" + ID_PARAMETER;
+
+    public static final String MUNICIPALITY_LOGIN_FI = "/fi/municipality-login";
+
+    public static final String MUNICIPALITY_LOGIN_SV = "/sv/municipality-login";
+
     public static final String EDIT_FI = "/fi/muokkaa" + "/" + ID_PARAMETER;
 
     public static final String EDIT_SV = "/sv/redigera" + "/" + ID_PARAMETER;
@@ -311,6 +333,10 @@ public final class Urls {
     public static final String ATTACHMENT = "/attachment/" + ID_PARAMETER + "/" + FILENAME_PARAMETER;
 
     public static final String ATTACHMENT_THUMBNAIL = "/thumbnail/" + ID_PARAMETER;
+
+    public static final String DECISION_ATTACHMENT = "/decision/attachment/" + ID_PARAMETER + "/" + FILENAME_PARAMETER;
+
+    public static final String DECISION_ATTACHMENT_THUMBNAIL = "/decision/thumbnail/" + ID_PARAMETER;
 
     public static final String SUPPORTS_BY_DATE = API+"/v1/supports-by-date/" + ID_PARAMETER;
 
@@ -590,11 +616,17 @@ public final class Urls {
         return getLocalizedPageUrl(MODERATOR_LOGIN, MODERATOR_LOGIN) + "?" + TARGET + "=" + urlEncode(MODERATION_FI.replace(ID_PARAMETER, initiativeId.toString()));
     }
 
-    public String attachment(Long id, String fileName) {
+    public String attachment(Long id, String fileName, boolean municipality) {
+        if (municipality) {
+            return baseUrl + DECISION_ATTACHMENT.replace(ID_PARAMETER, id.toString()).replace(FILENAME_PARAMETER, fileName);
+        }
         return baseUrl + ATTACHMENT.replace(ID_PARAMETER, id.toString()).replace(FILENAME_PARAMETER, fileName);
     }
 
-    public String getAttachmentThumbnail(Long id) {
+    public String getAttachmentThumbnail(Long id, boolean municipality) {
+        if (municipality) {
+            return baseUrl + DECISION_ATTACHMENT_THUMBNAIL.replace(ID_PARAMETER, id.toString());
+        }
         return baseUrl + ATTACHMENT_THUMBNAIL.replace(ID_PARAMETER, id.toString());
     }
 
@@ -706,4 +738,15 @@ public final class Urls {
         return getLocalizedPageUrl(VETUMA_ERROR_FI, VETUMA_ERROR_SV) + "?"+ VETUMA_AGE_ERROR_PARAMETER;
     }
 
+    public String getMunicipalityDecisionView(Long initiativeId) {
+        return getLocalizedPageUrl(MUNICIPALITY_DECISION_FI, MUNICIPALITY_DECISION_SV).replace(ID_PARAMETER, initiativeId.toString());
+    }
+
+    public String openDecisionForEdit(Long initiativeId) {
+        return getLocalizedPageUrl(EDIT_MUNICIPALITY_DECISION_FI, EDIT_MUNICIPALITY_DECISION_SV).replace(ID_PARAMETER, initiativeId.toString());
+    }
+
+    public String openDecisionAttachmentsForEdit(Long initiativeId) {
+        return getLocalizedPageUrl(EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV).replace(ID_PARAMETER, initiativeId.toString());
+    }
 }

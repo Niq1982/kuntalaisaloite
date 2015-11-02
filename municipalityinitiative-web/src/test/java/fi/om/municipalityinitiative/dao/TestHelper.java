@@ -108,6 +108,8 @@ public class TestHelper {
         queryFactory.delete(QVerifiedUser.verifiedUser).execute();
         queryFactory.delete(QEmail.email).execute();
         queryFactory.delete(QLocation.location).execute();
+        queryFactory.delete(QDecisionAttachment.decisionAttachment).execute();
+        queryFactory.delete(QMunicipalityUser.municipalityUser).execute();
         queryFactory.delete(QMunicipalityInitiative.municipalityInitiative).execute();
         queryFactory.delete(QInfoText.infoText).execute();
         queryFactory.delete(QAdminUser.adminUser).execute();

@@ -88,5 +88,6 @@ public final class PropertyNames {
 
     public static final String attachmentDir = "attachment.directory";
 
+    public static final String decisionAttachmentDir = "decisionAttachment.directory";
 
 }

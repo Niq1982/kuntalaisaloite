@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 public final class InitiativeViewInfo {
@@ -93,11 +94,21 @@ public final class InitiativeViewInfo {
         return initiative.getYouthInitiativeId();
     }
 
+    public Maybe<String> getDecisionText() {
+        return initiative.getDecision();
+    }
 
+    public Maybe<DateTime> getDecisionDate() {return initiative.getDecisionDate();}
+
+    public Maybe<DateTime> getDecisionModifiedDate() {
+        return initiative.getDecisionModifiedDate();
+    }
     public ParticipantCount getParticipantCount() {
         ParticipantCount participantCount = new ParticipantCount();
         participantCount.setPrivateNames(initiative.getParticipantCount() - initiative.getParticipantCountPublic());
         participantCount.setPublicNames(initiative.getParticipantCountPublic());
         return participantCount;
     }
+
+
 }

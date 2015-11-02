@@ -459,6 +459,7 @@
                                 <jsSourceFile>raphael.min.js</jsSourceFile>
                                 <jsSourceFile>jquery.headernav.js</jsSourceFile>
                                 <jsSourceFile>jquery.participantgraph.js</jsSourceFile>
+                                <jsSourceFile>jquery.MultiFile.js</jsSourceFile>
 
                                 <jsSourceFile>kuntalaisaloite.js</jsSourceFile>
                             </jsSourceFiles>
