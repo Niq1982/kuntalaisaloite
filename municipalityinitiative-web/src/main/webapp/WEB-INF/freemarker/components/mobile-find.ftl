@@ -18,7 +18,7 @@
     </div>
     <div class="search-options-mobile">
         <div class="search-parameters-wrapper">
-            <div class="search-filters-title"><span class="arrow"></span>Rajaa hakua</div>
+            <!--<div class="search-filters-title"><span class="arrow"></span>Rajaa hakua</div>-->
             <form action="${springMacroRequestContext.requestUri}" method="get">
                 <h3>Kunnat</h3>
                 <@f.municipalitySelect path="currentSearch.municipalities" options=municipalities required="" cssClass="" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true multiple=true id="mobileSelection "/>
