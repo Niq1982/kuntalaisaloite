@@ -124,6 +124,7 @@ public class EmailService {
         Map<String, Object> dataMap = toDataMap(initiative, authors, locale);
         dataMap.put("attachmentCount", dataProvider.getAcceptedAttachmentCount(initiativeId));
         dataMap.put("hasLocationAttached", dataProvider.hasLocationAttached(initiativeId));
+        dataMap.put("municipalityDecisionHash", dataProvider.getMunicipalityDecisionHash(initiativeId));
         emailMessageConstructor
                 .fromTemplate(initiativeId, NOT_COLLECTABLE_TEMPLATE)
                 .addRecipient(municipalityEmail)
@@ -175,6 +176,7 @@ public class EmailService {
         Map<String, Object> dataMap = toDataMap(initiative, dataProvider.findAuthors(initiativeId), locale);
         dataMap.put("attachmentCount", dataProvider.getAcceptedAttachmentCount(initiativeId));
         dataMap.put("hasLocationAttached", dataProvider.hasLocationAttached(initiativeId));
+        dataMap.put("municipalityDecisionHash", dataProvider.getMunicipalityDecisionHash(initiativeId));
         emailMessageConstructor
                 .fromTemplate(initiativeId, COLLABORATIVE_TO_MUNICIPALITY)
                 .addRecipient(municipalityEmail)

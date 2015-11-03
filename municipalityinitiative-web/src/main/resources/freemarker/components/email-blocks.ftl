@@ -350,6 +350,21 @@
     </#if>
 </#macro>
 
+
+<#macro municipalityDecisionLink type>
+    <#assign municipalityDecisionUrl = urls.get(switchLocale!locale).loginMunicipality(municipalityDecisionHash)/>
+
+    <#if type == "html">
+        <p style="${pBothMargins!""}"><@u.message "email.municipalityDecisionLink" /><br/>
+            <@u.link municipalityDecisionUrl municipalityDecisionUrl /></span>
+    <#else>
+        <@u.message "email.municipalityDecisionLink" />
+        ${municipalityDecisionUrl}
+    </#if>
+
+</#macro>
+
+
 <#--
  * separator
  *

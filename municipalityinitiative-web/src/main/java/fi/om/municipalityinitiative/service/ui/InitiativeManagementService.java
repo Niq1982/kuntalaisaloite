@@ -250,6 +250,7 @@ public class InitiativeManagementService {
 
         initiativeDao.markInitiativeAsSent(initiativeId);
         initiativeDao.updateSentComment(initiativeId, sentComment);
+        municipalityUserService.createMunicipalityUser(initiativeId);
 
         if (!initiative.getType().isCollaborative()) {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
@@ -266,7 +267,7 @@ public class InitiativeManagementService {
             youthInitiativeWebServiceNotifier.informInitiativeSentToMunicipality(initiative);
         }
 
-        municipalityUserService.createMunicipalityUser(initiativeId);
+
     }
 
     @Transactional(readOnly = true)

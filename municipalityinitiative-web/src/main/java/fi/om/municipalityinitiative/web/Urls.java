@@ -746,6 +746,10 @@ public final class Urls {
         return getLocalizedPageUrl(EDIT_MUNICIPALITY_DECISION_FI, EDIT_MUNICIPALITY_DECISION_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 
+    public String loginMunicipality(String municipalityLoginHash) {
+        return getLocalizedPageUrl(MUNICIPALITY_LOGIN_FI, MUNICIPALITY_LOGIN_SV)+ "?" + PARAM_MANAGEMENT_CODE + "=" + municipalityLoginHash;
+    }
+
     public String openDecisionAttachmentsForEdit(Long initiativeId) {
         return getLocalizedPageUrl(EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
