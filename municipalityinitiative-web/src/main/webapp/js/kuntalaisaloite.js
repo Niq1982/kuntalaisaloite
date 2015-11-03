@@ -1904,7 +1904,7 @@ if (window.hasIGraphFrame) {
 
 }());
 $(".open-filters").click(function() {
-	$(".search-options-mobile").addClass("open");
+	$(".search-options-mobile").toggleClass("open");
 });
 
 $(".search-filters-title .arrow").click(function() {
