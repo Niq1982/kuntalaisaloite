@@ -41,5 +41,24 @@
             </form>
         </div>
     </div>
+
 </#macro>
+
+<#macro frontPageLink>
+<div class="mobile-links-holder">
+    <a href="${urls.search()}" class="front-page-links-mobile"><@u.message "front.bigLinkMobile" /></a>
+    <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="front-page-links-mobile"><@u.message "front.bigLinkMobile2" /></a>
+</div>
+</#macro>
+
+<#macro mobileFrontPageImageContainer>
+    <div class="image-container-mobile">
+        <#if requestMessages?? && (requestMessages?size > 0)>
+        <@u.frontpageRequestMessage requestMessages />
+    </#if>
+    </div>
+
+</#macro>
+
+
 </#escape>

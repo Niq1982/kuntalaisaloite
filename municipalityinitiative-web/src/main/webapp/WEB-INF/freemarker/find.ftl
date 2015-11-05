@@ -5,7 +5,7 @@
 <#import "components/pagination.ftl" as p />
 <#import "components/forms.ftl" as f />
 <#import "components/elements.ftl" as e />
-<#import "components/mobile-find.ftl" as mobile />
+<#import "components/mobile-components.ftl" as mobile />
 
 <#escape x as x?html>
 

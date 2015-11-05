@@ -1,6 +1,7 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
 <#import "components/forms.ftl" as f />
+<#import "components/mobile-components.ftl" as mobile />
 
 <#escape x as x?html> 
 <@l.main "page.frontpage">
@@ -22,6 +23,10 @@
 <#assign _rand = 0.36 />
 <#assign imageNumber = rand(1, 4)?c />
 
+
+<@mobile.mobileFrontPageImageContainer />
+<@mobile.frontPageLink />
+
 <div class="image-container image-${imageNumber}">
 <#if requestMessages?? && (requestMessages?size > 0)>
     <@u.frontpageRequestMessage requestMessages />
@@ -30,9 +35,9 @@
 
 <div class="container">
     <div class="big-link-holder noprint">
-        <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="big-link hide-in-mobile "><@u.message "front.bigLink" /> <span class="arrow"></span></a>
-        <a href="${urls.search()}" class="big-link show-only-in-mobile "><@u.message "front.bigLinkMobile" /> <span class="arrow"></span></a>
+        <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="big-link"><@u.message "front.bigLink" /> <span class="arrow"></span></a>
     </div>
+
 
     <div id="content">
         
