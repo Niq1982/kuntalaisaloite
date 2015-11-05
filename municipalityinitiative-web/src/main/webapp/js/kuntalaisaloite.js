@@ -1903,13 +1903,20 @@ if (window.hasIGraphFrame) {
   });
 
 }());
+
 $(".open-filters").click(function() {
 	$(".search-options-mobile").toggleClass("open");
+	var dropdownWidth = "100%";
+	$(".chzn-container-multi").css("width", dropdownWidth);
+	$(".chzn-drop").css("width", dropdownWidth);
 });
 
-$(".search-filters-title .arrow").click(function() {
-	$(".search-options-mobile").removeClass("open");
+$(".search-field input").focus(function() {
+	$(".search-field input").val("");
 });
+/*$(".search-filters-title .arrow").click(function() {
+	$(".search-options-mobile").removeClass("open");
+});*/
 
 $(".toggle-dropdown").click(function() {
 	$("#main-navigation").toggleClass("open");

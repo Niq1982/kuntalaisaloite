@@ -4,6 +4,7 @@
 
     @media @mobile {
         width: 250px;
+
     }
     @media @tablet, @desktop, @desktop-xl {
         width:250px;
@@ -104,6 +105,16 @@
     &.chzn-container-multi {
         .chzn-drop {
             padding-top: 1px;
+        }
+        @media @mobile {
+            .search-field {
+                height: 33px;
+                input {
+                    height: 33px;
+                    padding: 0;
+                    margin: 0;
+                }
+            }
         }
     }
 }
