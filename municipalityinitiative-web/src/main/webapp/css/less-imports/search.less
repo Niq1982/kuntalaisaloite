@@ -573,16 +573,15 @@ h3 {
             width: 20px;
             margin-right: 10px;
             background-color: white;
-            border-radius: 2px;
+            border-radius: 10px;
 
         }
         input[type=radio]:checked  + label:before {
 
-
-                background-image: url("@{imagesPath}/check-box-icon.svg?version=$(timestamp)");
-                background-color: @mainColorDark;
-                background-repeat: no-repeat;
-                background-position: 50% 50%;
+            border: solid 5px @mainColorDark;
+            height: 10px;
+            width: 10px;
+        
 
         }
         .run-search-mobile {
