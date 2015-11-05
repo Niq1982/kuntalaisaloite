@@ -1911,12 +1911,7 @@ $(".open-filters").click(function() {
 	$(".chzn-drop").css("width", dropdownWidth);
 });
 
-$(".search-field input").focus(function() {
-	$(".search-field input").val("");
-});
-/*$(".search-filters-title .arrow").click(function() {
-	$(".search-options-mobile").removeClass("open");
-});*/
+
 
 $(".toggle-dropdown").click(function() {
 	$("#main-navigation").toggleClass("open");
