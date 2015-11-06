@@ -98,49 +98,51 @@
     }
     #logo span { display: none; }
 
- //   @media @tablet, @desktop, @desktop-xl {
+
 
          #main-navigation {
-            margin: 0;
-            padding: 0;
-            position: absolute;
 
-            .toggle-dropdown {
-                display: none;
-            }
+                 margin: 0;
+                 padding: 0;
+                 position: absolute;
 
-            left: 0;
-            bottom: 0;
+                 .toggle-dropdown {
+                     display: none;
+                 }
+
+                 left: 0;
+                 bottom: 0;
 
 
-            > ul {
-                height: 35px;
+                 > ul {
+                     height: 35px;
 
-                &.push {
-                    position: relative;
+                     &.push {
+                         position: relative;
 
-                }
+                     }
 
-                a {
-                    display: inline-block;
-                    text-decoration: none;
-                    color: #111;
-                    font-size: 1.1em;
-                    padding: 0.2em 0.9em 0.5em 0.9em;
-                    border-right: 1px solid @borderGray;
+                     a {
+                         display: inline-block;
+                         text-decoration: none;
+                         color: #111;
+                         font-size: 1.1em;
+                         padding: 0.2em 0.9em 0.5em 0.9em;
+                         border-right: 1px solid @borderGray;
 
-                    .transition(color, 0.2s, ease-in);
-                }
+                         .transition(color, 0.2s, ease-in);
+                     }
 
-                a:hover, .active a:hover {
-                    color: @secondaryColorDark;
-                }
+                     a:hover, .active a:hover {
+                         color: @secondaryColorDark;
+                     }
 
-                .active a {
-                    color: black;
-                    font-weight: bold;
-                }
-            }
+                     .active a {
+                         color: black;
+                         font-weight: bold;
+                     }
+                 }
+
              @media @mobile {
 
                  display: none;
@@ -217,11 +219,12 @@
     .header-wrap-front {
         margin: 0 10px;
         border-bottom: 1px solid @borderGray;
+        @media @mobile{
+            margin: 0 0;
+        }
     }
 
-    @media @mobile{
-        margin: 0 0;
-    }
+
 }
 
 // Exceptions for swedish page
