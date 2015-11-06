@@ -16,6 +16,9 @@
 
     .block, .footer-links {
         float: left;
+        @media @mobile  {
+            float: none;
+        }
     }
 
     .block {
@@ -25,6 +28,10 @@
 
         p {
             margin-left: 80px;
+        }
+        @media @mobile  {
+            margin: 0 auto;
+            height: 0;
         }
     }
 
