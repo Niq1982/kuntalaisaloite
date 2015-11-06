@@ -267,7 +267,7 @@
             </div>
 
             <#if (naviItems?size > 0) >
-                <a href="#" class="toggle-dropdown" > <i class="hamburger-nav-icon-black"></i></a>
+                <a href="#" class="toggle-dropdown" >Menu <i class="hamburger-nav-icon-black"></i></a>
                 <div id="main-navigation" >
                     <ul>
                         <#list naviItems as item>

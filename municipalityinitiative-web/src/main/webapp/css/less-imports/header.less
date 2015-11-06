@@ -24,13 +24,15 @@
             margin: 0;
 
             .toggle-dropdown {
+                display: block;
                 margin: 0;
                 padding: 0 7px;
                 line-height: @omHeaderHeight - @omHeaderPad;
-                width: @omHeaderHeight / 2;
+                width: 70px;
+                text-align: left;
                 color: @omHeaderTextColor;
-                text-align: center;
-                font-size: 20px;
+
+                font-size: 16px;
                 outline: none;
                 border: 0;
 
@@ -43,7 +45,9 @@
                     display: inline-block;
                     width: 20px;
                     height: 18px;
-
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
                     .backgroundImage('om-header-nav-icon', 20px auto);
                 }
             }
@@ -97,7 +101,9 @@
 
     }
     #logo span { display: none; }
-
+        .toggle-dropdown {
+            display: none;
+        }
 
 
          #main-navigation {
@@ -106,9 +112,7 @@
                  padding: 0;
                  position: absolute;
 
-                 .toggle-dropdown {
-                     display: none;
-                 }
+
 
                  left: 0;
                  bottom: 0;
