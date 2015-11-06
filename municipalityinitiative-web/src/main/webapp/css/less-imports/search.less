@@ -20,20 +20,16 @@ h3 {
 .search-options {
     margin-bottom:2em;
 
+    padding: 20px  35px 30px 55px;
 
     @media @mobile {
         display: none;
-
-
     }
     
     @media @tablet  {
         padding: 20px 35px 30px 20px;
     }
-    @media  @desktop, @desktop-xl {
-        padding: 20px  35px 30px 55px;
 
-    }
     .search-form {
         float: left;
         width: 80%;
@@ -152,8 +148,26 @@ h3 {
         }
 
     }
+
+    .date {
+        float:left;
+        color: @secondaryTextColor;
+    }
+    .title {
+        display:block;
+        margin:0 15em 0 100px;
+    }
+    .info {
+        display:block;
+        font-size:0.9em;
+        margin-left:100px;
+        color: @secondaryTextColor;
+    }
+
+
     @media @mobile, @tablet  {
         .date {
+            float: none;
             color: @secondaryTextColor;
         }
         .title {
@@ -164,22 +178,6 @@ h3 {
             display:block;
             font-size:0.9em;
             margin-left:0px;
-            color: @secondaryTextColor;
-        }
-    }
-    @media @desktop, @desktop-xl {
-        .date {
-            float:left;
-            color: @secondaryTextColor;
-        }
-        .title {
-            display:block;
-            margin:0 15em 0 100px;
-        }
-        .info {
-            display:block;
-            font-size:0.9em;
-            margin-left:100px;
             color: @secondaryTextColor;
         }
     }
@@ -236,21 +234,15 @@ h3 {
 // Styleguide 9.1
 .search-parameters-title {
 
-    @media @tablet, @desktop, @desktop-xl {
-        float:left;
-        &.filter {
-            line-height:35px;
-        }
-        width:6.3em;
-
-        &.sort {
-            padding:0.1em 0;
-        }
+    float:left;
+    &.filter {
+        line-height:35px;
     }
+    width:6.3em;
 
-
-
-
+    &.sort {
+        padding:0.1em 0;
+    }
 }
 
 // Search filtering
@@ -291,91 +283,74 @@ h3 {
         display: none;
     }
 
+    display:inline-block;
+    margin-bottom:0.2em;
+    text-align:right;
+    border:1px solid @borderGray;
 
+    .gradient (#fff, #f5f5f5);
 
-
-    @media @tablet, @desktop, @desktop-xl {
-
-        display:inline-block;
-        margin-bottom:0.2em;
-        text-align:right;
-        border:1px solid @borderGray;
-
-        .gradient (#fff, #f5f5f5);
-    }
 
     &.three-items {
+
         @media @tablet {
             width: 75%;
-        }
-        @media @desktop {
-            width: 60%;
-        }
-        a {
-            @media @tablet, @desktop{
+            a {
                 width: 33.3333%;
+
             }
         }
     }
 
     &.four-items {
+
         @media @tablet {
             width: 100%;
-        }
-        @media @desktop {
-            width: 80%;
-        }
-        a {
-            @media @tablet, @desktop {
+            a {
                 width: 25%;
             }
         }
     }
 
     a {
-        @media @tablet, @desktop, @desktop-xl {
 
-            span {
-                display: none;
-            }
-            display:inline-block;
-            padding:5px 0px;
-
-
-            color:#444;
-            text-align:center;
-
-
-            &:hover {
-                .gradient (#fff, #ddd);
-                color:#000;
-            }
-
-            &.active {
-                .gradient (#adad2d, #7a7a20);
-                color:#fff;
-                text-shadow:0px 1px 1px rgba(0,0,0,0.3);
-            }
-
-            .count {
-                display:block; margin:0 auto;
-                font-weight:bold;
-                font-size:0.9em;
-            }
+        span {
+            display: none;
         }
+        display:inline-block;
+        padding:5px 20px;
+
+
+        color:#444;
+        text-align:center;
+
+
+        &:hover {
+            .gradient (#fff, #ddd);
+            color:#000;
+        }
+
+        &.active {
+            .gradient (#adad2d, #7a7a20);
+            color:#fff;
+            text-shadow:0px 1px 1px rgba(0,0,0,0.3);
+        }
+
+        .count {
+            display:block; margin:0 auto;
+            font-weight:bold;
+            font-size:0.9em;
+        }
+        vertical-align: top;
+
+
         @media @tablet {
+            padding:5px 0;
             height: 75px;
             vertical-align: top;
             span {
                 display: inline;
             }
-        }
-        @media @desktop {
-            height: 60px;
-            vertical-align: top;
-        }
-        @media @desktop-xl {
-            padding:5px 20px;
         }
 
     }
@@ -498,17 +473,17 @@ h3 {
 
 }
 
-@media @tablet, @desktop, @desktop-xl {
-    .show-more {
-        display: none;
-    }
-
+.show-more {
+    display: none;
 }
 
 .search-options-mobile, .open-filters {
     display: none;
 }
-@media @mobile {
+@media @mobile {    
+    .show-more {
+        display: block;
+    }
     .open-filters{
 
         display: block;

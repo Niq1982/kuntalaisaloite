@@ -4,11 +4,11 @@
 }
 
 .container {
+
+    width: 80%;
+
     @media @mobile, @tablet  {
-        max-width: 100%;
-    }
-    @media  @desktop{
-        width: 80%;
+        width: auto;
     }
     @media @desktop-xl{
         width: 960px;
@@ -21,7 +21,7 @@
 #content {
     padding-bottom:250px;
     @media @mobile {
-        position: relative;;
+        position: relative;
     }
 }
 
@@ -49,6 +49,9 @@
             opacity:0.6;
         }
     }
+    @media @mobile {
+        margin-bottom: 1em;
+    }
 }
 
 .initiative-content-header {
@@ -57,14 +60,8 @@
 
 .input-block, .view-block {
     position: relative;
-    
-    @media @mobile {
-        background-color: white;
-    }
-    
-    @media @tablet, @desktop, @desktop-xl {
-        background: #fff url("@{imagesPath}/input-block-extra-bg.png?version=${timestamp}") repeat-y top right;
-    }
+
+    background: #fff url("@{imagesPath}/input-block-extra-bg.png?version=${timestamp}") repeat-y top right;
 
     border-left: 4px solid @mainColorLight;
 
@@ -79,6 +76,11 @@
         margin:5px 0;
         border:0;
     }
+    @media @mobile {
+        background: none;
+        background-color: white;
+        border: none;
+    }
 }
 .view-block {
     margin-bottom:3em;
@@ -90,13 +92,12 @@
     &.single  { margin-bottom:1em; }
 }
 .input-block {
+
+    width: auto;
+
     @media @desktop-xl {
         width: 866px; // Predefined width removes jumpyness bug in slideToggle. could be calculated with JS for dynamic widths.
     }
-    @media @mobile, @tablet, @desktop {
-        width: auto;
-    }
-
     &.no-sidebar {
         background:#fff;
     }
@@ -179,6 +180,11 @@
         margin-bottom: 0.4em;
 
     }
+    
+    @media @mobile {
+        border: none;
+        padding: 0;
+    }
 
 }
 
@@ -229,6 +235,9 @@
     &.col-1of2 {
         width:48%;
         margin-right:4%;
+        @media @mobile {
+            width: 96%;
+        }
     }
     &.col-1of3 {
         width:32.333333%;

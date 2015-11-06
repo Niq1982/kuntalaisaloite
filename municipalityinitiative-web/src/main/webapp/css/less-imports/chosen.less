@@ -2,13 +2,7 @@
 
 .chzn-select {
 
-    @media @mobile {
-        width: 250px;
-
-    }
-    @media @tablet, @desktop, @desktop-xl {
-        width:250px;
-    }
+    width: 250px;
 
 }
 .search-options-mobile {
@@ -27,6 +21,13 @@
 }
 
 .chzn-container .chzn-results li {
+
+    display: none;
+    line-height: 15px;
+    padding: 5px 6px;
+    margin: 0;
+    list-style: none;
+
     @media @mobile {
 
         display: none;
@@ -35,13 +36,6 @@
         margin: 0;
         list-style: none;
         border-bottom: solid lightgrey 1px;
-    }
-    @media @tablet, @desktop, @desktop-xl {
-        display: none;
-        line-height: 15px;
-        padding: 5px 6px;
-        margin: 0;
-        list-style: none;
     }
 }
 
