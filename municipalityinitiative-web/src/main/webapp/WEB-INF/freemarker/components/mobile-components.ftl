@@ -15,6 +15,17 @@
             Kaikki kunnat
         </#if>
 
+        <#if currentSearch.type != "all">
+            <br/><@u.message "type."+ currentSearch.type + ".mobile.checkbox"/><#if currentSearch.show != "all">,</#if>
+        </#if>
+        <#if currentSearch.show != "all">
+            <#if currentSearch.type == "all">
+                <br/>
+            </#if>
+            <@u.message "show."+ currentSearch.show + ".mobile.checkbox"/>
+        </#if>
+
+
     </div>
     <div class="search-options-mobile">
         <div class="search-parameters-wrapper">
