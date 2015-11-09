@@ -1,8 +1,6 @@
 package fi.om.municipalityinitiative.server;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.security.InvalidParameterException;
+import fi.om.municipalityinitiative.conf.ConfigurationFileLoader;
 
 public class RunJetty {
 
@@ -16,7 +14,7 @@ public class RunJetty {
                     Integer.valueOf(getSystemProperty(JETTY_PORT)),
                     Integer.valueOf(getSystemProperty(JETTY_THREAD_POOL_COUNT)),
                     getSystemProperty(SPRING_PROFILES_ACTIVE),
-                    configurationFile("log4j.properties")
+                    ConfigurationFileLoader.getFile("log4j.properties").toString()
             ));
         } catch (Throwable t) {
             t.printStackTrace();
@@ -24,23 +22,7 @@ public class RunJetty {
         }
     }
 
-    private static String configurationFile(String fileName) throws FileNotFoundException {
 
-
-        File parentFile = new File(getSystemProperty("java.class.path")).getParentFile();
-        if (parentFile == null) {
-            throw new InvalidParameterException("Give the whole path to jar-file instead of just: " + getSystemProperty("java.class.path"));
-        }
-        File grandParent = parentFile.getParentFile();
-        if (grandParent == null) {
-            throw new InvalidParameterException("Give the whole path to jar-file instead of just: " + getSystemProperty("java.class.path"));
-        }
-        File file = new File(grandParent.getAbsoluteFile().getPath() + "/config/" + fileName);
-        if (!file.exists()) {
-            throw new FileNotFoundException("Configuration file not found: " + file.getPath());
-        }
-        return file.getPath();
-    }
 
     private static String getSystemProperty(String variableName) {
         String s = System.getProperty(variableName);

@@ -27,6 +27,7 @@ import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.sql.Connection;
 
 @Configuration
@@ -57,20 +58,14 @@ public class JdbcConfiguration {
     public DataSource dataSource() throws IOException {
         BoneCPDataSource dataSource;
         try {
-            File file = new File(new File(System.getProperty("java.class.path")).getParentFile().getParentFile().getAbsoluteFile().getPath() + "/config/bonecp-config.xml");
-            if (!file.exists()) {
-                log.warn("\n");
-                log.warn("BONECP-CONFIG-FILE NOT FOUND at /config/bonecp-config.xml!");
-                log.warn("USING DEFAULT BONECP-CONFIG!\n\n");
-                dataSource = new BoneCPDataSource();
-            } else {
-                try (FileInputStream xmlConfigFile = FileUtils.openInputStream(file)) {
-                    dataSource = new BoneCPDataSource(new BoneCPConfig(xmlConfigFile, null));
-                }
+            File file = ConfigurationFileLoader.getFile("bonecp-config.xml");
+            log.info("Using bonecp-config: " + file.getAbsolutePath());
+            try (FileInputStream xmlConfigFile = FileUtils.openInputStream(file)) {
+                dataSource = new BoneCPDataSource(new BoneCPConfig(xmlConfigFile, null));
             }
-
         } catch (Exception e) {
-            throw new RuntimeException("BoneCP initialization failed", e);
+            dataSource = new BoneCPDataSource();
+            log.error("Unable to initialize bonecp-config.xml. Using default bonecp-settings.", e);
         }
         dataSource.setDriverClass(env.getRequiredProperty(PropertyNames.jdbcDriver));
         dataSource.setJdbcUrl(env.getRequiredProperty(PropertyNames.jdbcURL));
