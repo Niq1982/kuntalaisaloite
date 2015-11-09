@@ -11,7 +11,7 @@
         <#if currentMunicipalities?? && currentMunicipalities.present && currentMunicipalities.value?size gt 0>
             <@u.printMunicipalities currentMunicipalities.value />
         <#else>
-            <@u.message mobile.allMunicipalities />
+            <@u.message "mobile.allMunicipalities" />
         </#if>
 
         <#if currentSearch.type != "all">

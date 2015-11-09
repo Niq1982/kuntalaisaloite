@@ -65,15 +65,17 @@
                 </span>
                 <span class="info">
                     <#if !initiative.public>
-                        ${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span>
+                        <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span>
                     <#elseif !initiative.sentTime.present>
-                        ${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span>
+                        <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span>
                     <#else>
                         <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>
-                        ${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
+                        <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
                     </#if>
                     <span class="bull">&bull;</span>
-                    <@u.message "initiative.initiativeType."+initiative.type />
+                    <span class="initiative-type">
+                        <@u.message "initiative.initiativeType."+initiative.type />
+                    </span>
                 </span>
             </a>
         </li>
