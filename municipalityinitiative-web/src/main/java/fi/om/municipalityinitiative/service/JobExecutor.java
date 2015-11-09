@@ -1,15 +1,10 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.service.email.EmailReportService;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
 
 public class JobExecutor {
 

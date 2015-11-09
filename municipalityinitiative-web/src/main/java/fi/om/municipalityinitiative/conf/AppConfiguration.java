@@ -22,6 +22,8 @@ import fi.om.municipalityinitiative.web.Urls;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.utility.XmlEscape;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
@@ -30,6 +32,7 @@ import org.springframework.context.annotation.*;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -40,6 +43,8 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,6 +54,8 @@ import java.util.concurrent.Executors;
 @EnableAspectJAutoProxy(proxyTargetClass=false)
 @Import({ProdPropertiesConfiguration.class, TestPropertiesConfigurer.class, JdbcConfiguration.class, AppDevConfiguration.class})
 public class AppConfiguration {
+
+    private static Logger logger = LoggerFactory.getLogger(AppConfiguration.class);
 
     @Inject Environment env;
     
@@ -68,8 +75,13 @@ public class AppConfiguration {
     public static class ProdPropertiesConfiguration {
 
         @Bean
-        public static EncryptablePropertiesConfigurer propertyProcessor() {
-            return new EncryptablePropertiesConfigurer(new ClassPathResource("app.properties"));
+        public static EncryptablePropertiesConfigurer propertyProcessor() throws IOException {
+            File appProperties = new File("config/app.properties");
+            if (!appProperties.exists()) {
+                logger.warn("config/app.properties not found: \n USING DEFAULT PROPERTIES!");
+            }
+
+            return new EncryptablePropertiesConfigurer(new FileSystemResource(appProperties));
         }
     }
     
@@ -433,12 +445,12 @@ public class AppConfiguration {
     }
 
     @Bean
-    public SQLExceptionTranslator sqlExceptionTranslator() {
+    public SQLExceptionTranslator sqlExceptionTranslator() throws IOException {
         return new SQLErrorCodeSQLExceptionTranslator(jdbcConfiguration.dataSource());
     }
 
     @Bean
-    public SQLExceptionTranslatorAspect sqlExceptionTranslatorAspect() {
+    public SQLExceptionTranslatorAspect sqlExceptionTranslatorAspect() throws IOException {
         return new SQLExceptionTranslatorAspect(sqlExceptionTranslator());
     }
 

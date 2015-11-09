@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.conf;
 
+import com.jolbox.bonecp.BoneCPConfig;
 import com.jolbox.bonecp.BoneCPDataSource;
 import com.mysema.query.sql.PostgresTemplates;
 import com.mysema.query.sql.SQLTemplates;
@@ -10,6 +11,7 @@ import com.mysema.query.sql.types.LocalDateType;
 import com.mysema.query.types.Ops;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.util.*;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +24,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.sql.DataSource;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.sql.Connection;
 
 @Configuration
@@ -43,21 +49,31 @@ public class JdbcConfiguration {
     }
     
     /**
-     * Default connection pool settings are defined in <tt>classpath:/bonecp-default-config.xml</tt>.
+     * Default connection pool settings are not defined.
      * 
-     * Deployment specific overrides in <tt>classpath:/bonecp-config.xml</tt>, e.g. <tt>${jetty.home}/resources/bonecp-config.xml</tt>.
+     * Deployment specific overrides in <tt>jar-file-location/config/bonecp-default-config.xml</tt>
      * @return
      */
     @Bean 
-    public DataSource dataSource() {
-        BoneCPDataSource dataSource = new BoneCPDataSource();
+    public DataSource dataSource() throws IOException {
+        BoneCPDataSource dataSource;
+        try {
+            File file = ConfigurationFileLoader.getFile("bonecp-config.xml");
+            log.info("Using bonecp-config: " + file.getAbsolutePath());
+            try (FileInputStream xmlConfigFile = FileUtils.openInputStream(file)) {
+                dataSource = new BoneCPDataSource(new BoneCPConfig(xmlConfigFile, null));
+            }
+        } catch (Exception e) {
+            dataSource = new BoneCPDataSource();
+            log.error("Unable to initialize bonecp-config.xml. Using default bonecp-settings.", e);
+        }
         dataSource.setDriverClass(env.getRequiredProperty(PropertyNames.jdbcDriver));
         dataSource.setJdbcUrl(env.getRequiredProperty(PropertyNames.jdbcURL));
         dataSource.setUsername(env.getRequiredProperty(PropertyNames.jdbcUser));
         dataSource.setPassword(env.getRequiredProperty(PropertyNames.jdbcPassword));
-        
+        log.info(dataSource.getConfig().getConfigFile());
         log.info(dataSource.toString());
-        
+
         return dataSource;
     }
     @Bean
@@ -78,12 +94,12 @@ public class JdbcConfiguration {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
+    public PlatformTransactionManager transactionManager() throws IOException {
         return new DataSourceTransactionManager(dataSource());
     }
     
     @Bean
-    public PostgresQueryFactory queryFactory() {
+    public PostgresQueryFactory queryFactory() throws IOException {
         final DataSource dataSource = dataSource();
         return new PostgresQueryFactory(querydslConfiguration(), new Provider<Connection>() {
 

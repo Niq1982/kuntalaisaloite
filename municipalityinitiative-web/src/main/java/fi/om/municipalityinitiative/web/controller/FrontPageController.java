@@ -38,6 +38,7 @@ public class FrontPageController extends BaseController {
         RedirectView redirectView = new RedirectView(Urls.FRONT_FI, true, true, false);
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
+
     }
     
     @RequestMapping({ FRONT_FI, FRONT_SV })

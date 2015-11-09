@@ -71,7 +71,7 @@ public abstract class WebTestBase {
     protected static Long HYVINKAA_ID;
 
     @BeforeClass
-    public static synchronized void initialize() {
+    public static synchronized void initialize() throws Throwable {
         if (jettyServer == null) {
             jettyServer = StartJetty.startService(PORT, "test");
             try {
