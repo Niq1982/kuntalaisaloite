@@ -27,8 +27,384 @@
 	top: 50%;
 	margin:-@height/2 auto 0 auto;
 }
+.info-graph-mobile {
+  display: none;
+  @media @mobile {
+	display: block;
 
+	background: #fff;
+	text-align: center;
+
+	p {
+	  font-size: 0.9em;
+
+	  &.small {
+		font-size: 0.8em;
+	  }
+	}
+
+	.span {
+	  h4 {
+		font-size: 0.9em;
+		font-weight: normal;
+	  }
+	  position: relative;
+	  float: left;
+
+	  padding: 0;
+
+	  .boxSizing();
+
+	  .ie7 & {
+		padding: 0 1%;
+	  }
+	}
+	.span-1 {
+	  width: 1/3 * 100%;
+
+	  .ie7 & {
+		width: 31%;
+	  }
+	}
+	.span-2 {
+	  width: 2/3 * 100%;
+
+	  .ie7 & {
+		width: 62%;
+	  }
+	}
+	.span-3 {
+	  width: 100%;
+	}
+
+	.block {
+	  margin-bottom: 8px;
+	  background: #f8f8f8;
+
+	  &:last-child {
+		margin-bottom: 0;
+	  }
+	}
+
+	.top-pad {
+	  padding-top: 10px;
+	}
+
+	.header {
+	  width: 100%;
+	  text-align: center;
+
+	  h3 {
+		padding: 0 20px;
+	  }
+	}
+
+	.content {
+	  position: relative;
+	  padding: 60px 0 40px 0;
+
+	  background: #fff;
+
+	  * {
+		line-height: 1.2;
+	  }
+
+	  &.choose-type-section {
+		padding-top: 60px;
+		.vetuma-section{
+		  top: 30px;
+		  height: 16em;
+		}
+	  }
+
+	  &.collect-section {
+		padding-bottom: 40px;
+	  }
+
+	  .c-group {
+		position: relative;
+		padding-top: 1em;
+	  }
+	  .c-group-1 {
+	  }
+	  .c-group-2 {
+	  }
+	  .c-group-3 {
+		min-height: 200px;
+		padding-top: 20px;
+	  }
+	  .c-group-4 {
+		padding-bottom: 70px;
+	  }
+	}
+
+	.vetuma-section {
+	  z-index: 10;
+	  position: absolute;
+	  right: 0;
+	  top: 45px;
+	  width: 66%;
+	  height: 15em;
+	  border: 2px dashed @borderGray;
+
+	  html[lang="sv"] & {
+		height: 31.2em;
+	  }
+
+	  .ie8 & {
+		min-height: 425px;
+	  }
+
+	  .title {
+		position: relative;
+		top:0em;
+		text-align: center;
+		font-weight: bold;
+	  }
+	}
+
+	.order {
+	  .circle(58px, #fff);
+	  font-size: 2em;
+
+	  .ie7 &, .ie8 & {
+		background: url("@{imagesPath}/ie/info-graph-circles-fallback.png?version=${timestamp}") 0 0 no-repeat;
+	  }
+	}
+
+	.type {
+	  .circle(88px, #f0f0f0);
+
+	  .ie7 &, .ie8 & {
+		background: url("@{imagesPath}/ie/info-graph-circles-fallback.png?version=${timestamp}") -100px 0 no-repeat;
+	  }
+	}
+
+	.icon {
+	  display: inline-block;
+	  margin-bottom: 0.5em;
+
+	  background-image: url("@{imagesPath}/info-graph-icons.png?version=${timestamp}");
+
+	  @media @highdensity {
+		background-image: url("@{imagesPath}/info-graph-icons-2x.png?version=${timestamp}");
+		background-size: 300px 400px;
+	  }
+
+	  &.member {
+		width: 50px;
+		height: 49px;
+
+		.infoGraphSprite(0, 0);
+	  }
+
+	  &.right-to-vote {
+		width: 50px;
+		height: 49px;
+
+		.infoGraphSprite(1, 0);
+	  }
+
+	  &.icon-type {
+		width: 30px;
+		height: 41px;
+
+		.infoGraphVerticalCenter(41px);
+	  }
+
+	  &.normal {
+		.infoGraphSprite(0, 2);
+	  }
+
+	  &.two-percent {
+		.infoGraphSprite(1, 2);
+	  }
+
+	  &.five-percent {
+		.infoGraphSprite(2, 2);
+	  }
+
+	  &.collect-normal {
+		width: 100px;
+		height: 50px;
+		.infoGraphSprite(0, 0);
+	  }
+
+	  &.collect-two-percent {
+		width: 68px;
+		height: 50px;
+		.infoGraphSprite(2, 0);
+	  }
+
+	  &.collect-five-percent {
+		width: 111px;
+		height: 50px;
+		.infoGraphSprite(0, 1);
+	  }
+
+	  &.municipality {
+		width: 77px;
+		height: 79px;
+
+		.infoGraphSprite(0, 3);
+	  }
+
+	  &.envelope {
+		width: 77px;
+		height: 79px;
+
+		.infoGraphSprite(1, 3);
+	  }
+
+	}
+
+	.lines {
+	  position: relative;
+	  height: 35px;
+
+	  &.line-group-1 {
+		top: 18px;
+	  }
+	  &.line-group-2 {
+		top: -60px;
+	  }
+	  &.line-group-3 {
+		top: -60px;
+	  }
+	  &.line-group-4 {
+		top: -60px;
+	  }
+
+	  .line {
+		position: absolute;
+		height: @infoGraphHorLineWidth;
+		clear: both;
+
+		&.left {
+		  left: 0;
+		}
+		&.right {
+		  right: 0;
+		}
+
+		&.line-10 {
+		  width: @infoGraphVerLineWidth;
+		  left: 50%;
+		  margin-left: -@infoGraphVerLineWidth/2;
+		}
+		&.line-30 {
+		  // width: 1/3*100%;
+		  width: 150px;
+
+		  &.left {
+			left: 5px;
+		  }
+
+		  &.middle {
+			left: 50%;
+			margin-left: -75px;
+		  }
+
+		  &.right {
+			right: 5px;
+		  }
+
+		}
+
+		&.line-45 {
+		  width: 236px;
+		}
+		&.line-100 {
+		  width: 100%;
+		}
+
+		&.pullup {
+		  top: -9px;
+
+		  .arrow {
+			height: @infoGraphArrowHeight + 9px;
+		  }
+		}
+
+		&.green {
+		  background: @infoGraphGreen;
+
+		  .arrow {
+			background: @infoGraphGreen;
+		  }
+
+		  .arrow-down {
+			border-top: 8px solid @infoGraphGreen;
+		  }
+		}
+
+		&.black {
+		  background: @infoGraphBlack;
+
+		  .arrow {
+			background: @infoGraphBlack;
+		  }
+
+		  .arrow-down {
+			border-top: 8px solid @infoGraphBlack;
+		  }
+		}
+
+		.arrow {
+		  position: absolute;
+		  top: @infoGraphHorLineWidth;
+		  width: @infoGraphVerLineWidth;
+		  height: @infoGraphArrowHeight;
+
+		  // general
+		  &.right {
+			right: 0;
+		  }
+		  &.left {
+			left: 0;
+		  }
+		  &.middle {
+			left: 50%;
+			margin-left: -@infoGraphVerLineWidth/2;
+		  }
+
+		  // custom: group-line-arrow
+		  &.arrow-1-2-2 {
+			right: 240px;
+		  }
+		  &.arrow-1-2-3 {
+			right: 76px;
+		  }
+		  &.arrow-2-1-1 {
+			left: 75px;
+		  }
+
+		  .arrow-down {
+			position: absolute;
+			left: 0;
+			bottom: -8px;
+			width: 0;
+			height: 0;
+			border-left: 7px solid transparent;
+			border-right: 7px solid transparent;
+		  }
+
+		}
+
+	  }
+	}
+  }
+}
 .info-graph {
+    @media @mobile {
+	  display: none;
+	}
+	h1 {
+	  text-align: left;
+	  background-color: #f0f0f0;
+	  padding: 0.67em 0;
+	  margin: 0;
+	}
 
 	background: #fff;
 	text-align: center;
@@ -42,6 +418,7 @@
 	}
 
 	.span {
+
 		position: relative;
 		float: left;
 
@@ -127,7 +504,7 @@
 		position: absolute;
 		right: 25px;
 		top: 45px;
-		width: 333px;
+		width: 60%;
 		height: 28em;
 		min-height: 405px;
 		border: 2px dashed @borderGray;

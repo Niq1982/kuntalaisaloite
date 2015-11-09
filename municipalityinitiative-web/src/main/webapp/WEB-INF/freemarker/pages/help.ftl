@@ -70,15 +70,10 @@
             </div>
         </#if>
 
-        <div class="column col-3of4 last">
-            <#if content??>
-                <h1>${content.subject!""}</h1>
-                <#noescape>${content.content!""}</#noescape>
-            <#else>
-            	<#-- Static content for the info graph -->
-                <#include "include_info_graph.ftl" />
-            </#if>
-        </div>
+        <#-- Static content for the info graph -->
+        <#include "include_info_graph.ftl" />
+        <#include "mobile_info_graph.ftl" />
+
     </div>
 
 </@l.main>
