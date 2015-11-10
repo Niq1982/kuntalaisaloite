@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.conf;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.conf.AppConfiguration.AppDevConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.ProdPropertiesConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.TestPropertiesConfigurer;
@@ -43,6 +44,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -58,6 +60,8 @@ public class AppConfiguration {
     private static Logger logger = LoggerFactory.getLogger(AppConfiguration.class);
 
     @Inject Environment env;
+
+    @Inject ServletContext servletContext;
     
     @Resource JdbcConfiguration jdbcConfiguration; 
 
@@ -508,5 +512,11 @@ public class AppConfiguration {
                 env.getProperty(PropertyNames.apiBaseUrl, baseUrl),
                 env.getRequiredProperty(PropertyNames.youthInitiativeBaseUrl),
                 env.getRequiredProperty(PropertyNames.superSearchBaseUrl));
+    }
+
+    @PostConstruct
+    public void setSecureCookie() {
+        boolean disableSecureCookie = Sets.newHashSet(env.getActiveProfiles()).contains("disableSecureCookie");
+        servletContext.getSessionCookieConfig().setSecure(!disableSecureCookie);
     }
 }

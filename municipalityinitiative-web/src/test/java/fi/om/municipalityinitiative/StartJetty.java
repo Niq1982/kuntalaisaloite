@@ -23,7 +23,7 @@ public class StartJetty {
     }
 
     public static void main(String[] args) throws Throwable {
-        startService(8080, "dev");
+        startService(8080, "dev,disableSecureCookie");
 
     }
 }
