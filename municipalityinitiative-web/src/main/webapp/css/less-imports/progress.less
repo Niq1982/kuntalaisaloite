@@ -1,6 +1,8 @@
 @progressContainerHeight: 150px;
 @stepSize: 94px; // use even values to prevent half pixels
 @stepLabelWidth: 8.75em; // 140px
+@stepLabelWidthMobile: 5.75em;
+
 @progBarHeight: 10px; // use even values to prevent half pixels
 @progBarBorderSize: @progBarHeight / 2;
 @progBarColor: #fff;
@@ -141,6 +143,9 @@
   position: relative;
   height: @stepSize;
   margin: 0 @stepLabelWidth / 2;
+  @media @mobile {
+    margin: 0 3.0em;
+  }
 
   .step {
     display: inline-block;
@@ -167,9 +172,14 @@
       display: inline-block;
       width: @stepSize;
       height: @stepSize;
+      @media @mobile {
+        width: 84px;
+        height: 84px;
+      }
       border-radius: 100%;
       margin-left: -@stepSize / 2;
       background: @progBarColor;
+
 
       .ie8 & {
         background: transparent url("@{imagesPath}/ie/progress-step.png?version=${timestamp}") no-repeat 0 0;
@@ -179,6 +189,10 @@
         position: absolute;
         top: 50%;
         left: 50%;
+        @media @mobile {
+          top : 56%;
+          left: 58%;
+        }
         margin: -32px 0 0 -32px;
       }
     }
@@ -188,12 +202,21 @@
       width: @stepLabelWidth;
       margin-left: -@stepLabelWidth / 2;
       text-align: center;
+      @media @mobile {
+        width: @stepLabelWidthMobile;
+        margin-left: -@stepLabelWidthMobile / 2;
+      }
     }
 
     &.done {
       .step-icon-holder {
         background: @progBarColorDone;
+        i {
+          @media @mobile {
+            background-position-y: -50px;
+          }
 
+        }
         .ie8 & {
           background: transparent url("@{imagesPath}/ie/progress-step.png?version=${timestamp}") no-repeat 0 -100px;
         }

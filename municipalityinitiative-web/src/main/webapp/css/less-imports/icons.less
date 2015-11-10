@@ -230,33 +230,64 @@
     display: inline-block;
     width: 64px;
     height: 64px;
+    @media @mobile {
+        width: 50px;
+        height: 50px;
+    }
 
     background: transparent url("@{imagesPath}/kua-progress-icons.png?version=${timestamp}") no-repeat 0 0;
     background-image: url("@{imagesPath}/kua-progress-icons.svg?version=${timestamp}"), none;
     background-position: -100% -100%;
 
+    @iconDistance: 64;
+    @mobileIconDistance: 49;
+
+    @media @mobile {
+        background-size: 200px;
+    }
+
     &.icon-publish {
-        .iconPosition(0, 0, 64);
+        .iconPosition(0, 0, @iconDistance);
+        @media @mobile {
+            .iconPosition(0, 0, @mobileIconDistance);
+        }
     }
 
     &.icon-collect {
-        .iconPosition(1, 0, 64);
+        .iconPosition(1, 0, @iconDistance);
+        @media @mobile {
+            .iconPosition(1, 0, @mobileIconDistance);
+        }
     }
 
     &.icon-sent {
-        .iconPosition(2, 0, 64);
+        .iconPosition(2, 0, @iconDistance);
+        @media @mobile {
+            .iconPosition(2, 0, @mobileIconDistance);
+        }
     }
 
-
     &.icon-draft {
-        .iconPosition(0, 1, 64);
+        .iconPosition(0, 1, @iconDistance);
+        @media @mobile {
+            .iconPosition(0, 1, @mobileIconDistance);
+        }
     }
 
     &.icon-mgmnt {
-        .iconPosition(1, 1, 64);
+        .iconPosition(1, 1, @iconDistance);
+        @media @mobile {
+            .iconPosition(1, 1, @mobileIconDistance);
+        }
     }
 
     &.icon-mgmnt-publish {
-        .iconPosition(2, 1, 64);
+        .iconPosition(2, 1, @iconDistance);
+        @media @mobile {
+            .iconPosition(2, 1, @mobileIconDistance);
+        }
+
     }
+
+
 }
