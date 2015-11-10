@@ -3,8 +3,10 @@
 <#escape x as x?html>
 
 <#if content??>
-    <h1>${content.subject!""}</h1>
-    <#noescape>${content.content!""}</#noescape>
+    <div class="help-text-content-mobile">
+        <h1>${content.subject!""}</h1>
+        <#noescape>${content.content!""}</#noescape>
+    </div>
 <#else>
     <div class="info-graph-mobile">
 

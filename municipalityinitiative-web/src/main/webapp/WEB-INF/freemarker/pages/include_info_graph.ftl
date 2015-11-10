@@ -5,8 +5,10 @@
 
 <div class="column col-3of4 last">
     <#if content??>
-        <h1>${content.subject!""}</h1>
-        <#noescape>${content.content!""}</#noescape>
+        <div class="help-text-content">
+            <h1>${content.subject!""}</h1>
+            <#noescape>${content.content!""}</#noescape>
+        </div>
     <#else>
 
         <div class="info-graph">

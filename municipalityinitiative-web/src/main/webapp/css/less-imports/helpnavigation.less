@@ -1,0 +1,40 @@
+.help-text-content-mobile {
+  display: none;
+  @media @mobile {
+    display: block;
+  }
+}
+@media @mobile {
+  .help-text-content {
+    display: none;
+  }
+}
+
+.navigation-mobile {
+  display: none;
+
+  @media @mobile {
+
+      padding: 0 15px;
+      display: block;
+      h3 {
+        border-bottom: none;
+        margin-top: 0.8em;
+      }
+      .box-mobile {
+        background-color: @mainColorLight;
+        display: block;
+        padding: 20px;
+        margin: 5px auto;
+        color: white;
+        border-radius: 2px;
+
+        .help-nav-icon {
+          display: block;
+          padding: 5px 0 0 29px;
+          max-width: 16em;
+
+      }
+    }
+  }
+}
