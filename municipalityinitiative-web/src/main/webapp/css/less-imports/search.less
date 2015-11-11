@@ -97,17 +97,17 @@ h3 {
             background-color: white;
             margin: 7px 0;
             border: none;
-            height: 130px;
+            height: 180px;
             padding-left: 15px;
             position:relative;
             a {
-                height: 130px;
+                height: 180px;
                 padding: 0;
                 .participants{
                     border-left: solid;
                     border-color: rgb(240, 240, 240);
                     padding: 10px 3px;
-                    height: 130px;
+                    height: 180px;
                     text-align: center;
                     .participant-count{
                         background: none;
@@ -118,7 +118,8 @@ h3 {
                     position: absolute;
                     top: 4em;
                     font-weight: bold;
-                    margin-right: 6em;
+                    margin-right: 8em;
+                    font-size: 0.9em;
                 }
                 .date {
                     position: absolute;
@@ -506,10 +507,12 @@ h3 {
         .arrow {
             position: absolute;
             display: inline-block;
-            width: 29px;
-            height: 29px;
+            width: 30px;
+            height: 30px;
             right: 20px;
-            top: 12px;
+
+            top: 50%;
+            transform: translateY(-50%);
             background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -192px -96px no-repeat;
         }
     }
