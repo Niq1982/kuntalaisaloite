@@ -377,7 +377,7 @@
            checked
         </#if>>
     </input>
-    <label for=${id}><@u.message key=prefix+".mobile.checkbox" /></label></br>
+    <label for=${id}><@u.message key=prefix+".mobile.checkbox" /></label>
 </#macro>
 
 </#escape> 
