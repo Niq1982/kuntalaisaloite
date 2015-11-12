@@ -119,8 +119,8 @@
         </#if>
 
         <#-- Static content for the info graph -->
-        <#include "include_info_graph.ftl" />
-        <#include "mobile_info_graph.ftl" />
+        <#include "include_help_content.ftl" />
+        <#include "include_help_content_mobile.ftl" />
 
     </div>
 

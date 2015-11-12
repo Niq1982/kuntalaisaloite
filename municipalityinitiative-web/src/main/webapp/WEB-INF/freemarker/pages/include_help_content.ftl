@@ -10,7 +10,6 @@
             <#noescape>${content.content!""}</#noescape>
         </div>
     <#else>
-
         <div class="info-graph">
 
             <h1 ><@u.message "infoGraph.title" /></h1>
