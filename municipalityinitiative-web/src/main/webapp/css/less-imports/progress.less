@@ -244,6 +244,10 @@
 
   &.steps-2 {
     margin: 0 13.5 + @stepLabelWidth / 2; // em -> 0 286px (216 + 140/2)
+    @media @mobile {
+      margin: 0 0.5 + @stepLabelWidthMobile/ 2; // em -> 0 286px (216 + 140/2)
+
+    }
   }
 
   &.steps-3 {
