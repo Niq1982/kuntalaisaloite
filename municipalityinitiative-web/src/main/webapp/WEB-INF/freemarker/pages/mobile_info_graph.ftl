@@ -7,10 +7,13 @@
         <h1>${content.subject!""}</h1>
         <#noescape>${content.content!""}</#noescape>
     </div>
-<#else>
+</#if>
+
+<#if showInfoGraph?? && showInfoGraph>
     <div class="info-graph-mobile">
 
         <div class="block cf">
+            <h1><@u.message "infoGraph.title" /></h1>
             <@header "infoGraph.choose.title" 1 />
 
             <div class="content choose-type-section top-pad cf">
@@ -128,6 +131,7 @@
 
     </div>
 </#if>
+
 <#--
  * header
  *

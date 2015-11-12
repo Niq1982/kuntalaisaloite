@@ -24,6 +24,9 @@
 -->
 <#macro navigation map titleKey="" cssClass="">
     <#if cssClass == "box">
+        <a href="${urls.helpIndex()}" class="${(helpPage == "lyhyesti" || helpPage == "")?string("active","")} ${cssClass}">
+            <span class="help-nav-icon icon-info"><@u.message "infoGraph.title" /></span>
+        </a>
         <#list map as link>
             <a href="${urls.help(link.uri)}" class="${(link.uri == helpPage)?string("active","")} ${cssClass} ${link_has_next?string("","last")}">
                 <#-- NOTE: we could also use urls (fi/sv) to determine the class -->
@@ -50,8 +53,11 @@
 
 <#macro navigationMobile map titleKey="" cssClass="">
     <#if cssClass == "box-mobile">
+        <a href="${urls.helpInitiativeGraphMobile()}" class="${cssClass}">
+            <span class="help-nav-icon icon-info"><@u.message "infoGraph.title" /></span>
+        </a>
         <#list map as link>
-        <a href="${urls.help(link.uri)}" class="${(link.uri == helpPage)?string("active","")} ${cssClass} ${link_has_next?string("","last")}">
+        <a href="${urls.help(link.uri)}" class="${cssClass} ${link_has_next?string("","last")}">
         <#-- NOTE: we could also use urls (fi/sv) to determine the class -->
             <#if link_index == 0>
                 <#assign iconClass="author" />
@@ -74,7 +80,25 @@
     </#if>
 </#macro>
 
+<#macro helpNavigation>
+    <div class="column col-1of4 extra-margin navigation">
+        <@navigation categoryLinksMap['MAIN'] "" "box" />
+        <@navigation categoryLinksMap['KUNTALAISALOITE_FI'] "help.service.title" />
+        <@navigation categoryLinksMap['KUNTALAISALOITE'] "help.general.title" />
+    </div>
+</#macro>
 
+<#macro helpNavigationMobile>
+    <div class="navigation-mobile" >
+        <#if content?? || (showInfoGraph?? && showInfoGraph)>
+            <a href="${urls.helpIndex()}" > << Ohjeet </a>
+        <#else>
+            <@navigationMobile categoryLinksMap['MAIN'] "" "box-mobile" />
+            <@navigationMobile categoryLinksMap['KUNTALAISALOITE_FI'] "help.service.title" />
+            <@navigationMobile categoryLinksMap['KUNTALAISALOITE'] "help.general.title" />
+        </#if>
+    </div>
+</#macro>
 <#--
  * Layout parameters for HTML-title
  *
@@ -102,26 +126,7 @@
 
 </@l.main>
 
-<#macro helpNavigation>
-    <div class="column col-1of4 extra-margin navigation">
-        <@navigation categoryLinksMap['MAIN'] "" "box" />
-        <@navigation categoryLinksMap['KUNTALAISALOITE_FI'] "help.service.title" />
-        <@navigation categoryLinksMap['KUNTALAISALOITE'] "help.general.title" />
-    </div>
-</#macro>
 
-<#macro helpNavigationMobile>
-    <div class="navigation-mobile" >
-        <#if content??>
-            <a href="${urls.helpIndex()}" > << Ohjeet </a>
-        <#else>
-            <@navigationMobile categoryLinksMap['MAIN'] "" "box-mobile" />
-            <@navigationMobile categoryLinksMap['KUNTALAISALOITE_FI'] "help.service.title" />
-            <@navigationMobile categoryLinksMap['KUNTALAISALOITE'] "help.general.title" />
-        </#if>
-    </div>
-
-</#macro>
 
 </#escape>
 
