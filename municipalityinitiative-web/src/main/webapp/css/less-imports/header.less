@@ -242,6 +242,11 @@
         width: 349px;
         background: url("@{imagesPath}/logo-invanarinitiativ.png?version=${timestamp}") 0 0 no-repeat;
         background-image: url("@{imagesPath}/logo-invanarinitiativ.svg?version=${timestamp}"), none;
+        @media @mobile {
+            height: 32px;
+            width: 90%;
+            background-size: contain;
+        }
     }
 }
 
