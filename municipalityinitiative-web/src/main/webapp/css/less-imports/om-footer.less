@@ -10,6 +10,9 @@
     width: 100%;
     padding: 60px 0px;
 
+    @media @mobile {
+        padding: 60px 0 160px 0;
+    }
     background: @footerColor;
     color: @footerTextColor;
     font-size: 0.9em;
@@ -28,8 +31,13 @@
 
         p {
             margin-left: 80px;
+            @media @mobile {
+                margin: 0 auto;
+                width: 80%;
+            }
         }
         @media @mobile  {
+            width: auto;
             margin: 0 auto;
             height: 0;
         }
@@ -44,11 +52,17 @@
 
         &.om {
             .iconPosition(0, 0, @footerLogoWidth);
+            @media @mobile {
+                float: none;
+                display: block;
+                margin: 0 auto;
+            }
         }
 
         &.vivi {
             .iconPosition(1, 0, @footerLogoWidth);
         }
+
     }
 
     a {

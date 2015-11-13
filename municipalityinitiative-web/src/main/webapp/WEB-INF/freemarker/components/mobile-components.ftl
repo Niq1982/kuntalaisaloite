@@ -53,15 +53,15 @@
 
 </#macro>
 
-<#macro frontPageLink>
-<div class="mobile-links-holder">
-    <a href="${urls.search()}" class="front-page-links-mobile"><@u.message "front.bigLinkMobile" /></a>
-    <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="front-page-links-mobile"><@u.message "front.bigLinkMobile2" /></a>
-</div>
-</#macro>
 
 <#macro mobileFrontPageImageContainer>
     <div class="image-container-mobile">
+        <div class="mobile-image-1" ></div>
+        <div class="mobile-image-2" ></div>
+        <div class="mobile-image-3" ></div>
+        <div class="mobile-big-link-container">
+            <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="front-page-links-mobile"><@u.message "front.bigLink.Mobile1" /><span class="arrow"><@u.message "front.bigLink.Mobile2" /></span></a>
+        </div>
         <#if requestMessages?? && (requestMessages?size > 0)>
         <@u.frontpageRequestMessage requestMessages />
     </#if>

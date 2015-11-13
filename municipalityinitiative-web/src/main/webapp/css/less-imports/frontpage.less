@@ -54,11 +54,37 @@
     @media @tablet, @desktop, @desktop-xl {
         display: none;
     }
-    .frontpage-image(3);
+    width: 95%;
+    margin: 0 auto;
+
+    .mobile-image-1 {
+        .frontpage-image(3);
+        background-position-x: 50%;
+        background-size: cover;
+        height: 100px;
+        width: 60%;
+        float: left;
+    }
+    .mobile-image-2 {
+        .frontpage-image(3);
+        background-position-x: 50%;
+        background-size: cover;
+        height: 100px;
+        width: 38%;
+        float: right;
+    }
+    .mobile-image-3 {
+        .frontpage-image(3);
+        background-position-x: 50%;
+        background-size: cover;
+        height: 100px;
+        width: 38%;
+        float: left;
+        margin-top: 2%;
+    }
     position:relative;
-    height:200px;
-    background-position-x: 50%;
-    background-size: cover;
+
+
 
 
 }
@@ -75,23 +101,45 @@
 	padding: 0 5px;
 }
 
-.mobile-links-holder {
-    padding: 2%;
 
+.mobile-big-link-container {
     @media @tablet, @desktop, @desktop-xl{
         display: none;
     }
+    width: 60%;
+    float: right;
+    height: 100px;
+    margin-top: 2%;
+
+    background: @mainColorLight;
+
+    &:hover {
+        background-color: @mainColor;
+    }
 
     .front-page-links-mobile {
-        width:43%;
-        padding: 10px 6px;
+
+        padding: 5% 0 0 6%;
         color: #fff;
-        background: @mainColorLight;
+        font-size: 20px;
+
         text-decoration: none;
-        display: inline-block;
-        text-align: center;
+        display: block;
+        text-align: left;
+
+        .arrow {
+
+            display: block;
+            height: 29px;
+            background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -192px -96px no-repeat;
+            background-position-x: 100%;
+            text-decoration: underline;
+            width: 120px;
+            font-style: italic;
+        }
     }
 }
+
 
 
 .big-link-holder {
@@ -107,9 +155,7 @@
     width: 470px;
 
     .big-link {
-        &.show-only-in-mobile {
-            display: none;
-        }
+
         position: absolute;
         bottom: 0;
         left: 0;

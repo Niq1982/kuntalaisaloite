@@ -25,7 +25,7 @@
 
 
 <@mobile.mobileFrontPageImageContainer />
-<@mobile.frontPageLink />
+
 
 <div class="image-container image-${imageNumber}">
 <#if requestMessages?? && (requestMessages?size > 0)>
