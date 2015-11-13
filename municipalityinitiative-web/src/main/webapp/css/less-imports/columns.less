@@ -7,8 +7,12 @@
 
     width: 80%;
 
-    @media @mobile, @tablet  {
+    @media @mobile{
         width: auto;
+    }
+    @media @tablet {
+        width: auto;
+        padding: 0 2%;
     }
     @media @desktop-xl{
         width: 960px;
@@ -79,6 +83,9 @@
     @media @mobile {
         background: none;
         background-color: white;
+        border: none;
+    }
+    @media @tablet {
         border: none;
     }
 }

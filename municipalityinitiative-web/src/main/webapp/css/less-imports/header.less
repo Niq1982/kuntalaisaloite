@@ -17,7 +17,7 @@
         height: 130px;
         margin: 0 auto;
 
-        @media @mobile {
+        @media @mobile, @tablet {
 
             width: auto;
             height: 40px;
@@ -55,8 +55,8 @@
 
         }
         @media @tablet{
-            width: 90%;
-            height: 130px;
+            width: auto;
+            height: 100px;
             margin: 0 auto;
         }
 
@@ -73,7 +73,7 @@
             text-align: right;
             max-width: 450px;
 
-            @media @mobile {
+            @media @mobile, @tablet {
                 visibility: hidden;
             }
 
@@ -97,7 +97,10 @@
 
         @media @mobile {
             height: 32px;
-            margin-left: 10px;
+            margin-left: 2%;
+        }
+        @media @tablet {
+            margin-left: 3%;
         }
 
     }
@@ -148,7 +151,7 @@
                      }
                  }
 
-             @media @mobile {
+             @media @mobile, @tablet {
 
                  display: none;
                  &.open {
@@ -225,7 +228,10 @@
         margin: 0 10px;
         border-bottom: 1px solid @borderGray;
         @media @mobile{
-            margin: 0 0;
+            margin: 0;
+        }
+        @media @tablet{
+            margin: 0;
         }
     }
 
