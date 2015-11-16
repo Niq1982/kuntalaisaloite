@@ -39,7 +39,7 @@
         <@f.notTooFastField initiative />
 
         <div class="form-block-container">
-            <div class="input-block cf">
+            <div class="input-block cf" id="prepare-municipality-selection">
                 <@edit.municipalityBlock municipality=currentMunicipality/>
             </div>
         </div>
