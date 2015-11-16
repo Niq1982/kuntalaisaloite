@@ -14,11 +14,11 @@
     float: left;
 }
 .frontpage-image-mobile(@imageset, @index) when (@index = 2) {
-    width: 38%;
+    width: 40%;
     float: right;
 }
 .frontpage-image-mobile(@imageset, @index) when (@index = 3) {
-    width: 38%;
+    width: 40%;
     float: left;
 }
 
@@ -71,13 +71,14 @@
     @media @tablet, @desktop, @desktop-xl {
         display: none;
     }
-    width: 95%;
+    width: 94%;
     margin: 0 auto;
 
     .mobile-image{
         background-size: cover;
         height: 100px;
-        margin-top: 2%;
+        outline: solid white 5px;
+        margin-top: 5px;
 
         &.image-1 {
             &-1{
@@ -158,8 +159,8 @@
     width: 60%;
     float: right;
     height: 100px;
-    margin-top: 2%;
-
+    margin-top: 5px;
+    outline: solid white 5px;
     background: @mainColorLight;
 
     &:hover {
