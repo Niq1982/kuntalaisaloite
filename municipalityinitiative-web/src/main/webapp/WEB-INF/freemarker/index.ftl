@@ -24,7 +24,7 @@
 <#assign imageNumber = rand(1, 4)?c />
 
 
-<@mobile.mobileFrontPageImageContainer />
+<@mobile.mobileFrontPageImageContainer imageNumber/>
 
 
 <div class="image-container image-${imageNumber}">

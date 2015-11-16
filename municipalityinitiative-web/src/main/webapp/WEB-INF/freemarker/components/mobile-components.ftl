@@ -54,11 +54,11 @@
 </#macro>
 
 
-<#macro mobileFrontPageImageContainer>
+<#macro mobileFrontPageImageContainer imageNumber>
     <div class="image-container-mobile">
-        <div class="mobile-image-1" ></div>
-        <div class="mobile-image-2" ></div>
-        <div class="mobile-image-3" ></div>
+        <div class="mobile-image image-${imageNumber}-1" ></div>
+        <div class="mobile-image image-${imageNumber}-2" ></div>
+        <div class="mobile-image image-${imageNumber}-3" ></div>
         <div class="mobile-big-link-container">
             <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="front-page-links-mobile"><@u.message "front.bigLink.Mobile1" /><span class="arrow"><@u.message "front.bigLink.Mobile2" /></span></a>
         </div>
