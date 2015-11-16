@@ -30,7 +30,6 @@
 
 
 
-<@mobile.mobileSearch />
 
 
 <div class="view-block search-options cf noprint">
@@ -143,6 +142,9 @@
         <#--</#if>-->
 
 </div>
+
+
+<@mobile.mobileSearch />
 
 <div class="search-terms">
     <#if currentMunicipalities.present>
