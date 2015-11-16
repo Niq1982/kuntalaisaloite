@@ -41,6 +41,14 @@
     
     <@u.spacer "15" />
 
+    <#if municipalityDecisionHash??>
+        <@b.contentBlock type>
+            <@b.municipalityDecisionLink type/>
+        </@b.contentBlock>
+
+        <@u.spacer "15" />
+    </#if>
+
     <@b.emailFooter type ".sentToMunicipality" />
 
 </@l.emailHtml>

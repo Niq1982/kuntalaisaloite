@@ -1,8 +1,10 @@
 package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
+import fi.om.municipalityinitiative.dao.MunicipalityUserDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
@@ -10,6 +12,7 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.service.MunicipalityUserService;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
@@ -17,11 +20,13 @@ import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
@@ -33,8 +38,15 @@ import static org.junit.Assert.fail;
 
 public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrationTestBase {
 
+
     @Resource
     InitiativeManagementService service;
+
+    @Resource
+    MunicipalityUserService municipalityUserService;
+
+    @Resource
+    MunicipalityUserDao municipalityUserDao;
 
     @Resource
     TestHelper testHelper;
@@ -83,7 +95,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     public void editing_initiative_throws_exception_if_wrong_author() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()), new ContactInfo());
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()), new ContactInfo(), new ArrayList<Location>());
 
         service.editInitiativeDraft(initiativeId, TestHelper.unknownLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
     }
@@ -101,7 +113,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void get_initiative_for_update_sets_all_required_information() {
-        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality.getId());
+        Long initiativeId = testHelper.createCollaborativeAcceptedWithLocationInformation(testMunicipality.getId());
         InitiativeUIUpdateDto initiativeForUpdate = service.getInitiativeForUpdate(initiativeId, TestHelper.authorLoginUserHolder);
         ReflectionTestUtils.assertNoNullFields(initiativeForUpdate);
     }
@@ -125,7 +137,12 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative,randomlyFilledContactInfo);
+        List<Location> locations = new ArrayList<Location>();
+        locations.add(ReflectionTestUtils.modifyAllFields(new Location()));
+        locations.add(ReflectionTestUtils.modifyAllFields(new Location()));
+        locations.add(ReflectionTestUtils.modifyAllFields(new Location()));
+
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative,randomlyFilledContactInfo, locations);
 
         service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
 
@@ -137,6 +154,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         assertThat(updated.getProposal(), is(editDto.getProposal()));
         assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
         assertThat(updated.getExternalParticipantCount(), is(editDto.getExternalParticipantCount()));
+        testHelper.assertLocations(updated.getLocations(), editDto.getLocations());
 
         ReflectionTestUtils.assertNoNullFields(updated);
 
@@ -153,8 +171,11 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         String originalName = TestHelper.DEFAULT_PARTICIPANT_NAME;
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
+
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative, randomlyFilledContactInfo);
+
+
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative, randomlyFilledContactInfo, new ArrayList<Location>());
 
         service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
 
@@ -172,6 +193,8 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         ReflectionTestUtils.assertNoNullFields(updated);
 
     }
+
+
 
     @Test
     public void get_initiative_draft_for_edit_receives_correct_information_if_verified_initiative() {
@@ -202,9 +225,9 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     public void send_initiative_as_review_sents_state_as_review_and_sets_type_as_undefined() {
 //        Long initiativeId = testHelper.createDraft(testMunicipality.getId());
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
-                .withType(InitiativeType.SINGLE)
-                .withState(InitiativeState.DRAFT)
-                .applyAuthor().toInitiativeDraft()
+                        .withType(InitiativeType.SINGLE)
+                        .withState(InitiativeState.DRAFT)
+                        .applyAuthor().toInitiativeDraft()
         );
 
         service.sendReviewWithUndefinedType(initiativeId, TestHelper.authorLoginUserHolder);
@@ -234,7 +257,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     public void send_initiative_as_review_sends_emails_to_author_and_moderator() throws MessagingException {
         service.sendReviewWithUndefinedType(testHelper.createDraft(testMunicipality.getId()), TestHelper.authorLoginUserHolder);
 
-        assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_REVIEW.name()+".subject");
+        assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_REVIEW.name() + ".subject");
         assertSecondSentEmail(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
 
     }
@@ -304,7 +327,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void send_initiative_as_review_and_straight_to_municipality_sends_emails_to_author_and_moderator() throws MessagingException {
         service.sendReviewAndStraightToMunicipality(testHelper.createDraft(testMunicipality.getId()), TestHelper.authorLoginUserHolder, null);
-        assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_REVIEW.name()+".subject");
+        assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_REVIEW.name() + ".subject");
         assertSecondSentEmail(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
     }
 
@@ -369,7 +392,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         service.sendFixToReview(accepted, TestHelper.authorLoginUserHolder);
 
-        assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_FIX_TO_REVIEW.name()+".subject");
+        assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_FIX_TO_REVIEW.name() + ".subject");
         assertSecondSentEmail(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
 
     }
@@ -410,7 +433,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
         service.publishAndStartCollecting(accepted, TestHelper.authorLoginUserHolder);
-        assertUniqueSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX+EmailMessageType.PUBLISHED_COLLECTING.name()+".subject");
+        assertUniqueSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.PUBLISHED_COLLECTING.name() + ".subject");
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -420,6 +443,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test
+    @Transactional
     public void publish_initiative_and_send_to_municipality_sets_all_data() {
         Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
@@ -431,6 +455,15 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         assertThat(sent.getType(), is(InitiativeType.SINGLE));
         assertThat(sent.getSentTime(), isPresent());
         assertThat(sent.getSentComment(), is("some sent comment"));
+
+        assertMunicipalityUserHash(accepted);
+
+    }
+
+    private void assertMunicipalityUserHash(Long accepted) {
+        String hash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(accepted);
+        assertThat(hash, notNullValue());
+        assertThat(accepted.equals(municipalityUserDao.getInitiativeId(hash)), is(true));
     }
 
     @Test
@@ -438,7 +471,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
         service.sendToMunicipality(accepted, TestHelper.authorLoginUserHolder, "some sent comment", null);
 
-        assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX+EmailMessageType.SENT_TO_MUNICIPALITY.name()+".subject");
+        assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_MUNICIPALITY.name() + ".subject");
         assertSecondSentEmail(testMunicipalityEmail, EmailSubjectPropertyKeys.EMAIL_NOT_COLLABORATIVE_MUNICIPALITY_SUBJECT, TestHelper.DEFAULT_INITIATIVE_NAME);
     }
 
@@ -469,6 +502,16 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         service.sendToMunicipality(collaborativeAccepted, TestHelper.unknownLoginUserHolder, "", null);
     }
 
+    @Test(expected = AccessDeniedException.class)
+    public void no_municipality_hash_is_not_created_if_sending_to_municipality_fails_if_no_rights_to_initiative() {
+        Long collaborativeAccepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
+
+        service.sendToMunicipality(collaborativeAccepted, TestHelper.unknownLoginUserHolder, "", null);
+
+        String hash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(collaborativeAccepted);
+        assertThat(hash, notNullValue());
+    }
+
     @Test
     public void sending_collobarative_to_municipality_sets_sent_time_and_sent_comment() {
         Long collaborative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
@@ -481,6 +524,19 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         Initiative sent = testHelper.getInitiative(collaborative);
         assertThat(sent.getSentTime(), isPresent());
         assertThat(sent.getSentComment(), is("my sent comment"));
+    }
+
+    @Test
+    @Transactional
+    public void sending_collabarative_to_municipality_creates_management_hash(){
+        Long collaborative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE)
+                .applyAuthor().toInitiativeDraft());
+
+        service.sendToMunicipality(collaborative, TestHelper.authorLoginUserHolder, "my sent comment", null);
+
+        assertMunicipalityUserHash(collaborative);
     }
 
     @Test

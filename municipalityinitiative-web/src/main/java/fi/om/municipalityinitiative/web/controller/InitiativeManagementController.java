@@ -7,9 +7,7 @@ import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
-import fi.om.municipalityinitiative.service.AttachmentService;
-import fi.om.municipalityinitiative.service.ParticipantService;
-import fi.om.municipalityinitiative.service.ValidationService;
+import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
@@ -61,6 +59,9 @@ public class InitiativeManagementController extends BaseController {
     @Resource
     AttachmentService attachmentService;
 
+    @Resource
+    LocationService locationService;
+
     private static final Logger log = LoggerFactory.getLogger(InitiativeManagementController.class);
 
     public InitiativeManagementController(boolean optimizeResources, String resourcesVersion) {
@@ -98,6 +99,7 @@ public class InitiativeManagementController extends BaseController {
                 authorService.findAuthors(initiativeId, loginUserHolder),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
                 initiativeInfo.getParticipantCount(),
+                locationService.getLocations(initiativeId),
                 new CommentUIDto()
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
@@ -122,7 +124,7 @@ public class InitiativeManagementController extends BaseController {
                 normalInitiativeService.getManagementSettings(initiativeId),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
                 new AttachmentCreateDto(),
-                AttachmentService.ImageProperties.instance()).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+                AttachmentUtil.ImageProperties.instance()).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
@@ -199,6 +201,7 @@ public class InitiativeManagementController extends BaseController {
                     initiativeManagementService.getInitiativeForUpdate(initiativeId, loginUserHolder),
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     authorService.findAuthors(initiativeId, loginUserHolder),
+                    locationService.getLocations(initiativeId),
                     urls.getManagement(initiativeId)
             ).view(model, urls.alt().update(initiativeId));
 
@@ -224,6 +227,7 @@ public class InitiativeManagementController extends BaseController {
                     updateDto,
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     authorService.findAuthors(initiativeId, loginUserHolder),
+                    locationService.getLocations(initiativeId),
                     urls.getManagement(initiativeId)
             ).view(model, urls.alt().update(initiativeId));
         }
@@ -244,7 +248,7 @@ public class InitiativeManagementController extends BaseController {
             return ViewGenerator.managementView(municipalityInitiative,
                     normalInitiativeService.getManagementSettings(initiativeId),
                     authorService.findAuthors(initiativeId, loginUserHolder),
-                    attachmentService.findAllAttachments(initiativeId, loginUserHolder), municipalityInitiative.getParticipantCount(),
+                    attachmentService.findAllAttachments(initiativeId, loginUserHolder), municipalityInitiative.getParticipantCount(), locationService.getLocations(initiativeId),
                     commentUIDto)
                     .view(model, Urls.get(locale).alt().moderation(initiativeId));
         }
@@ -287,6 +291,7 @@ public class InitiativeManagementController extends BaseController {
                     normalInitiativeService.getManagementSettings(initiativeId),
                     authorService.findAuthors(initiativeId, loginUserHolder),
                     attachmentService.findAllAttachments(initiativeId, loginUserHolder), municipalityInitiative.getParticipantCount(),
+                    locationService.getLocations(initiativeId),
                     commentUIDto)
                     .view(model, Urls.get(locale).alt().moderation(initiativeId));
         }
@@ -420,7 +425,7 @@ public class InitiativeManagementController extends BaseController {
                     normalInitiativeService.getManagementSettings(initiativeId),
                     attachmentService.findAttachments(initiativeId, loginUserHolder),
                     attachmentCreateDto,
-                    AttachmentService.ImageProperties.instance())
+                    AttachmentUtil.ImageProperties.instance())
                     .view(model, Urls.get(locale).alt().manageAttachments(initiativeId));
 
         }

@@ -518,4 +518,15 @@
     </#list>
 </#macro>
 
+<#--
+ * Inserts a script tag that loads google maps on page.
+ *
+-->
+<#macro jsGoogleMapsLib>
+    <script type="text/javascript">
+        if (typeof google === 'undefined') {
+            document.write('<script src="https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&language=${locale}"></'+'script>');
+        }
+    </script>
+</#macro>
 </#escape>

@@ -28,7 +28,10 @@
 <body>
 <div id="wrapper">
 
+
     <#include "om-header.ftl" />
+
+
 
     <div id="header">
         <div class="header-content">
@@ -337,8 +340,10 @@
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.headernav.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.mainnav.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.participantgraph.js?version=${resourcesVersion}"></script>
+      <script type="text/javascript" src="${urls.baseUrl}/js/jquery.MultiFile.js?version=${resourcesVersion}"></script>
 
       <script type="text/javascript" src="${urls.baseUrl}/js/kuntalaisaloite.js?version=${resourcesVersion}"></script>
+
     </#if>
 
   <#--

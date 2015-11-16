@@ -1,12 +1,12 @@
 package fi.om.municipalityinitiative.util;
 
-import org.apache.commons.io.IOUtils;
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IM4JavaException;
 import org.im4java.core.IMOperation;
 import org.im4java.core.Info;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 
 public class ImageModifier {

@@ -13,7 +13,12 @@ public final class PropertyNames {
     public static final String baseURL = "app.baseURL"; 
     
     public static final String registeredUserSecret = "security.registeredUserSecret";
-    
+
+    public static final String googleMapsApiKey = "googlemaps.apikey";
+
+    public static final String googleMapsEnabled = "googlemaps.enabled";
+
+    public static final String superSearchEnabled = "supersearch.enabled";
     
     public static final String jdbcDriver = "jdbc.driver";
     
@@ -79,7 +84,10 @@ public final class PropertyNames {
 
     public static final String youthInitiativeBaseUrl = "youth.initiative.base.url";
 
+    public static final String superSearchBaseUrl = "supersearch.baseurl";
+
     public static final String attachmentDir = "attachment.directory";
 
+    public static final String decisionAttachmentDir = "decisionAttachment.directory";
 
 }

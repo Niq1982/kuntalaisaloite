@@ -226,13 +226,35 @@
 </#macro>
 
 <#macro attachments type>
-    <#if (attachmentCount > 0)>
+    <#if (attachmentCount > 0) || hasLocationAttached>
         <#if type == "html">
-            <h4 style="${h4!""}"><@u.messageHTML key="email.attachmentCount.total" args=[attachmentCount] /></h4>
-            <p style="${pBottomMargin!""}"><@u.message "email.attachmentCount.info" /></p>
+            <h4 style="${h4!""}">
+                <#if (attachmentCount > 0)>
+                    <@u.messageHTML key="email.attachmentCount.total" args=[attachmentCount] />
+                </#if>
+                <#if hasLocationAttached>
+                    <@u.messageHTML key="email.mapAttached" args=[attachmentCount] />
+                </#if>
+            </h4>
+            <#if (attachmentCount > 0)>
+                <p style="${pBottomMargin!""}"><@u.message "email.attachmentCount.info" /></p>
+            </#if>
+            <#if hasLocationAttached>
+                <p style="${pBottomMargin!""}"><@u.message "email.mapAttached.info" /></p>
+            </#if>
         <#else>
+            <#if (attachmentCount > 0)>
             <@u.message key="email.attachmentCount.total" /> ${attachmentCount}
-            <@u.message "email.attachmentCount.info" />
+            </#if>
+            <#if hasLocationAttached>
+                <@u.message key="email.mapAttached" /> ${attachmentCount}
+            </#if>
+            <#if (attachmentCount > 0)>
+                <@u.message "email.attachmentCount.info" />
+            </#if>
+            <#if hasLocationAttached>
+                <@u.message "email.mapAttached.info" />
+            </#if>
         </#if>
     </#if>
 </#macro>
@@ -327,6 +349,21 @@
         </#if>
     </#if>
 </#macro>
+
+
+<#macro municipalityDecisionLink type>
+    <#assign municipalityDecisionUrl = urls.get(switchLocale!locale).loginMunicipality(municipalityDecisionHash)/>
+
+    <#if type == "html">
+        <p style="${pBothMargins!""}"><@u.message "email.municipalityDecisionLink" /><br/>
+            <@u.link municipalityDecisionUrl municipalityDecisionUrl /></span>
+    <#else>
+        <@u.message "email.municipalityDecisionLink" />
+        ${municipalityDecisionUrl}
+    </#if>
+
+</#macro>
+
 
 <#--
  * separator

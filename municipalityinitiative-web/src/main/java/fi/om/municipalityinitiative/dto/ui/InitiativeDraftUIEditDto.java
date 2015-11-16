@@ -2,17 +2,22 @@ package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
-
+import fi.om.municipalityinitiative.validation.InitiativeWithLocationInformation;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.ValidLocation;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
-public class InitiativeDraftUIEditDto {
+@ValidLocation(groups = {VerifiedInitiative.class, NormalInitiative.class})
+public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformation {
 
     // Not editable after set
     private Municipality municipality;
@@ -36,11 +41,13 @@ public class InitiativeDraftUIEditDto {
     @Min(value = 0, groups = {VerifiedInitiative.class, NormalInitiative.class} )
     private int externalParticipantCount;
 
+    private List<Location> locations = new ArrayList<Location>();
+
     public InitiativeDraftUIEditDto() {
         // For freemarker
     }
 
-    public static InitiativeDraftUIEditDto parse(Initiative initiative, ContactInfo contactInfo) {
+    public static InitiativeDraftUIEditDto parse(Initiative initiative, ContactInfo contactInfo, List<Location> locations) {
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
         editDto.setExtraInfo(initiative.getExtraInfo());
         editDto.setName(initiative.getName());
@@ -48,6 +55,7 @@ public class InitiativeDraftUIEditDto {
         editDto.municipality = initiative.getMunicipality();
         editDto.setContactInfo(new ContactInfo(contactInfo));
         editDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
+        editDto.setLocations(locations);
         return editDto;
     }
 
@@ -94,4 +102,14 @@ public class InitiativeDraftUIEditDto {
     public int getExternalParticipantCount() {
         return externalParticipantCount;
     }
+
+    public List<Location> getLocations(){
+        return this.locations;
+    }
+
+    public void setLocations(List<Location> locations){
+        this.locations = locations;
+    }
+
+
 }

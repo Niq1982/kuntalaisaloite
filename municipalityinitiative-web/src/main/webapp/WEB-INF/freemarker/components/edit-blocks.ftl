@@ -1,6 +1,7 @@
 <#import "/spring.ftl" as spring />
 <#import "utils.ftl" as u />
 <#import "forms.ftl" as f />
+<#import "elements.ftl" as e />
 
 <#escape x as x?html> 
 
@@ -255,7 +256,7 @@
  *
  * @param locked locks some field from editing
  -->
-<#macro initiativeBlock path>
+<#macro initiativeBlock path locationSelected=false>
     <div class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
@@ -281,7 +282,13 @@
         <div class="input-block-content">
             <@f.textarea path=path+".extraInfo" key="initiative.extraInfo" required="" optional=true cssClass="textarea" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
         </div>
-        
+
+        <#if googleMapsEnabled>
+            <div class="input-block-content">
+                <@mapSelection path locationSelected/>
+            </div>
+        </#if>
+
     </div>
 </#macro>
 
@@ -295,7 +302,7 @@
  *
  * @param locked locks some field from editing
  -->
-<#macro updateInitiativeBlock path>
+<#macro updateInitiativeBlock path locationSelected=false>
     <div class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
@@ -309,7 +316,12 @@
         <div class="input-block-content">
             <@f.textarea path=path+".extraInfo" required="" optional=true cssClass="textarea" key="initiative.extraInfo" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
         </div>
-        
+
+        <#if googleMapsEnabled>
+            <div class="input-block-content">
+                <@mapSelection path locationSelected/>
+            </div>
+        </#if>
         <#if initiative.collaborative && initiative.state == InitiativeState.PUBLISHED>
             <div class="input-block-content">
                 <@f.textField path=path+".externalParticipantCount" required="" cssClass="small" optional=false  maxLength=7 />
@@ -427,6 +439,91 @@
 </#macro>
 
 <#--
+  * mapContainer
+  *
+  * Modal for selecting location from map.
+  * Requires Javascript.
+  *
+-->
+<#assign mapContainer>
+    <@compress single_line=true>
+        <div id="map-modal">
+            <p><@u.message key="map.searchAddress"/></p>
+            <input type="text" id="user-entered-address"></input>
+            <button id="search-locations-button" name="search" class="small-button disable-dbl-click-check"><@u.message key="map.search"/></button>
+            <div id = "result-list"></div>
+
+            <div class="map-container initiative-content-row last">
+                <div id="map-canvas"></div>
+            </div>
+            <div id="selectedLocations">
+                <ul></ul>
+            </div>
+
+
+            <div class="input-block-content">
+                <span class="small-button disabled" id="save-and-close"><@u.message "map.save" /></span>
+                <a class="close push"><@u.message "map.cancel" /></a>
+            </div>
+        </div>
+    </@compress>
+</#assign>
+
+<#--
+ * mapSelection
+ *
+ * Open modal for selecting and editing location on map.
+ * Requires Javascript.
+ *
+ * @param location has already been selected
+-->
+<#macro mapSelection path locationSelected=false>
+    <div id = "map-selection" class="no-visible">
+        <div id="select-location" <#if locationSelected> class="no-visible" </#if> >
+            <p> <@u.message "map.selectLocation" /> <a id="openMap"><@u.message "map.here" /></a></p>
+        </div>
+
+        <div id="open-remove-location" <#if !locationSelected> class="no-visible" </#if> >
+            <p id="show-selected-location" class="map-marker trigger-tooltip" title="<@u.message key="map.showSelectedLocation" />">
+                <a><@u.message key="map.locationAttached" /></a>
+            </p>
+            <a class="trigger-tooltip">
+                <span id="remove-selected-location" class="icon-small icon-16 cancel trigger-tooltip" title="<@u.message key="map.removeLocation" />"></span>
+            </a>
+        </div>
+    </div>
+
+    <noscript><@u.message key="map.javaScriptSupport" /></noscript>
+
+    <div id="old-locations">
+        <!-- Existing locations -->
+        <#list updateData.locations as location>
+            <div class="locationRow">
+                <@spring.formHiddenInput path+".locations[${location_index}].lat" />
+                <@spring.formHiddenInput path+".locations[${location_index}].lng" />
+            </div>
+        </#list>
+    </div>
+
+    <!-- New locations -->
+    <div id = "new-locations"></div>
+
+    <!-- Location template -->
+    <script id="locationTemplate" type="text/x-jsrender">
+        <div>
+            <label>
+                <input type="hidden" class="medium" value="{{>locationLat}}" id="locations[{{>newLocationIndex}}].lat" name="locations[{{>newLocationIndex}}].lat" />
+            </label>
+            <label>
+                <input type="hidden" class="medium" value="{{>locationLng}}" id="locations[{{>newLocationIndex}}].lng" name="locations[{{>newLocationIndex}}].lng" />
+            </label>
+        </div>
+    </script>
+
+
+</#macro>
+
+<#--
  * sessionExpired
  *
  * Generates a modal when user's session has expired.
@@ -442,7 +539,7 @@
         };
 
         var sessionLength = 1000 * 60 * 30; // 30 minutes
-    
+
         function sessionExpired() {
             generateModal(modalData.sessionHasEnded(), 'minimal');
         }

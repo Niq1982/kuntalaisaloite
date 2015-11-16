@@ -1,14 +1,16 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
-import com.mysema.query.types.path.*;
-
-import com.mysema.query.types.PathMetadata;
-import javax.annotation.Generated;
-import com.mysema.query.types.Path;
-
 import com.mysema.query.sql.ColumnMetadata;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
+import com.mysema.query.types.path.DateTimePath;
+import com.mysema.query.types.path.EnumPath;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.StringPath;
+
+import javax.annotation.Generated;
+
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -36,6 +38,12 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
     public final StringPath moderatorComment = createString("moderatorComment");
 
     public final DateTimePath<org.joda.time.DateTime> modified = createDateTime("modified", org.joda.time.DateTime.class);
+
+    public final StringPath municipalityDecision = createString("municipalityDecision");
+
+    public final DateTimePath<org.joda.time.DateTime> municipalityDecisionDate = createDateTime("municipalityDecisionDate", org.joda.time.DateTime.class);
+
+    public final DateTimePath<org.joda.time.DateTime> municipalityDecisionModifiedDate = createDateTime("municipalityDecisionModifiedDate", org.joda.time.DateTime.class);
 
     public final NumberPath<Long> municipalityId = createNumber("municipalityId", Long.class);
 
@@ -65,11 +73,7 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final com.mysema.query.sql.ForeignKey<QMunicipality> municipalityInitiativeMunicipalityFk = createForeignKey(municipalityId, "id");
 
-    public final com.mysema.query.sql.ForeignKey<QAuthor> _authorInitiativeIdFk = createInvForeignKey(id, "initiative_id");
-
-    public final com.mysema.query.sql.ForeignKey<QInitiativeSupportVoteDay> _supportVoteDayInitiativeIdFk = createInvForeignKey(id, "initiative_id");
-
-    public final com.mysema.query.sql.ForeignKey<QEmail> _emailInitiativeId = createInvForeignKey(id, "initiative_id");
+    public final com.mysema.query.sql.ForeignKey<QMunicipalityUser> _municipalityUserInitiativeId = createInvForeignKey(id, "initiative_id");
 
     public final com.mysema.query.sql.ForeignKey<QReviewHistory> _reviewHistoryInitiativeId = createInvForeignKey(id, "initiative_id");
 
@@ -79,7 +83,17 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final com.mysema.query.sql.ForeignKey<QVerifiedParticipant> _verifiedParticipantInitiativeFk = createInvForeignKey(id, "initiative_id");
 
+    public final com.mysema.query.sql.ForeignKey<QAuthor> _authorInitiativeIdFk = createInvForeignKey(id, "initiative_id");
+
+    public final com.mysema.query.sql.ForeignKey<QLocation> _locationInitiativeId = createInvForeignKey(id, "initiative_id");
+
+    public final com.mysema.query.sql.ForeignKey<QInitiativeSupportVoteDay> _supportVoteDayInitiativeIdFk = createInvForeignKey(id, "initiative_id");
+
+    public final com.mysema.query.sql.ForeignKey<QEmail> _emailInitiativeId = createInvForeignKey(id, "initiative_id");
+
     public final com.mysema.query.sql.ForeignKey<QParticipant> _participantMunicipalityInitiativeIdFk = createInvForeignKey(id, "municipality_initiative_id");
+
+    public final com.mysema.query.sql.ForeignKey<QDecisionAttachment> _decisionAttachmentInitiativeId = createInvForeignKey(id, "initiative_id");
 
     public final com.mysema.query.sql.ForeignKey<QAttachment> _attachmentInitiativeId = createInvForeignKey(id, "initiative_id");
 
@@ -109,6 +123,9 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
         addMetadata(lastEmailReportType, ColumnMetadata.named("last_email_report_type").ofType(1111).withSize(2147483647));
         addMetadata(moderatorComment, ColumnMetadata.named("moderator_comment").ofType(12).withSize(1024));
         addMetadata(modified, ColumnMetadata.named("modified").ofType(93).withSize(29).withDigits(6).notNull());
+        addMetadata(municipalityDecision, ColumnMetadata.named("municipality_decision").ofType(12).withSize(2147483647));
+        addMetadata(municipalityDecisionDate, ColumnMetadata.named("municipality_decision_date").ofType(93).withSize(29).withDigits(6));
+        addMetadata(municipalityDecisionModifiedDate, ColumnMetadata.named("municipality_decision_modified_date").ofType(93).withSize(29).withDigits(6));
         addMetadata(municipalityId, ColumnMetadata.named("municipality_id").ofType(-5).withSize(19).notNull());
         addMetadata(name, ColumnMetadata.named("name").ofType(12).withSize(512));
         addMetadata(participantCount, ColumnMetadata.named("participant_count").ofType(4).withSize(10));

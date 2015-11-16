@@ -27,4 +27,8 @@
 
 <@b.separator />
 
+<@b.municipalityDecisionLink type />
+
+<@b.separator />
+
 <@b.emailFooter type />

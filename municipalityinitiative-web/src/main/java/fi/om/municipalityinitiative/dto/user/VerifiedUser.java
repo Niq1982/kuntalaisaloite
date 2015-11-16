@@ -65,6 +65,11 @@ public class VerifiedUser extends User{
         return true;
     }
 
+    @Override
+    public boolean isMunicipalityUser() {
+        return false;
+    }
+
     public String getHash() {
         return hash;
     }

@@ -30,6 +30,12 @@ public class EmailServiceDataProvider {
     @Resource
     AttachmentDao attachmentDao;
 
+    @Resource
+    LocationDao locationDao;
+
+    @Resource
+    MunicipalityUserDao municipalityUserDao;
+
     public Initiative get(Long initiativeId) {
         return initiativeDao.get(initiativeId);
     }
@@ -71,4 +77,11 @@ public class EmailServiceDataProvider {
         return attachmentDao.findAcceptedAttachments(initiativeId).size();
     }
 
+    public boolean hasLocationAttached(Long initiativeId){
+        return locationDao.getLocations(initiativeId).size() > 0;
+    }
+
+    public String getMunicipalityDecisionHash(Long initiativeId) {
+        return municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(initiativeId);
+    }
 }

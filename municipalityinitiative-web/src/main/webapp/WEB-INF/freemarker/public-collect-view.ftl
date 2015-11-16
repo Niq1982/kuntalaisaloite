@@ -31,6 +31,7 @@
     </@compress>
 </#assign>
 
+
 <#--
  * Layout parameters for HTML-title and navigation.
  * 
@@ -56,9 +57,14 @@
     <@e.initiativeTitle initiative />
     
     <@prog.progress initiative />
-    
+
+    <#if decisionInfo.isPresent() >
+        <@e.decisionBlock decisionInfo.getValue() />
+    </#if>
+
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">
+
         <@e.initiativeView initiative />
     </div>
 

@@ -46,6 +46,10 @@ public interface InitiativeDao {
 
     void updateSentComment(Long initiativeId, String sentComment);
 
+    void updateInitiativeDecision(Long initiativeId, String decisionText);
+
+    void updateInitiativeDecisionModifiedDate(Long initiativeId);
+
     InitiativeCounts getAllInitiativeCounts(Maybe<List<Long>> municipalities, InitiativeSearch.Type initiativeTypeMaybe);
 
     boolean isVerifiableInitiative(Long initiativeId);

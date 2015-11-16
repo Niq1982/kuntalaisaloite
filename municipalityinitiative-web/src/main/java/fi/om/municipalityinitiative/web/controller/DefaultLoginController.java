@@ -80,10 +80,21 @@ public class DefaultLoginController extends BaseLoginController {
     @RequestMapping(value={LOGOUT_FI, LOGOUT_SV}, method=GET)
     public String logout(@RequestParam(required = false) String target, Locale locale, HttpServletRequest request, HttpServletResponse response) {
         userService.logout(request);
+        Urls urls = Urls.get(locale);
         if (target != null) {
+            target = getValidLoginTarget(target, urls);
             return redirectWithMessage(target, RequestMessage.LOGOUT, request);
         }
-        return redirectWithMessage(Urls.get(locale).frontpage(), RequestMessage.LOGOUT, request);
+        return redirectWithMessage(urls.frontpage(), RequestMessage.LOGOUT, request);
+    }
+
+
+    @RequestMapping(value = {MUNICIPALITY_LOGIN_FI, MUNICIPALITY_LOGIN_SV}, method = RequestMethod.GET, params = PARAM_MANAGEMENT_CODE)
+    public RedirectView municipalityLoginPost(@RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+                                              Model model, Locale locale, HttpServletRequest request) {
+        // TODO write tests
+        Long initiativeId = userService.municipalityUserLogin(managementHash, request);
+        return new RedirectView(Urls.get(locale).getMunicipalityDecisionView(initiativeId), false, true, false);
     }
 
 }

@@ -246,6 +246,11 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     public InfoTextController infoTextController() {
         return new InfoTextController(optimizeResources(env), resourcesVersion(env), omPiwicId(env));
     }
+
+    @Bean
+    public MunicipalityDecisionController municipalityDecisionController() {
+        return new MunicipalityDecisionController(optimizeResources(env), resourcesVersion(env));
+    }
     
     @Bean
     public FrontPageController frontPageController() {

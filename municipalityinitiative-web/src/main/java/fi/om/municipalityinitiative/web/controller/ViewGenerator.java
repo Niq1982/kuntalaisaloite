@@ -3,12 +3,10 @@ package fi.om.municipalityinitiative.web.controller;
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
-import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
-import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
+import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.*;
-import fi.om.municipalityinitiative.service.AttachmentService;
+import fi.om.municipalityinitiative.service.AttachmentUtil;
+import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReviewHistoryDiff;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
@@ -45,7 +43,8 @@ public final class ViewGenerator {
                                                   List<Municipality> municipalities,
                                                   ParticipantUICreateDto participantUICreateDto,
                                                   AuthorUIMessage authorUIMessage,
-                                                  String supportCountData) {
+                                                  String supportCountData,
+                                                  Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo) {
         return new ViewGenerator(Views.PUBLIC_COLLECT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiative.initiative)
@@ -56,6 +55,8 @@ public final class ViewGenerator {
                         .add("participant", participantUICreateDto)
                         .add("authorMessage", authorUIMessage)
                         .add("supportCountData", supportCountData)
+                        .add("locations", initiative.locations)
+                        .add("decisionInfo", municipalityDecisionInfo)
                         .build()
         );
     }
@@ -132,16 +133,18 @@ public final class ViewGenerator {
         return new ViewGenerator(GRAPH_IFRAME_GENERATOR_VIEW, new AttributeBuilder().build());
     }
 
-    public static ViewGenerator singleView(InitiativePageInfo initiativePageView) {
+    public static ViewGenerator singleView(InitiativePageInfo initiativePageView, Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo) {
         return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativePageView.initiative)
                         .add("authors", initiativePageView.authors)
                         .add("attachments", initiativePageView.attachments)
+                        .add("locations", initiativePageView.locations)
+                        .add("decisionInfo", municipalityDecisionInfo)
                         .build());
     }
 
-    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentService.Attachments allAttachments, List<ReviewHistoryRow> reviewHistory, Maybe<ReviewHistoryDiff> reviewHistoryDiff) {
+    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentUtil.Attachments allAttachments, List<ReviewHistoryRow> reviewHistory, Maybe<ReviewHistoryDiff> reviewHistoryDiff, List<Location> locations) {
         return new ViewGenerator(MODERATION_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -150,11 +153,29 @@ public final class ViewGenerator {
                         .add("attachments", allAttachments)
                         .add("reviewHistories", reviewHistory)
                         .add("reviewHistoryDiff", reviewHistoryDiff)
+                        .add("locations", locations)
                         .build()
         );
     }
 
-    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentService.Attachments attachments, ParticipantCount participantCount, CommentUIDto commentUIDto) {
+    public static ViewGenerator municipalityDecisionView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings,
+                                                         List<? extends Author> authors,  AttachmentUtil.Attachments allAttachments, MunicipalityDecisionDto decisionDraft,
+                                                         Maybe<MunicipalityDecisionInfo> decisionInfoMaybe, boolean showDecisionForm, boolean editAttachments){
+        return new ViewGenerator("municipality-decision-view",
+                new AttributeBuilder()
+                    .add("initiative", initiativeInfo)
+                    .add("managementSettings", managementSettings)
+                    .add("authors", authors)
+                    .add("attachments", allAttachments)
+                    .add("decision", decisionDraft)
+                    .add("decisionInfo", decisionInfoMaybe)
+                    .add("showDecisionForm", showDecisionForm)
+                    .add("editAttachments", editAttachments)
+                        .build()
+                );
+        }
+
+    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentUtil.Attachments attachments, ParticipantCount participantCount, List<Location> locations, CommentUIDto commentUIDto) {
         return new ViewGenerator(MANAGEMENT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -163,11 +184,12 @@ public final class ViewGenerator {
                         .add("participantCount", participantCount)
                         .add("comment", commentUIDto)
                         .add("attachments", attachments)
+                        .add("locations", locations)
                         .build()
         );
     }
     
-    public static ViewGenerator manageAttachmentsView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, AttachmentService.Attachments attachments, AttachmentCreateDto attachmentCreateDto, AttachmentService.ImageProperties imageProperties) {
+    public static ViewGenerator manageAttachmentsView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, AttachmentUtil.Attachments attachments, AttachmentCreateDto attachmentCreateDto, AttachmentUtil.ImageProperties imageProperties) {
         return new ViewGenerator(MANAGE_ATTACHMENTS_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -179,7 +201,7 @@ public final class ViewGenerator {
         );
     }
 
-    public static ViewGenerator updateView(InitiativeViewInfo initiative, InitiativeUIUpdateDto initiativeForUpdate, Author authorInformation, List<? extends Author> authors, String previousPageURI) {
+    public static ViewGenerator updateView(InitiativeViewInfo initiative, InitiativeUIUpdateDto initiativeForUpdate, Author authorInformation, List<? extends Author> authors, List<Location> locations, String previousPageURI) {
         return new ViewGenerator(UPDATE_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiative)
@@ -187,6 +209,7 @@ public final class ViewGenerator {
                         .add("author", authorInformation)
                         .add("authors", authors)
                         .add("previousPageURI", previousPageURI)
+                        .add("locations", locations)
                         .build()
         );
     }
@@ -256,6 +279,7 @@ public final class ViewGenerator {
                         .add("initiatives", initiatives).build()
         );
     }
+
 
     private static class AttributeBuilder {
         private Map<String, Object> attributes = Maps.newHashMap();

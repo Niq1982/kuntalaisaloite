@@ -88,7 +88,7 @@ public abstract class WebTestBase {
     public void init() {
         if (urls == null) {
             String baseUrl = env.getRequiredProperty(PropertyNames.baseURL);
-            Urls.initUrls(baseUrl, baseUrl, baseUrl, "www.nua.fi");
+            Urls.initUrls(baseUrl, baseUrl, baseUrl, "www.nua.fi", "superhaku.demo.solita.fi");
             urls = Urls.FI;
         }
 
@@ -380,10 +380,11 @@ public abstract class WebTestBase {
         open(urls.vetumaLogin());
         enterVetumaLoginInformationAndSubmit(userSsn, municipality);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
     }
 
     protected void enterVetumaLoginInformationAndSubmit(String userSsn, String municipalityName) {

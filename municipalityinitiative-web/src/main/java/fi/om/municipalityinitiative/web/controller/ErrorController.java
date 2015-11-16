@@ -77,6 +77,7 @@ public class ErrorController {
     private void addModelDefaults(Model model, Urls urls) {
         model.addAttribute("urls", urls);
         model.addAttribute("locale", urls.getLang());
+        model.addAttribute("superSearchEnabled", false);
 
         Map<String, HelpPage> values = Maps.newHashMap();
         for (HelpPage value : HelpPage.values()) {

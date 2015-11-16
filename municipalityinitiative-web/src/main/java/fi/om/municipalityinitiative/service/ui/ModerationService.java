@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.YouthInitiativeWebServiceNotifier;
@@ -115,7 +116,7 @@ public class ModerationService {
     }
 
     @Transactional(readOnly = true)
-    public List<? extends Author> findAuthors(OmLoginUserHolder loginUserHolder, Long initiativeId) {
+    public List<? extends Author> findAuthors(LoginUserHolder loginUserHolder, Long initiativeId) {
         loginUserHolder.assertOmUser();
         if (initiativeDao.isVerifiableInitiative(initiativeId)) {
             return authorDao.findVerifiedAuthors(initiativeId);

@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.dto.ui.ParticipantsPageInfo;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.AttachmentService;
+import fi.om.municipalityinitiative.service.LocationService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ParticipantService;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,12 +38,16 @@ public class PublicInitiativeService {
     @Resource
     private MunicipalityService municipalityService;
 
+    @Resource
+    private LocationService locationService;
+
     @Transactional(readOnly = true)
     public InitiativePageInfo getInitiativePageInfo(Long initiativeId) {
         return new InitiativePageInfo(
                 normalInitiativeService.getPublicInitiative(initiativeId),
                 authorService.findPublicAuthors(initiativeId),
-                attachmentService.findAcceptedAttachments(initiativeId)
+                attachmentService.findAcceptedAttachments(initiativeId),
+                locationService.getLocations(initiativeId)
         );
     }
 
@@ -53,7 +58,8 @@ public class PublicInitiativeService {
         return new InitiativePageInfo(
                 initiative,
                 authorService.findPublicAuthors(initiativeId),
-                attachmentService.findAttachments(initiativeId, loginUserHolder)
+                attachmentService.findAttachments(initiativeId, loginUserHolder),
+                locationService.getLocations(initiativeId)
         );
     }
 

@@ -165,6 +165,12 @@ public class AppConfiguration {
     public SupportCountDao supportCountDao() {return new SupportCountDao();}
 
     @Bean
+    public LocationDao locationDao() {return new JdbcLocationDao();}
+
+    @Bean
+    public MunicipalityUserDao municipalityUserDao() {return new JdbcMunicipalityUserDao() ;}
+
+    @Bean
     public AuthorService authorService() {
         return new AuthorService();
     }
@@ -203,9 +209,17 @@ public class AppConfiguration {
     }
 
     @Bean
+    public MunicipalityUserService municipalityUserService() {
+        return new MunicipalityUserService();
+    }
+
+    @Bean
     public ParticipantService participantService() {
         return new ParticipantService();
     }
+
+    @Bean
+    public LocationService locationService() { return new  LocationService();}
 
     @Bean
     public JobExecutor jobExecutor() {
@@ -215,6 +229,16 @@ public class AppConfiguration {
     @Bean
     public UserService userService() {
         return new UserService(env.getRequiredProperty(PropertyNames.omUserSalt));
+    }
+
+    @Bean
+    public MunicipalityDecisionService decisionService() {
+        return new MunicipalityDecisionService(env.getRequiredProperty(PropertyNames.decisionAttachmentDir));
+    }
+
+    @Bean
+    public DecisionAttachmentDao decisionAttachmentDao(){
+        return new JdbcDecisionAttachmentDao();
     }
 
     @Bean
@@ -392,7 +416,10 @@ public class AppConfiguration {
                 testSendMunicipalityEmailsToAuthor,
                 testSendModeratorEmailsToAuthor,
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.enableVerifiedInitiatives)),
-                Boolean.valueOf(env.getRequiredProperty(PropertyNames.isTestEmailSender)));
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.isTestEmailSender)),
+                String.valueOf(env.getRequiredProperty(PropertyNames.googleMapsApiKey)),
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.googleMapsEnabled)),
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.superSearchEnabled)));
     }
 
     @Bean
@@ -467,6 +494,7 @@ public class AppConfiguration {
         Urls.initUrls(baseUrl,
                 env.getProperty(PropertyNames.iframeBaseUrl, baseUrl),
                 env.getProperty(PropertyNames.apiBaseUrl, baseUrl),
-                env.getRequiredProperty(PropertyNames.youthInitiativeBaseUrl));
+                env.getRequiredProperty(PropertyNames.youthInitiativeBaseUrl),
+                env.getRequiredProperty(PropertyNames.superSearchBaseUrl));
     }
 }

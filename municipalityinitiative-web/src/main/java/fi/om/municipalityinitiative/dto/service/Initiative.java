@@ -32,6 +32,9 @@ public class Initiative {
     private DateTime lastEmailReportTime;
     private EmailReportType lastEmailReportType;
     private Maybe<Long> youthInitiativeId = Maybe.absent();
+    private Maybe<String> decision = Maybe.absent();
+    private Maybe<DateTime> decisionDate = Maybe.absent();
+    private Maybe<DateTime> decisionModifiedDate = Maybe.absent();
 
     public Maybe<Long> getYouthInitiativeId() {
         return youthInitiativeId;
@@ -195,5 +198,25 @@ public class Initiative {
 
     public EmailReportType getLastEmailReportType() {
         return lastEmailReportType;
+    }
+
+
+    public void setDecision(String decision){
+        this.decision = Maybe.of(decision);
+    }
+
+    public Maybe<String> getDecision() {
+        return decision;
+    }
+
+    public void setDecisionDate(DateTime decisionDate) {this.decisionDate = Maybe.of(decisionDate);}
+
+    public Maybe<DateTime> getDecisionDate(){return decisionDate;}
+
+    public Maybe<DateTime> getDecisionModifiedDate() {
+        return decisionModifiedDate;
+    }
+    public void setDecisionModifiedDate(DateTime date) {
+        this.decisionModifiedDate = Maybe.of(date);
     }
 }

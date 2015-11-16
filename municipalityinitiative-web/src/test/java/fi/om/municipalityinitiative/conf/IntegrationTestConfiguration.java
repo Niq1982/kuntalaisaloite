@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.conf;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.service.AttachmentService;
+import fi.om.municipalityinitiative.service.MunicipalityDecisionService;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.util.ImageModifier;
 import org.aspectj.util.FileUtil;
@@ -42,6 +43,11 @@ public class IntegrationTestConfiguration {
     @Bean
     public AttachmentService attachmentService() {
         return new AttachmentService(FileUtil.getTempDir(null).getAbsolutePath()+"/");
+    }
+
+    @Bean
+    public MunicipalityDecisionService decisionService() {
+        return new MunicipalityDecisionService(FileUtil.getTempDir(null).getAbsolutePath()+"/");
     }
 
     @Bean

@@ -1,12 +1,20 @@
 package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.dto.service.Location;
+import fi.om.municipalityinitiative.validation.InitiativeWithLocationInformation;
+import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.ValidLocation;
+import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
-public class InitiativeUIUpdateDto {
+@ValidLocation(groups = {VerifiedInitiative.class, NormalInitiative.class})
+public class InitiativeUIUpdateDto implements InitiativeWithLocationInformation {
 
     @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX)
     private String extraInfo;
@@ -16,6 +24,8 @@ public class InitiativeUIUpdateDto {
 
     @Valid
     private ContactInfo contactInfo;
+
+    private List<Location> locations =  new ArrayList<Location>();
 
     public String getExtraInfo() {
         return extraInfo;
@@ -39,5 +49,15 @@ public class InitiativeUIUpdateDto {
 
     public int getExternalParticipantCount() {
         return externalParticipantCount;
+    }
+
+
+    @Override
+    public List<Location> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<Location> locations) {
+        this.locations = locations;
     }
 }

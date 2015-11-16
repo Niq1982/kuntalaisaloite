@@ -268,26 +268,66 @@
         }
     }
 
+
+    &.icon-decision {
+        .iconPosition(3, 0, 64);
+    }
+
+
     &.icon-draft {
-        .iconPosition(0, 1, @iconDistance);
+        .iconPosition(0, 2, 64);
         @media @mobile {
             .iconPosition(0, 2, @mobileIconDistance);
         }
+
     }
 
     &.icon-mgmnt {
-        .iconPosition(1, 1, @iconDistance);
+
+        .iconPosition(1, 2, 64);
         @media @mobile {
             .iconPosition(1, 2, @mobileIconDistance);
         }
+
     }
 
     &.icon-mgmnt-publish {
-        .iconPosition(2, 1, @iconDistance);
+
+        .iconPosition(2, 2, 64);
         @media @mobile {
             .iconPosition(2, 2, @mobileIconDistance);
         }
+    }
 
+    .done &{
+
+        &.icon-publish {
+            .iconPosition(0, 1, 64);
+
+        }
+        &.icon-collect {
+            .iconPosition(1, 1, 64);
+        }
+
+        &.icon-sent {
+            .iconPosition(2, 1, 64);
+        }
+
+        &.icon-decision {
+            .iconPosition(3, 1, 64);
+        }
+
+        &.icon-draft {
+            .iconPosition(0, 3, 65, -2);
+        }
+
+        &.icon-mgmnt {
+            .iconPosition(1, 3, 65);
+        }
+
+        &.icon-mgmnt-publish {
+            .iconPosition(2, 3, 65);
+        }
     }
 
 

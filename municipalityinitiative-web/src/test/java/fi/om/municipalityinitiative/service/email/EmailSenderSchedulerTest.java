@@ -10,14 +10,14 @@ import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.junit.After;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailException;
 
 import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
@@ -27,6 +27,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
+
+    private static final Logger log = LoggerFactory.getLogger(EmailSenderSchedulerTest.class);
 
     @Resource
     protected EmailSender emailSender;
@@ -129,7 +131,8 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
 
         List<Callable<Boolean>> executions = Lists.newArrayList();
 
-        for (int i = 0; i < 12; ++i) {
+        int threadCount = 12;
+        for (int i = 0; i < threadCount; ++i) {
             executions.add(new Callable<Boolean>() {
                 @Override
                 public Boolean call() throws Exception {
@@ -139,7 +142,20 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
             });
         }
 
-        executor.invokeAll(executions);
+        List<Future<Boolean>> futures = executor.invokeAll(executions);
+
+        for (Future future : futures) {
+            try {
+                future.get(10, TimeUnit.SECONDS);
+            } catch (ExecutionException e) {
+                log.error("Some exception", e);
+            } catch (TimeoutException e) {
+                log.error("Timeout exception", e);
+                future.cancel(true);
+
+            }
+        }
+
     }
 
     private void createRandomEmails(int count) {

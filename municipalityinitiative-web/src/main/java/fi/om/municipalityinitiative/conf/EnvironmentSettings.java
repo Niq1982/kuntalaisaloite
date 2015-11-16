@@ -12,6 +12,9 @@ public class EnvironmentSettings {
     private final boolean testSendModeratorEmailsToAuthor;
     private final boolean enableVerifiedInitiatives;
     private final boolean isTestEmailSender;
+    private final String googleMapsApiKey;
+    private final boolean googleMapsEnabled;
+    private final boolean superSearchEnabled;
 
 
     public EnvironmentSettings(String defaultReplyTo,
@@ -21,7 +24,11 @@ public class EnvironmentSettings {
                                boolean testSendMunicipalityEmailsToAuthor,
                                boolean testSendModeratorEmailsToAuthor,
                                boolean enableVerifiedInitiatives,
-                               boolean isTestEmailSender) {
+                               boolean isTestEmailSender,
+                               String googleMapsApiKey,
+                               boolean googleMapsEnabled,
+                               boolean superSearchEnabled
+                               ) {
         this.defaultReplyTo = defaultReplyTo;
         this.testSendTo = testSendTo;
         this.testConsoleOutput = testConsoleOutput;
@@ -30,6 +37,9 @@ public class EnvironmentSettings {
         this.testSendModeratorEmailsToAuthor = testSendModeratorEmailsToAuthor;
         this.enableVerifiedInitiatives = enableVerifiedInitiatives;
         this.isTestEmailSender = isTestEmailSender;
+        this.googleMapsApiKey = googleMapsApiKey;
+        this.googleMapsEnabled = googleMapsEnabled;
+        this.superSearchEnabled = superSearchEnabled;
     }
 
     public String getDefaultReplyTo() {
@@ -72,5 +82,17 @@ public class EnvironmentSettings {
                 || isTestEmailSender;
 
 
+    }
+
+    public String getGoogleMapsApiKey() {
+        return googleMapsApiKey;
+    }
+
+    public boolean isGoogleMapsEnabled() {
+        return googleMapsEnabled;
+    }
+
+    public boolean isSuperSearchEnabled() {
+        return superSearchEnabled;
     }
 }

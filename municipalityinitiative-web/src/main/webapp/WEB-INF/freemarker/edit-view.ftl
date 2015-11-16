@@ -3,6 +3,7 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
 <#import "components/edit-blocks.ftl" as edit />
+<#import "components/elements.ftl" as e />
 
 <#escape x as x?html>
 
@@ -13,6 +14,8 @@
  * @param pageTitle can be assigned as custom HTML title
 -->
 <#assign page="page.edit" />
+
+<#assign locationSelected = updateData.locations?? && updateData.locations?size gt 0>
 
 <@l.main page pageTitle!"">
 
@@ -39,7 +42,7 @@
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.initiative.title" step=1 />
-            <@edit.initiativeBlock "updateData"/>
+            <@edit.initiativeBlock "updateData" locationSelected/>
         </div>
 
         <div class="form-block-container">
@@ -66,6 +69,9 @@
         </div>
     </form>
 
+
+
+
 <#--
  * Create page modals and jsMessage
  *
@@ -80,6 +86,9 @@
 -->
 <@u.modalTemplate />
 <@u.jsMessageTemplate />
+<#if googleMapsEnabled>
+    <@u.jsGoogleMapsLib />
+</#if>
 
 <script type="text/javascript">
     var modalData = {};
@@ -92,6 +101,15 @@
         }]
     };
 
+    modalData.mapContainer = function() {
+        return [{
+            title:      '<@u.message "map.mapModalTitle" />',
+            content:    '<#noescape>${edit.mapContainer?replace("'","&#39;")}</#noescape>'
+        }]
+    };
+
+    modalData.initiaveMunicipality = '${initiative.municipality.getName(locale)}';
+
     var messageData = {};
 
     <#-- jsMessage: Warning if cookies are not enabled -->
@@ -101,6 +119,8 @@
             content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[springMacroRequestContext.requestUri] /></div>'
         }]
     };
+
+
 </script>
 
 <@edit.sessionExpired />

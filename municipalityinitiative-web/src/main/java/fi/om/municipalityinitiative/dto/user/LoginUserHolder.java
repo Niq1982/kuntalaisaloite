@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.dto.user;
 
-import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.VerifiedLoginRequiredException;
 
@@ -62,6 +61,12 @@ public class LoginUserHolder<E extends User> {
     public void assertViewRightsForInitiative(Long initiativeId) {
         if (!hasManagementRightsForInitiative(initiativeId) && user.isNotOmUser()) {
             throwAccessDeniedException(initiativeId);
+        }
+    }
+
+    public void assertMunicipalityLoginUser() {
+        if (user.isNotMunicipalityLoginUser()) {
+            throw new AccessDeniedException("No privileges");
         }
     }
 }

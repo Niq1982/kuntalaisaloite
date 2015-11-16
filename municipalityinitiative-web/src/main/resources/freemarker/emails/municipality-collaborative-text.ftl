@@ -26,4 +26,10 @@
 
 <@b.separator />
 
+<#if municipalityDecisionHash??>
+    <@b.municipalityDecisionLink type/>
+</#if>
+
+<@b.separator />
+
 <@b.emailFooter type ".sentToMunicipality" />

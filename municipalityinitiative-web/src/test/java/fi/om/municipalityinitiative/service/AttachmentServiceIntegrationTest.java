@@ -197,26 +197,26 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
 
     @Test
     public void check_file_is_jpeg() throws IOException {
-        assertThat(AttachmentService.isJPEG(TEST_JPG_FILE), is(true));
-        assertThat(AttachmentService.isJPEG(TEST_PNG_FILE), is(false));
-        assertThat(AttachmentService.isJPEG(TEST_PDF_FILE), is(false));
-        assertThat(AttachmentService.isJPEG(TEST_TXT_FILE_CONTENT_WITH_JPG_SUFFIX), is(false));
+        assertThat(AttachmentUtil.isJPEG(TEST_JPG_FILE), is(true));
+        assertThat(AttachmentUtil.isJPEG(TEST_PNG_FILE), is(false));
+        assertThat(AttachmentUtil.isJPEG(TEST_PDF_FILE), is(false));
+        assertThat(AttachmentUtil.isJPEG(TEST_TXT_FILE_CONTENT_WITH_JPG_SUFFIX), is(false));
     }
 
     @Test
     public void check_file_is_png() throws IOException {
-        assertThat(AttachmentService.isPNG(TEST_PNG_FILE), is(true));
-        assertThat(AttachmentService.isPNG(TEST_PDF_FILE), is(false));
-        assertThat(AttachmentService.isPNG(TEST_JPG_FILE), is(false));
-        assertThat(AttachmentService.isPNG(TEST_TXT_FILE_CONTENT_WITH_JPG_SUFFIX), is(false));
+        assertThat(AttachmentUtil.isPNG(TEST_PNG_FILE), is(true));
+        assertThat(AttachmentUtil.isPNG(TEST_PDF_FILE), is(false));
+        assertThat(AttachmentUtil.isPNG(TEST_JPG_FILE), is(false));
+        assertThat(AttachmentUtil.isPNG(TEST_TXT_FILE_CONTENT_WITH_JPG_SUFFIX), is(false));
     }
 
     @Test
     public void check_file_is_pdf() throws IOException {
-        assertThat(AttachmentService.isPDF(TEST_PDF_FILE), is(true));
-        assertThat(AttachmentService.isPDF(TEST_PNG_FILE), is(false));
-        assertThat(AttachmentService.isPDF(TEST_JPG_FILE), is(false));
-        assertThat(AttachmentService.isPDF(TEST_TXT_FILE_CONTENT_WITH_JPG_SUFFIX), is(false));
+        assertThat(AttachmentUtil.isPDF(TEST_PDF_FILE), is(true));
+        assertThat(AttachmentUtil.isPDF(TEST_PNG_FILE), is(false));
+        assertThat(AttachmentUtil.isPDF(TEST_JPG_FILE), is(false));
+        assertThat(AttachmentUtil.isPDF(TEST_TXT_FILE_CONTENT_WITH_JPG_SUFFIX), is(false));
     }
 
     private void createDummyTempAttachmentFile(Long attachmentId) {

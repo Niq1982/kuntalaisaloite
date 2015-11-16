@@ -50,24 +50,33 @@
     }
   };
 
-  var addEmptyVoting = function(settings, date) {
-    var dateHasVotes = false;
+  var votesContainsDate = function(settings, date) {
     for (var i = 0; i < settings.data.votes.length; i++) {
       if (settings.data.votes[i].d === date) {
-        dateHasVotes = true;
+        return true;
       }
-    }
-    if (!dateHasVotes) {
+    } return false;
+  };
+
+  var addEmptyVoting = function(settings, date) {
+    if (!votesContainsDate(settings, date)) {
       settings.data.votes.push({"d": date, "n": 0});
     }
   };
 
   function drawGraphTillYesterdayOrTillTheSentDate(settings){
     var yesterday = moment().subtract(1, 'days').format(DATE_FORMAT);
+    var today = moment().format(DATE_FORMAT);
+
+
 
     if (settings.data.graphEndDate == null) {
       if (settings.data.endDate != null) {
         settings.data.graphEndDate = settings.data.endDate;
+      }
+      // There is a small possibility that there are votes for today
+      else if (votesContainsDate(settings, today)) {
+        settings.data.graphEndDate = today;
       }
       else {
         settings.data.graphEndDate = yesterday

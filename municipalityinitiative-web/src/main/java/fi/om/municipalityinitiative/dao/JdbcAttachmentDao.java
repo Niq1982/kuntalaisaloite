@@ -5,9 +5,8 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
-import fi.om.municipalityinitiative.exceptions.NotFoundException;
+import fi.om.municipalityinitiative.service.AttachmentUtil;
 import fi.om.municipalityinitiative.sql.QAttachment;
-import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -51,9 +50,9 @@ public class JdbcAttachmentDao implements AttachmentDao{
 
     @Override
     public AttachmentFileInfo getAttachment(Long attachmentId) {
-        return notNull(queryFactory.from(QAttachment.attachment)
-                .where(QAttachment.attachment.id.eq(attachmentId))
-                .uniqueResult(attachmentMapper),
+        return AttachmentUtil.notNull(queryFactory.from(QAttachment.attachment)
+                        .where(QAttachment.attachment.id.eq(attachmentId))
+                        .uniqueResult(attachmentMapper),
                 AttachmentFileInfo.class, attachmentId);
     }
 
@@ -97,10 +96,4 @@ public class JdbcAttachmentDao implements AttachmentDao{
         }
     };
 
-    private static <T extends Object> T notNull(T object, Class clazz, Long id) {
-        if (object == null) {
-            throw new NotFoundException(clazz.toString(), id);
-        }
-        return object;
-    }
 }

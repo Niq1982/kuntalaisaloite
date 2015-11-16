@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.dao;
 import com.google.common.base.Strings;
 import com.mysema.commons.lang.Assert;
 import com.mysema.query.Tuple;
+import com.mysema.query.sql.dml.SQLUpdateClause;
 import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.support.Expressions;
@@ -103,6 +104,18 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     Long maybeYouthInitiativeID = row.get(municipalityInitiative.youthInitiativeId);
                     if (maybeYouthInitiativeID != null) {
                         info.setYouthInitiativeId(maybeYouthInitiativeID);
+                    }
+                    String maybeDecision = row.get(municipalityInitiative.municipalityDecision);
+                    if (maybeDecision != null) {
+                        info.setDecision(maybeDecision);
+                    }
+                    DateTime maybeDecisionDate = row.get(municipalityInitiative.municipalityDecisionDate);
+                    if(maybeDecisionDate != null) {
+                        info.setDecisionDate(maybeDecisionDate);
+                    }
+                    DateTime maybeDecisionModifiedDate = row.get(municipalityInitiative.municipalityDecisionModifiedDate);
+                    if(maybeDecisionModifiedDate != null) {
+                        info.setDecisionModifiedDate(maybeDecisionModifiedDate);
                     }
                     return info;
                 }
@@ -449,13 +462,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto) {
-
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.name, editDto.getName())
+        SQLUpdateClause query = queryFactory.update(municipalityInitiative);
+        query.set(municipalityInitiative.name, editDto.getName())
                 .set(municipalityInitiative.proposal, editDto.getProposal())
                 .set(municipalityInitiative.modified, CURRENT_TIME)
                 .set(municipalityInitiative.extraInfo, editDto.getExtraInfo())
-                .set(municipalityInitiative.externalparticipantcount, editDto.getExternalParticipantCount())
+                .set(municipalityInitiative.externalparticipantcount, editDto.getExternalParticipantCount());
+
+        assertSingleAffection(query
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
 
@@ -512,6 +526,23 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
+    public void updateInitiativeDecision(Long initiativeId, String decisionText) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+            .set(municipalityInitiative.municipalityDecision, decisionText)
+            .set(municipalityInitiative.municipalityDecisionDate, DateTime.now())
+            .where(municipalityInitiative.id.eq(initiativeId))
+            .execute());
+    }
+
+    @Override
+    public void updateInitiativeDecisionModifiedDate(Long initiativeId) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.municipalityDecisionModifiedDate, DateTime.now())
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+
+    @Override
     public void updateExtraInfo(Long initiativeId, String extraInfo, Integer externalParticipantCount) {
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)
@@ -520,6 +551,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
     }
+
 
     @Override
     public Long prepareVerifiedInitiative(Long municipalityId, InitiativeType initiativeType) {
@@ -550,7 +582,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
 
     @Override
-    public Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay){
+    public Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay) {
 
         if (get(initiativeId).getType().isVerifiable()) {
             return queryFactory.from(verifiedParticipant)
@@ -559,8 +591,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     .groupBy(verifiedParticipant.participateTime)
                     .map(verifiedParticipant.participateTime, verifiedParticipant.participateTime.count());
 
-        }
-        else {
+        } else {
             return queryFactory.from(participant)
                     .where(participant.municipalityInitiativeId.eq(initiativeId))
                     .where(participant.participateTime.loe(tillDay))
@@ -568,9 +599,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     .groupBy(participant.participateTime)
                     .map(participant.participateTime, participant.participateTime.count());
         }
-
-
     }
+
 
     public static void assertSingleAffection(long affectedRows) {
         Assert.isTrue(affectedRows == 1, "Should have affected only one row. Affected: " + affectedRows);
