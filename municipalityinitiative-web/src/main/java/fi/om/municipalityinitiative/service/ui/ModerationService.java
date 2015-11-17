@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.service.MunicipalityUserService;
 import fi.om.municipalityinitiative.service.YouthInitiativeWebServiceNotifier;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
@@ -47,6 +48,9 @@ public class ModerationService {
     @Resource
     YouthInitiativeWebServiceNotifier youthInitiativeWebServiceNotifier;
 
+    @Resource
+    MunicipalityUserService municipalityUserService;
+
     @Transactional(readOnly = false)
     public void accept(OmLoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment, Locale locale) {
         loginUserHolder.assertOmUser();
@@ -76,8 +80,11 @@ public class ModerationService {
         if (initiative.getType().equals(InitiativeType.SINGLE)) {
             initiativeDao.updateInitiativeState(initiative.getId(), InitiativeState.PUBLISHED);
             initiativeDao.markInitiativeAsSent(initiative.getId());
+            municipalityUserService.createMunicipalityUser(initiative.getId());
+
             emailService.sendStatusEmail(initiative.getId(), EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
             emailService.sendSingleToMunicipality(initiative.getId(), locale);
+
             if (initiative.getYouthInitiativeId().isPresent()) {
                 youthInitiativeWebServiceNotifier.informInitiativeSentToMunicipality(initiative);
             }
