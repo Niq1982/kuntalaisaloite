@@ -276,8 +276,10 @@
                         <#list naviItems as item>
                             <li <#if item.naviName == page>class="active"</#if>><a href="${item.naviUrl}"><@u.message item.naviName /></a></li>
                         </#list>
+                        <li><a href="${altUri!"/"+altLocale}" class="language-selection-mobile"><@u.message "lang.alternative"/></a></li>
                     </ul>
                     <div class="mobile-user-actions">
+
                         <#if user.isVerifiedUser()>
                             <span>${userName}</span>
                             <div class="user-actions-wrapper">
