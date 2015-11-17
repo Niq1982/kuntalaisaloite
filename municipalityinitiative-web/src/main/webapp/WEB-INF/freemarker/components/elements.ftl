@@ -450,8 +450,9 @@
                 <a class="small-button edit-decision" href="${urls.openDecisionForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.editDecision" /> </span></a>
             </#if>
             <@municipalityAttachmentsView attachments=decisionInfo.attachments />
+            <#if manage>
             <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "decision.edit.attachments" /></span></a>
-
+            </#if>
         </div>
     </div>
 </#macro>
