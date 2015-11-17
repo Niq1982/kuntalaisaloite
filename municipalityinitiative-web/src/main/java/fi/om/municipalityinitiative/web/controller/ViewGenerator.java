@@ -144,7 +144,7 @@ public final class ViewGenerator {
                         .build());
     }
 
-    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentUtil.Attachments allAttachments, List<ReviewHistoryRow> reviewHistory, Maybe<ReviewHistoryDiff> reviewHistoryDiff, List<Location> locations) {
+    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentUtil.Attachments allAttachments, List<ReviewHistoryRow> reviewHistory, Maybe<ReviewHistoryDiff> reviewHistoryDiff, List<Location> locations, Maybe<MunicipalityDecisionInfo> decisionInfo) {
         return new ViewGenerator(MODERATION_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -154,6 +154,7 @@ public final class ViewGenerator {
                         .add("reviewHistories", reviewHistory)
                         .add("reviewHistoryDiff", reviewHistoryDiff)
                         .add("locations", locations)
+                        .add("decisionInfo", decisionInfo)
                         .build()
         );
     }

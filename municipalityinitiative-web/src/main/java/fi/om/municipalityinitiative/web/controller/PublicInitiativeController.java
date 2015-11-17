@@ -69,8 +69,7 @@ public class PublicInitiativeController extends BaseController {
     @Resource
     private AttachmentService attachmentService;
 
-    @Resource
-    private MunicipalityDecisionService municipalityDecisionService;
+
 
     @Resource
     private SupportCountService supportCountService;
@@ -111,7 +110,7 @@ public class PublicInitiativeController extends BaseController {
 
         InitiativePageInfo initiativePageView = publicInitiativeService.getInitiativePageDto(initiativeId, loginUserHolder);
 
-        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageView);
+        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageView.initiative);
 
         if (initiativePageView.isCollaborative()) {
 
@@ -125,23 +124,6 @@ public class PublicInitiativeController extends BaseController {
         else {
             return ViewGenerator.singleView(initiativePageView, municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
         }
-    }
-
-    private Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(Long initiativeId, InitiativePageInfo initiativePageView) {
-        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
-        AttachmentUtil.Attachments attachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
-        if (initiativePageView.initiative != null && decisionPresent(initiativePageView, attachments)) {
-            municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
-            initiativePageView.initiative.getDecisionText(),
-            initiativePageView.initiative.getDecisionDate().getValue(),
-            initiativePageView.initiative.getDecisionModifiedDate(),
-            attachments));
-        }
-        return municipalityDecisionInfo;
-    }
-
-    private boolean decisionPresent(InitiativePageInfo initiativePageView, AttachmentUtil.Attachments attachments) {
-        return initiativePageView.initiative.getDecisionDate().isPresent() && (initiativePageView.initiative.getDecisionText().isPresent() || attachments.count() > 0);
     }
 
 
@@ -240,7 +222,7 @@ public class PublicInitiativeController extends BaseController {
                     participant,
                     new AuthorUIMessage(),
                     supportCountService.getSupportVotesPerDateJson(initiativeId),
-                    getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo)).view(model, Urls.get(locale).alt().view(initiativeId));
+                    getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(initiativeId));
 
         }
     }
@@ -388,7 +370,7 @@ public class PublicInitiativeController extends BaseController {
                     new ParticipantUICreateDto(),
                     authorUIMessage,
                     supportCountService.getSupportVotesPerDateJson(initiativeId),
-                    getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo)
+                    getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo.initiative)
             ).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
