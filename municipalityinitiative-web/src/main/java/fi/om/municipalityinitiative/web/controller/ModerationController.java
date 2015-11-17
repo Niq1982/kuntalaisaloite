@@ -132,7 +132,8 @@ public class ModerationController extends BaseController{
                                                   HttpServletRequest request,
                                                   Locale locale) {
 
-        municipalityUserService.renewManagementHash(userService.getRequiredOmLoginUserHolder(request), initiativeId);
+        municipalityUserService.renewManagementHash(userService.getRequiredOmLoginUserHolder(request), initiativeId, locale);
+
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.MANAGEMENT_HASH_RENEWED, request);
     }
 

@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -352,7 +353,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
         OmLoginUserHolder omLoginUserHolder = new OmLoginUserHolder(User.omUser("om user"));
 
-        municipalityUserService.renewManagementHash(omLoginUserHolder, initiativeId);
+        municipalityUserService.renewManagementHash(omLoginUserHolder, initiativeId, new Locale("fi"));
 
         String newHash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(initiativeId);
 
