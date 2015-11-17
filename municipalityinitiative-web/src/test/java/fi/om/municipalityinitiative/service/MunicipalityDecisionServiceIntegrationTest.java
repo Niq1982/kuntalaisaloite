@@ -13,6 +13,7 @@ import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.aspectj.util.FileUtil;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
@@ -221,7 +222,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             createDefaultMunicipalityDecisionWithAttachment(initiativeId);
 
-            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build("Edited text");
+            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build(Maybe.of("Edited text"));
 
             municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
@@ -247,7 +248,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             createDefaultMunicipalityDecisionWithAttachment(initiativeId);
 
-            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build("Edited text");
+            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build(Maybe.of("Edited text"));
 
             municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId + 1)));
 

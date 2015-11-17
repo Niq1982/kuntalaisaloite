@@ -127,16 +127,21 @@ public class PublicInitiativeController extends BaseController {
         }
     }
 
-    private Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(@PathVariable("id") Long initiativeId, InitiativePageInfo initiativePageView) {
+    private Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(Long initiativeId, InitiativePageInfo initiativePageView) {
         Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
-        if (initiativePageView.initiative != null && initiativePageView.initiative.getDecisionDate().isPresent()) {
+        AttachmentUtil.Attachments attachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
+        if (initiativePageView.initiative != null && decisionPresent(initiativePageView, attachments)) {
             municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
-                    initiativePageView.initiative.getDecisionText(),
-                    initiativePageView.initiative.getDecisionDate().getValue(),
-                    initiativePageView.initiative.getDecisionModifiedDate(),
-                    municipalityDecisionService.getDecisionAttachments(initiativeId)));
+            initiativePageView.initiative.getDecisionText(),
+            initiativePageView.initiative.getDecisionDate().getValue(),
+            initiativePageView.initiative.getDecisionModifiedDate(),
+            attachments));
         }
         return municipalityDecisionInfo;
+    }
+
+    private boolean decisionPresent(InitiativePageInfo initiativePageView, AttachmentUtil.Attachments attachments) {
+        return initiativePageView.initiative.getDecisionDate().isPresent() && (initiativePageView.initiative.getDecisionText().isPresent() || attachments.count() > 0);
     }
 
 

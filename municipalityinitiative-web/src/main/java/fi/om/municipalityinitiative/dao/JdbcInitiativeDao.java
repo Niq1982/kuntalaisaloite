@@ -106,7 +106,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                         info.setYouthInitiativeId(maybeYouthInitiativeID);
                     }
                     String maybeDecision = row.get(municipalityInitiative.municipalityDecision);
-                    if (maybeDecision != null) {
+                    if (maybeDecision != null && !maybeDecision.equals("")) {
                         info.setDecision(maybeDecision);
                     }
                     DateTime maybeDecisionDate = row.get(municipalityInitiative.municipalityDecisionDate);

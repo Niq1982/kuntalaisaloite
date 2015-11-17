@@ -15,7 +15,9 @@ import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
+import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.util.ImageModifier;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,24 +105,51 @@ public class MunicipalityDecisionService {
         return AttachmentUtil.getAttachmentFile(fileName, attachmentInfo, attachmentDir);
     }
 
-    public boolean validationSuccessful(MunicipalityDecisionDto decision, boolean edit, BindingResult bindingResult, Model model) {
+    @Transactional(readOnly = false, rollbackFor = Throwable.class)
+    private void saveAttachments(List<MunicipalityDecisionDto.FileWithName> files, Long initiativeId) throws FileUploadException, InvalidAttachmentException {
+
+        for (MunicipalityDecisionDto.FileWithName attachment: files) {
+
+            File tempFile = null;
+            try {
+                tempFile = AttachmentUtil.createTempFile(attachment.getFile(), AttachmentUtil.getFileType(attachment.getFile()));
+
+                DecisionAttachmentFile fileInfo = new DecisionAttachmentFile(attachment.getName(), AttachmentUtil.getFileType(attachment.getFile()), attachment.getFile().getContentType(), initiativeId);
+
+                Long attachmentId = decisionAttachmentDao.addAttachment(initiativeId, fileInfo);
+
+                AttachmentUtil.saveMunicipalityAttachmentToDiskAndCreateThumbnail(imageModifier, fileInfo.getContentType(), fileInfo.getFileType(), tempFile, attachmentId, attachmentDir);
+
+            }catch (InvalidAttachmentException e) {
+                throw e;
+
+            } catch (Throwable t) {
+                log.error("Error while uploading file: " + attachment.getFile().getOriginalFilename(), t);
+                throw new FileUploadException(t);
+            } finally {
+                if (tempFile != null){
+                    tempFile.delete();
+                }
+            }
+        }
+    }
+
+    public boolean validationSuccessful(MunicipalityDecisionDto decision, Maybe<MunicipalityDecisionInfo> oldDecision, BindingResult bindingResult, Model model) {
 
         decision.setFiles(clearEmptyFiles(decision.getFiles()));
 
-        if (edit) {
-            if (decision.getDescription().isEmpty() || decision.getDescription().equals("")){
-                addAttachmentValidationError(bindingResult, "description", "NotEmpty");
-            }
-        }
-        else  {
-            if (decision.getFiles().isEmpty()  && (decision.getDescription().isEmpty() || decision.getDescription().equals(""))) {
+        if (oldDecision.isNotPresent()) {
+            if (decision.getFiles().isEmpty() && decisionTextIsEmpty(decision)) {
                 addAttachmentValidationError(bindingResult, "filesAndDescription", "DecisionDescriptionAndAttachmentsBothEmpty");
             }
-            validateFiles(decision.getFiles(), bindingResult);
-
         }
+        validateFiles(decision.getFiles(), bindingResult);
 
         return validationService.validationSuccessful(decision, bindingResult, model);
+    }
+
+    private boolean decisionTextIsEmpty(MunicipalityDecisionDto decision) {
+        return decision.getDescription().isEmpty() || decision.getDescription().equals("");
     }
 
     public boolean validationSuccessful(List<MunicipalityDecisionDto.FileWithName> files, BindingResult bindingResult, Model model) {
@@ -166,32 +195,5 @@ public class MunicipalityDecisionService {
 
     }
 
-    @Transactional(readOnly = false, rollbackFor = Throwable.class)
-    private void saveAttachments(List<MunicipalityDecisionDto.FileWithName> files, Long initiativeId) throws FileUploadException, InvalidAttachmentException {
 
-        for (MunicipalityDecisionDto.FileWithName attachment: files) {
-
-            File tempFile = null;
-            try {
-                tempFile = AttachmentUtil.createTempFile(attachment.getFile(), AttachmentUtil.getFileType(attachment.getFile()));
-
-                DecisionAttachmentFile fileInfo = new DecisionAttachmentFile(attachment.getName(), AttachmentUtil.getFileType(attachment.getFile()), attachment.getFile().getContentType(), initiativeId);
-
-                Long attachmentId = decisionAttachmentDao.addAttachment(initiativeId, fileInfo);
-
-                AttachmentUtil.saveMunicipalityAttachmentToDiskAndCreateThumbnail(imageModifier, fileInfo.getContentType(), fileInfo.getFileType(), tempFile, attachmentId, attachmentDir);
-
-            }catch (InvalidAttachmentException e) {
-                throw e;
-
-            } catch (Throwable t) {
-                log.error("Error while uploading file: " + attachment.getFile().getOriginalFilename(), t);
-                throw new FileUploadException(t);
-            } finally {
-                if (tempFile != null){
-                    tempFile.delete();
-                }
-            }
-        }
-    }
 }

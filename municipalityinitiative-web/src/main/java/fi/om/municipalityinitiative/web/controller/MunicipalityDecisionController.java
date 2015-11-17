@@ -45,8 +45,6 @@ public class MunicipalityDecisionController extends BaseController{
     private MunicipalityDecisionService municipalityDecisionService;
 
 
-
-
     public MunicipalityDecisionController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
@@ -58,51 +56,18 @@ public class MunicipalityDecisionController extends BaseController{
 
         InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
-        Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
-
-        if (initiative.getDecisionDate().isPresent()) {
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().getValue(),initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
-        }
-
-        boolean ediDecision = decisionInfo.isNotPresent();
-        boolean editAttachments = false;
-        return ViewGenerator.municipalityDecisionView(
-                normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
-                normalInitiativeService.getManagementSettings(initiativeId),
-                authorService.findAuthors(initiativeId, loginUserHolder),
-                attachmentService.findAllAttachments(initiativeId, loginUserHolder),
-                new MunicipalityDecisionDto(),
-                decisionInfo,
-                ediDecision,
-                editAttachments
-        ).view(model, Urls.get(locale).alt().municipalityModeration());
+        return showMunicipalityDecisionView(initiativeId, new MunicipalityDecisionDto(), model, locale, loginUserHolder, false, initiative.getDecisionDate().isNotPresent());
 
     }
 
     @RequestMapping(value = {EDIT_MUNICIPALITY_DECISION_FI, EDIT_MUNICIPALITY_DECISION_SV}, method = GET)
-    public String editDecision(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+    public String editDecisionText(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
 
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
 
         InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
-        Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
-        if (initiative.getDecisionDate().isPresent()) {
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().getValue(), initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
-        }
-
-        boolean ediDecision = true;
-        boolean editAttachments = false;
-        return ViewGenerator.municipalityDecisionView(
-                normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
-                normalInitiativeService.getManagementSettings(initiativeId),
-                authorService.findAuthors(initiativeId, loginUserHolder),
-                attachmentService.findAllAttachments(initiativeId, loginUserHolder),
-                MunicipalityDecisionDto.build(initiative.getDecisionText().getValue()),
-                decisionInfo,
-                ediDecision,
-                editAttachments
-        ).view(model, Urls.get(locale).alt().municipalityModeration());
+        return showMunicipalityDecisionView(initiativeId, MunicipalityDecisionDto.build(initiative.getDecisionText()), model, locale, loginUserHolder, false, true);
     }
 
     @RequestMapping(value = {EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV}, method = GET)
@@ -112,24 +77,46 @@ public class MunicipalityDecisionController extends BaseController{
 
         InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
+        return showMunicipalityDecisionView(initiativeId, MunicipalityDecisionDto.build(initiative.getDecisionText()), model, locale, loginUserHolder, true, false);
+    }
+
+    @RequestMapping(value = {MUNICIPALITY_DECISION_FI, MUNICIPALITY_DECISION_SV}, method = POST)
+    public String addDecision(@PathVariable("id") Long initiativeId,
+                              @ModelAttribute("decision") MunicipalityDecisionDto decision,
+                              Model model,
+                              BindingResult bindingResult,
+                              DefaultMultipartHttpServletRequest request,
+                              Locale locale) {
+
+        // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
+        SecurityFilter.verifyAndGetCurrentCSRFToken(request);
+
+        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+
+        InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
         if (initiative.getDecisionDate().isPresent()) {
             decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().getValue(), initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
 
+        if (!municipalityDecisionService.validationSuccessful(decision, decisionInfo, bindingResult, model)) {
+            return showMunicipalityDecisionView(initiativeId,  decision,  model,  locale,  loginUserHolder,  false,  true);
+        }
 
-        boolean ediDecision = false;
-        boolean editAttachments = true;
-        return ViewGenerator.municipalityDecisionView(
-                normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
-                normalInitiativeService.getManagementSettings(initiativeId),
-                authorService.findAuthors(initiativeId, loginUserHolder),
-                attachmentService.findAllAttachments(initiativeId, loginUserHolder),
-                MunicipalityDecisionDto.build(initiative.getDecisionText().getValue()),
-                decisionInfo,
-                ediDecision,
-                editAttachments
-        ).view(model, Urls.get(locale).alt().municipalityModeration());
+        try {
+            municipalityDecisionService.setDecision(decision, initiativeId, loginUserHolder);
+
+        } catch (InvalidAttachmentException e) {
+            e.printStackTrace();
+            return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.ATTACHMENT_INVALID, request);
+
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+            return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.ATTACHMENT_FAILURE, request);
+        }
+
+        return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.DECISION_UPDATED, request);
+
     }
 
     @RequestMapping(value = {EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV}, method = POST)
@@ -145,25 +132,8 @@ public class MunicipalityDecisionController extends BaseController{
 
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
         if(!municipalityDecisionService.validationSuccessful(decision.getFiles(), bindingResult, model)) {
-            boolean editAttachments = true;
-            boolean showDecisionForm = false;
 
-            InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
-            Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
-            if (initiative.getDecisionDate().isPresent()) {
-                decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().getValue(), initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
-            }
-
-            return ViewGenerator.municipalityDecisionView(
-                    normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
-                    normalInitiativeService.getManagementSettings(initiativeId),
-                    authorService.findAuthors(initiativeId, loginUserHolder),
-                    attachmentService.findAllAttachments(initiativeId, loginUserHolder),
-                    decision,
-                    decisionInfo,
-                    showDecisionForm,
-                    editAttachments
-            ).view(model, Urls.get(locale).alt().municipalityModeration());
+            return showMunicipalityDecisionView(initiativeId, decision, model, locale, loginUserHolder, true, false);
         }
         try {
             municipalityDecisionService.updateAttachments(initiativeId, decision.getFiles(), loginUserHolder);
@@ -189,62 +159,31 @@ public class MunicipalityDecisionController extends BaseController{
         return redirectWithMessage(Urls.get(locale).openDecisionAttachmentsForEdit(initiativeId), RequestMessage.ATTACHMENT_DELETED, request);
     }
 
-    @RequestMapping(value = {MUNICIPALITY_DECISION_FI, MUNICIPALITY_DECISION_SV}, method = POST)
-    public String addDecision(@PathVariable("id") Long initiativeId,
-                              @ModelAttribute("decision") MunicipalityDecisionDto decision,
-                              Model model,
-                              BindingResult bindingResult,
-                              DefaultMultipartHttpServletRequest request,
-                              Locale locale) {
 
-        // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
-        SecurityFilter.verifyAndGetCurrentCSRFToken(request);
 
-        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+    // http://stackoverflow.com/questions/22391064/why-is-spring-mvc-inserting-an-empty-object-into-what-should-be-an-empty-list
+    @InitBinder
+    public void init(WebDataBinder binder) {
+        binder.setBindEmptyMultipartFiles(false);
+    }
 
+
+
+    private String showMunicipalityDecisionView(Long initiativeId,  MunicipalityDecisionDto decision, Model model, Locale locale, MunicipalityUserHolder loginUserHolder, boolean editAttachments, boolean showDecisionForm) {
         InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
         Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
         if (initiative.getDecisionDate().isPresent()) {
             decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().getValue(), initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
 
-        if (!municipalityDecisionService.validationSuccessful(decision,decisionInfo.isPresent(), bindingResult, model)) {
-
-            boolean editAttachments = false;
-            boolean showDecisionForm = true;
-
-            return ViewGenerator.municipalityDecisionView(
-                    normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
-                    normalInitiativeService.getManagementSettings(initiativeId),
-                    authorService.findAuthors(initiativeId, loginUserHolder),
-                    attachmentService.findAllAttachments(initiativeId, loginUserHolder),
-                    decision,
-                    decisionInfo,
-                    showDecisionForm,
-                    editAttachments
-            ).view(model, Urls.get(locale).alt().municipalityModeration());
-        }
-
-        try {
-            municipalityDecisionService.setDecision(decision, initiativeId, loginUserHolder);
-
-        } catch (InvalidAttachmentException e) {
-            e.printStackTrace();
-            return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.ATTACHMENT_INVALID, request);
-
-        } catch (FileUploadException e) {
-            e.printStackTrace();
-            return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.ATTACHMENT_FAILURE, request);
-        }
-
-        return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.DECISION_UPDATED, request);
-
-    }
-
-    // http://stackoverflow.com/questions/22391064/why-is-spring-mvc-inserting-an-empty-object-into-what-should-be-an-empty-list
-    @InitBinder
-    public void init(WebDataBinder binder) {
-        binder.setBindEmptyMultipartFiles(false);
+        return ViewGenerator.municipalityDecisionView(
+                normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
+                normalInitiativeService.getManagementSettings(initiativeId),
+                decision,
+                decisionInfo,
+                showDecisionForm,
+                editAttachments
+        ).view(model, Urls.get(locale).alt().municipalityModeration());
     }
 
 }
