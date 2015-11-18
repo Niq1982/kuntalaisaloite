@@ -91,7 +91,7 @@
 <#macro helpNavigationMobile>
     <div class="navigation-mobile" >
         <#if content?? || (showInfoGraph?? && showInfoGraph)>
-            <a href="${urls.helpIndex()}" > << Ohjeet </a>
+            <a href="${urls.helpIndex()}" class="back-link"> <@u.message "mobile.help.frontpage"/> </a>
         <#else>
             <@navigationMobile categoryLinksMap['MAIN'] "" "box-mobile" />
             <@navigationMobile categoryLinksMap['KUNTALAISALOITE_FI'] "help.service.title" />

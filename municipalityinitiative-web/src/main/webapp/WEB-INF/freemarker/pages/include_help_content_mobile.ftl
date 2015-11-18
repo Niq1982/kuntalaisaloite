@@ -3,7 +3,7 @@
 <#escape x as x?html>
 
 <#if content??>
-    <div class="help-text-content-mobile">
+    <div class="help-text-content-mobile bread-text">
         <h1>${content.subject!""}</h1>
         <#noescape>${content.content!""}</#noescape>
     </div>

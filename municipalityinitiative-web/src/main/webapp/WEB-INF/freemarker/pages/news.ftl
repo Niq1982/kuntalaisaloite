@@ -21,8 +21,9 @@
 
     <h1>${content.subject!""}</h1>
 
-   <#noescape>${content.content!""}</#noescape>
-    
+    <div class="bread-text">
+        <#noescape>${content.content!""}</#noescape>
+    </div>
 </@l.main>
 </#escape> 
 

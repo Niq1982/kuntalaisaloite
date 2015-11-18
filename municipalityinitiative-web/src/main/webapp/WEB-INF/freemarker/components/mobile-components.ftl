@@ -49,7 +49,6 @@
                 <h3><@u.message "mobile.sort" /></h3>
                 <@f.mobileCheckBox path=currentSearch.orderBy prefix="orderBy.latest" name="orderBy" value="latest" id="latest"  />
                 <@f.mobileCheckBox path=currentSearch.orderBy prefix="orderBy.oldest" name="orderBy" value="oldest" id="oldest"  />
-                </br>
                 <@f.mobileCheckBox path=currentSearch.orderBy prefix="orderBy.mostParticipants" name="orderBy" value="mostParticipants" id="mostParticipants"  />
                 <@f.mobileCheckBox path=currentSearch.orderBy prefix="orderBy.leastParticipants" name="orderBy" value="leastParticipants" id="leastParticipants"  />
 
