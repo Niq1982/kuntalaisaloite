@@ -44,7 +44,8 @@
         
     <#elseif urls.baseUrl?starts_with(localSite)>
         <#-- no ribbon in localhost (should look like production) -->
-        
+
+    <#elseif urls.baseUrl?starts_with(devSite) && mobileTesting >
     <#else>
     	<#if urls.baseUrl?starts_with(testSite) || urls.baseUrl?starts_with(prodTestSite)>
             <div class="test-padge"> </div>
@@ -57,7 +58,7 @@
                     T&auml;m&auml; on kuntalaisaloitepalvelun testiversio. Palvelu l&auml;hett&auml;&auml; sinulle s&auml;hk&ouml;posteja, joten annathan toimivan s&auml;hk&ouml;postiosoitteesi. Testipalvelussa tehdyt aloitteet ja muut tiedot poistetaan s&auml;&auml;nn&ouml;llisesti ilman erillist&auml; ilmoitusta, eiv&auml;tk&auml; aloitteet v&auml;lity kunnalle.<br/>
                     Anna palautetta testipalvelusta <a href="mailto:kuntalaisaloite.om@om.fi">kuntalaisaloite.om@om.fi</a>
 
-                <#elseif urls.baseUrl?starts_with(devSite) && !mobileTesting>
+                <#elseif urls.baseUrl?starts_with(devSite)>
                     T&auml;m&auml; on oikeusministeri&ouml;n kuntalaisaloiteverkkopalvelun kehitysversio.
                     <br/>Sovellus voi toimia arvaamattomasti ja sis&auml;lt&auml;&auml; p&auml;&auml;t&ouml;nt&auml; dataa.
                 </#if>
