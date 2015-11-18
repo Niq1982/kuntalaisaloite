@@ -404,9 +404,7 @@ h3 {
 
 .pagination {
 
-    @media @mobile {
-        display: none;
-    }
+
 
     margin:2em 0 1em;
 
@@ -414,7 +412,11 @@ h3 {
         margin-top:1em;
     }
 
-
+    &.top{
+        @media @mobile {
+            display: none;
+        }
+    }
     .pagination-limiter {
         float:right;
 
@@ -422,6 +424,10 @@ h3 {
 
         .active {
             font-weight:bold;
+        }
+
+        @media @mobile {
+            display: none;
         }
     }
 

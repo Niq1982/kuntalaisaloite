@@ -220,7 +220,6 @@
 
 <@p.pagination paginationParams "bottom" />
 
-<@p.showMore paginationParams />
 
 </@l.main>
 
