@@ -28,6 +28,7 @@
 .large-button, .small-button {
     //.rounded-corners;
     display: inline-block;
+
     zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
     *display: inline;
     vertical-align: baseline;
@@ -72,7 +73,9 @@
     }
 
     @media @mobile {
-        margin: 0.5em 2px;
+        display: block;
+        width: 80%;
+        margin: 2% auto;
     }
 }
 
