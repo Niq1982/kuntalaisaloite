@@ -22,6 +22,7 @@
 
     <#assign localSite>http://localhost</#assign>
 
+    <#assign mobileTesting>true</#assign>
     <#-- For testing ribbons locally:
     <#assign prodTestSite>${localSite}</#assign>
     <#assign localSite>https://localhost:8443x</#assign>
@@ -56,7 +57,7 @@
                     T&auml;m&auml; on kuntalaisaloitepalvelun testiversio. Palvelu l&auml;hett&auml;&auml; sinulle s&auml;hk&ouml;posteja, joten annathan toimivan s&auml;hk&ouml;postiosoitteesi. Testipalvelussa tehdyt aloitteet ja muut tiedot poistetaan s&auml;&auml;nn&ouml;llisesti ilman erillist&auml; ilmoitusta, eiv&auml;tk&auml; aloitteet v&auml;lity kunnalle.<br/>
                     Anna palautetta testipalvelusta <a href="mailto:kuntalaisaloite.om@om.fi">kuntalaisaloite.om@om.fi</a>
 
-                <#elseif urls.baseUrl?starts_with(devSite) >
+                <#elseif urls.baseUrl?starts_with(devSite) && !mobileTesting>
                     T&auml;m&auml; on oikeusministeri&ouml;n kuntalaisaloiteverkkopalvelun kehitysversio.
                     <br/>Sovellus voi toimia arvaamattomasti ja sis&auml;lt&auml;&auml; p&auml;&auml;t&ouml;nt&auml; dataa.
                 </#if>
@@ -83,7 +84,7 @@
     <#elseif urls.baseUrl?starts_with(localSite)>
         <#-- no ribbon in localhost (should look like production) -->
 
-    <#elseif urls.baseUrl?starts_with(devSite) || urls.baseUrl?starts_with(testSite)>
+    <#elseif (urls.baseUrl?starts_with(devSite) && !mobileTesting) || urls.baseUrl?starts_with(testSite)>
         <div class="debug-ribbon bottom ${ribbonColor}">
             <div class="container">
                 Eri tiloissa olevia valmiita testialoitteita p&auml;&auml;set luomaan t&auml;&auml;lt&auml;: <a href="${urls.testDataGeneration()}">Testidatan generointi</a>
