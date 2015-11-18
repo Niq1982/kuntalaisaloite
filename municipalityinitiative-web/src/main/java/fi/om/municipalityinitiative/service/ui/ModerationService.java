@@ -79,11 +79,8 @@ public class ModerationService {
     private void acceptInitiativeDraft(Locale locale, Initiative initiative) {
         if (initiative.getType().equals(InitiativeType.SINGLE)) {
             initiativeDao.updateInitiativeState(initiative.getId(), InitiativeState.PUBLISHED);
-            initiativeDao.markInitiativeAsSent(initiative.getId());
-            municipalityUserService.createMunicipalityUser(initiative.getId());
 
-            emailService.sendStatusEmail(initiative.getId(), EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
-            emailService.sendSingleToMunicipality(initiative.getId(), locale);
+            sendSingleToMunicipality(locale, initiative);
 
             if (initiative.getYouthInitiativeId().isPresent()) {
                 youthInitiativeWebServiceNotifier.informInitiativeSentToMunicipality(initiative);
@@ -92,6 +89,14 @@ public class ModerationService {
             initiativeDao.updateInitiativeState(initiative.getId(), InitiativeState.ACCEPTED);
             emailService.sendStatusEmail(initiative.getId(), EmailMessageType.ACCEPTED_BY_OM);
         }
+    }
+
+    private void sendSingleToMunicipality(Locale locale, Initiative initiative) {
+        initiativeDao.markInitiativeAsSent(initiative.getId());
+        municipalityUserService.createMunicipalityUser(initiative.getId());
+
+        emailService.sendStatusEmail(initiative.getId(), EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
+        emailService.sendSingleToMunicipality(initiative.getId(), locale);
     }
 
     private void acceptInitiativeFix(Long initiativeId) {

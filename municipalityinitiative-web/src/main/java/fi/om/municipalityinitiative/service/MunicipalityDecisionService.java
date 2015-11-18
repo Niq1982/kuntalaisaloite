@@ -15,6 +15,7 @@ import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
+import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.util.ImageModifier;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -50,6 +51,9 @@ public class MunicipalityDecisionService {
     @Resource
     private ValidationService validationService;
 
+    @Resource
+    private EmailService emailService;
+
     public MunicipalityDecisionService(String attachmentDir) {
         this.attachmentDir = attachmentDir;
     }
@@ -63,10 +67,13 @@ public class MunicipalityDecisionService {
         user.assertManagementRightsForInitiative(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
         if (initiative.getDecisionDate().isPresent()) {
-            initiativeDao.updateInitiativeDecisionModifiedDate(initiativeId);
+            initiativeDao.updateInitiativeDecision(initiativeId, decision.getDescription());
+        } else {
+            initiativeDao.createInitiativeDecision(initiativeId, decision.getDescription());
         }
-        initiativeDao.updateInitiativeDecision(initiativeId, decision.getDescription());
         saveAttachments(decision.getFiles(), initiativeId);
+
+
     }
 
     @Transactional(readOnly = false, rollbackFor = Throwable.class)

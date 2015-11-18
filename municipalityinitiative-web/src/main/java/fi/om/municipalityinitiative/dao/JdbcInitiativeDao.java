@@ -526,12 +526,21 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public void updateInitiativeDecision(Long initiativeId, String decisionText) {
+    public void createInitiativeDecision(Long initiativeId, String decisionText) {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
             .set(municipalityInitiative.municipalityDecision, decisionText)
             .set(municipalityInitiative.municipalityDecisionDate, DateTime.now())
             .where(municipalityInitiative.id.eq(initiativeId))
             .execute());
+    }
+
+    @Override
+    public void updateInitiativeDecision(Long initiativeId, String decisionText) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.municipalityDecision, decisionText)
+                .set(municipalityInitiative.municipalityDecisionModifiedDate, DateTime.now())
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
     }
 
     @Override
