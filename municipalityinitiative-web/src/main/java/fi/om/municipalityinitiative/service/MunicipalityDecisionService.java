@@ -66,15 +66,17 @@ public class MunicipalityDecisionService {
     public void setDecision(MunicipalityDecisionDto decision, Long initiativeId, MunicipalityUserHolder user) throws FileUploadException, InvalidAttachmentException {
         user.assertManagementRightsForInitiative(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
-        if (initiative.getDecisionDate().isPresent()) {
+        saveAttachments(decision.getFiles(), initiativeId);
+
+        if (decisionExists(initiative)) {
             initiativeDao.updateInitiativeDecision(initiativeId, decision.getDescription());
         } else {
             initiativeDao.createInitiativeDecision(initiativeId, decision.getDescription());
+            
         }
-        saveAttachments(decision.getFiles(), initiativeId);
-
 
     }
+
 
     @Transactional(readOnly = false, rollbackFor = Throwable.class)
     public void updateAttachments(Long initiativeId, List<MunicipalityDecisionDto.FileWithName> files, MunicipalityUserHolder user) throws FileUploadException, InvalidAttachmentException {
@@ -83,8 +85,9 @@ public class MunicipalityDecisionService {
         if (initiative.getDecisionDate().isNotPresent()) {
             throw new InvalidAttachmentException("Can't attach files to decision that doesn't exist");
         }
-        initiativeDao.updateInitiativeDecisionModifiedDate(initiativeId);
+
         saveAttachments(files, initiativeId);
+        initiativeDao.updateInitiativeDecisionModifiedDate(initiativeId);
     }
 
     @Transactional
@@ -119,11 +122,12 @@ public class MunicipalityDecisionService {
 
             File tempFile = null;
             try {
-                tempFile = AttachmentUtil.createTempFile(attachment.getFile(), AttachmentUtil.getFileType(attachment.getFile()));
 
                 DecisionAttachmentFile fileInfo = new DecisionAttachmentFile(attachment.getName(), AttachmentUtil.getFileType(attachment.getFile()), attachment.getFile().getContentType(), initiativeId);
 
                 Long attachmentId = decisionAttachmentDao.addAttachment(initiativeId, fileInfo);
+
+                tempFile = AttachmentUtil.createTempFile(attachment.getFile(), AttachmentUtil.getFileType(attachment.getFile()));
 
                 AttachmentUtil.saveMunicipalityAttachmentToDiskAndCreateThumbnail(imageModifier, fileInfo.getContentType(), fileInfo.getFileType(), tempFile, attachmentId, attachmentDir);
 
@@ -200,6 +204,10 @@ public class MunicipalityDecisionService {
             }
         }));
 
+    }
+
+    private boolean decisionExists(Initiative initiative) {
+        return initiative.getDecisionDate().isPresent();
     }
 
 
