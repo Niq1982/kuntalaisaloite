@@ -22,7 +22,7 @@
 
     <#assign localSite>http://localhost</#assign>
 
-    <#assign mobileTesting>true</#assign>
+    <#assign mobileTesting= true />
     <#-- For testing ribbons locally:
     <#assign prodTestSite>${localSite}</#assign>
     <#assign localSite>https://localhost:8443x</#assign>
