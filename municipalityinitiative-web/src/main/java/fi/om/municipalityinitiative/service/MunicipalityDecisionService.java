@@ -70,6 +70,7 @@ public class MunicipalityDecisionService {
 
         if (decisionExists(initiative)) {
             initiativeDao.updateInitiativeDecision(initiativeId, decision.getDescription());
+
         } else {
             initiativeDao.createInitiativeDecision(initiativeId, decision.getDescription());
             
@@ -127,7 +128,7 @@ public class MunicipalityDecisionService {
 
                 Long attachmentId = decisionAttachmentDao.addAttachment(initiativeId, fileInfo);
 
-                tempFile = AttachmentUtil.createTempFile(attachment.getFile(), AttachmentUtil.getFileType(attachment.getFile()));
+                tempFile = AttachmentUtil.createTempFile(attachment.getFile(), fileInfo.getFileType());
 
                 AttachmentUtil.saveMunicipalityAttachmentToDiskAndCreateThumbnail(imageModifier, fileInfo.getContentType(), fileInfo.getFileType(), tempFile, attachmentId, attachmentDir);
 
