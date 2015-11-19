@@ -19,12 +19,12 @@
 
     <#if decisionInfo.isPresent() && !showDecisionForm && !editAttachments>
         <div class="msg-block cf">
-            <h2>Kunnan vastaus on julkaistu <@u.localDate decisionInfo.getValue().getDate() />
+            <h2><@u.message "municipality.decision.published" /> <@u.localDate decisionInfo.getValue().getDate() />
                 <#if decisionInfo.getValue().getModifiedDate().isPresent()>
-                    (muokattu <@u.localDate decisionInfo.getValue().getModifiedDate().value />)
+                    (<@u.message "municipality.decision.modified"/> <@u.localDate decisionInfo.getValue().getModifiedDate().value />)
                 </#if>
             </h2>
-            <p>Voit muokata kunnan vastausta. Kaikki muokkaukset ovat julkisia.</p>
+            <p><@u.message "municipality.decision.edit"/></p>
 
         </div>
     </#if>
