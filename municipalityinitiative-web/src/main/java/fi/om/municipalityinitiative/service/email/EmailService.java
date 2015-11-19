@@ -39,6 +39,7 @@ public class EmailService {
     private static final String VERIFIED_INITIATIVE_CREATED = "verified-initiative-created";
     private static final String INITIATIVE_ACCEPTED_BUT_NOT_PUBLISHED = "report-accepted-but-not-published";
     private static final String INITIATIVE_QUARTER_REPORT = "report-quarter";
+    private static final String MUNICIPALITY_DECISION = "municipality-decision";
 
     @Resource
     EmailServiceDataProvider dataProvider;
@@ -328,6 +329,14 @@ public class EmailService {
                 .send();
     }
 
+    public void sendMunicipalityDecisionToAuthors(Long initiativeId, Locale locale){
+        emailMessageConstructor
+                .fromTemplate(initiativeId, MUNICIPALITY_DECISION)
+                .addRecipients(dataProvider.getAuthorEmails(initiativeId))
+                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_ANSWERED_SUBJECT, toArray(), locale))
+                .withDataMap(toDataMap(dataProvider.get(initiativeId), locale))
+                .send();
+    }
 
     private String solveMunicipalityEmail(Initiative initiative) {
         if (environmentSettings.isTestSendMunicipalityEmailsToAuthor()) {

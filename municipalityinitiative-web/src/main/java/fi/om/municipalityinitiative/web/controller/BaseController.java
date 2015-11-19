@@ -5,7 +5,10 @@ import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.service.AttachmentUtil;
+import fi.om.municipalityinitiative.service.MunicipalityDecisionService;
 import fi.om.municipalityinitiative.service.UserService;
+import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
@@ -53,6 +56,9 @@ public class BaseController {
     private final Maybe<Integer> omPiwicId;
 
     private UrlHelper urlHelper = new UrlHelper();
+
+    @Resource
+    protected MunicipalityDecisionService municipalityDecisionService;
     
     public BaseController(boolean optimizeResources, String resourcesVersion) {
         this(optimizeResources, resourcesVersion, Maybe.<Integer>absent());
@@ -64,6 +70,8 @@ public class BaseController {
         this.omPiwicId = omPiwicId;
         InfoRibbon.refreshInfoRibbonTexts();
     }
+
+
 
     static void addRequestMessage(RequestMessage requestMessage, Model model, HttpServletRequest request) {
         FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
@@ -137,6 +145,24 @@ public class BaseController {
         if (!userService.getLoginUserHolder(request).isVerifiedUser()) {
             model.addAttribute(OM_PICIW_ID, omPiwicId.orNull());
         }
+    }
+
+    protected Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(Long initiativeId, InitiativeViewInfo initiative) {
+        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
+        AttachmentUtil.Attachments attachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
+        if (initiative != null && decisionPresent(initiative, attachments)) {
+            municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
+                    initiative.getDecisionText(),
+                    initiative.getDecisionDate().getValue(),
+                    initiative.getDecisionModifiedDate(),
+                    attachments));
+        }
+        return municipalityDecisionInfo;
+    }
+
+
+    private boolean decisionPresent( InitiativeViewInfo initiative, AttachmentUtil.Attachments attachments) {
+        return initiative.getDecisionDate().isPresent() && (initiative.getDecisionText().isPresent() || attachments.count() > 0);
     }
 
     @ModelAttribute

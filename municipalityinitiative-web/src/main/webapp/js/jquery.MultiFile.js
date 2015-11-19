@@ -508,7 +508,7 @@
 		// STRING: collection lets you show messages in different languages
 		STRING: {
 			remove:'x',
-			denied:'You cannot select a $ext file.\nTry again...',
+			denied:'Et voi lisätä tiedostoa jonka tyyppi on: $ext \n',
 			file:'$file',
 			selected:'File selected: $file',
 			duplicate:'This file has already been selected:\n$file'

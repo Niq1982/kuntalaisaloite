@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dto.ui;
 
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
@@ -43,9 +44,12 @@ public class MunicipalityDecisionDto {
         this.description = description;
     }
 
-    public static MunicipalityDecisionDto build(String description) {
+    public static MunicipalityDecisionDto build(Maybe<String> description) {
         MunicipalityDecisionDto municipalityDecisionDto = new MunicipalityDecisionDto();
-        municipalityDecisionDto.setDescription(description);
+        if (description.isPresent()) {
+            municipalityDecisionDto.setDescription(description.getValue());
+        }
+
         municipalityDecisionDto.setFiles(new ArrayList<FileWithName>());
         return municipalityDecisionDto;
     }

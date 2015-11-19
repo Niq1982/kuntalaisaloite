@@ -46,6 +46,8 @@ public interface InitiativeDao {
 
     void updateSentComment(Long initiativeId, String sentComment);
 
+    void createInitiativeDecision(Long initiativeId, String decisionText);
+
     void updateInitiativeDecision(Long initiativeId, String decisionText);
 
     void updateInitiativeDecisionModifiedDate(Long initiativeId);

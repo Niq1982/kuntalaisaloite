@@ -13,6 +13,7 @@ import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.aspectj.util.FileUtil;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -221,7 +223,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             createDefaultMunicipalityDecisionWithAttachment(initiativeId);
 
-            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build("Edited text");
+            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build(Maybe.of("Edited text"));
 
             municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
@@ -247,7 +249,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             createDefaultMunicipalityDecisionWithAttachment(initiativeId);
 
-            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build("Edited text");
+            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build(Maybe.of("Edited text"));
 
             municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId + 1)));
 
@@ -351,7 +353,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
         OmLoginUserHolder omLoginUserHolder = new OmLoginUserHolder(User.omUser("om user"));
 
-        municipalityUserService.renewManagementHash(omLoginUserHolder, initiativeId);
+        municipalityUserService.renewManagementHash(omLoginUserHolder, initiativeId, new Locale("fi"));
 
         String newHash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(initiativeId);
 

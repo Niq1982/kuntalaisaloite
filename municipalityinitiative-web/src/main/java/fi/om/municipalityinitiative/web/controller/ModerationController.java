@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
+import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.AttachmentService;
@@ -69,14 +70,16 @@ public class ModerationController extends BaseController{
         if (historyItemId != null) {
             reviewHistoryDiff = Maybe.of(ReviewHistoryDiff.from(reviewHistory, historyItemId));
         }
+        InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
-        return ViewGenerator.moderationView(normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
+        return ViewGenerator.moderationView(initiative,
                 normalInitiativeService.getManagementSettings(initiativeId),
                 moderationService.findAuthors(loginUserHolder, initiativeId),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
                 reviewHistory,
                 reviewHistoryDiff,
-                locationService.getLocations(initiativeId)
+                locationService.getLocations(initiativeId),
+                getMunicipalityDecisionInfoMaybe(initiativeId, initiative)
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 
@@ -132,7 +135,8 @@ public class ModerationController extends BaseController{
                                                   HttpServletRequest request,
                                                   Locale locale) {
 
-        municipalityUserService.renewManagementHash(userService.getRequiredOmLoginUserHolder(request), initiativeId);
+        municipalityUserService.renewManagementHash(userService.getRequiredOmLoginUserHolder(request), initiativeId, locale);
+
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.MANAGEMENT_HASH_RENEWED, request);
     }
 
