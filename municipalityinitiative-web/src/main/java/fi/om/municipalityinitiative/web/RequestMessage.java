@@ -45,7 +45,8 @@ public enum RequestMessage {
     ATTACHMENT_FAILURE(WARNING),
     ATTACHMENT_INVALID(WARNING),
 
-    DECISION_UPDATED(SUCCESS);
+    DECISION_UPDATED(SUCCESS),
+    DECISION_ADDED(SUCCESS);
 
     private final boolean modal;
     

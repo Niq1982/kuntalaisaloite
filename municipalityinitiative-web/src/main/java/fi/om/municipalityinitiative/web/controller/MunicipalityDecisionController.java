@@ -94,17 +94,14 @@ public class MunicipalityDecisionController extends BaseController{
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
 
         InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
-        Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
-        if (initiative.getDecisionDate().isPresent()) {
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().getValue(), initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
-        }
 
-        if (!municipalityDecisionService.validationSuccessful(decision, decisionInfo, bindingResult, model)) {
+        boolean updating = initiative.getDecisionDate().isPresent();
+        if (!municipalityDecisionService.validationSuccessful(decision, updating, bindingResult, model)) {
             return showMunicipalityDecisionView(initiativeId,  decision,  model,  locale,  loginUserHolder,  false,  true);
         }
 
         try {
-            municipalityDecisionService.setDecision(decision, initiativeId, loginUserHolder);
+            municipalityDecisionService.setDecision(decision, initiativeId, loginUserHolder, locale);
 
         } catch (InvalidAttachmentException e) {
             e.printStackTrace();
@@ -114,9 +111,12 @@ public class MunicipalityDecisionController extends BaseController{
             e.printStackTrace();
             return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.ATTACHMENT_FAILURE, request);
         }
+        if (updating) {
+            return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.DECISION_UPDATED, request);
+        } else{
+            return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.DECISION_ADDED, request);
 
-        return redirectWithMessage(Urls.get(locale).getMunicipalityDecisionView(initiativeId), RequestMessage.DECISION_UPDATED, request);
-
+        }
     }
 
     @RequestMapping(value = {EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV}, method = POST)

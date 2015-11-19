@@ -16,9 +16,7 @@ import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.email.EmailService;
-import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.util.ImageModifier;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 
 public class MunicipalityDecisionService {
@@ -63,7 +62,7 @@ public class MunicipalityDecisionService {
 
 
     @Transactional(readOnly = false, rollbackFor = Throwable.class)
-    public void setDecision(MunicipalityDecisionDto decision, Long initiativeId, MunicipalityUserHolder user) throws FileUploadException, InvalidAttachmentException {
+    public void setDecision(MunicipalityDecisionDto decision, Long initiativeId, MunicipalityUserHolder user,  Locale locale) throws FileUploadException, InvalidAttachmentException {
         user.assertManagementRightsForInitiative(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
         saveAttachments(decision.getFiles(), initiativeId);
@@ -73,7 +72,7 @@ public class MunicipalityDecisionService {
 
         } else {
             initiativeDao.createInitiativeDecision(initiativeId, decision.getDescription());
-            
+            emailService.sendMunicipalityDecisionToAuthors(initiativeId, locale);
         }
 
     }
@@ -146,11 +145,11 @@ public class MunicipalityDecisionService {
         }
     }
 
-    public boolean validationSuccessful(MunicipalityDecisionDto decision, Maybe<MunicipalityDecisionInfo> oldDecision, BindingResult bindingResult, Model model) {
+    public boolean validationSuccessful(MunicipalityDecisionDto decision, boolean oldDecision, BindingResult bindingResult, Model model) {
 
         decision.setFiles(clearEmptyFiles(decision.getFiles()));
 
-        if (oldDecision.isNotPresent()) {
+        if (oldDecision) {
             if (decision.getFiles().isEmpty() && decisionTextIsEmpty(decision)) {
                 addAttachmentValidationError(bindingResult, "filesAndDescription", "DecisionDescriptionAndAttachmentsBothEmpty");
             }

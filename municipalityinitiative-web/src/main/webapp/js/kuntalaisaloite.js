@@ -2621,6 +2621,8 @@ function findLocation(locations, location) {
 
 
 
+
+
 $(window).on('resize', function () {
   if (fireParticipantGraph !== undefined) {
     fireParticipantGraph();
