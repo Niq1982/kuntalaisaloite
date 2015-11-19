@@ -23,6 +23,7 @@ import fi.om.municipalityinitiative.web.Urls;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.utility.XmlEscape;
+import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
