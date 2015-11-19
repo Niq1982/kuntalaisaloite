@@ -14,7 +14,8 @@ public class StartJetty {
                     port,
                     10,
                     springProfile,
-                    "config/log4j.properties"));
+                    "config/log4j.properties",
+                    "src/main/webapp/"));
 
         } catch (Throwable throwable) {
             throw new RuntimeException(throwable);
@@ -23,7 +24,7 @@ public class StartJetty {
     }
 
     public static void main(String[] args) throws Throwable {
-        startService(8080, "dev,disableSecureCookie");
+        startService(8080, "dev,disableSecureCookie").join();
 
     }
 }

@@ -73,9 +73,25 @@ public abstract class WebTestBase {
     @BeforeClass
     public static synchronized void initialize() throws Throwable {
         if (jettyServer == null) {
-            jettyServer = StartJetty.startService(PORT, "test");
+            System.out.println("starting");
+
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    jettyServer = StartJetty.startService(PORT, "test,disableSecureCookie");
+                    try {
+                        jettyServer.join();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            ).start();
+
+            System.out.println("started");
             try {
-                while (!jettyServer.isStarted()) {
+                while (jettyServer == null || !jettyServer.isStarted()) {
                     Thread.sleep(250);
                 }
             } catch (InterruptedException e) {
@@ -174,7 +190,7 @@ public abstract class WebTestBase {
     protected String getMessage(String code) {
         return getMessage(code, null);
     }
-    
+
     protected String getMessage(String code, Object arg) {
         Object[] args = {arg};
         String text = messageSource.getMessage(code, args, Locales.LOCALE_FI);
@@ -182,7 +198,7 @@ public abstract class WebTestBase {
         text = text.trim();
         return text;
     }
-    
+
     protected void open(String href) {
         driver.get(href);
     }
@@ -244,7 +260,7 @@ public abstract class WebTestBase {
         List<String> elementTexts = Lists.newArrayList();
         List<WebElement> elements = driver.findElements(By.xpath(xpathExpression));
         for (WebElement element : elements) {
-            assertNotNull(element); 
+            assertNotNull(element);
             String elementText = element.getText().trim();
             elementTexts.add(elementText);
             if (elementText.contains(text)) {
@@ -306,30 +322,30 @@ public abstract class WebTestBase {
             throw new TimeoutException(e.getMessage() + " on page with title: " + driver.getTitle(), e);
         }
     }
-    
+
     protected WebElement getElemContaining(String containing, String tagName) {
 
         Maybe<WebElement> maybeElement = getOptionalElemContaining(containing, tagName);
-        
+
         if (maybeElement.isNotPresent()) {
             throw new NullPointerException("Tag not found with text: " + containing);
         }
-        
+
         return maybeElement.get();
     }
-    
+
     protected Maybe<WebElement> getOptionalElemContaining(String containing, String tagName) {
-        
-     List<WebElement> htmlElements = driver.findElements(By.tagName(tagName));
-            
+
+        List<WebElement> htmlElements = driver.findElements(By.tagName(tagName));
+
         // wait.until(ExpectedConditions.elementToBeClickable(By.name(name)));
 
         for (WebElement e : htmlElements) {
-          if (e.getText().contains(containing)) {
-             return Maybe.of(e);
-          }
+            if (e.getText().contains(containing)) {
+                return Maybe.of(e);
+            }
         }
-        
+
         return Maybe.absent();
     }
 

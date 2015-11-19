@@ -15,7 +15,7 @@ public class RunJetty {
                     Integer.valueOf(getSystemProperty(JETTY_THREAD_POOL_COUNT)),
                     getSystemProperty(SPRING_PROFILES_ACTIVE),
                     ConfigurationFileLoader.getFile("log4j.properties").toString()
-            ));
+            )).join();
         } catch (Throwable t) {
             t.printStackTrace();
             throw t;

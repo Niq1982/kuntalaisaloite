@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.server;
 
+import com.google.common.base.Optional;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -16,6 +17,7 @@ public class JettyServer {
         public final int jettyThreadPoolCount;
         public final String springProfile;
         public final String log4jConfigPath;
+        public final Optional<String> customWebappContextPath;
 
         public JettyProperties(int jettyPort, int jettyThreadPoolCount,
                                String springProfile, String log4jConfigPath) {
@@ -23,6 +25,16 @@ public class JettyServer {
             this.jettyThreadPoolCount = jettyThreadPoolCount;
             this.springProfile = springProfile;
             this.log4jConfigPath = log4jConfigPath;
+            this.customWebappContextPath = Optional.absent();
+        }
+
+        public JettyProperties(int jettyPort, int jettyThreadPoolCount,
+                               String springProfile, String log4jConfigPath, String customWebappContextPath) {
+            this.jettyPort = jettyPort;
+            this.jettyThreadPoolCount = jettyThreadPoolCount;
+            this.springProfile = springProfile;
+            this.log4jConfigPath = log4jConfigPath;
+            this.customWebappContextPath = Optional.of(customWebappContextPath);
         }
     }
 
@@ -83,8 +95,7 @@ public class JettyServer {
 
         server.setHandler(context);
         server.start();
-        System.out.println("Joining server");
-        server.join();
+        System.out.println("Server started");
         return server;
     }
 

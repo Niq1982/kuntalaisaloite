@@ -45,6 +45,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
+import javax.servlet.SessionCookieConfig;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -517,6 +518,12 @@ public class AppConfiguration {
     @PostConstruct
     public void setSecureCookie() {
         boolean disableSecureCookie = Sets.newHashSet(env.getActiveProfiles()).contains("disableSecureCookie");
-        servletContext.getSessionCookieConfig().setSecure(!disableSecureCookie);
+        SessionCookieConfig sessionCookieConfig = servletContext.getSessionCookieConfig();
+
+        // servletContext is mocked in integrationTests so it will return null.
+        if (sessionCookieConfig != null) {
+            sessionCookieConfig.setSecure(!disableSecureCookie);
+        }
+
     }
 }

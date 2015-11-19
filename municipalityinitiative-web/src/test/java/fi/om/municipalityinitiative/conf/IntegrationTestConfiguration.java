@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 
 import static org.mockito.Mockito.mock;
@@ -21,6 +22,11 @@ import static org.mockito.Mockito.mock;
 @Import(AppConfiguration.class)
 @PropertySource({"classpath:default.properties", "classpath:test.properties"})
 public class IntegrationTestConfiguration {
+
+    @Bean
+    public ServletContext servletContext() {
+        return mock(ServletContext.class);
+    }
 
     @Bean
     public TestHelper testHelper() {
