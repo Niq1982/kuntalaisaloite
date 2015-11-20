@@ -128,18 +128,22 @@ public class JdbcConfiguration {
 
     @PostConstruct
     public void updateDatabase() throws IOException {
-        Flyway flyway = new Flyway();
-        flyway.setEncoding("UTF-8");
-        flyway.setTable("flyway_schema");
-        flyway.setLocations("db/migration");
-        flyway.setSchemas(env.getProperty(PropertyNames.jdbcUser));
-        flyway.setDataSource(
-                env.getProperty(PropertyNames.jdbcURL),
-                env.getProperty(PropertyNames.flywayUser),
-                env.getProperty(PropertyNames.flywayPassword));
+        try {
+            Flyway flyway = new Flyway();
+            flyway.setEncoding("UTF-8");
+            flyway.setTable("flyway_schema");
+            flyway.setLocations("db/migration");
+            flyway.setSchemas(env.getProperty(PropertyNames.jdbcUser));
+            flyway.setDataSource(
+                    env.getProperty(PropertyNames.jdbcURL),
+                    env.getProperty(PropertyNames.flywayUser),
+                    env.getProperty(PropertyNames.flywayPassword));
 
-        flyway.setBaselineOnMigrate(true);
-        flyway.migrate();
+            flyway.setBaselineOnMigrate(true);
+            flyway.migrate();
+        } catch (Exception e) {
+            log.error("FAILED TO MIGRATE DATABASE", e);
+        }
     }
 
 }
