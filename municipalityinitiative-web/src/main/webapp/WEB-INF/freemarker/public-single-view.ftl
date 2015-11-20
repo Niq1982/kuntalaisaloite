@@ -37,24 +37,25 @@
 
     <div class="view-block public last">
         <div class="initiative-content-row last">
-            <h2><@u.message key="initiative.people.title" args=[1] /></h2>
+            <h2><@u.message key="initiative.authors.title" args=[1] /></h2>
             <@e.initiativeAuthor authors />
         </div>
     </div>
     
     
 
-    <#--
-     * Social media buttons
-    -->
-    <#if initiative.state == InitiativeState.PUBLISHED>
-        <@some.some pageTitle=initiative.name!"" />
-    </#if>
+
     
     <#if user.hasRightToInitiative(initiative.id) && !initiative.sent>
         <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
     <#else>
         <@u.returnPrevious url=urls.search() + "?orderBy=latestSent&show=sent" labelKey="link.to.searchView" useJsBack=true />
+    </#if>
+<#--
+   * Social media buttons
+  -->
+    <#if initiative.state == InitiativeState.PUBLISHED>
+        <@some.some pageTitle=initiative.name!"" />
     </#if>
 
 </@l.main>

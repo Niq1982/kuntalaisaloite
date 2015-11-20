@@ -207,19 +207,17 @@
     
     </@compress>
     </#assign>
-    
-    
-    <div id="participants" class="view-block public last">
-        <h2><@u.message key="initiative.people.title" args=[participantCount.total] /></h2>
-    
+
+    <div id = "authors" class="view-block public">
+        <h2><@u.message key="initiative.authors.title" args=[authors.getPublicNameCount() + authors.getPrivateNameCount()] /></h2>
         <div class="initiative-content-row">
             <@e.initiativeAuthor authors />
 
             <#if initiative.state == InitiativeState.PUBLISHED && !initiative.sentTime.present>
                 <p class="noprint"><a href="?contactAuthorForm=true#form-contact-author" class="js-contact-author"><span class="icon-small icon-16 envelope margin-right"></span> <@u.message key="contactAuthor.link" args=[authors.publicNameCount+authors.privateNameCount] /></a></p>
-            
+
                 <#if (RequestParameters['formError']?? && RequestParameters['formError'] == "contactAuthor")
-                                        || (RequestParameters['contactAuthorForm']?? && RequestParameters['contactAuthorForm'] == "true")>
+                || (RequestParameters['contactAuthorForm']?? && RequestParameters['contactAuthorForm'] == "true")>
                     <noscript>
                         <div id="form-contact-author" class="form-container cf top-margin">
                             <h3><@u.message key="contactAuthor.title" args=[authors.publicNameCount+authors.privateNameCount] /></h3>
@@ -229,30 +227,37 @@
                 </#if>
             </#if>
         </div>
-        <#--
-         * Do NOT show participate button:
-         *  - when modal request message is showed
-         *  - when participate form is showed (RequestParameter for NOSCRIPT)
-         *  - when the form has validation errors
-         *  - when sent to municipality (initiative.sentTime.present)
-        -->
-        <#assign showParticipateForm = (RequestParameters['formError']?? && RequestParameters['formError'] == "participate")
-                                    || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true") />
-        
-        <#--
-         * Show participant counts and participate form
-         *
-         * - Hide when not published. OM sees this view in REVIEW state. 
-        -->
-        <#if initiative.state == InitiativeState.PUBLISHED>
+
+    </div>
+
+    <#if initiative.state == InitiativeState.PUBLISHED>
+        <div id="participants" class="view-block public last">
+            <h2><@u.message key="initiative.participants.title" args=[participantCount.total] /></h2>
+
+            <#--
+             * Do NOT show participate button:
+             *  - when modal request message is showed
+             *  - when participate form is showed (RequestParameter for NOSCRIPT)
+             *  - when the form has validation errors
+             *  - when sent to municipality (initiative.sentTime.present)
+            -->
+            <#assign showParticipateForm = (RequestParameters['formError']?? && RequestParameters['formError'] == "participate")
+                                        || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true") />
+
+            <#--
+             * Show participant counts and participate form
+             *
+             * - Hide when not published. OM sees this view in REVIEW state.
+            -->
+
             <div class="initiative-content-row last">
                 <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
                 <#if supportCountData?? && supportCountData!="[]" && participantCount.total gt 0>
                     <@e.participantGraph initiative supportCountData!"{}" participantCount.total/>
                 </#if>
             </div>
-        </#if>
-    </div>
+        </div>
+    </#if>
     
     <#if user.hasRightToInitiative(initiative.id) && !initiative.sent>
         <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />

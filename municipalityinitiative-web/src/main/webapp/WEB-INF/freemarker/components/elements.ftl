@@ -297,7 +297,6 @@
  * @param initiative is initiative
 -->
 <#macro initiativeAuthor publicAuthors>
-    <h3><@u.message key="initiative.authors.title" args=[publicAuthors.publicNameCount+publicAuthors.privateNameCount] /></h3>
 
     <#if (publicAuthors.publicNameCount > 0)>
         <#list publicAuthors.publicAuthors as publicAuthor>
@@ -406,7 +405,6 @@
     </#if>
     <br class="clear" />
     <br class="clear" />
-    <h3><@u.message key="initiative.participants.title" args=[participantCount.total+initiative.externalParticipantCount] />
     <#if admin><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
 
     <#if  !initiative.sentTime.present && !user.hasRightToInitiative(initiative.id)>

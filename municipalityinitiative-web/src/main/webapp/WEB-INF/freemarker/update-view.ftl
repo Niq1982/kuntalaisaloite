@@ -43,7 +43,7 @@
         
         <div class="initiative-content-row last">
             <h2><@u.message key="initiative.authors.title" args=[authors?size] /></h2>
-            <@e.initiativeContactInfo authorList=authors showTitle=false />
+            <@e.initiativeContactInfo showTitle=false authorList=authors showTitle=false />
         </div>
     </div>
 

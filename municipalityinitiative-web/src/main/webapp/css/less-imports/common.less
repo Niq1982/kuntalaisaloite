@@ -84,8 +84,11 @@
 .pushdown { position:relative; top:1em; }
 .pullup { position:relative; top:-1em; }
 
-.push, .pull{
-    left: auto;
+@media @mobile {
+    .push, .pull{
+        left: auto;
+    }
+
 }
 
 // Hide unwanted elements

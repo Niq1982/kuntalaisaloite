@@ -37,18 +37,21 @@
         <@e.initiativeViewManage initiative />
     </div>
 
-    <div class="view-block cf">
-        <h2><@u.message key="initiative.people.title" args=[participantCount.total] /></h2>
-        
-        <div class="initiative-content-row ${(initiative.state == InitiativeState.PUBLISHED)?string("","last")}">
-            <@e.initiativeContactInfo authors />
-        </div>
+    <div id = "authors" class="view-block public">
+        <h2><@u.message key="initiative.authors.title" args=[authors?size] /></h2>
 
-        <#if initiative.state == InitiativeState.PUBLISHED>
-            <@e.participants showForm=false admin=true />
-        </#if>
+        <div class="initiative-content-row ${(initiative.state == InitiativeState.PUBLISHED)?string("","last")}">
+            <@e.initiativeContactInfo authorList=authors showTitle=false/>
+        </div>
     </div>
-    
+
+    <#if !initiative.single && initiative.state == InitiativeState.PUBLISHED>
+        <div class="view-block cf">
+            <h2><@u.message key="initiative.participants.title" args=[participantCount.total] /></h2>
+            <@e.participants showForm=false admin=true />
+        </div>
+    </#if>
+
     <#if !initiative.single>
         <#if initiative.state == InitiativeState.REVIEW>
             <div class="msg-block">
