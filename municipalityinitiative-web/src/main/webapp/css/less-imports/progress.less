@@ -211,12 +211,8 @@
     &.done {
       .step-icon-holder {
         background: @progBarColorDone;
-        i {
-          @media @mobile {
-            background-position-y: -50px;
-          }
 
-        }
+        
         .ie8 & {
           background: transparent url("@{imagesPath}/ie/progress-step.png?version=${timestamp}") no-repeat 0 -100px;
         }
