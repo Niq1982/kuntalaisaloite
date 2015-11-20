@@ -8,15 +8,18 @@
     padding-left: 1.3em;
     font-size:0.725em;
     font-weight:normal;
+    
+    @media @mobile {
+        border: none;
+        margin-left: 0;
+        padding-left: 0;
+        display: block;
+    };
 }
 h3 {
     .switch-view { font-size:0.855em; }
 }
-@media @mobile {
-    .switch-view {
-        display: none;
-    }
-}
+
 .search-options {
     margin-bottom:2em;
 
