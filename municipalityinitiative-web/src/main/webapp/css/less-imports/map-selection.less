@@ -6,12 +6,19 @@
   width: 430px;
   margin-top: 1em;
   padding: 0;
-  
-  @media @mobile {
-    width: 100%;
-  }
+
 }
 
+@media @mobile {
+  #map-canvas {
+    width: 100%;
+  }
+
+  #map-canvas-view {
+    width: 80%;
+  }
+
+}
 .map-marker {
   background: url("@{imagesPath}/google-maps-marker.png?version=${timestamp}") no-repeat 5%;
   background-size: 20px 30px;
