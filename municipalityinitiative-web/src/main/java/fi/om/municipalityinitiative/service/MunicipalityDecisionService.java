@@ -120,27 +120,31 @@ public class MunicipalityDecisionService {
 
         for (MunicipalityDecisionDto.FileWithName attachment: files) {
 
-            File tempFile = null;
-            try {
+            DecisionAttachmentFile fileInfo = new DecisionAttachmentFile(attachment.getName(), AttachmentUtil.getFileType(attachment.getFile()), attachment.getFile().getContentType(), initiativeId);
 
-                DecisionAttachmentFile fileInfo = new DecisionAttachmentFile(attachment.getName(), AttachmentUtil.getFileType(attachment.getFile()), attachment.getFile().getContentType(), initiativeId);
+            Long attachmentId = decisionAttachmentDao.addAttachment(initiativeId, fileInfo);
 
-                Long attachmentId = decisionAttachmentDao.addAttachment(initiativeId, fileInfo);
+            saveFile(attachment, fileInfo, attachmentId);
+        }
+    }
 
-                tempFile = AttachmentUtil.createTempFile(attachment.getFile(), fileInfo.getFileType());
+    private void saveFile(MunicipalityDecisionDto.FileWithName attachment, DecisionAttachmentFile fileInfo, Long attachmentId) throws InvalidAttachmentException, FileUploadException {
+        File tempFile = null;
+        try {
 
-                AttachmentUtil.saveMunicipalityAttachmentToDiskAndCreateThumbnail(imageModifier, fileInfo.getContentType(), fileInfo.getFileType(), tempFile, attachmentId, attachmentDir);
+            tempFile = AttachmentUtil.createTempFile(attachment.getFile(), fileInfo.getFileType());
 
-            }catch (InvalidAttachmentException e) {
-                throw e;
+            AttachmentUtil.saveMunicipalityAttachmentToDiskAndCreateThumbnail(imageModifier, fileInfo.getContentType(), fileInfo.getFileType(), tempFile, attachmentId, attachmentDir);
 
-            } catch (Throwable t) {
-                log.error("Error while uploading file: " + attachment.getFile().getOriginalFilename(), t);
-                throw new FileUploadException(t);
-            } finally {
-                if (tempFile != null){
-                    tempFile.delete();
-                }
+        } catch (InvalidAttachmentException e) {
+            throw e;
+
+        } catch (Throwable t) {
+            log.error("Error while uploading file: " + attachment.getFile().getOriginalFilename(), t);
+            throw new FileUploadException(t);
+        } finally {
+            if (tempFile != null){
+                tempFile.delete();
             }
         }
     }
@@ -149,7 +153,7 @@ public class MunicipalityDecisionService {
 
         decision.setFiles(clearEmptyFiles(decision.getFiles()));
 
-        if (oldDecision) {
+        if (!oldDecision) {
             if (decision.getFiles().isEmpty() && decisionTextIsEmpty(decision)) {
                 addAttachmentValidationError(bindingResult, "filesAndDescription", "DecisionDescriptionAndAttachmentsBothEmpty");
             }
