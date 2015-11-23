@@ -372,6 +372,7 @@
         </#if>
     </#list>
 
+    <#if admin><h3><span><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></h3></#if>
     <@participateButton admin participateSuccess showForm/>
 
     <#if !admin && initiative.sentTime.present>
@@ -392,7 +393,7 @@
     </#if>
     <br class="clear" />
     <br class="clear" />
-    <#if admin><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
+
 
     <#if  !initiative.sentTime.present && !user.hasRightToInitiative(initiative.id)>
         <#if user.hasParticipatedToInitiative(initiative.id)>
