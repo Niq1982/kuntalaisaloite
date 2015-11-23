@@ -76,5 +76,96 @@
 
 </#macro>
 
+<#macro participantsBlock participantCount>
+
+    <div id="participants" class="view-block public participants mobile last">
+        <h2><@u.message key="initiative.participants.title" args=[participantCount.total] /></h2>
+
+    <#--
+     * Do NOT show participate button:
+     *  - when modal request message is showed
+     *  - when participate form is showed (RequestParameter for NOSCRIPT)
+     *  - when the form has validation errors
+     *  - when sent to municipality (initiative.sentTime.present)
+    -->
+    <#assign showParticipateForm = (RequestParameters['formError']?? && RequestParameters['formError'] == "participate")
+    || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true") />
+
+    <#--
+     * Show participant counts and participate form
+     *
+     * - Hide when not published. OM sees this view in REVIEW state.
+    -->
+
+    <div class="initiative-content-row last">
+        <@participantsMobile formHTML=participateFormHTML showForm=showParticipateForm />
+    </div>
+</div>
+
+</#macro>
+
+#--
+* participants
+*
+* Generates participants block with optional participate button and form
+*
+* @param formHTML is the markup for the form for NOSCRIPT-users
+* @param showForm is boolean for toggling form visibility
+* @param admin is boolean for toggling participate button and participant manage -link
+-->
+<#macro participantsMobile formHTML="" showForm=true admin=false>
+    <#assign participateSuccess=false />
+    <#list requestMessages as requestMessage>
+        <#if requestMessage == RequestMessage.PARTICIPATE>
+            <#assign participateSuccess=true />
+        </#if>
+    </#list>
+
+    <#if admin><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
+
+    <#if  !initiative.sentTime.present && !user.hasRightToInitiative(initiative.id)>
+        <#if user.hasParticipatedToInitiative(initiative.id)>
+            <@u.systemMessage path="warning.already.participated" type="warning" />
+        <#elseif initiative.verifiable && user.isVerifiedUser() && !user.allowVerifiedParticipation(initiative.id, initiative.municipality)>
+            <@u.systemMessage path="warning.participant.notMember" type="warning" />
+        <#elseif initiative.verifiable && ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
+            <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
+        </#if>
+    </#if>
+    <#if !admin && initiative.sentTime.present>
+        <@u.systemMessage path="participate.sentToMunicipality" type="info" />
+    </#if>
+
+    <@participantInformationMobile/>
+
+    <@e.participateButton admin participateSuccess showForm/>
+
+    <#-- NOSCRIPT participate -->
+    <#if showForm>
+        <#noescape><noscript>
+            <div id="participate-form" class="form-container cf top-margin">
+                <h3><@u.message "participate.title" /></h3>
+            ${formHTML!""}
+            </div>
+        </noscript></#noescape>
+    </#if>
+
+
+</#macro>
+
+
+<#macro participantInformationMobile>
+    <div class="participants-block">
+        <span class="user-count-total">${participantCount.total+initiative.externalParticipantCount}</span>
+        <span><@u.message "participants"/></span>
+    </div>
+    <div class="participants-block separate">
+            <span class="user-count-sub-total">
+                <#if (participantCount.publicNames > 0)><span class="public-names"><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.publicNames] /></a></span></#if><br/>
+                <#if (participantCount.privateNames > 0)><span class="private-names"><@u.message key="participantCount.privateNames" args=[participantCount.privateNames] /></span><br/></#if>
+                <#if (initiative.externalParticipantCount > 0)><span class="private-names"><@u.message key="participantCount.externalNames" args=[initiative.externalParticipantCount]/></span></p></#if>
+            </span>
+    </div>
+</#macro>
 
 </#escape>

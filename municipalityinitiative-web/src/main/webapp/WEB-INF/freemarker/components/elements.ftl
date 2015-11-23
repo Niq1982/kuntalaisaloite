@@ -371,22 +371,9 @@
             <#assign participateSuccess=true />
         </#if>
     </#list>
-    <#if !admin && !initiative.sentTime.present && !participateSuccess>
-    <div class="participants-block ${showForm?string("hidden","")} noprint">
-        <#if initiative.verifiable && !user.isVerifiedUser()>
-            <a class="small-button" href="${urls.vetumaLogin(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
-        <#else>
-            <#if !user.hasParticipatedToInitiative(initiative.id) && (!initiative.verifiable || user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
-                <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
-            </#if>
-        </#if>
-    </div>
-        <#if !user.hasParticipatedToInitiative(initiative.id)>
-        <div class="participants-block last ${showForm?string("hidden","")} noprint">
-            <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="${urls.help(HelpPage.PARTICIPANTS.getUri(locale))}"><@u.messageHTML "action.participate.infoLink" /></a>
-        </div>
-        </#if>
-    </#if>
+
+    <@participateButton admin participateSuccess showForm/>
+
     <#if !admin && initiative.sentTime.present>
     <div class="participants-block last noprint">
         <div class="participate not-allowed">
@@ -420,6 +407,31 @@
     <@participantInformation/>
 
 
+</#macro>
+
+<#macro participateButton admin participateSuccess showForm>
+    <#if !admin && !initiative.sentTime.present && !participateSuccess>
+    <div class="participants-block ${showForm?string("hidden","")} noprint">
+        <#if initiative.verifiable>
+            <#if user.isVerifiedUser()>
+                <#if !user.hasParticipatedToInitiative(initiative.id) && (user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
+                    <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
+                </#if>
+            <#else>
+                <a class="small-button" href="${urls.vetumaLogin(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
+            </#if>
+        <#else>
+            <#if !user.hasParticipatedToInitiative(initiative.id)>
+                <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
+            </#if>
+        </#if>
+    </div>
+        <#if !user.hasParticipatedToInitiative(initiative.id)>
+        <div class="participants-block last ${showForm?string("hidden","")} noprint">
+            <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="${urls.help(HelpPage.PARTICIPANTS.getUri(locale))}"><@u.messageHTML "action.participate.infoLink" /></a>
+        </div>
+        </#if>
+    </#if>
 </#macro>
 
 <#macro participantInformation>

@@ -287,7 +287,42 @@
     }
 
 }
+.participants {
+    &.mobile{
+        display: none;
+        @media @mobile {
+            display: block;
 
+            .participants-block {
+                float: none;
+                margin: 0 auto 1em auto;
+                &.separate{
+                    margin: 0 auto 1em auto;
+                }
+            }
+            .user-count-total{
+                float: none;
+                display: block;
+                margin-top: 0.5em;
+            }
+            .small-button {
+                display: block;
+                width: 200px;
+                margin: auto;
+            }
+            .participants-block{
+                text-align: center;
+                a br {
+                    display: none;
+                }
+            }
+
+        }
+    }
+    @media @mobile {
+        display: none;
+    }
+}
 
 .participants-block {
     float:left;

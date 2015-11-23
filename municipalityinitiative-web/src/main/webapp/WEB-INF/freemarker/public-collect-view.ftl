@@ -6,6 +6,7 @@
 <#import "components/forms.ftl" as f />
 <#import "components/edit-blocks.ftl" as edit />
 <#import "components/some.ftl" as some />
+<#import "components/mobile-components.ftl" as mobile />
 
 <#escape x as x?html> 
 
@@ -231,7 +232,7 @@
     </div>
 
     <#if initiative.state == InitiativeState.PUBLISHED>
-        <div id="participants" class="view-block public last">
+        <div id="participants" class="view-block public last participants">
             <h2><@u.message key="initiative.participants.title" args=[participantCount.total] /></h2>
 
             <#--
@@ -258,6 +259,8 @@
             </div>
         </div>
     </#if>
+
+    <@mobile.participantsBlock participantCount/>
     
     <#if user.hasRightToInitiative(initiative.id) && !initiative.sent>
         <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
