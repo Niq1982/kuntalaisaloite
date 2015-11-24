@@ -13,6 +13,7 @@ public class MunicipalityDecisionWebTest  extends WebTestBase {
     public static final String SUCCESS = "Vastaus lisätty";
     public static final String VERIFIED_USER_AUTHOR_SSN = "010190-0001";
 
+
     private Long verifiedInitiativeId;
 
     @Override
@@ -34,6 +35,16 @@ public class MunicipalityDecisionWebTest  extends WebTestBase {
         clickButton(PUBLISH);
         assertSuccessMessage(SUCCESS);
     }
+
+    @Test
+    public void municipality_description_text_and_attachment_cant_both_be_empty() {
+        testHelper.sendToMunicipality(verifiedInitiativeId);
+        openMunicipalityDecisionViewForLastSentInitiative();
+        open(urls.getMunicipalityDecisionView(verifiedInitiativeId));
+        clickButton(PUBLISH);
+        this.assertPageHasValidationErrors();
+    }
+
     private void openMunicipalityDecisionViewForLastSentInitiative() {
         open(urls.loginMunicipality(testHelper.getPreviousMunicipalityHash()));
 
