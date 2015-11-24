@@ -5,6 +5,12 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
 public class MunicipalityDecisionWebTest  extends WebTestBase {
 
@@ -12,6 +18,7 @@ public class MunicipalityDecisionWebTest  extends WebTestBase {
     public static final String PUBLISH = "Julkaise vastaus";
     public static final String SUCCESS = "Vastaus lisätty";
     public static final String VERIFIED_USER_AUTHOR_SSN = "010190-0001";
+    public static final String MUNICIPALITY_ANSWER = "Kunnan vastaus";
 
 
     private Long verifiedInitiativeId;
@@ -34,6 +41,10 @@ public class MunicipalityDecisionWebTest  extends WebTestBase {
         inputTextByCSS("#description", DECISIONTEXT);
         clickButton(PUBLISH);
         assertSuccessMessage(SUCCESS);
+
+        open(urls.view(verifiedInitiativeId));
+        WebElement element = getElement(By.tagName("h2"));
+        assertThat(element.getText(), containsString(MUNICIPALITY_ANSWER));
     }
 
     @Test
@@ -42,7 +53,12 @@ public class MunicipalityDecisionWebTest  extends WebTestBase {
         openMunicipalityDecisionViewForLastSentInitiative();
         open(urls.getMunicipalityDecisionView(verifiedInitiativeId));
         clickButton(PUBLISH);
+
         this.assertPageHasValidationErrors();
+        open(urls.view(verifiedInitiativeId));
+        WebElement element = getElement(By.tagName("h2"));
+        assertThat(element.getText(), not(MUNICIPALITY_ANSWER));
+
     }
 
     private void openMunicipalityDecisionViewForLastSentInitiative() {
