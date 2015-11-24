@@ -80,6 +80,7 @@ public class TestHelper {
     private Long lastVerifiedUserId;
     private String previousTestManagementHash;
     private String previousUserSsnHash;
+    private String lastMunicipalityHash;
 
     public TestHelper() {
     }
@@ -119,6 +120,7 @@ public class TestHelper {
         lastVerifiedUserId = null;
         previousUserSsnHash = null;
         previousTestManagementHash = null;
+        lastMunicipalityHash = null;
     }
 
     @Transactional
@@ -730,6 +732,23 @@ public class TestHelper {
     @Transactional
     public void clearSentEmails() {
         queryFactory.delete(QEmail.email).execute();
+    }
+
+    @Transactional
+    public void sendToMunicipality(Long verifiedInitiativeId) {
+
+        String managementHash = RandomHashGenerator.longHash();
+        queryFactory.insert(QMunicipalityUser.municipalityUser)
+                .set(QMunicipalityUser.municipalityUser.initiativeId, verifiedInitiativeId)
+                .set(QMunicipalityUser.municipalityUser.managementHash, managementHash)
+                .executeWithKey(QMunicipalityUser.municipalityUser.id);
+
+        lastMunicipalityHash =  managementHash;
+
+    }
+
+    public String getPreviousMunicipalityHash() {
+        return lastMunicipalityHash;
     }
 
 
