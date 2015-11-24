@@ -35,11 +35,13 @@
 
     <@u.spacer "15" />
 
-    <@b.contentBlock type>
-        <@b.attachments type/>
-    </@b.contentBlock>
-    
-    <@u.spacer "15" />
+    <#if (attachmentCount > 0) || hasLocationAttached>
+        <@b.contentBlock type>
+            <@b.attachments type/>
+        </@b.contentBlock>
+
+        <@u.spacer "15" />
+    </#if>
 
     <#if municipalityDecisionHash??>
         <@b.contentBlock type>
