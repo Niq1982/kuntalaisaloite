@@ -61,7 +61,7 @@
                     </div>
                 
                 </div>
-                <div class="col-2">
+                <div class="col-2 first">
                 
                     <div class="front-block block-2 noprint">
                         <h2><@u.message "front.browse.title" /></h2>
@@ -87,7 +87,9 @@
                             </form>
                         </div>
                     </div>
-                    
+                </div>
+
+                <div class="col-2">
                     <div class="front-block block-3">
                         <h2><@u.message "front.latest.title" /></h2>
 

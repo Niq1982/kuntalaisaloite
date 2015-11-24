@@ -299,6 +299,7 @@
             margin-bottom: 50px;
             background: url("@{imagesPath}/faux-columns.png?version=${timestamp}") 0 0 repeat-y;
             background-size: 100%;
+            display: table;
 
             .col-1 {
                 width: 50%;
@@ -346,14 +347,23 @@
             width:100%;
             margin-bottom:0;
             background-color: white;
+            display: table;
 
             .col-1 {
-                width:100%;
-                float:left;
+                width: 100%;
+                display: table-row-group;
+                float: none;
             }
             .col-2 {
-                width:100%;
-                float:left;
+                width: 100%;
+                &.first {
+                    display: table-header-group;
+                    float: none;
+
+                }
+                display: table-footer-group;
+                float: none;
+
             }
         }
         .front-block {
