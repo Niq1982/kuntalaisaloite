@@ -6,7 +6,8 @@ create table follow_initiative (
 
   constraint follow_initiative_id primary key (id),
   constraint follow_initiative_initiative_id foreign key (initiative_id) references municipality_initiative(id),
-  constraint follow_initiative_unsubscribe_hash unique(unsubscribe_hash)
+  constraint follow_initiative_unsubscribe_hash unique(unsubscribe_hash),
+  constraint follow_initiative_email_id_unique unique(email, initiative_id)
 );
 
 

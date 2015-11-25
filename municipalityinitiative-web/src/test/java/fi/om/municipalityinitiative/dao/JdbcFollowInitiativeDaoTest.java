@@ -56,11 +56,20 @@ public class JdbcFollowInitiativeDaoTest {
         int before = followers.size();
 
         followInitiativeDao.addFollow(initiativeId, TESTEMAIL, RandomHashGenerator.longHash());
-        followInitiativeDao.addFollow(initiativeId, TESTEMAIL, RandomHashGenerator.longHash());
-
         followers = followInitiativeDao.listFollowers(initiativeId);
 
-        assertThat(followers.values(), hasSize(before +1));
+        try{
+      
+            followInitiativeDao.addFollow(initiativeId, TESTEMAIL, RandomHashGenerator.longHash());
+            followers = followInitiativeDao.listFollowers(initiativeId);
+        } catch (Exception e) {
+
+        }finally {
+            assertThat(followers.values(), hasSize(before +1));
+        }
+
+
+
     }
 
     @Test
