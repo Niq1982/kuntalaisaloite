@@ -171,6 +171,9 @@ public class AppConfiguration {
     public MunicipalityUserDao municipalityUserDao() {return new JdbcMunicipalityUserDao() ;}
 
     @Bean
+    public FollowInitiativeDao followInitiativeDao() {return new JdbcFollowInitiativeDao();}
+
+    @Bean
     public AuthorService authorService() {
         return new AuthorService();
     }

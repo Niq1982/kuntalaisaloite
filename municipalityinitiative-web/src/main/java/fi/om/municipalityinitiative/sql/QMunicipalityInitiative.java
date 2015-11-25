@@ -9,6 +9,7 @@ import com.mysema.query.types.path.NumberPath;
 import com.mysema.query.types.path.StringPath;
 
 import javax.annotation.Generated;
+import java.util.Arrays;
 
 import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
@@ -82,6 +83,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
     public final com.mysema.query.sql.ForeignKey<QAuthorMessage> _authormessageInitiativeidFk = createInvForeignKey(id, "initiative_id");
 
     public final com.mysema.query.sql.ForeignKey<QVerifiedParticipant> _verifiedParticipantInitiativeFk = createInvForeignKey(id, "initiative_id");
+
+    public final com.mysema.query.sql.ForeignKey<QFollowInitiative> _followInitiativeInitiativeId = createInvForeignKey(Arrays.asList(id, id), Arrays.asList("initiative_id", "initiative_id"));
 
     public final com.mysema.query.sql.ForeignKey<QAuthor> _authorInitiativeIdFk = createInvForeignKey(id, "initiative_id");
 
