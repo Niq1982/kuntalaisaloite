@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.dao;
 
 
+import com.mysema.query.QueryException;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
@@ -59,11 +60,11 @@ public class JdbcFollowInitiativeDaoTest {
         followers = followInitiativeDao.listFollowers(initiativeId);
 
         try{
-      
+
             followInitiativeDao.addFollow(initiativeId, TESTEMAIL, RandomHashGenerator.longHash());
             followers = followInitiativeDao.listFollowers(initiativeId);
-        } catch (Exception e) {
-
+        } catch (QueryException e) {
+            e.printStackTrace();
         }finally {
             assertThat(followers.values(), hasSize(before +1));
         }
