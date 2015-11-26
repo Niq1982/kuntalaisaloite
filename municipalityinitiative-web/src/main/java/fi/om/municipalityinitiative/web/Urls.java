@@ -344,6 +344,8 @@ public final class Urls {
 
     private static final String SUPERSEARCH_SITE_PARAMETER = "&site=";
 
+    public static final String UNSUBSCRIBE = "/unsubscribe/" + ID_PARAMETER;
+
     private final String baseUrl;
 
     private final String iframeBaseUrl;
@@ -752,5 +754,8 @@ public final class Urls {
 
     public String openDecisionAttachmentsForEdit(Long initiativeId) {
         return getLocalizedPageUrl(EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV).replace(ID_PARAMETER, initiativeId.toString());
+    }
+    public String unsubscribe(long initiativeId, String hash ) {
+        return getBaseUrl() + "/" + UNSUBSCRIBE.replace(ID_PARAMETER, initiativeId+"/") + "?" + PARAM_CONFIRMATION_CODE + "="+ hash;
     }
 }

@@ -40,6 +40,7 @@ public class EmailService {
     private static final String INITIATIVE_ACCEPTED_BUT_NOT_PUBLISHED = "report-accepted-but-not-published";
     private static final String INITIATIVE_QUARTER_REPORT = "report-quarter";
     private static final String MUNICIPALITY_DECISION = "municipality-decision";
+    private static final String MUNICIPALITY_COLLABORATIVE_FOLLOWERS = "municipality-collaborative-followers";
 
     @Resource
     EmailServiceDataProvider dataProvider;
@@ -186,6 +187,35 @@ public class EmailService {
                 .withAttachment(EmailAttachmentType.PARTICIPANTS)
                 .send();
     }
+
+    public void sendCollaborativeToMunicipalityToFollowers(Long initiativeId) {
+
+        for (Map.Entry<String, String> entry : dataProvider.getFollowers(initiativeId).entrySet())
+        {
+            emailToFollower(initiativeId, entry.getKey(), entry.getValue());
+        }
+
+    }
+
+    private void emailToFollower(Long initiativeId, String recipient, String hash) {
+        Locale locale = Locales.LOCALE_FI;
+
+        Initiative initiative = dataProvider.get(initiativeId);
+
+        Map<String, Object> dataMap = toDataMap(initiative, dataProvider.findAuthors(initiativeId), locale);
+        dataMap.put("attachmentCount", dataProvider.getAcceptedAttachmentCount(initiativeId));
+        dataMap.put("hasLocationAttached", dataProvider.hasLocationAttached(initiativeId));
+        dataMap.put("initiativeId", initiativeId);
+        dataMap.put("removeHash", hash);
+
+        emailMessageConstructor
+                .fromTemplate(initiativeId, MUNICIPALITY_COLLABORATIVE_FOLLOWERS)
+                .addRecipient(recipient)
+                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
+                .withDataMap(dataMap)
+                .send();
+    }
+
 
     public void sendCollaborativeToAuthors(Long initiativeId) {
         Locale locale = Locales.LOCALE_FI;
@@ -383,6 +413,8 @@ public class EmailService {
         }
         dataMap.put(enumType.getSimpleName(), values);
     }
+
+
 
     public static class EmailLocalizationProvider {
         private final Locale locale;

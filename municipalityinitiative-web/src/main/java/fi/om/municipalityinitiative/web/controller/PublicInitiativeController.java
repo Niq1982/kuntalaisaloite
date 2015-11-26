@@ -462,8 +462,8 @@ public class PublicInitiativeController extends BaseController {
         return redirectWithMessage(Urls.get(locale).view(id), RequestMessage.COMFIRM_FOLLOW, request);
     }
 
-    @RequestMapping(value = { VIEW_FI, VIEW_SV }, method = POST,  params = "unsubscribe")
-    public String unfollowInitiative(@PathVariable long id, @RequestParam("hash") String hash, Locale locale, HttpServletRequest request) {
+    @RequestMapping(value = { UNSUBSCRIBE }, method = GET)
+    public String unfollowInitiative(@PathVariable long id, @RequestParam(PARAM_CONFIRMATION_CODE) String hash, Locale locale, HttpServletRequest request) {
         followInitiativeService.stopFollowingInitiative(hash);
         return redirectWithMessage(Urls.get(locale).view(id), RequestMessage.COMFIRM_STOP_FOLLOW, request);
     }

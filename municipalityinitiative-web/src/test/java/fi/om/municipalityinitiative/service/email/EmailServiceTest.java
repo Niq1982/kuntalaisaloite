@@ -22,6 +22,7 @@ import static org.hamcrest.core.IsNot.not;
 public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     private static final String MANAGEMENT_HASH = "managementHash";
+    public static final String FOLLOWEREMAIL = "test@test.fi";
 
     private Urls urls;
 
@@ -108,7 +109,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         EmailDto email = testHelper.getSingleQueuedEmail();
 
-        assertThat(email.getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
+        assertThat(email.getSubject(), is("Kuntalaisaloite: " + INITIATIVE_NAME));
         assertThat(email.getRecipientsAsString(), is(MUNICIPALITY_EMAIL));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_PROPOSAL));
@@ -227,6 +228,23 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
         assertThat(email.getBodyHtml(), containsString("1 liite"));
     }
+
+    @Test
+    public void collaborative_to_municipality_to_followers() throws Exception{
+
+        String removeHash = testHelper.addFollower(initiativeId(), FOLLOWEREMAIL);
+
+        emailService.sendCollaborativeToMunicipalityToFollowers(initiativeId());
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getRecipientsAsString(), containsString(FOLLOWEREMAIL));
+
+        assertThat(email.getBodyHtml(), containsString(removeHash));
+
+    }
+
+
 
     @Test
     public void collaborative_to_authors_has_no_information_of_attachments_if_has_not_any() {

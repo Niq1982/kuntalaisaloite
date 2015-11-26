@@ -752,6 +752,18 @@ public class TestHelper {
         return lastMunicipalityHash;
     }
 
+    @Transactional
+    public String addFollower(Long initiativeId, String s) {
+        String randomHash =  RandomHashGenerator.shortHash();
+        queryFactory.insert(QFollowInitiative.followInitiative)
+                .set(QFollowInitiative.followInitiative.initiativeId, initiativeId)
+                .set(QFollowInitiative.followInitiative.email, s)
+                .set(QFollowInitiative.followInitiative.unsubscribeHash, randomHash)
+                .execute();
+
+        return randomHash;
+    }
+
 
     public static class AuthorDraft {
 

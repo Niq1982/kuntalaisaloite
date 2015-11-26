@@ -36,6 +36,9 @@ public class EmailServiceDataProvider {
     @Resource
     MunicipalityUserDao municipalityUserDao;
 
+    @Resource
+    FollowInitiativeDao followInitiativeDao;
+
     public Initiative get(Long initiativeId) {
         return initiativeDao.get(initiativeId);
     }
@@ -83,5 +86,9 @@ public class EmailServiceDataProvider {
 
     public String getMunicipalityDecisionHash(Long initiativeId) {
         return municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(initiativeId);
+    }
+
+    public Map<String, String> getFollowers(Long initiativeId) {
+        return followInitiativeDao.listFollowers(initiativeId);
     }
 }
