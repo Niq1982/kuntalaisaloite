@@ -424,6 +424,10 @@
 
 </#macro>
 
+<#macro follow >
+    <a class="js-follow"><span class="small-icon save-and-send"><@u.message "action.follow" /></span></a>
+</#macro>
+
 <#macro participantInformation>
     <div class="participants-block">
         <span class="user-count-total">${participantCount.total+initiative.externalParticipantCount}</span>

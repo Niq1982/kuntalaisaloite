@@ -225,6 +225,9 @@ public class AppConfiguration {
     public LocationService locationService() { return new  LocationService();}
 
     @Bean
+    public FollowInitiativeService followInitiativeService() {return new FollowInitiativeService();}
+
+    @Bean
     public JobExecutor jobExecutor() {
         return new JobExecutor();
     }

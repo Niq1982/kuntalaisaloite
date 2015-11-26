@@ -107,7 +107,22 @@
     
     </@compress>
     </#assign>
-    
+
+    <#assign followInitiativeFormHTML>
+        <@compress single_line=true>
+            <@u.message "follow.text" />
+            <form action="${springMacroRequestContext.requestUri}?formError=follow" method="POST">
+                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+
+                <div class="input-block-content">
+                    <@f.textField path="followInitiative.participantEmail" required="" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
+                </div>
+                <button id="participate" type="submit"  value="true" name="action-follow" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
+                <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+            </form>
+        </@compress>
+    </#assign>
+
     <#assign participateFormHTML>
     <@compress single_line=true>
     
@@ -228,6 +243,9 @@
                     </noscript>
                 </#if>
             </#if>
+            <#assign showFollowForm = (RequestParameters['formError']?? && RequestParameters['formError'] == "follow") />
+            <@e.follow />
+
         </div>
         <#--
          * Do NOT show participate button:
@@ -372,7 +390,23 @@
                 content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[springMacroRequestContext.requestUri] /></div>'
             }]
         };
-        
+
+        modalData.followInitiative = function(){
+            return [{
+                title: '<@u.message "followInitiative.title"/>',
+                content: '<#noescape>${followInitiativeFormHTML?replace("'","&#39;")}</#noescape>'
+            }]
+        };
+
+        <#if showFollowForm>
+            modalData.followFormAutoLoad = function() {
+                return [{
+                    title:     '<@u.message "followInitiative.title"/>',
+                    content:   '<#noescape>${followInitiativeFormHTML?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+        </#if>
+
     </script>
     
 </@l.main>

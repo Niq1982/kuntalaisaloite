@@ -1316,10 +1316,23 @@ $('.municipality-filter').change( function() {
 		}
 	});
 
+	// Follow initiative
+	$('.js-follow').click(function(){
+		try {
+			generateModal(modalData.followInitiative(), 'full');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+
 	if( typeof modalData !== 'undefined' && typeof modalData.participateFormAutoLoad !== 'undefined' ){
 		generateModal(modalData.participateFormAutoLoad(), 'full', municipalitySelection.init);
 	}
 
+	if (typeof modalData !== 'undefined' && typeof modalData.followFormAutoLoad !== 'undefined') {
+		generateModal(modalData.followFormAutoLoad(), 'full');
+	}
 	// Contact author
 	$('.js-contact-author').click(function(){
 		try {
