@@ -243,9 +243,11 @@
                     </noscript>
                 </#if>
             </#if>
-            <#assign showFollowForm = (RequestParameters['formError']?? && RequestParameters['formError'] == "follow") />
-            <@e.follow />
-
+            <#assign canFollow = ( initiative.state == InitiativeState.PUBLISHED && !initiative.sentTime.present) />
+            <#assign showFollowForm = canFollow && (RequestParameters['formError']?? && RequestParameters['formError'] == "follow") />
+            <#if canFollow>
+                <@e.follow />
+            </#if>
         </div>
         <#--
          * Do NOT show participate button:
