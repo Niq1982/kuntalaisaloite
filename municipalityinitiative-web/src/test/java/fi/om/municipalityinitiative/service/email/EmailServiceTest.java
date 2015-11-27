@@ -13,6 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Locale;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -23,6 +25,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     private static final String MANAGEMENT_HASH = "managementHash";
     public static final String FOLLOWEREMAIL = "test@test.fi";
+    public static final String MUNICIPALITY_LOGIN_HASH = "hashahs";
 
     private Urls urls;
 
@@ -105,6 +108,9 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         testHelper.addAttachment(initiativeId(), "accepted", true, "jpg");
         testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
 
+
+        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+
         emailService.sendSingleToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
         EmailDto email = testHelper.getSingleQueuedEmail();
@@ -123,6 +129,8 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(SENT_COMMENT));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
         assertThat(email.getBodyHtml(), containsString("1 liite"));
+
+        assertThat(email.getBodyHtml(), containsString(urls.loginMunicipality(MUNICIPALITY_LOGIN_HASH)));
 
     }
 
@@ -184,10 +192,26 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     }
 
     @Test
+    public void municipality_answers_contains_all_information() {
+        emailService.sendMunicipalityDecisionToAuthors(initiativeId(), new Locale("fi"));
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getSubject(), containsString("Kunta on vastannut aloitteeseesi"));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
+        assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
+
+    }
+
+    @Test
     public void collaborative_to_municipality_contains_all_information() throws Exception {
 
         testHelper.addAttachment(initiativeId(), "accepted", true, "jpg");
         testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
+
+        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
 
         emailService.sendCollaborativeToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
@@ -204,6 +228,8 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
         assertThat(email.getBodyHtml(), containsString("1 liite"));
+
+        assertThat(email.getBodyHtml(), containsString(urls.loginMunicipality(MUNICIPALITY_LOGIN_HASH)));
     }
 
     @Test
@@ -211,6 +237,8 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         testHelper.addAttachment(initiativeId(), "accepted", true, "jpg");
         testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
+
+        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
 
         emailService.sendCollaborativeToAuthors(initiativeId());
 
@@ -227,6 +255,9 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
         assertThat(email.getBodyHtml(), containsString("1 liite"));
+
+
+        assertThat(email.getBodyHtml(), not(containsString(urls.loginMunicipality(MUNICIPALITY_LOGIN_HASH))));
     }
 
     @Test

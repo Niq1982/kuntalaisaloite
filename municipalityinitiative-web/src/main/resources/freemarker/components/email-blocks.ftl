@@ -352,7 +352,7 @@
 
 
 <#macro municipalityDecisionLink type>
-    <#assign municipalityDecisionUrl = urls.get(switchLocale!locale).loginMunicipality(municipalityDecisionHash)/>
+    <#assign municipalityDecisionUrl = urls.get(locale).loginMunicipality(municipalityDecisionHash)/>
 
     <#if type == "html">
         <h4 style="${h4!""}"><@u.message "email.municipalityDecisionLink" /></h4>
