@@ -3,20 +3,19 @@
 
 <#assign type="text" />
 
-<#if (initiative.sentComment)?has_content>
-    <@b.comment type initiative.sentComment "email.sentComment" />
-</#if>
-
 <@u.message "email.initiative" />
 
-
-<@b.initiativeDetails type=type showProposal=true showDate=true showExtraInfo=true />
-
-<@b.separator />
+"${initiative.name!""}"
+${initiative.municipality.getLocalizedName(switchLocale!locale)!""}
+<@u.message "email.sentToMunicipality" />
 
 <@b.separator />
 
 <@b.attachments type/>
+
+<@b.separator />
+
+<@u.message key="email.participantCount.total" /> ${initiative.participantCount!"0"}
 
 <@b.separator />
 

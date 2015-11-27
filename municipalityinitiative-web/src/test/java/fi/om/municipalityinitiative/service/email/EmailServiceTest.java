@@ -239,8 +239,12 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         EmailDto email = testHelper.getSingleQueuedEmail();
 
         assertThat(email.getRecipientsAsString(), containsString(FOLLOWEREMAIL));
-
         assertThat(email.getBodyHtml(), containsString(removeHash));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
+        assertThat(email.getBodyHtml(), not(containsString(SENT_COMMENT)));
+        assertThat(email.getSubject(), is("Kuntalaisaloite: " + INITIATIVE_NAME));
 
     }
 

@@ -12,13 +12,10 @@
 
     <@l.emailHtml title=title footer=false>
 
-        <#if (initiative.sentComment)?has_content>
-            <@b.comment type initiative.sentComment "email.sentComment" />
-            <@u.spacer "15" />
-        </#if>
-
         <@b.mainContentBlock title>
-            <@b.initiativeDetails type=type showProposal=true showDate=true showExtraInfo=true />
+            <h4 style="${h4!""}">${initiative.name!""}</h4>
+            <p style="${pBottomMargin!""}">${initiative.municipality.getLocalizedName(switchLocale!locale)!""}</p>
+
         </@b.mainContentBlock>
 
         <@u.spacer "15" />
@@ -32,8 +29,15 @@
         </#if>
 
         <@b.contentBlock type>
+            <h4 style="${h4!""}"><@u.message "email.sentToMunicipality" /></h4>
+            <p style="${pBottomMargin!""}"><@u.messageHTML key="email.participantCount.total" /> ${initiative.participantCount!"0"}</p>
+        </@b.contentBlock>
+
+        <@u.spacer "15" />
+
+        <@b.contentBlock type>
             <#if removeHash??>
-                Etkö halua saada sähköpostitiedotteita tästä aloitteesta? Lopeta aloitteen seuraaminen:
+                <@u.message "email.unSubscribe"/>
                 <@u.button "Lopeta tilaus" urls.unsubscribe(initiativeId, removeHash) "green" />
             </#if>
         </@b.contentBlock>
