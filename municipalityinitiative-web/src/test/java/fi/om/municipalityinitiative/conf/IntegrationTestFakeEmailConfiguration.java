@@ -21,6 +21,8 @@ public class IntegrationTestFakeEmailConfiguration {
 
     private boolean superSearchEnabled  = false;
 
+    private boolean videoEnabled = false;
+
     @Bean
     public EnvironmentSettings environmentSettings() {
         return new EnvironmentSettings(EMAIL_DEFAULT_REPLY_TO,
@@ -33,7 +35,8 @@ public class IntegrationTestFakeEmailConfiguration {
                 true,
                 googleMapsApiKey,
                 googleMapsEnabled,
-                superSearchEnabled);
+                superSearchEnabled,
+                videoEnabled);
     }
 
     @Bean

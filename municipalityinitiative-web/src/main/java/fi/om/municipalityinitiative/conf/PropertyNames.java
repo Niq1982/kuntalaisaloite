@@ -4,6 +4,7 @@ public final class PropertyNames {
 
     public static final String isTestEmailSender = "test.mail.sender";
 
+
     private PropertyNames() {}
 
     public static final String omImageDirection = "om.image.directory";
@@ -89,5 +90,7 @@ public final class PropertyNames {
     public static final String attachmentDir = "attachment.directory";
 
     public static final String decisionAttachmentDir = "decisionAttachment.directory";
+
+    public static final String videoEnabled = "video.enabled";
 
 }

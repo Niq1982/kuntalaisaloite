@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.*;
@@ -40,6 +41,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class InitiativeManagementController extends BaseController {
+
 
     @Resource
     private InitiativeManagementService initiativeManagementService;
@@ -126,6 +128,33 @@ public class InitiativeManagementController extends BaseController {
                 new AttachmentCreateDto(),
                 AttachmentUtil.ImageProperties.instance()).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
+    
+    @RequestMapping(value={ MANAGE_VIDEOS_FI+ID_PARAMETER, MANAGE_VIDEOS_SV+ID_PARAMETER }, method=GET)
+    public String manageVideos(@PathVariable("id") Long initiativeId,
+                                        Model model, Locale locale, HttpServletRequest request) {
+
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+
+        InitiativeViewInfo initiativeInfo = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
+
+        if (!environmentSettings.getVideoEnabled()) {
+            throw new AccessDeniedException("Feature not enabled");
+        }
+        if (initiativeInfo.isSent()) {
+            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
+        }
+
+        if (initiativeInfo.hasNeverBeenSaved()) {
+            return contextRelativeRedirect(Urls.get(locale).edit(initiativeId));
+        }
+
+        return ViewGenerator.manageVideosView(initiativeInfo,
+                normalInitiativeService.getManagementSettings(initiativeId),
+                attachmentService.findAllAttachments(initiativeId, loginUserHolder),
+                new AttachmentCreateDto(),
+                AttachmentUtil.ImageProperties.instance()).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+    }
+
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
     public String editView(@PathVariable("id") Long initiativeId,

@@ -202,6 +202,19 @@ public final class ViewGenerator {
         );
     }
 
+
+    public static ViewGenerator manageVideosView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, AttachmentUtil.Attachments attachments, AttachmentCreateDto attachmentCreateDto, AttachmentUtil.ImageProperties imageProperties) {
+        return new ViewGenerator(MANAGE_VIDEOS_VIEW,
+                new AttributeBuilder()
+                        .add("initiative", initiativeInfo)
+                        .add("managementSettings", managementSettings)
+                        .add("attachments", attachments)
+                        .add("attachment", attachmentCreateDto)
+                        .add("imageProperties", imageProperties)
+                        .build()
+        );
+    }
+
     public static ViewGenerator updateView(InitiativeViewInfo initiative, InitiativeUIUpdateDto initiativeForUpdate, Author authorInformation, List<? extends Author> authors, List<Location> locations, String previousPageURI) {
         return new ViewGenerator(UPDATE_VIEW,
                 new AttributeBuilder()

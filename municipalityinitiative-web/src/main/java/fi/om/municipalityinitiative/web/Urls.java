@@ -292,6 +292,10 @@ public final class Urls {
 
     public static final String MANAGE_ATTACHMENTS_SV = "/sv/bilagor" + "/";
 
+    public static final String MANAGE_VIDEOS_FI = "/fi/video" + "/";
+
+    public static final String MANAGE_VIDEOS_SV = "/sv/video" + "/";
+
     public static final String INVITATION_FI = "/fi/kutsu" + "/" + ID_PARAMETER;
 
     public static final String INVITATION_SV = "/sv/inbjudan" + "/" + ID_PARAMETER;

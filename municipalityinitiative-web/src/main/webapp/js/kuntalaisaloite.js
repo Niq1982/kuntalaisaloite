@@ -2632,6 +2632,69 @@ function findLocation(locations, location) {
 
 })();
 
+var	entityMap = {
+	"&": "&amp;",
+	"<": "&lt;",
+	">": "&gt;",
+	'"': '&quot;',
+	"'": '&#39;',
+	"/": '&#x2F;'
+};
+
+var escapeHtml = function (string) {
+	return String(string).replace(/[&<>"'\/]/g, function (s) {
+		  return entityMap[s];
+		});
+};
+
+
+function convertToYoutubeEmbed(a) {
+	var url = null,videoIDPos = -1;
+	var queryParam = a.search;
+	var path = a.pathname;
+	if (queryParam.indexOf("v=") > 0) {
+		videoIDPos = queryParam.indexOf("v=") + 2;
+		var endOfID = queryParam.indexOf("&");
+		if (endOfID < 0 ) {
+			url = ["https://www.youtube.com/embed/", escapeHtml(queryParam.substring(videoIDPos))].join('');
+		} else if (videoIDPos < endOfID) {
+			url = ["https://www.youtube.com/embed/",  escapeHtml(queryParam.substring(videoIDPos, endOfID))].join('');
+		}
+
+	} else if(path.indexOf("embed") > 0) {
+		videoIDPos = path.indexOf("embed") + 6;
+		url = ["https://www.youtube.com/embed/", escapeHtml(path.substring(videoIDPos))].join('');
+	}
+	return url;
+}
+
+function validateVideoLink(url){
+
+	var a = $('<a>', { href:url } )[0];
+
+	if (a.hostname === "www.youtube.com") {
+		return convertToYoutubeEmbed(a);
+	}
+	else {
+		return null;
+	}
+}
+
+
+$("#videoUrl").on('input propertychange', function() {
+
+	var url = validateVideoLink($("#videoUrl").val());
+
+	var videoContainer = $("#videoContainer");
+
+	videoContainer.empty();
+	if (url) {
+		videoContainer.append("<iframe src=" + url + " width='760' height='447' />");
+	} else{
+		videoContainer.append("<p>Videolinkki ei osoita Youtube-verkkopalveluun.</p>");
+	}
+});
+
 
 
 
