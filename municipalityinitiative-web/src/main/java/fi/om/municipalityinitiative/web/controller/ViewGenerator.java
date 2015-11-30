@@ -203,14 +203,12 @@ public final class ViewGenerator {
     }
 
 
-    public static ViewGenerator manageVideosView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, AttachmentUtil.Attachments attachments, AttachmentCreateDto attachmentCreateDto, AttachmentUtil.ImageProperties imageProperties) {
+    public static ViewGenerator manageVideosView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, VideoCreateDto videoCreateDto) {
         return new ViewGenerator(MANAGE_VIDEOS_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
                         .add("managementSettings", managementSettings)
-                        .add("attachments", attachments)
-                        .add("attachment", attachmentCreateDto)
-                        .add("imageProperties", imageProperties)
+                        .add("video", videoCreateDto)
                         .build()
         );
     }

@@ -22,6 +22,7 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
+import fi.om.municipalityinitiative.dto.ui.VideoCreateDto;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
@@ -116,6 +117,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     DateTime maybeDecisionModifiedDate = row.get(municipalityInitiative.municipalityDecisionModifiedDate);
                     if(maybeDecisionModifiedDate != null) {
                         info.setDecisionModifiedDate(maybeDecisionModifiedDate);
+                    }
+                    String videoUrl = row.get(municipalityInitiative.videoUrl);
+                    if (videoUrl != null) {
+                        info.setVideoUrl(videoUrl);
+                    }
+                    String videoName = row.get(municipalityInitiative.videoName);
+                    if (videoName != null) {
+                        info.setVideoUrlName(videoName);
                     }
                     return info;
                 }
@@ -608,6 +617,24 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     .groupBy(participant.participateTime)
                     .map(participant.participateTime, participant.participateTime.count());
         }
+    }
+
+    @Override
+    public void addVideoUrl(VideoCreateDto video, Long initiativeId) {
+        queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.videoName, video.getVideoName())
+                .set(municipalityInitiative.videoUrl, video.getVideoUrl())
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute();
+    }
+
+    @Override
+    public void removeVideoUrl(Long initiativeId) {
+        queryFactory.update(municipalityInitiative)
+                .setNull(municipalityInitiative.videoName)
+                .setNull(municipalityInitiative.videoUrl)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute();
     }
 
 

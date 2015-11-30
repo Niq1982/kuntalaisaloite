@@ -48,7 +48,11 @@ public enum RequestMessage {
     ATTACHMENT_INVALID(WARNING),
 
     DECISION_UPDATED(SUCCESS),
-    DECISION_ADDED(SUCCESS);
+    DECISION_ADDED(SUCCESS),
+
+    VIDEO_ADDED(SUCCESS),
+    VIDEO_DELETED(SUCCESS),
+    VIDEO_FAILURE(WARNING);
 
     private final boolean modal;
     

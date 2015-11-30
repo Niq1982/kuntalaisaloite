@@ -257,7 +257,13 @@ public class TestHelper {
             insert.set(municipalityInitiative.supportCountData, initiativeDraft.supporCountData);
         }
 
+        if (initiativeDraft.videoUrl.isPresent()) {
+            insert.set(municipalityInitiative.videoUrl, initiativeDraft.videoUrl.getValue());
+        }
 
+        if (initiativeDraft.videoName.isPresent()) {
+            insert.set(municipalityInitiative.videoName, initiativeDraft.videoName.getValue());
+        }
 
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
@@ -866,6 +872,8 @@ public class TestHelper {
         public DateTime emailReportDateTime;
         public String supporCountData;
         public List<Location> locations = new ArrayList<Location>();
+        private Maybe<String> videoUrl = Maybe.absent();
+        private Maybe<String> videoName = Maybe.absent();
 
 
         public AuthorDraft applyAuthor() {
@@ -964,6 +972,15 @@ public class TestHelper {
             return this;
         }
 
+        public InitiativeDraft withVideoUrl(String url) {
+            this.videoUrl = Maybe.of(url);
+            return this;
+        }
+
+        public InitiativeDraft withVideoName(String videoname) {
+            this.videoName = Maybe.of(videoname);
+            return this;
+        }
     }
     public Long getLastInitiativeId() {
         return lastInitiativeId;

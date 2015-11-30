@@ -19,13 +19,12 @@
 
 	<@u.returnPrevious managementURL "link.to.managementView" />
 	
-	<@u.errorsSummary path="attachment.*" prefix="attachment."/>
+	<@u.errorsSummary path="video.*" prefix="video."/>
     
     <div class="msg-block">
         <div class="system-msg msg-info">
             <h2><@u.message "attachmentManage.title" /></h2>
 			<p><@u.message "attachmentManage.description.1" /></p>
-			<p><@u.message key="attachmentManage.description.2" args=[imageProperties.getMaxFilesizeInKilobytes(), imageProperties.getMaxWidth(), imageProperties.getMaxHeight()] /></p>
 			<p><@u.message "attachmentManage.description.3" /><br/><a href="#"><@u.message "attachmentManage.readMore" /></a></p>
         </div>
     </div>
@@ -35,17 +34,29 @@
 
 
         <h2><@u.message "attachment.add.title" /></h2>
+        <div class="initiative-content-row cf">
 
+            <form id="form-video-url"  action="${urls.getManageVideoUrl(initiative.id)}" method="POST">
+                <@f.securityFilters/>
+                <@spring.bind "video" />
+                <input type="hidden" name="locale" value="${locale}"/>
+                <div class="input-block-content no-top-margin">
+                    <@f.textField cssClass="videoUrl large" required="" optional=false path="video.videoUrl" key="video.videoUrl"/>
+                </div>
+                <div id="videoContainer">
 
-        Videon url:
-        <input type="text" style="width:760px" id="videoUrl"/>
+                </div>
 
-        <div id="videoContainer">
+                <div class="input-block-content">
+                    <@f.textField cssClass="large" required="" optional=false path="video.videoName" key="video.videoName"/>
+                </div>
 
+                <div class="input-block-content no-top-margin">
+                    <button type="submit" name="${UrlConstants.ACTION_ADD_VIDEO}" class="small-button dbl-click-check-no-msg"><span class="small-icon save-and-send"><@u.message "attachment.save" /></span></button>
+                </div>
+
+            </form>
         </div>
-
-
-
         <div class="initiative-content-row cf last">
             <a href="${managementURL}" class="small-button" ><@u.message "attachment.ready" /></a>
 

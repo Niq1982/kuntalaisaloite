@@ -466,6 +466,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public VideoService videoService() {
+        return new VideoService();
+    }
+
+    @Bean
     public SecurityFilter securityFilter() {
         return new SecurityFilter();
     }

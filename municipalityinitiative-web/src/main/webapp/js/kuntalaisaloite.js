@@ -2681,7 +2681,7 @@ function validateVideoLink(url){
 }
 
 
-$("#videoUrl").on('input propertychange', function() {
+$(".videoUrl").on('input propertychange', function() {
 
 	var url = validateVideoLink($("#videoUrl").val());
 
