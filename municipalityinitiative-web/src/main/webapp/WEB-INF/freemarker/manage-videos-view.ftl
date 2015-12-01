@@ -35,40 +35,37 @@
 
         <h2><@u.message "attachment.add.title" /></h2>
 
-        <#assign videoPresent = video.videoUrl?? && video.videoName?? />
-        <#if videoPresent>
+        <#if !managementSettings.isAddVideo()>
             <div>
                 <iframe src="${video.videoUrl}"></iframe>
                 <a href="?deleteAttachment" class="js-delete-attachment delete-attachment trigger-tooltip"
                    title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a>
-                </a>
                 <p>${video.videoName}</p>
             </div>
-        <#else>
-            <div class="initiative-content-row cf">
-
-                <form id="form-video-url"  action="${urls.getManageVideoUrl(initiative.id)}" method="POST">
-                    <@f.securityFilters/>
-                    <@spring.bind "video" />
-                    <input type="hidden" name="locale" value="${locale}"/>
-                    <div class="input-block-content no-top-margin">
-                        <@f.textField cssClass="videoUrl large" required="" optional=false path="video.videoUrl" key="video.videoUrl"/>
-                    </div>
-                    <div id="videoContainer">
-
-                    </div>
-
-                    <div class="input-block-content">
-                        <@f.textField cssClass="large" required="" optional=false path="video.videoName" key="video.videoName"/>
-                    </div>
-
-                    <div class="input-block-content no-top-margin">
-                        <button type="submit" name="${UrlConstants.ACTION_ADD_VIDEO}" class="small-button dbl-click-check-no-msg"><span class="small-icon save-and-send"><@u.message "attachment.save" /></span></button>
-                    </div>
-
-                </form>
-            </div>
         </#if>
+        <div class="initiative-content-row cf">
+
+            <form id="form-video-url"  action="${urls.getManageVideoUrl(initiative.id)}" method="POST">
+                <@f.securityFilters/>
+                <@spring.bind "video" />
+                <input type="hidden" name="locale" value="${locale}"/>
+                <div class="input-block-content no-top-margin">
+                    <@f.textField cssClass="videoUrl large" required="" optional=false path="video.videoUrl" key="video.videoUrl"/>
+                </div>
+                <div id="videoContainer">
+
+                </div>
+
+                <div class="input-block-content">
+                    <@f.textField cssClass="large" required="" optional=false path="video.videoName" key="video.videoName"/>
+                </div>
+
+                <div class="input-block-content no-top-margin">
+                    <button type="submit" name="${UrlConstants.ACTION_ADD_VIDEO}" class="small-button dbl-click-check-no-msg"><span class="small-icon save-and-send"><@u.message "attachment.save" /></span></button>
+                </div>
+
+            </form>
+        </div>
 
 
         <div class="initiative-content-row cf last">

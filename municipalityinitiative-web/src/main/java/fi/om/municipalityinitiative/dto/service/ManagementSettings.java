@@ -74,4 +74,6 @@ public class ManagementSettings {
     public boolean isAllowSendFixToReview() {
         return initiative.getFixState() == FixState.FIX;
     }
+
+    public boolean isAddVideo(){return initiative.getVideoUrl().isNotPresent() && initiative.getVideoUrlName().isNotPresent();}
 }

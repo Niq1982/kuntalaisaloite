@@ -4,6 +4,8 @@ package fi.om.municipalityinitiative.dto.ui;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Pattern;
+
 public class VideoCreateDto {
 
     public VideoCreateDto() {
@@ -20,6 +22,7 @@ public class VideoCreateDto {
     }
 
     @NotEmpty
+    @Pattern(regexp = "^https://www.youtube.com/(watch\\?v=|embed/)([^#&?]*)")
     private String videoUrl;
 
     @NotEmpty
