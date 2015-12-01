@@ -23,9 +23,9 @@
     
     <div class="msg-block">
         <div class="system-msg msg-info">
-            <h2><@u.message "attachmentManage.title" /></h2>
-			<p><@u.message "attachmentManage.description.1" /></p>
-			<p><@u.message "attachmentManage.description.3" /><br/><a href="#"><@u.message "attachmentManage.readMore" /></a></p>
+            <h2>Aloitteen videolinkki</h2>
+			<p>Voit liittää aloitteeseen videon lisäämällä linkin videoon joka sijaitsee Youtube-verkkopalvelussa.</p>
+			<p>Lataa haluamasi video Youtube-verkkopalveluun ja kopio videon linkkio osoiteriviltä Videolinkki -kenttään.</p>
         </div>
     </div>
 
@@ -33,7 +33,7 @@
     <div class="view-block cf">
 
 
-        <h2><@u.message "attachment.add.title" /></h2>
+        <h2>Liitä videolinkki</h2>
 
         <#if !managementSettings.isAddVideo()>
             <div class="delete-video-url">
