@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.exceptions.InvalidVideoUrlException;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class VideoServiceTest extends ServiceIntegrationTestBase{
@@ -23,13 +24,12 @@ public class VideoServiceTest extends ServiceIntegrationTestBase{
 
     @Test
     public void get_youtubevideoid_from_watch_url() throws InvalidVideoUrlException {
-        assertThat(videoService.getYouTubeVideoId(VALID_VIDEO_URL), equals(VIDEO_ID));
+        assertThat(videoService.getYouTubeVideoId(VALID_VIDEO_URL), is(VIDEO_ID));
     }
 
     @Test
     public void get_youtubevideoid_from_embed_url() throws InvalidVideoUrlException {
-        assertThat(videoService.getYouTubeVideoId(VALID_EMBED_VIDEO_URL), equals(VIDEO_ID));
+        assertThat(videoService.getYouTubeVideoId(VALID_EMBED_VIDEO_URL), is(VIDEO_ID));
     }
-
 
 }
