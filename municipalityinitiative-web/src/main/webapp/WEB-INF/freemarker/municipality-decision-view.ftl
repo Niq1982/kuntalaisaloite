@@ -111,7 +111,7 @@
 
     <#assign deleteAattachment>
         <@compress single_line=true>
-            <@e.deleteAattachmentForm />
+            <@deleteAattachmentForm />
         </@compress>
     </#assign>
 
@@ -177,5 +177,35 @@
     </script>
 
 </@l.main>
+
+<#--
+ * deleteAattachmentForm
+ *
+ * Generates a form for deleting attachment
+ *
+ * @param modal is a boolean for selecting either JS- or NOSCRIPT-version
+ *
+-->
+<#macro deleteAattachmentForm modal=true >
+    <#if !modal><#assign attachmentId = RequestParameters['deleteAttachment']?number /></#if>
+
+    <form id="delete-attachment-form" action="<#if !modal>${urls.getManageAttachments(initiative.id)}</#if>" method="POST">
+        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+        <input type="hidden" id="attachmentId" name="${UrlConstants.PARAM_ATTACHMENT_ID}" value="<#if !modal>${RequestParameters['deleteAttachment']}</#if>"/>
+
+        <#if modal>
+            <div id="selected-attachment" class="details"></div>
+            <br/>
+        <#else>
+            <@attachmentDetailsById RequestParameters['deleteAttachment'] />
+        </#if>
+
+        <div class="input-block-content">
+            <button type="submit" name="${UrlConstants.ACTION_DELETE_ATTACHMENT}" class="small-button"><span class="small-icon cancel"><@u.message "deleteAttachment.btn" /></button>
+            <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+        </div>
+    </form>
+</#macro>
+
 
 </#escape>

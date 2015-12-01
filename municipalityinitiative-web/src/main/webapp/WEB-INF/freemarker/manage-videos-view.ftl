@@ -36,9 +36,9 @@
         <h2><@u.message "attachment.add.title" /></h2>
 
         <#if !managementSettings.isAddVideo()>
-            <div>
+            <div class="delete-video-url">
                 <iframe src="${video.videoUrl}"></iframe>
-                <a href="?deleteAttachment" class="js-delete-attachment delete-attachment trigger-tooltip"
+                <a href="?deleteVideoForm" class="js-delete-video delete-video trigger-tooltip"
                    title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a>
                 <p>${video.videoName}</p>
             </div>
@@ -80,9 +80,9 @@
     <@u.returnPrevious managementURL "link.to.managementView" />
     
     <#-- HTML for confirm delete Modal -->
-    <#assign deleteAattachment>
+    <#assign deleteVideo>
         <@compress single_line=true>
-            <@e.deleteAattachmentForm />
+            <@deleteVideoForm />
         </@compress>
     </#assign>
     
@@ -116,10 +116,10 @@
         </#if>
         
         <#-- Modal: Confirm remove attachment -->   
-        modalData.deleteAttachment = function() {
+        modalData.deleteVideoForm = function() {
             return [{
                 title:      '<@u.message "deleteAttachment.confirm.title" />',
-                content:    '<#noescape>${deleteAattachment?replace("'","&#39;")}</#noescape>'
+                content:    '<#noescape>${deleteVideo?replace("'","&#39;")}</#noescape>'
             }]
         };
 
@@ -136,27 +136,24 @@
 
 </@l.main>
 
-<#-- 
- * attachmentDetailsById
- *
- * Prints attachment's details by id
- *
- * @param list is attachments object list
- * @param id is attachment's id
--->
-<#macro attachmentDetailsById id municipality=false>
-    <#list attachments.images as attachment>
-        <#if attachment.attachmentId?string == id>
-            <h4 class="header">${attachment.description}</h4>
-            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId, municipality)}" alt="${attachment.description}" />
+<#macro deleteVideoForm modal=true >
+    <#if !modal><#assign attachmentId = RequestParameters['deleteVideoForm']?number /></#if>
+
+    <form id="delete-attachment-form" action="<#if !modal>${urls.getManageAttachments(initiative.id)}</#if>" method="POST">
+        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+
+        <#if modal>
+            <div id="selected-attachment" class="details"></div>
+            <br/>
+        <#else>
+            <@attachmentDetailsById RequestParameters['deleteVideoForm'] />
         </#if>
-    </#list>
-    
-    <#list attachments.pdfs as attachment>
-        <#if attachment.attachmentId?string == id>
-            <p class="pdf-attachment"><@u.fileIcon type="pdf" /> <span class="pdf-label">${attachment.description}</span></p>            
-        </#if>
-    </#list>
+
+        <div class="input-block-content">
+            <button type="submit" name="${UrlConstants.ACTION_REMOVE_VIDEO}" class="small-button"><span class="small-icon cancel"><@u.message "deleteAttachment.btn" /></button>
+            <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+        </div>
+    </form>
 </#macro>
 
 

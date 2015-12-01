@@ -1427,6 +1427,21 @@ $('.municipality-filter').change( function() {
     }
   });
 
+ $('.js-delete-video').click(function(e) {
+
+	 e.preventDefault();
+	 $('.js-delete-video.active').removeClass('active');
+	 $(this).addClass('active');
+
+	 try {
+		 generateModal(modalData.deleteVideoForm(), 'full');
+		 return false;
+	 } catch(e) {
+		 console.log(e);
+	 }
+
+ });
+
 
 /**
  *
@@ -1673,6 +1688,7 @@ var deleteAttachment = (function() {
   };
 
 }());
+
 
 /**
 * Renew author management hash
