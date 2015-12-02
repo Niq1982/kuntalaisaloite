@@ -45,6 +45,8 @@ public class MunicipalityDecisionWebTest  extends WebTestBase {
         open(urls.view(verifiedInitiativeId));
         WebElement element = getElement(By.tagName("h2"));
         assertThat(element.getText(), containsString(MUNICIPALITY_ANSWER));
+
+        assertTotalEmailsInQueue(1);
     }
 
     @Test
@@ -58,6 +60,8 @@ public class MunicipalityDecisionWebTest  extends WebTestBase {
         open(urls.view(verifiedInitiativeId));
         WebElement element = getElement(By.tagName("h2"));
         assertThat(element.getText(), not(MUNICIPALITY_ANSWER));
+
+        assertTotalEmailsInQueue(0);
 
     }
 
