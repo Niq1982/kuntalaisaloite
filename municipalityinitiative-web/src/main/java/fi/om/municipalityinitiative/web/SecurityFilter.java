@@ -7,6 +7,8 @@ import fi.om.municipalityinitiative.exceptions.CookiesRequiredException;
 import fi.om.municipalityinitiative.exceptions.VerifiedLoginRequiredException;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.util.UrlHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.util.NestedServletException;
 import org.springframework.web.util.WebUtils;
 
@@ -26,6 +28,8 @@ public class SecurityFilter implements Filter {
     private static final String COOKIE_ERROR = "cookieError";
     public static final String UNWANTED_HIDDEN_EMAIL_FIELD = "email";
 
+    protected final Logger log = LoggerFactory.getLogger(SecurityFilter.class);
+
     private UrlHelper urlPathHelper = new UrlHelper();
 
     @Resource
@@ -34,7 +38,7 @@ public class SecurityFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
-    
+
 
     public static void setNoCache(HttpServletResponse response) {
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
@@ -47,6 +51,8 @@ public class SecurityFilter implements Filter {
                          FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        log.info("REQ: " + request.getRequestURI() + "?" + request.getQueryString());
 
         setNoCache(response);
 
@@ -149,6 +155,8 @@ public class SecurityFilter implements Filter {
         if (IS_POST(request)) {
             String requestToken = request.getParameter(CSRF_TOKEN_NAME);
             if (requestToken == null || !requestToken.equals(sessionToken)) {
+                System.out.println(cookieToken + " = " + sessionToken);
+                System.out.println(cookieToken.length() + "=" + sessionToken.length());
                 throw new CSRFException("CSRFToken -request parameter missing or doesn't match session");
             }
         }

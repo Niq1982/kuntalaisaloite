@@ -6,15 +6,20 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CacheHeaderFilter implements Filter {
     
     private final int expiresMinutes; 
     private final boolean resourceFilter;
     private final boolean optimizeResources;
+
+    protected final Logger log = LoggerFactory.getLogger(CacheHeaderFilter.class);
     
     public CacheHeaderFilter(boolean optimizeResources) {
         this.optimizeResources = optimizeResources;
@@ -57,7 +62,9 @@ public class CacheHeaderFilter implements Filter {
             FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        
+
+        log.info("REQ: " + request.getRequestURI() + "?" + request.getQueryString());
+
         if (request.getRequestURI().endsWith(".eot")) {
             response.setHeader("content-type", "font/eot");
         }
