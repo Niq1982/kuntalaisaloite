@@ -426,7 +426,8 @@ public class AppConfiguration {
                 String.valueOf(env.getRequiredProperty(PropertyNames.googleMapsApiKey)),
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.googleMapsEnabled)),
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.superSearchEnabled)),
-                Boolean.valueOf(env.getProperty(PropertyNames.videoEnabled)));
+                Boolean.valueOf(env.getProperty(PropertyNames.videoEnabled)),
+                Boolean.valueOf(env.getProperty(PropertyNames.followEnabled)));
     }
 
     @Bean

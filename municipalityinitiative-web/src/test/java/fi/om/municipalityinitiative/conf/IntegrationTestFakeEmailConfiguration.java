@@ -23,6 +23,8 @@ public class IntegrationTestFakeEmailConfiguration {
 
     private boolean videoEnabled = false;
 
+    private boolean followEnabled = false;
+
     @Bean
     public EnvironmentSettings environmentSettings() {
         return new EnvironmentSettings(EMAIL_DEFAULT_REPLY_TO,
@@ -36,7 +38,8 @@ public class IntegrationTestFakeEmailConfiguration {
                 googleMapsApiKey,
                 googleMapsEnabled,
                 superSearchEnabled,
-                videoEnabled);
+                videoEnabled,
+                followEnabled);
     }
 
     @Bean

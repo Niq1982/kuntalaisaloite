@@ -93,4 +93,6 @@ public final class PropertyNames {
 
     public static final String videoEnabled = "video.enabled";
 
+    public static final String followEnabled = "follow.enabled";
+
 }
