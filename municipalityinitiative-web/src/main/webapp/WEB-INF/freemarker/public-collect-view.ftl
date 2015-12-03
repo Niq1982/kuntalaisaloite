@@ -243,7 +243,7 @@
                     </noscript>
                 </#if>
             </#if>
-            <#assign canFollow = ( initiative.state == InitiativeState.PUBLISHED && !initiative.sentTime.present && followEnabled) />
+            <#assign canFollow = ( initiative.state == InitiativeState.PUBLISHED && !initiative.decisionDate.present && followEnabled) />
             <#assign showFollowForm = canFollow && (RequestParameters['formError']?? && RequestParameters['formError'] == "follow") />
             <#if canFollow>
                 <@e.follow />
