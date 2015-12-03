@@ -265,6 +265,10 @@ public class TestHelper {
             insert.set(municipalityInitiative.videoName, initiativeDraft.videoName.getValue());
         }
 
+        if (initiativeDraft.decisionDate.isPresent()) {
+            insert.set(municipalityInitiative.municipalityDecisionDate, initiativeDraft.decisionDate.getValue());
+        }
+
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
         if (initiativeDraft.locations.size() > 0  ) {
@@ -874,6 +878,7 @@ public class TestHelper {
         public List<Location> locations = new ArrayList<Location>();
         private Maybe<String> videoUrl = Maybe.absent();
         private Maybe<String> videoName = Maybe.absent();
+        private Maybe<DateTime> decisionDate = Maybe.absent();
 
 
         public AuthorDraft applyAuthor() {
@@ -979,6 +984,11 @@ public class TestHelper {
 
         public InitiativeDraft withVideoName(String videoname) {
             this.videoName = Maybe.of(videoname);
+            return this;
+        }
+
+        public InitiativeDraft withDecisionDate(DateTime dateTime){
+            this.decisionDate = Maybe.of(dateTime);
             return this;
         }
     }

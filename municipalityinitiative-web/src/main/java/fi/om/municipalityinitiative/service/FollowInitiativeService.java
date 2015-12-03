@@ -3,7 +3,11 @@ package fi.om.municipalityinitiative.service;
 
 import com.mysema.query.QueryException;
 import fi.om.municipalityinitiative.dao.FollowInitiativeDao;
+import fi.om.municipalityinitiative.dao.InitiativeDao;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.service.email.EmailService;
+import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +22,15 @@ public class FollowInitiativeService {
     @Resource
     private EmailService emailService;
 
+    @Resource
+    InitiativeDao initiativeDao;
+
     @Transactional(readOnly = false)
     public void followInitiative(Long initiativeId, String email ) {
-
+        Initiative initiative = initiativeDao.get(initiativeId);
+        if (initiative.getDecisionDate().isPresent() || !initiative.getState().equals(InitiativeState.PUBLISHED)) {
+            throw new AccessDeniedException("Can't follow initiative.");
+        }
         String hash = RandomHashGenerator.longHash();
         try {
             followInitiativeDao.addFollow(initiativeId, email, hash);
