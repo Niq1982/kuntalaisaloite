@@ -155,7 +155,6 @@ public class InitiativeManagementController extends BaseController {
 
         return ViewGenerator.manageVideosView(initiativeInfo,
                 normalInitiativeService.getManagementSettings(initiativeId),
-                new VideoCreateDto(initiativeInfo.getVideoUrl(), initiativeInfo.getVideoName()),
                 new VideoCreateDto())
                 .view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
@@ -175,8 +174,7 @@ public class InitiativeManagementController extends BaseController {
         if (!validationService.validationSuccessful(video, bindingResult, model)) {
             return ViewGenerator.manageVideosView(initiativeInfo,
                     normalInitiativeService.getManagementSettings(initiativeId),
-                    video,
-                    new VideoCreateDto())
+                    video)
                     .view(model, Urls.get(locale).alt().getManagement(initiativeId));
         }
 

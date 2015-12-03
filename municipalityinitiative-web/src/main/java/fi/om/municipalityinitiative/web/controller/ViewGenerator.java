@@ -203,13 +203,12 @@ public final class ViewGenerator {
     }
 
 
-    public static ViewGenerator manageVideosView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, VideoCreateDto video, VideoCreateDto videoCreateDto) {
+    public static ViewGenerator manageVideosView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, VideoCreateDto videoCreateDto) {
         return new ViewGenerator(MANAGE_VIDEOS_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
                         .add("managementSettings", managementSettings)
-                        .add("video", video)
-                        .add("videoCreate", videoCreateDto)
+                        .add("video", videoCreateDto)
                         .build()
         );
     }

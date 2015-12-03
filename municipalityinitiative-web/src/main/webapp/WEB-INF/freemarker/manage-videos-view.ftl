@@ -35,30 +35,30 @@
 
         <h2>Liitä videolinkki</h2>
 
-        <#if video.videoUrl?? && video.videoName??>
+        <#if initiative.videoUrl.isPresent() && initiative.videoName.isPresent()>
             <div>
-                <p>${video.videoUrl}</p>
-                <iframe src="${video.videoUrl}"></iframe>
+                <p>${initiative.videoUrl.value}</p>
+                <iframe src="${initiative.videoUrl.value}"></iframe>
                 <a href="?deleteVideoForm" class="js-delete-video delete-video trigger-tooltip"
                    title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a>
-                <p>${video.videoName}</p>
+                <p>${initiative.videoName.value}</p>
             </div>
         </#if>
         <div class="initiative-content-row cf">
 
             <form id="form-video-url"  action="${urls.getManageVideoUrl(initiative.id)}" method="POST">
                 <@f.securityFilters/>
-                <@spring.bind "videoCreate" />
+                <@spring.bind "video" />
                 <input type="hidden" name="locale" value="${locale}"/>
                 <div class="input-block-content no-top-margin">
-                    <@f.textField cssClass="videoUrl large" required="" optional=false path="videoCreate.videoUrl" key="video.videoUrl"/>
+                    <@f.textField cssClass="videoUrl large" required="" optional=false path="video.videoUrl" key="video.videoUrl"/>
                 </div>
                 <div id="videoContainer">
 
                 </div>
 
                 <div class="input-block-content">
-                    <@f.textField cssClass="large" required="" optional=false path="videoCreate.videoName" key="video.videoName"/>
+                    <@f.textField cssClass="large" required="" optional=false path="video.videoName" key="video.videoName"/>
                 </div>
 
                 <div class="input-block-content no-top-margin">
