@@ -8,7 +8,7 @@
 
 <#escape x as x?html>
 
-    <#assign title><@u.message "email.initiative" /></#assign>
+    <#assign title><@u.message "email.follow.sent.to.municipality" /></#assign>
 
     <@l.emailHtml title=title footer=false>
 

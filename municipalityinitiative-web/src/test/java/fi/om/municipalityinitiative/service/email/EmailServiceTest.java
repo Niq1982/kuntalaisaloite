@@ -261,6 +261,25 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     }
 
     @Test
+    public void send_confirm_to_followers_contains_all_information() {
+        String removeHash = testHelper.addFollower(initiativeId(), FOLLOWEREMAIL);
+
+        emailService.sendConfirmToFollower(initiativeId(), FOLLOWEREMAIL, removeHash);
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getSubject(), is("Kuntalaisaloite: " + INITIATIVE_NAME));
+
+        assertThat(email.getRecipientsAsString(), containsString(FOLLOWEREMAIL));
+        assertThat(email.getBodyHtml(), containsString(removeHash));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getBodyHtml(), containsString("Olet tilannut aloitteen sähköpositiedotteet"));
+        assertThat(email.getBodyHtml(), containsString("Saat sähköpostitiedotteen kun aloitteen vastuuhenkilö lähettää aloitteen kuntaan tai kunta julkaisee vastauksen palvelussa"));
+
+    }
+
+    @Test
     public void collaborative_to_municipality_to_followers() throws Exception{
 
         String removeHash = testHelper.addFollower(initiativeId(), FOLLOWEREMAIL);

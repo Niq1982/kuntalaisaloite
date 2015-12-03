@@ -3,7 +3,7 @@
 
 <#assign type="text" />
 
-<@u.message "email.follow.sent.to.municipality" />
+<@u.message "email.followConfirm.title" />
 
 "${initiative.name!""}"
 ${initiative.municipality.getLocalizedName(switchLocale!locale)!""}
@@ -11,19 +11,14 @@ ${initiative.municipality.getLocalizedName(switchLocale!locale)!""}
 
 <@b.separator />
 
-<@b.attachments type/>
-
-<@b.separator />
-
-<@u.message key="email.participantCount.total" /> ${initiative.participantCount!"0"}
+<@b.contentBlock type>
+<@u.message "email.followConfirm" />
+<@u.messageHTML key="email.followConfirm.text" />
+</@b.contentBlock>
 
 <@b.separator />
 
 <@b.contentBlock type>
-    ${urls.unsubscribe(initiativeId, removeHash)}
+${urls.unsubscribe(initiativeId, removeHash)}
 </@b.contentBlock>
 
-
-<@b.separator />
-
-<@b.emailFooter type ".sentToMunicipality" />

@@ -41,6 +41,7 @@ public class EmailService {
     private static final String INITIATIVE_QUARTER_REPORT = "report-quarter";
     private static final String MUNICIPALITY_DECISION = "municipality-decision";
     private static final String MUNICIPALITY_COLLABORATIVE_FOLLOWERS = "municipality-collaborative-followers";
+    private static final String FOLLOWERS_CONFIRM = "follow-confirmed";
 
     @Resource
     EmailServiceDataProvider dataProvider;
@@ -210,6 +211,23 @@ public class EmailService {
 
         emailMessageConstructor
                 .fromTemplate(initiativeId, MUNICIPALITY_COLLABORATIVE_FOLLOWERS)
+                .addRecipient(recipient)
+                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
+                .withDataMap(dataMap)
+                .send();
+    }
+
+    public void sendConfirmToFollower(Long initiativeId, String recipient, String hash) {
+        Locale locale = Locales.LOCALE_FI;
+
+        Initiative initiative = dataProvider.get(initiativeId);
+
+        Map<String, Object> dataMap = toDataMap(initiative, locale);
+        dataMap.put("initiativeId", initiativeId);
+        dataMap.put("removeHash", hash);
+
+        emailMessageConstructor
+                .fromTemplate(initiativeId, FOLLOWERS_CONFIRM)
                 .addRecipient(recipient)
                 .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
                 .withDataMap(dataMap)
