@@ -22,7 +22,6 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
-import fi.om.municipalityinitiative.dto.ui.VideoCreateDto;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
@@ -620,10 +619,10 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public void addVideoUrl(VideoCreateDto video, Long initiativeId) {
+    public void addVideoUrl(String url, String name, Long initiativeId) {
         queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.videoName, video.getVideoName())
-                .set(municipalityInitiative.videoUrl, video.getVideoUrl())
+                .set(municipalityInitiative.videoName, name)
+                .set(municipalityInitiative.videoUrl, url)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute();
     }

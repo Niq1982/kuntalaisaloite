@@ -7,7 +7,6 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.dto.ui.VideoCreateDto;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
@@ -1081,7 +1080,7 @@ public class JdbcInitiativeDaoTest {
         Long withVideo = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
 
 
-        initiativeDao.addVideoUrl(new VideoCreateDto(Maybe.of(VIDEO_URL), Maybe.of(VIDEONAME)), withVideo);
+        initiativeDao.addVideoUrl(VIDEO_URL, VIDEONAME, withVideo);
 
         Initiative initiative = initiativeDao.get(withVideo);
         assertThat(initiative.getVideoUrl().isPresent(), is(true));
@@ -1094,7 +1093,7 @@ public class JdbcInitiativeDaoTest {
     public void can_remove_video_to_initiative() {
         Long withVideo = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
 
-        initiativeDao.addVideoUrl(new VideoCreateDto(Maybe.of(VIDEO_URL), Maybe.of(VIDEONAME)), withVideo);
+        initiativeDao.addVideoUrl(VIDEO_URL, VIDEONAME, withVideo);
 
         initiativeDao.removeVideoUrl(withVideo);
 

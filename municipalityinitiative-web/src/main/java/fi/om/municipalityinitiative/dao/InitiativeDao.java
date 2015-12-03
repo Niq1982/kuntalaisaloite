@@ -6,7 +6,6 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
-import fi.om.municipalityinitiative.dto.ui.VideoCreateDto;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.FixState;
@@ -77,7 +76,7 @@ public interface InitiativeDao {
 
     Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay);
 
-    void addVideoUrl(VideoCreateDto video, Long initiativeId);
+    void addVideoUrl(String url, String name, Long initiativeId);
 
     void removeVideoUrl(Long initiativeId);
 }

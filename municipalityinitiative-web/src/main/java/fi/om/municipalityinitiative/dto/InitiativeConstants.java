@@ -12,4 +12,5 @@ public class InitiativeConstants {
     public static final int AUTHOR_MESSAGE_MAX = 2048;
     public static final int ATTACHMENT_DESCRIPTION_MAX = 100;
     public static final int MUNICIPALITY_DECISION_MAX = 2000;
+    public static final int VIDEO_MAX_LENGTH = 100;
 }

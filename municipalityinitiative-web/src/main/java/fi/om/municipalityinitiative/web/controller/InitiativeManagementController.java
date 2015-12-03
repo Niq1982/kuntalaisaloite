@@ -31,6 +31,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Locale;
 
@@ -180,6 +181,9 @@ public class InitiativeManagementController extends BaseController {
         try {
             videoService.addVideoUrl(video, initiativeId);
         } catch (InvalidVideoUrlException e) {
+            e.printStackTrace();
+            return redirectWithMessage(Urls.get(locale).getManageVideoUrl(initiativeId), RequestMessage.VIDEO_FAILURE, request);
+        } catch (MalformedURLException e) {
             e.printStackTrace();
             return redirectWithMessage(Urls.get(locale).getManageVideoUrl(initiativeId), RequestMessage.VIDEO_FAILURE, request);
         }
