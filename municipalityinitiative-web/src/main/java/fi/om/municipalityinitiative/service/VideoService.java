@@ -4,6 +4,9 @@ import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.ui.VideoCreateDto;
 import fi.om.municipalityinitiative.exceptions.InvalidVideoUrlException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import javax.annotation.Resource;
 import java.net.MalformedURLException;
@@ -22,8 +25,16 @@ public class VideoService {
     private static final String YOUTUBE_BASE_URL = "//www.youtube.com/embed/";
     private static final String VIMEO_BASE_URL = "//player.vimeo.com/video/";
 
+
+    public static final String VIDEO_REGEX = "^https://((www.youtube.com/(watch\\?v=|embed/)([^#&?]*))|(vimeo.com/([^#&?]*)))";
+
     @Resource
     InitiativeDao initiativeDao;
+
+    @Resource
+    private ValidationService validationService;
+
+
 
 
     @Transactional
@@ -64,4 +75,11 @@ public class VideoService {
         throw new InvalidVideoUrlException();
     }
 
+    public boolean validationSuccessful(VideoCreateDto video, BindingResult bindingResult, Model model) {
+        if (!video.getVideoUrl().matches(VIDEO_REGEX)) {
+            bindingResult.addError(new FieldError("video", "videoUrl", video.getVideoUrl(), false, new String[]{"invalidUrl"}, new String[]{"invalidUrl"}, ""));
+        }
+        return validationService.validationSuccessful(video, bindingResult, model);
+
+    }
 }

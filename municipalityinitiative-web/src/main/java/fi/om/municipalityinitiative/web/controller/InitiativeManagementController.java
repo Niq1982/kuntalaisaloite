@@ -171,7 +171,7 @@ public class InitiativeManagementController extends BaseController {
         if (initiativeInfo.isSent()) {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
         }
-        if (!validationService.validationSuccessful(video, bindingResult, model)) {
+        if (!videoService.validationSuccessful(video, bindingResult, model)) {
             return ViewGenerator.manageVideosView(initiativeInfo,
                     normalInitiativeService.getManagementSettings(initiativeId),
                     video)

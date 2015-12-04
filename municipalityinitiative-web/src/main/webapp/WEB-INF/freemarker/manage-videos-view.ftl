@@ -23,9 +23,9 @@
     
     <div class="msg-block">
         <div class="system-msg msg-info">
-            <h2>Aloitteen videolinkki</h2>
-			<p>Voit liittää aloitteeseen videon lisäämällä linkin videoon joka sijaitsee Youtube-verkkopalvelussa.</p>
-			<p>Lataa haluamasi video Youtube-verkkopalveluun ja kopio videon linkkio osoiteriviltä Videolinkki -kenttään.</p>
+            <h2><@u.message "video.videoUrl" /></h2>
+			<p><@u.message "video.instruction.1"/></p>
+			<p><@u.message "video.instruction.2"/></p>
         </div>
     </div>
 
@@ -33,7 +33,7 @@
     <div class="view-block cf">
 
 
-        <h2>Liitä videolinkki</h2>
+        <h2><@u.message "video.attachVideoLink"/></h2>
 
         <#if initiative.videoUrl.isPresent() && initiative.videoName.isPresent()>
             <@e.video manage=true />

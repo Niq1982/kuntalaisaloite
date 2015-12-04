@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class VideoCreateDto {
@@ -25,7 +24,6 @@ public class VideoCreateDto {
 
     @NotEmpty
     @Size(max = InitiativeConstants.VIDEO_MAX_LENGTH)
-    @Pattern(regexp = "^https://((www.youtube.com/(watch\\?v=|embed/)([^#&?]*))|(vimeo.com/([^#&?]*)))")
     private String videoUrl;
 
     @NotEmpty
