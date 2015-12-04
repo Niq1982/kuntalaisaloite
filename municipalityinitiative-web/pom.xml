@@ -570,7 +570,7 @@
                         <id>iframe-minify</id>
                         <phase>process-resources</phase>
                         <configuration>
-                            <webappTargetDir>${basedir}/src/main/webapp</webappTargetDir>
+                            <webappTargetDir>target/tmp</webappTargetDir>
                             <cssSourceDir>css</cssSourceDir>
                             <cssSourceFiles>
                                 <cssSourceFile>normalize.css</cssSourceFile>
@@ -586,7 +586,7 @@
                         <id>graph-iframe-minify</id>
                         <phase>process-resources</phase>
                         <configuration>
-                            <webappTargetDir>${basedir}/src/main/webapp</webappTargetDir>
+                            <webappTargetDir>target/tmp</webappTargetDir>
                             <cssSourceDir>css</cssSourceDir>
                             <cssSourceFiles>
                                 <cssSourceFile>normalize.css</cssSourceFile>
