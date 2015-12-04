@@ -26,7 +26,7 @@
                 <span class="switch-view"><a href="${urls.participantList(initiative.id)}"><@u.message key="participantList.title" /> &bull; ${participantCount.publicNames!""} <@u.message key="participantList.title.count" /></a></span>
             </h2>
 
-            <p>Siirry päivittämään muualla kerättyjen osallistujien lukumäärää <a href="${urls.update(initiative.id)}#form-initiative">tästä.</a></p>
+            <p><@u.message "participantList.goToUpdate"/><a href="${urls.update(initiative.id)}#form-initiative"><@u.message "participantList.here"/></a></p>
 
             <#if initiative.verifiable>
                 <#assign secureCount = 0/>
