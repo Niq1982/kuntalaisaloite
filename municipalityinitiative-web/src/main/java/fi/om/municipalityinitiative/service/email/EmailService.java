@@ -40,6 +40,7 @@ public class EmailService {
     private static final String INITIATIVE_ACCEPTED_BUT_NOT_PUBLISHED = "report-accepted-but-not-published";
     private static final String INITIATIVE_QUARTER_REPORT = "report-quarter";
     private static final String MUNICIPALITY_DECISION = "municipality-decision";
+    private static final String MUNICIPALITY_DECISION_TO_FOLLOWERS = "municipality-decision-followers";
     private static final String MUNICIPALITY_COLLABORATIVE_FOLLOWERS = "municipality-collaborative-followers";
     private static final String FOLLOWERS_CONFIRM = "follow-confirmed";
 
@@ -193,12 +194,12 @@ public class EmailService {
 
         for (Map.Entry<String, String> entry : dataProvider.getFollowers(initiativeId).entrySet())
         {
-            emailToFollower(initiativeId, entry.getKey(), entry.getValue());
+            sentToMunicipalityToFollower(initiativeId, entry.getKey(), entry.getValue());
         }
 
     }
 
-    private void emailToFollower(Long initiativeId, String recipient, String hash) {
+    private void sentToMunicipalityToFollower(Long initiativeId, String recipient, String hash) {
         Locale locale = Locales.LOCALE_FI;
 
         Initiative initiative = dataProvider.get(initiativeId);
@@ -386,6 +387,27 @@ public class EmailService {
                 .send();
     }
 
+    public void sendMunicipalityDecisionToFollowers(Long initiativeId) {
+        for (Map.Entry<String, String> entry : dataProvider.getFollowers(initiativeId).entrySet())
+        {
+            decisionToFollowers(initiativeId, entry.getKey(), entry.getValue());
+        }
+
+    }
+    private void decisionToFollowers(Long initiativeId, String email, String hash) {
+        Locale locale = new Locale("fi");
+
+        HashMap<String, Object> dataMap = toDataMap(dataProvider.get(initiativeId), locale);
+        dataMap.put("removeHash", hash);
+        dataMap.put("initiativeId", initiativeId);
+        emailMessageConstructor
+                .fromTemplate(initiativeId, MUNICIPALITY_DECISION_TO_FOLLOWERS)
+                .addRecipient(email)
+                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_ANSWERED_SUBJECT, toArray(), locale))
+                .withDataMap(dataMap)
+                .send();
+    }
+
     private String solveMunicipalityEmail(Initiative initiative) {
         if (environmentSettings.isTestSendMunicipalityEmailsToAuthor()) {
             String alternativeEmail = dataProvider.findAuthors(initiative.getId()).get(0).getContactInfo().getEmail();
@@ -431,7 +453,6 @@ public class EmailService {
         }
         dataMap.put(enumType.getSimpleName(), values);
     }
-
 
 
     public static class EmailLocalizationProvider {

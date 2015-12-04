@@ -73,6 +73,7 @@ public class MunicipalityDecisionService {
         } else {
             initiativeDao.createInitiativeDecision(initiativeId, decision.getDescription());
             emailService.sendMunicipalityDecisionToAuthors(initiativeId, locale);
+            emailService.sendMunicipalityDecisionToFollowers(initiativeId);
         }
 
     }

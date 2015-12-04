@@ -197,13 +197,32 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         EmailDto email = testHelper.getSingleQueuedEmail();
 
-        assertThat(email.getSubject(), containsString("Kunta on vastannut aloitteeseesi"));
+        assertThat(email.getSubject(), containsString("Kunta on vastannut aloitteeseen"));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
         assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
         assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
 
     }
+
+    @Test
+    public void municipality_answers_to_followers_contains_all_information() {
+
+        String removeHash = testHelper.addFollower(initiativeId(), FOLLOWEREMAIL);
+
+        emailService.sendMunicipalityDecisionToFollowers(initiativeId());
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getSubject(), containsString("Kunta on vastannut aloitteeseen"));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
+        assertThat(email.getRecipientsAsString(), is(FOLLOWEREMAIL));
+        assertThat(email.getBodyHtml(), containsString(removeHash));
+
+    }
+
 
     @Test
     public void collaborative_to_municipality_contains_all_information() throws Exception {
