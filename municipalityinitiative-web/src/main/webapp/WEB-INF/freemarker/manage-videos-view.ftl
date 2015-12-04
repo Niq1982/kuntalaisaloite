@@ -36,13 +36,7 @@
         <h2>Liitä videolinkki</h2>
 
         <#if initiative.videoUrl.isPresent() && initiative.videoName.isPresent()>
-            <div>
-                <p>${initiative.videoUrl.value}</p>
-                <iframe src="${initiative.videoUrl.value}"></iframe>
-                <a href="?deleteVideoForm" class="js-delete-video delete-video trigger-tooltip"
-                   title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a>
-                <p>${initiative.videoName.value}</p>
-            </div>
+            <@e.video manage=true />
         </#if>
         <div class="initiative-content-row cf">
 

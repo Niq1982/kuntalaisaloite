@@ -34,7 +34,7 @@ public class VideoService {
         switch (url.getHost()) {
 
             case YOUTUBE:
-                initiativeDao.addVideoUrl(YOUTUBE_BASE_URL + htmlEscape(getYouTubeVideoId(url.getPath())), video.getVideoName(), initiativeId);
+                initiativeDao.addVideoUrl(YOUTUBE_BASE_URL + htmlEscape(getYouTubeVideoId(url.toString())), video.getVideoName(), initiativeId);
                 break;
 
             case VIMEO:

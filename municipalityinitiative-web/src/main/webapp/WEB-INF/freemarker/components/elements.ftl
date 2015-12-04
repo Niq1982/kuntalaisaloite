@@ -56,6 +56,10 @@
  * @param initiative is initiative
 -->
 <#macro initiativeView initiative>
+    <#assign pageIsConfirmParticipation = currentRequestUri?ends_with("show-participate")/>
+    <#assign showMap = locations?? && locations?size gt 0 && !pageIsConfirmParticipation && googleMapsEnabled />
+    <#assign showVideo = (initiative.videoUrl.isPresent() && initiative.videoName.isPresent()) && videoEnabled/>
+
     <h2><@u.message "initiative.proposal.title" /></h2>
 
     <div class="initiative-content-row ${((initiative.extraInfo)?has_content)?string("","last")}">
@@ -66,15 +70,21 @@
     	<@e.attachmentsView attachments />
     </#if>
 
-    <#if (initiative.extraInfo)?has_content>
+    <#if showVideo>
+        <@video />
+    </#if>
+
+    <#if (initiative.extraInfo)?has_content || showMap>
         <h2><@u.message "initiative.extraInfo.title" /></h2>
+    </#if>
+
+    <#if (initiative.extraInfo)?has_content>
         <div class="initiative-content-row last replace-links">
             <@u.text initiative.extraInfo!"" />
         </div>
     </#if>
 
-    <#assign pageIsConfirmParticipation = currentRequestUri?ends_with("show-participate")/>
-    <#if locations?? && locations?size gt 0 && !pageIsConfirmParticipation && googleMapsEnabled>
+    <#if showMap>
         <@map locations />
     </#if>
 
@@ -113,6 +123,9 @@
  * @param initiative is initiative
 -->
 <#macro initiativeViewManage initiative>
+    <#assign showMap = locations?? && locations?size gt 0 && googleMapsEnabled />
+    <#assign showVideo = (initiative.videoUrl.isPresent() && initiative.videoName.isPresent()) && videoEnabled/>
+
     <h2><@u.message "initiative.proposal.title" /></h2>
 
     <div class="initiative-content-row ${((initiative.extraInfo)?has_content)?string("","last")}">
@@ -127,20 +140,26 @@
 		</div>
     </#if>
 
-    <#if managementSettings.allowAddAttachments && videoEnabled>
+    <#if showVideo>
+        <@video />
+    </#if>
+    <#if managementSettings.allowAddVideo && videoEnabled>
     	<div class="initiative-content-row">
     		<a href="${urls.getManageVideoUrl(initiative.id)}" class="small-button"><span class="small-icon add"><@u.message "video.add.btn" /></span></a>
 		</div>
     </#if>
 
-    <#if (initiative.extraInfo)?has_content>
+    <#if showMap || (initiative.extraInfo)?has_content>
         <h2><@u.message "initiative.extraInfo.title" /></h2>
+    </#if>
+
+    <#if (initiative.extraInfo)?has_content>
         <div class="initiative-content-row last replace-links">
             <@u.text initiative.extraInfo!"" />
         </div>
     </#if>
 
-    <#if locations?? && locations?size gt 0 && googleMapsEnabled>
+    <#if showMap>
         <@map locations />
     </#if>
 
@@ -467,6 +486,18 @@
     </div>
 </#macro>
 
-
+<#macro video manage=false>
+    <div>
+        <#if !manage>
+            <h3><@u.message "video.title" /></h3>
+        </#if>
+        <iframe src="${initiative.videoUrl.value}" width="90%" height="400px"></iframe>
+        <#if manage>
+            <a href="?deleteVideoForm" class="js-delete-video delete-video trigger-tooltip"
+               title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a>
+        </#if>
+        <p>${initiative.videoName.value}</p>
+    </div>
+</#macro>
 
 </#escape> 
