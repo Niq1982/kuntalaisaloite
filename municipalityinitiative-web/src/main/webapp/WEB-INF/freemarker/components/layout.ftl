@@ -18,6 +18,7 @@
 <html lang="${locale}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><@u.message page /> - <@u.message "siteName" /></title>
 
     <link href="${urls.baseUrl}/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
