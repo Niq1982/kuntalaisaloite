@@ -1994,61 +1994,75 @@ if (window.hasIGraphFrame) {
 
 }());
 
-(function() {
-	var filtersWidth = "100%", filtersHeight = "100%";
-	var filters = $(".search-options-mobile"),
-		pageWrapper = $("#wrapper"),
-		content = $("#content"),
-		container = $(".container"),
-		resultList = $(".search-results"),
-		footer = $(".om-footer");
+var closeSearchFilter;
 
-	var contentPaddingBottom = content.css("padding-bottom");
+/*
+* Search filter  in mobile
+*
+*/
+if ($(".search-options-mobile").length > 0) {
+	(function () {
+		var filtersWidth = "100%", filtersHeight = "100%";
+		var filters = $(".search-options-mobile"),
+			pageWrapper = $("#wrapper"),
+			content = $("#content"),
+			container = $(".container"),
+			resultList = $(".search-results"),
+			footer = $(".om-footer"),
+			paginationBottom = $(".pagination .bottom");
 
-	var openSearchFilter = function () {
-		filters.addClass("open");
+		var contentPaddingBottom = content.css("padding-bottom");
 
-		$(".chzn-container-multi").css("width", filtersWidth);
-		$(".chzn-drop").css("width", filtersWidth);
+		var openSearchFilter = function () {
+			filters.addClass("open");
 
-		pageWrapper.height(filtersHeight);
-		container.height(filtersHeight);
-		content.height(filtersHeight);
+			$(".chzn-container-multi").css("width", filtersWidth);
+			$(".chzn-drop").css("width", filtersWidth);
 
-		content.css("padding-bottom", 0);
-		resultList.hide();
-		footer.hide();
+			pageWrapper.height(filtersHeight);
+			container.height(filtersHeight);
+			content.height(filtersHeight);
 
-	};
-	var closeSearchFilter = function () {
-		filters.removeClass("open");
+			content.css("padding-bottom", 0);
+			resultList.hide();
+			footer.hide();
+			paginationBottom.hide();
 
-		pageWrapper.height("auto");
-		content.height("auto");
-		container.height("auto");
+		};
+		closeSearchFilter = function () {
+			filters.removeClass("open");
 
-		content.css("padding-bottom", contentPaddingBottom);
-		resultList.show();
-		footer.show();
-	};
+			pageWrapper.height("auto");
+			content.height("auto");
+			container.height("auto");
 
-	$(".open-filters").click(function () {
+			content.css("padding-bottom", contentPaddingBottom);
+			resultList.show();
+			footer.show();
+			paginationBottom.show();
+		};
 
-		if (filters.hasClass("open")) {
+		$(".open-filters").click(function () {
+			if (filters.hasClass("open")) {
+				closeSearchFilter();
+			} else {
+				openSearchFilter();
+			}
+
+		});
+	})();
+}
+
+/*
+ * Main menu in mobile
+ *
+*/
+$(".toggle-dropdown").click(function () {
+	$("#main-navigation").toggleClass("open");
+		if (closeSearchFilter) {
 			closeSearchFilter();
-		} else {
-			openSearchFilter();
 		}
-
-	});
-
-	$(".toggle-dropdown").click(function () {
-		$("#main-navigation").toggleClass("open");
-		if (filters.hasClass("open")) {
-			closeSearchFilter();
-		}
-	});
-})();
+});
 
 
 /**
@@ -2688,7 +2702,9 @@ $(window).on('resize', function () {
     headerNav.headerNav('resize');
   }
 
-
+  if (closeSearchFilter) {
+	  closeSearchFilter();
+  }
 
 }).trigger('resize');
 
