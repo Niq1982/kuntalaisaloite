@@ -8,7 +8,7 @@
 
 <#macro mobileSearch >
     <div class="open-filters"><b><@u.message "mobile.open.search.filters" /></b> <span class="arrow"></span> </br>
-        <@u.message "mobile.filters.selected"/>
+        <@u.message "mobile.filters.selected"/>&nbsp;
         <#if currentMunicipalities?? && currentMunicipalities.present && currentMunicipalities.value?size gt 0>
             <@u.printMunicipalities currentMunicipalities.value />
         <#else>
