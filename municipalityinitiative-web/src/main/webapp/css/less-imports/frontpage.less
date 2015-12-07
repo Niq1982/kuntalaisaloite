@@ -68,8 +68,9 @@
 
 }
 .image-container-mobile {
-    @media @tablet, @desktop, @desktop-xl {
-        display: none;
+    display: none;
+    @media @mobile {
+        display: block;
     }
     width: 94%;
     margin: 0 auto;
@@ -153,8 +154,10 @@
 
 
 .mobile-big-link-container {
-    @media @tablet, @desktop, @desktop-xl{
-        display: none;
+    display: none;
+
+    @media @mobile{
+        display: block;
     }
     width: 60%;
     float: right;
