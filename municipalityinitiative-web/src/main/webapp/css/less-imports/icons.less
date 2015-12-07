@@ -231,8 +231,8 @@
     width: 64px;
     height: 64px;
     @media @mobile {
-        width: 48px;
-        height: 50px;
+        width: 35px;
+        height: 35px;
     }
 
     background: transparent url("@{imagesPath}/kua-progress-icons.png?version=${timestamp}") no-repeat 0 0;
@@ -240,17 +240,16 @@
     background-position: -100% -100%;
 
     @iconDistance: 64;
-    @mobileIconDistance: 49;
+    @mobileIconDistance: 37;
 
     @media @mobile {
-        background-size: 200px;
+        background-size: 150px;
     }
 
     &.icon-publish {
-        .iconPosition(0, 0, @iconDistance);
-        background-position-x: -3px;
+        .iconPosition(0, 0, @iconDistance, -3);
         @media @mobile {
-            .iconPosition(0, 0, @mobileIconDistance);
+            .iconPosition(0, 0, @mobileIconDistance, -3);
 
         }
     }
@@ -305,7 +304,7 @@
         &.icon-publish {
             .iconPosition(0, 1, 64);
             @media @mobile {
-                .iconPosition(0, 1, @mobileIconDistance);
+                .iconPosition(0, 1, @mobileIconDistance, -3);
             }
 
         }

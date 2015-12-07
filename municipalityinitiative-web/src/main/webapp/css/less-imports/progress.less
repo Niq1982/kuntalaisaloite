@@ -1,5 +1,6 @@
 @progressContainerHeight: 150px;
 @stepSize: 94px; // use even values to prevent half pixels
+@mobileStepSize: 54px;
 @stepLabelWidth: 8.75em; // 140px
 @stepLabelWidthMobile: 5.75em;
 
@@ -52,6 +53,9 @@
 .initiative-progress-bar {
   position: absolute;
   top: 50%;
+  @media @mobile{
+    top: 28%;
+  }
   width: 100%;
   left: 0;
   margin-top: -@progBarHeight / 2;
@@ -144,7 +148,7 @@
   height: @stepSize;
   margin: 0 @stepLabelWidth / 2;
   @media @mobile {
-    margin: 0 3.0em;
+    margin: 0 15%;
   }
 
   .step {
@@ -173,11 +177,14 @@
       width: @stepSize;
       height: @stepSize;
       @media @mobile {
-        width: 84px;
-        height: 84px;
+        width: @mobileStepSize;
+        height: @mobileStepSize;
       }
       border-radius: 100%;
       margin-left: -@stepSize / 2;
+      @media @mobile {
+        margin-left: -@mobileStepSize / 2
+      }
       background: @progBarColor;
 
 
@@ -190,8 +197,8 @@
         top: 50%;
         left: 50%;
         @media @mobile {
-          top : 58%;
-          left: 58%;
+          top : 74%;
+          left: 78%;
         }
         margin: -32px 0 0 -32px;
       }
@@ -205,6 +212,7 @@
       @media @mobile {
         width: @stepLabelWidthMobile;
         margin-left: -@stepLabelWidthMobile / 2;
+        font-size: 80%;
       }
     }
 
