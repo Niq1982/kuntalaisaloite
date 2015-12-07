@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="input-block-content no-top-margin">
-                    <button type="submit" name="${UrlConstants.ACTION_ADD_VIDEO}" class="small-button dbl-click-check-no-msg"><span class="small-icon save-and-send"><@u.message "attachment.save" /></span></button>
+                    <button type="submit" name="${UrlConstants.ACTION_ADD_VIDEO}" class="small-button dbl-click-check-no-msg"><span class="small-icon save-and-send"><@u.message "video.attach"/></span></button>
                 </div>
 
             </form>

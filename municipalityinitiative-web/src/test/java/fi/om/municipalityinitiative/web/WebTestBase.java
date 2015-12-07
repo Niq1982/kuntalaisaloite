@@ -278,6 +278,9 @@ public abstract class WebTestBase {
         e.click();
     }
 
+    protected void clickElementByClass(String cssClass) {
+        findElementWhenClickable(By.cssSelector("." + cssClass)).click();
+    }
     protected void inputTextByCSS(String css, String text) {
         findElementWhenClickable(By.cssSelector(css)).sendKeys(text);
     }
