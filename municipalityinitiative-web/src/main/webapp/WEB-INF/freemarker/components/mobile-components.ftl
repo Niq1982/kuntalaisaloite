@@ -7,7 +7,8 @@
 <#escape x as x?html>
 
 <#macro mobileSearch >
-    <div class="open-filters"><@u.message "mobile.open.search.filters"></@u.message> <span class="arrow"></span> </br>
+    <div class="open-filters"><b><@u.message "mobile.open.search.filters" /></b> <span class="arrow"></span> </br>
+        <@u.message "mobile.filters.selected"/>
         <#if currentMunicipalities?? && currentMunicipalities.present && currentMunicipalities.value?size gt 0>
             <@u.printMunicipalities currentMunicipalities.value />
         <#else>
