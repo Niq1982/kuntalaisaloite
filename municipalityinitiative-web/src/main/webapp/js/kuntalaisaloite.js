@@ -2714,17 +2714,20 @@ function findLocation(locations, location) {
 
 
 	$(".videoUrl").on('input propertychange', function () {
-
-		var url = validateVideoLink($("#videoUrl").val());
-
-		var videoContainer = $("#videoContainer");
+		var videoInput = $("#videoUrl"),
+			videoContainer = $("#videoContainer");
 
 		videoContainer.empty();
-		if (url) {
-			videoContainer.append("<iframe src=" + url + " width='760' height='447' />");
-		} else {
-			videoContainer.append("<p>Videolinkki ei osoita Youtube tai Vimeo -verkkopalveluihin.</p>");
+
+		if (videoInput.val()) {
+			var url = validateVideoLink(videoInput.val());
+			if (url) {
+				videoContainer.append("<iframe src=" + url + " width='100%' height='447' />");
+			} else {
+				videoContainer.append("<p>"+videoWarning+"</p>");
+			}
 		}
+
 	});
 
 })();

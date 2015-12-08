@@ -15,7 +15,7 @@
  * pageTitle = initiative.name if exists, otherwise empty string
 -->
 
-<@l.main page="page.manageAttachments">
+<@l.main page="page.manageVideo">
 
 	<@u.returnPrevious managementURL "link.to.managementView" />
 	
@@ -44,14 +44,14 @@
                 <@f.securityFilters/>
                 <@spring.bind "video" />
                 <input type="hidden" name="locale" value="${locale}"/>
-                <div class="input-block-content no-top-margin">
+                <div class="input-block-content">
                     <@f.textField cssClass="videoUrl large" required="" optional=false path="video.videoUrl" key="video.videoUrl"/>
                 </div>
-                <div id="videoContainer">
+                <div id="videoContainer" class="input-block-content  no-top-margin">
 
                 </div>
 
-                <div class="input-block-content">
+                <div class="input-block-content no-top-margin">
                     <@f.textField cssClass="large" required="" optional=false path="video.videoName" key="video.videoName"/>
                 </div>
 
@@ -127,6 +127,8 @@
                 content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[managementURL] /></div>'
             }]
         };
+
+        var videoWarning = <@u.message "warning.videoUrl"/>;
     </script>
 
 </@l.main>
