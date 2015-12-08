@@ -41,7 +41,8 @@
 			<#assign disableClass="" />
     		<#if (fixState != FixState.OK && (step.icon != "draft" && step.icon != "mgmnt"))><#assign disableClass="disabled" /></#if>
     		<#if fixState == FixState.FIX && step.icon != "draft"><#assign disableClass="disabled" /></#if>
-		    <div class="step nth-child-${step_index + 1} ${step_has_next?string("","last-child")} ${step.done?string("done", "")} ${disableClass}">
+			<#if step.done && (!step_has_next || !steps[step_index+1].done)><#assign active=true><#else><#assign active=false></#if>
+		    <div class="step nth-child-${step_index + 1} ${step_has_next?string("","last-child")} ${step.done?string("done", "")} ${disableClass} <#if active>active</#if>">
 		    	<div class="step-icon-holder"><i class="icon-progress icon-${step.icon}"></i></div>
 		    	<span class="label"><#noescape>${step.label}</#noescape></span>
 		    </div>
