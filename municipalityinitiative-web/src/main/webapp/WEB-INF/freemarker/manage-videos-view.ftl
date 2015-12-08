@@ -110,10 +110,10 @@
             };
         </#if>
         
-        <#-- Modal: Confirm remove attachment -->   
+        <#-- Modal: Confirm remove Video-->
         modalData.deleteVideoForm = function() {
             return [{
-                title:      '<@u.message "deleteAttachment.confirm.title" />',
+                title:      '<@u.message "deleteVideo.confirm.title" />',
                 content:    '<#noescape>${deleteVideo?replace("'","&#39;")}</#noescape>'
             }]
         };
@@ -131,21 +131,12 @@
 
 </@l.main>
 
-<#macro deleteVideoForm modal=true >
-    <#if !modal><#assign attachmentId = RequestParameters['deleteVideoForm']?number /></#if>
-
-    <form id="delete-attachment-form" action="<#if !modal>${urls.getManageAttachments(initiative.id)}</#if>" method="POST">
+<#macro deleteVideoForm >
+    <form id="delete-attachment-form" method="POST">
         <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
 
-        <#if modal>
-            <div id="selected-attachment" class="details"></div>
-            <br/>
-        <#else>
-            <@attachmentDetailsById RequestParameters['deleteVideoForm'] />
-        </#if>
-
         <div class="input-block-content">
-            <button type="submit" name="${UrlConstants.ACTION_REMOVE_VIDEO}" class="small-button"><span class="small-icon cancel"><@u.message "deleteAttachment.btn" /></button>
+            <button type="submit" name="${UrlConstants.ACTION_REMOVE_VIDEO}" class="small-button"><span class="small-icon cancel"><@u.message "deleteVideo.btn" /></button>
             <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
         </div>
     </form>

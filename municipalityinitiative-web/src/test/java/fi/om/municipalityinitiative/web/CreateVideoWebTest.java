@@ -49,4 +49,26 @@ public class CreateVideoWebTest extends WebTestBase {
 
     }
 
+    @Test
+    public void remove_video_from_initiative() {
+
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
+
+        open(urls.management(normalInitiativeId));
+
+        clickLink(getMessage(MSG_ADD_VIDEO));
+
+        inputText(VIDEO_URL, VALID_VIDEO_URL);
+        inputText(VIDEO_NAME, VALID_VIDEO_NAME);
+
+        getElemContaining(getMessage(VIDEO_ATTACH), "button").click();
+
+        assertSuccessMessage(getMessage(SUCCESS_VIDEO_ADDED));
+
+        clickElementByCSS(".js-delete-video");
+        getElemContaining(getMessage("deleteVideo.btn"), "button").click();
+        assertSuccessMessage("Video poistettu");
+
+    }
+
 }
