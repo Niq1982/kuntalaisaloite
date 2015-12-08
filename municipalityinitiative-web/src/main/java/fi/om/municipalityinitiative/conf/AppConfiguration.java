@@ -23,7 +23,6 @@ import fi.om.municipalityinitiative.web.Urls;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.utility.XmlEscape;
-import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -281,8 +280,8 @@ public class AppConfiguration {
         int messageSourceCacheSeconds = env.getProperty(PropertyNames.testMessageSourceCacheSeconds, Integer.class, TEST_MESSAGE_SOURCE_CACHE_SECONDS_DEFAULT);
         boolean testFreemarkerShowErrorsOnPage = env.getProperty(PropertyNames.testFreemarkerShowErrorsOnPage, Boolean.class, TEST_FREEMARKER_SHOW_ERRORS_ON_PAGE_DEFAULT);
 
-        return new StatusServiceImpl(testEmailSendTo,
-                testEmailConsoleOutput, messageSourceCacheSeconds, testFreemarkerShowErrorsOnPage,
+        return new StatusServiceImpl(
+                messageSourceCacheSeconds, testFreemarkerShowErrorsOnPage,
                 WebConfiguration.optimizeResources(env),
                 WebConfiguration.resourcesVersion(env),
                 WebConfiguration.appVersion(env));
