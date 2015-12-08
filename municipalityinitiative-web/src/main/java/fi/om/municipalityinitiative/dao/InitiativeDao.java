@@ -76,4 +76,7 @@ public interface InitiativeDao {
 
     Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay);
 
+    void addVideoUrl(String url, String name, Long initiativeId);
+
+    void removeVideoUrl(Long initiativeId);
 }

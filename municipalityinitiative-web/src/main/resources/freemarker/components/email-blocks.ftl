@@ -352,16 +352,31 @@
 
 
 <#macro municipalityDecisionLink type>
-    <#assign municipalityDecisionUrl = urls.get(switchLocale!locale).loginMunicipality(municipalityDecisionHash)/>
+    <#assign municipalityDecisionUrl = urls.get(locale).loginMunicipality(municipalityDecisionHash)/>
 
     <#if type == "html">
-        <p style="${pBothMargins!""}"><@u.message "email.municipalityDecisionLink" /><br/>
-            <@u.link municipalityDecisionUrl municipalityDecisionUrl /></span>
+        <h4 style="${h4!""}"><@u.message "email.municipalityDecisionLink" /></h4>
+        <@u.link municipalityDecisionUrl municipalityDecisionUrl /></span>
     <#else>
         <@u.message "email.municipalityDecisionLink" />
         ${municipalityDecisionUrl}
     </#if>
 
+</#macro>
+
+
+<#macro municipalityDecision type>
+    <#if type == "html">
+        <h4 style="${h4!""}">${initiative.name!""}</h4>
+        <p style="${pBottomMargin!""}">${initiative.municipality.getLocalizedName(switchLocale!locale)!""}</p>
+        <@u.message "email.municipality.answered.body" />
+        <@publicViewLink type/>
+    <#else>
+        "${initiative.name!""}"
+         ${initiative.municipality.getLocalizedName(switchLocale!locale)!""}
+        <@u.message "email.municipality.answered.body" />
+        <@publicViewLink type />
+    </#if>
 </#macro>
 
 

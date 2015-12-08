@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service.email;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
+import fi.om.municipalityinitiative.dao.MunicipalityUserDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -36,6 +37,9 @@ public abstract class MailSendingEmailServiceTestBase {
 
     @Resource
     private MessageSource messageSource;
+
+    @Resource
+    protected MunicipalityUserDao municipalityUserDao;
 
     private Long testMunicipality;
 

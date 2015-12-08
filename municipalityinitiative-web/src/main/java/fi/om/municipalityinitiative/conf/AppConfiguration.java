@@ -59,7 +59,8 @@ public class AppConfiguration {
 
     @Inject Environment env;
 
-    @Inject ServletContext servletContext;
+    @Inject
+    ServletContext servletContext;
     
     @Resource JdbcConfiguration jdbcConfiguration; 
 
@@ -185,6 +186,9 @@ public class AppConfiguration {
     public MunicipalityUserDao municipalityUserDao() {return new JdbcMunicipalityUserDao() ;}
 
     @Bean
+    public FollowInitiativeDao followInitiativeDao() {return new JdbcFollowInitiativeDao();}
+
+    @Bean
     public AuthorService authorService() {
         return new AuthorService();
     }
@@ -234,6 +238,9 @@ public class AppConfiguration {
 
     @Bean
     public LocationService locationService() { return new  LocationService();}
+
+    @Bean
+    public FollowInitiativeService followInitiativeService() {return new FollowInitiativeService();}
 
     @Bean
     public JobExecutor jobExecutor() {
@@ -434,6 +441,8 @@ public class AppConfiguration {
                 String.valueOf(env.getRequiredProperty(PropertyNames.googleMapsApiKey)),
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.googleMapsEnabled)),
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.superSearchEnabled)),
+                Boolean.valueOf(env.getProperty(PropertyNames.videoEnabled)),
+                Boolean.valueOf(env.getProperty(PropertyNames.followEnabled)),
                 env.getRequiredProperty(PropertyNames.appEnvironment));
     }
 
@@ -471,6 +480,11 @@ public class AppConfiguration {
             }
          });
         return executorService;
+    }
+
+    @Bean
+    public VideoService videoService() {
+        return new VideoService();
     }
 
     @Bean

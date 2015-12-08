@@ -70,8 +70,13 @@ public class ManagementSettings {
         return initiative.getState() == InitiativeState.DRAFT;
     }
 
+    public boolean isAllowAddVideo() {
+        return initiative.getState() == InitiativeState.DRAFT;
+    }
+
 
     public boolean isAllowSendFixToReview() {
         return initiative.getFixState() == FixState.FIX;
     }
+
 }

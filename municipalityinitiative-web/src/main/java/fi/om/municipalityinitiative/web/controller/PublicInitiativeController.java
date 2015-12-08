@@ -69,14 +69,16 @@ public class PublicInitiativeController extends BaseController {
     @Resource
     private AttachmentService attachmentService;
 
-
-
     @Resource
     private SupportCountService supportCountService;
+
+    @Resource
+    private FollowInitiativeService followInitiativeService;
 
     private static final Logger log = LoggerFactory.getLogger(PublicInitiativeController.class);
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
 
 
     public PublicInitiativeController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> piwikId) {
@@ -117,6 +119,7 @@ public class PublicInitiativeController extends BaseController {
             return ViewGenerator.collaborativeView(initiativePageView,
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
+                    new FollowInitiativeDto(),
                     new AuthorUIMessage(),
                     supportCountService.getSupportVotesPerDateJson(initiativeId),
                     municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
@@ -220,6 +223,7 @@ public class PublicInitiativeController extends BaseController {
             return ViewGenerator.collaborativeView(initiativePageInfo,
                     municipalityService.findAllMunicipalities(locale),
                     participant,
+                    new FollowInitiativeDto(),
                     new AuthorUIMessage(),
                     supportCountService.getSupportVotesPerDateJson(initiativeId),
                     getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(initiativeId));
@@ -368,6 +372,7 @@ public class PublicInitiativeController extends BaseController {
             return ViewGenerator.collaborativeView(initiativePageInfo,
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
+                    new FollowInitiativeDto(),
                     authorUIMessage,
                     supportCountService.getSupportVotesPerDateJson(initiativeId),
                     getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo.initiative)
@@ -438,6 +443,29 @@ public class PublicInitiativeController extends BaseController {
     @RequestMapping(value = SUPPORTS_BY_DATE, method=GET, produces=JSON)
     public @ResponseBody JsonNode jsonSupportsByDate(@PathVariable Long id) throws IOException {
         return objectMapper.readTree(supportCountService.getSupportVotesPerDateJson(id));
+    }
+
+    @RequestMapping(value = { VIEW_FI, VIEW_SV }, method = POST, params = "action-follow")
+    public String followInitiative(@PathVariable long id, @ModelAttribute("followInitiative") FollowInitiativeDto followInitiativeDto, Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
+        if (!validationService.validationSuccessful(followInitiativeDto, bindingResult, model)) {
+            InitiativePageInfo initiativePageInfo = publicInitiativeService.getInitiativePageInfo(id);
+            return ViewGenerator.collaborativeView(initiativePageInfo,
+                    municipalityService.findAllMunicipalities(locale),
+                    new ParticipantUICreateDto(),
+                    followInitiativeDto,
+                    new AuthorUIMessage(),
+                    supportCountService.getSupportVotesPerDateJson(id),
+                    getMunicipalityDecisionInfoMaybe(id, initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(id));
+
+        }
+        followInitiativeService.followInitiative(id, followInitiativeDto.getParticipantEmail());
+        return redirectWithMessage(Urls.get(locale).view(id), RequestMessage.COMFIRM_FOLLOW, request);
+    }
+
+    @RequestMapping(value = { UNSUBSCRIBE }, method = GET)
+    public String unfollowInitiative(@PathVariable long id, @RequestParam(PARAM_CONFIRMATION_CODE) String hash, Locale locale, HttpServletRequest request) {
+        followInitiativeService.stopFollowingInitiative(hash);
+        return redirectWithMessage(Urls.get(locale).view(id), RequestMessage.COMFIRM_STOP_FOLLOW, request);
     }
 
     private static void attachmentFileResponse(HttpServletResponse response, AttachmentFile file) throws IOException {

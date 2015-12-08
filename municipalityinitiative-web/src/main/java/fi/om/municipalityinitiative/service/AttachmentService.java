@@ -57,15 +57,18 @@ public class AttachmentService {
         assertPrivilege(initiativeId);
         AttachmentUtil.assertFileSize(file);
 
+        Long attachmentId = attachmentDao.addAttachment(initiativeId, description, file.getContentType(), AttachmentUtil.getFileType(file));
 
-        String fileType = AttachmentUtil.getFileType(file);
 
+        saveFile(file, attachmentId);
+    }
 
+    private void saveFile(MultipartFile file, Long attachmentId) throws InvalidAttachmentException, FileUploadException {
         File tempFile = null;
         try {
-            tempFile = AttachmentUtil.createTempFile(file, fileType);
 
-            Long attachmentId = attachmentDao.addAttachment(initiativeId, description, file.getContentType(), fileType);
+            String fileType = AttachmentUtil.getFileType(file);
+            tempFile = AttachmentUtil.createTempFile(file, fileType);
 
             AttachmentUtil.saveAttachmentToDiskAndCreateThumbnail(imageModifier, file.getContentType(), fileType, tempFile, attachmentId, attachmentDir);
 

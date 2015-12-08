@@ -8,16 +8,12 @@
 
 <#escape x as x?html>
 
-    <#assign title><@u.message "email.initiative" /> - ${initiative.municipality.getLocalizedName(locale)}</#assign>
+    <#assign title><@u.message "email.initiative" /></#assign>
 
-    <@l.emailHtml title>
-
-
-        <@b.contentBlock type>
-            Kunta on vastannut aloitteeseesi palvelussa. Käy katsomassa vastaus osoitteessa:
-            <@b.publicViewLink type />
-        </@b.contentBlock>
-
+    <@l.emailHtml title=title footer=true>
+        <@b.mainContentBlock title>
+            <@b.municipalityDecision type />
+        </@b.mainContentBlock>
 
         <@u.spacer "15" />
 

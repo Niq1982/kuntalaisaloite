@@ -261,6 +261,7 @@ public class InitiativeManagementService {
         else {
             emailService.sendCollaborativeToAuthors(initiativeId);
             emailService.sendCollaborativeToMunicipality(initiativeId, locale);
+            emailService.sendCollaborativeToMunicipalityToFollowers(initiativeId);
         }
 
         if (initiative.getYouthInitiativeId().isPresent()) {

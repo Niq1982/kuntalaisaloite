@@ -42,6 +42,7 @@ public final class ViewGenerator {
     public static ViewGenerator collaborativeView(InitiativePageInfo initiative,
                                                   List<Municipality> municipalities,
                                                   ParticipantUICreateDto participantUICreateDto,
+                                                  FollowInitiativeDto followInitiativeDto,
                                                   AuthorUIMessage authorUIMessage,
                                                   String supportCountData,
                                                   Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo) {
@@ -53,6 +54,7 @@ public final class ViewGenerator {
                         .add("participantCount", initiative.initiative.getParticipantCount())
                         .add("attachments", initiative.attachments)
                         .add("participant", participantUICreateDto)
+                        .add("followInitiative", followInitiativeDto)
                         .add("authorMessage", authorUIMessage)
                         .add("supportCountData", supportCountData)
                         .add("locations", initiative.locations)
@@ -196,6 +198,17 @@ public final class ViewGenerator {
                         .add("attachments", attachments)
                         .add("attachment", attachmentCreateDto)
                         .add("imageProperties", imageProperties)
+                        .build()
+        );
+    }
+
+
+    public static ViewGenerator manageVideosView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, VideoCreateDto videoCreateDto) {
+        return new ViewGenerator(MANAGE_VIDEOS_VIEW,
+                new AttributeBuilder()
+                        .add("initiative", initiativeInfo)
+                        .add("managementSettings", managementSettings)
+                        .add("video", videoCreateDto)
                         .build()
         );
     }

@@ -16,6 +16,8 @@ public class EnvironmentSettings {
     private final boolean googleMapsEnabled;
     private final boolean superSearchEnabled;
     private String appEnvironment;
+    private final boolean videoEnabled;
+    private final boolean followEnabled;
 
 
     public EnvironmentSettings(String defaultReplyTo,
@@ -29,7 +31,10 @@ public class EnvironmentSettings {
                                String googleMapsApiKey,
                                boolean googleMapsEnabled,
                                boolean superSearchEnabled,
-                               String appEnvironment) {
+                               boolean videoEnabled,
+                               boolean followEnabled,
+                               String appEnvironment
+                               ) {
         this.defaultReplyTo = defaultReplyTo;
         this.testSendTo = testSendTo;
         this.testConsoleOutput = testConsoleOutput;
@@ -42,6 +47,8 @@ public class EnvironmentSettings {
         this.googleMapsEnabled = googleMapsEnabled;
         this.superSearchEnabled = superSearchEnabled;
         this.appEnvironment = appEnvironment;
+        this.videoEnabled = videoEnabled;
+        this.followEnabled = followEnabled;
     }
 
     public String getDefaultReplyTo() {
@@ -96,6 +103,14 @@ public class EnvironmentSettings {
 
     public boolean isSuperSearchEnabled() {
         return superSearchEnabled;
+    }
+
+    public boolean getVideoEnabled() {
+        return videoEnabled;
+    }
+
+    public boolean isFollowEnabled() {
+        return followEnabled;
     }
 
     public String getAppEnvironment() {

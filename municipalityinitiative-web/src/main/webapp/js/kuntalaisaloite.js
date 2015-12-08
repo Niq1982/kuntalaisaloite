@@ -1316,10 +1316,23 @@ $('.municipality-filter').change( function() {
 		}
 	});
 
+	// Follow initiative
+	$('.js-follow').click(function(){
+		try {
+			generateModal(modalData.followInitiative(), 'full');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+
 	if( typeof modalData !== 'undefined' && typeof modalData.participateFormAutoLoad !== 'undefined' ){
 		generateModal(modalData.participateFormAutoLoad(), 'full', municipalitySelection.init);
 	}
 
+	if (typeof modalData !== 'undefined' && typeof modalData.followFormAutoLoad !== 'undefined') {
+		generateModal(modalData.followFormAutoLoad(), 'full');
+	}
 	// Contact author
 	$('.js-contact-author').click(function(){
 		try {
@@ -1413,6 +1426,21 @@ $('.municipality-filter').change( function() {
       console.log(e);
     }
   });
+
+ $('.js-delete-video').click(function(e) {
+
+	 e.preventDefault();
+	 $('.js-delete-video.active').removeClass('active');
+	 $(this).addClass('active');
+
+	 try {
+		 generateModal(modalData.deleteVideoForm(), 'full');
+		 return false;
+	 } catch(e) {
+		 console.log(e);
+	 }
+
+ });
 
 
 /**
@@ -1660,6 +1688,7 @@ var deleteAttachment = (function() {
   };
 
 }());
+
 
 /**
 * Renew author management hash
@@ -2616,6 +2645,87 @@ function findLocation(locations, location) {
 		}
 	});
 
+
+})();
+
+(function() {
+
+	var YOUTUBEBASEURL = "https://www.youtube.com/embed/";
+	var VIMEOURL = "https://player.vimeo.com/video";
+
+	var entityMap = {
+		"&": "&amp;",
+		"<": "&lt;",
+		">": "&gt;",
+		'"': '&quot;',
+		"'": '&#39;',
+		"/": '&#x2F;'
+	};
+
+	var escapeHtml = function (string) {
+		return String(string).replace(/[&<>"'\/]/g, function (s) {
+			return entityMap[s];
+		});
+	};
+
+	function convertToYoutubeEmbed(a) {
+		var url = null, videoIDPos = -1;
+		var queryParam = a.search;
+		var path = a.pathname;
+		if (queryParam.indexOf("v=") > 0) {
+			videoIDPos = queryParam.indexOf("v=") + 2;
+			var endOfID = queryParam.indexOf("&");
+			if (endOfID < 0) {
+				url = [YOUTUBEBASEURL, escapeHtml(queryParam.substring(videoIDPos))].join('');
+			} else if (videoIDPos < endOfID) {
+				url = [YOUTUBEBASEURL, escapeHtml(queryParam.substring(videoIDPos, endOfID))].join('');
+			}
+
+		} else if (path.indexOf("embed") > 0) {
+			videoIDPos = path.indexOf("embed") + 6;
+			url = [YOUTUBEBASEURL, escapeHtml(path.substring(videoIDPos))].join('');
+		}
+		return url;
+	}
+
+	function convertToVimeoEmbed(a) {
+		var url = null, path = a.pathname;
+		if (path) {
+			url = [VIMEOURL + escapeHtml(path)].join('');
+		}
+		return url;
+
+	}
+
+	function validateVideoLink(url) {
+
+		var a = $('<a>', {href: url})[0];
+
+		if (a.hostname === "www.youtube.com") {
+			return convertToYoutubeEmbed(a);
+		}
+		if (a.hostname === "vimeo.com") {
+			return convertToVimeoEmbed(a);
+		}
+		else {
+			return null;
+		}
+	}
+
+
+	$(".videoUrl").on('input propertychange', function () {
+
+		var url = validateVideoLink($("#videoUrl").val());
+
+		var videoContainer = $("#videoContainer");
+
+		videoContainer.empty();
+		if (url) {
+			videoContainer.append("<iframe src=" + url + " width='760' height='447' />");
+		} else {
+			videoContainer.append("<p>Videolinkki ei osoita Youtube tai Vimeo -verkkopalveluihin.</p>");
+		}
+	});
 
 })();
 

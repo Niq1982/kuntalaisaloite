@@ -4,8 +4,7 @@
 <#assign type="text" />
 
 <@b.contentBlock type>
-Kunta on vastannut aloitteeseesi palvelussa. Käy katsomassa vastaus osoitteessa:
-    <@b.publicViewLink type />
+    <@b.municipalityDecision type />
 </@b.contentBlock>
 
 

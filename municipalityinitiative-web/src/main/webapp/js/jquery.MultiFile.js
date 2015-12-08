@@ -511,7 +511,7 @@
 			denied:'Et voi lisätä tiedostoa jonka tyyppi on: $ext \n',
 			file:'$file',
 			selected:'File selected: $file',
-			duplicate:'This file has already been selected:\n$file'
+			duplicate:'Tämä tiedosto on jo lisätty:\n$file'
 		},
 		
 		// name of methods that should be automcatically intercepted so the plugin can disable

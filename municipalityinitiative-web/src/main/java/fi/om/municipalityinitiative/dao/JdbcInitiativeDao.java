@@ -117,6 +117,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     if(maybeDecisionModifiedDate != null) {
                         info.setDecisionModifiedDate(maybeDecisionModifiedDate);
                     }
+                    String videoUrl = row.get(municipalityInitiative.videoUrl);
+                    if (videoUrl != null) {
+                        info.setVideoUrl(videoUrl);
+                    }
+                    String videoName = row.get(municipalityInitiative.videoName);
+                    if (videoName != null) {
+                        info.setVideoUrlName(videoName);
+                    }
                     return info;
                 }
             };
@@ -608,6 +616,24 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     .groupBy(participant.participateTime)
                     .map(participant.participateTime, participant.participateTime.count());
         }
+    }
+
+    @Override
+    public void addVideoUrl(String url, String name, Long initiativeId) {
+        queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.videoName, name)
+                .set(municipalityInitiative.videoUrl, url)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute();
+    }
+
+    @Override
+    public void removeVideoUrl(Long initiativeId) {
+        queryFactory.update(municipalityInitiative)
+                .setNull(municipalityInitiative.videoName)
+                .setNull(municipalityInitiative.videoUrl)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute();
     }
 
 

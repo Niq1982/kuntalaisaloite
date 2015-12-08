@@ -225,7 +225,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build(Maybe.of("Edited text"));
 
-            municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+            municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)), new Locale("fi"));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -251,7 +251,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build(Maybe.of("Edited text"));
 
-            municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId + 1)));
+            municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId + 1)),  new Locale("fi"));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -386,7 +386,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
         decision.setDescription(DECISION_DESCRIPTION);
 
-        municipalityDecisionService.setDecision(decision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+        municipalityDecisionService.setDecision(decision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)),  new Locale("fi"));
 
         return decision;
     }
