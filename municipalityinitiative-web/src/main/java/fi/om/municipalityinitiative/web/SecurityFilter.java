@@ -35,6 +35,13 @@ public class SecurityFilter implements Filter {
     @Resource
     private EncryptionService encryptionService;
 
+    private final boolean disableSecureCookie;
+
+    public SecurityFilter(boolean disableSecureCookie) {
+        this.disableSecureCookie = disableSecureCookie;
+    }
+
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -219,6 +226,9 @@ public class SecurityFilter implements Filter {
         }
         cookie.setPath(contextPath);
         cookie.setSecure(request.isSecure());
+
+
+        response.setHeader("Set-Cookie", name + "=" + value + "; Path=" + contextPath + (disableSecureCookie ? "" : "Secure; ")+ "HttpOnly");
 
         if (cookie.getSecure()) {
             // For enabling httpOnly we need to write the raw cookie data instead of response.addCookie(cookie)
