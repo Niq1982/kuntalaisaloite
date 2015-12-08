@@ -4,8 +4,15 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.dao.FollowInitiativeDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.EmailDto;
+import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
+import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.exceptions.FileUploadException;
+import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
+import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -13,6 +20,7 @@ import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,6 +30,7 @@ public class FollowInitiativeServiceTest extends ServiceIntegrationTestBase {
 
 
     public static final String FOLLOWER_EMAIL = "test@test.fi";
+    private static final String VERIFIED_INITIATIVE_AURHOR_SSN = "000000-0000" ;
     private Long testMunicipalityId;
 
     @Resource
@@ -29,6 +38,12 @@ public class FollowInitiativeServiceTest extends ServiceIntegrationTestBase {
 
     @Resource
     FollowInitiativeDao followInitiativeDao;
+
+    @Resource
+    InitiativeManagementService initiativeManagementService;
+
+    @Resource
+    MunicipalityDecisionService municipalityDecisionService;
 
     private final LocalDate twoDaysAgo = LocalDate.now().minusDays(2);
 
@@ -49,6 +64,48 @@ public class FollowInitiativeServiceTest extends ServiceIntegrationTestBase {
 
         assertThat(sentEmail.getRecipientsAsString(), is(FOLLOWER_EMAIL));
         assertThat(sentEmail.getBodyHtml(), containsString(Urls.get(Locales.LOCALE_FI).unsubscribe(id, followers.get(FOLLOWER_EMAIL))));
+
+    }
+
+    @Test
+    @Transactional
+    public void send_email_to_follower_when_sending_to_municipality(){
+
+        Long id = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).withState(InitiativeState.PUBLISHED).applyAuthor(VERIFIED_INITIATIVE_AURHOR_SSN).toInitiativeDraft());
+        followInitiativeService.followInitiative(id, FOLLOWER_EMAIL);
+        EmailDto sentEmail = testHelper.getSingleQueuedEmail();
+
+        Map<String, String> followers = followInitiativeDao.listFollowers(id);
+
+        assertThat(sentEmail.getRecipientsAsString(), is(FOLLOWER_EMAIL));
+        assertThat(sentEmail.getBodyHtml(), containsString(Urls.get(Locales.LOCALE_FI).unsubscribe(id, followers.get(FOLLOWER_EMAIL))));
+
+        initiativeManagementService.sendToMunicipality(id, TestHelper.authorLoginUserHolder, "", new Locale("fi"));
+
+        assertThat(testHelper.findQueuedEmails(), hasSize(4));
+
+    }
+    @Test
+    @Transactional
+    public void send_email_to_follower_when_municipality_answers_to_initiative(){
+
+        Long id = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).withState(InitiativeState.PUBLISHED).applyAuthor(VERIFIED_INITIATIVE_AURHOR_SSN).toInitiativeDraft());
+        followInitiativeService.followInitiative(id, FOLLOWER_EMAIL);
+        EmailDto sentEmail = testHelper.getSingleQueuedEmail();
+
+        Map<String, String> followers = followInitiativeDao.listFollowers(id);
+
+        assertThat(sentEmail.getRecipientsAsString(), is(FOLLOWER_EMAIL));
+        assertThat(sentEmail.getBodyHtml(), containsString(Urls.get(Locales.LOCALE_FI).unsubscribe(id, followers.get(FOLLOWER_EMAIL))));
+
+        try {
+            municipalityDecisionService.setDecision(MunicipalityDecisionDto.build(Maybe.of("Päätös teksti")), id, new MunicipalityUserHolder(User.municipalityLoginUser(id)), new Locale("fi"));
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+        } catch (InvalidAttachmentException e) {
+            e.printStackTrace();
+        }
+        assertThat(testHelper.findQueuedEmails(), hasSize(3));
 
     }
 
