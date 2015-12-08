@@ -2680,10 +2680,11 @@ function findLocation(locations, location) {
 			} else if (videoIDPos < endOfID) {
 				url = [YOUTUBEBASEURL, escapeHtml(queryParam.substring(videoIDPos, endOfID))].join('');
 			}
-
 		} else if (path.indexOf("embed") > 0) {
 			videoIDPos = path.indexOf("embed") + 6;
 			url = [YOUTUBEBASEURL, escapeHtml(path.substring(videoIDPos))].join('');
+		} else if (a.hostname === "youtu.be") {
+			url = [YOUTUBEBASEURL, escapeHtml(path)].join('');
 		}
 		return url;
 	}
@@ -2701,7 +2702,7 @@ function findLocation(locations, location) {
 
 		var a = $('<a>', {href: url})[0];
 
-		if (a.hostname === "www.youtube.com") {
+		if (a.hostname === "www.youtube.com" || a.hostname === "youtu.be") {
 			return convertToYoutubeEmbed(a);
 		}
 		if (a.hostname === "vimeo.com") {

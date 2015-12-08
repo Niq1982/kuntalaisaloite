@@ -128,7 +128,7 @@
             }]
         };
 
-        var videoWarning = <@u.message "warning.videoUrl"/>;
+        var videoWarning = '<@u.message "warning.videoUrl"/>';
     </script>
 
 </@l.main>
