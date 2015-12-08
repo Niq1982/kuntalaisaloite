@@ -15,6 +15,7 @@ public class EnvironmentSettings {
     private final String googleMapsApiKey;
     private final boolean googleMapsEnabled;
     private final boolean superSearchEnabled;
+    private String appEnvironment;
 
 
     public EnvironmentSettings(String defaultReplyTo,
@@ -27,8 +28,8 @@ public class EnvironmentSettings {
                                boolean isTestEmailSender,
                                String googleMapsApiKey,
                                boolean googleMapsEnabled,
-                               boolean superSearchEnabled
-                               ) {
+                               boolean superSearchEnabled,
+                               String appEnvironment) {
         this.defaultReplyTo = defaultReplyTo;
         this.testSendTo = testSendTo;
         this.testConsoleOutput = testConsoleOutput;
@@ -40,6 +41,7 @@ public class EnvironmentSettings {
         this.googleMapsApiKey = googleMapsApiKey;
         this.googleMapsEnabled = googleMapsEnabled;
         this.superSearchEnabled = superSearchEnabled;
+        this.appEnvironment = appEnvironment;
     }
 
     public String getDefaultReplyTo() {
@@ -94,5 +96,9 @@ public class EnvironmentSettings {
 
     public boolean isSuperSearchEnabled() {
         return superSearchEnabled;
+    }
+
+    public String getAppEnvironment() {
+        return appEnvironment;
     }
 }

@@ -437,7 +437,8 @@ public class AppConfiguration {
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.isTestEmailSender)),
                 String.valueOf(env.getRequiredProperty(PropertyNames.googleMapsApiKey)),
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.googleMapsEnabled)),
-                Boolean.valueOf(env.getRequiredProperty(PropertyNames.superSearchEnabled)));
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.superSearchEnabled)),
+                env.getRequiredProperty(PropertyNames.appEnvironment));
     }
 
     @Bean

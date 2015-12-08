@@ -33,7 +33,8 @@ public class IntegrationTestFakeEmailConfiguration {
                 true,
                 googleMapsApiKey,
                 googleMapsEnabled,
-                superSearchEnabled);
+                superSearchEnabled,
+                "prod");
     }
 
     @Bean

@@ -94,4 +94,6 @@ public final class PropertyNames {
 
     public static final String decisionAttachmentDir = "decisionAttachment.directory";
 
+    public static final String appEnvironment = "app.environment";
+
 }
