@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.web;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import fi.om.municipalityinitiative.conf.ConfigurationFileLoader;
 import fi.om.municipalityinitiative.util.Locales;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +30,7 @@ public class InfoRibbon {
     
     private static String getRefreshedInfoRibbonText(String fileName) {
         try {
-            Resource resource = new ClassPathResource(fileName);
-            String result = Files.toString(resource.getFile(), Charsets.UTF_8);
+            String result = Files.toString(ConfigurationFileLoader.getFile(fileName), Charsets.UTF_8);
             result = result.trim();
             if (result.length() == 0) {
                 return null;

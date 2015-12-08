@@ -68,7 +68,6 @@ public class BaseController {
         this.optimizeResources = optimizeResources;
         this.resourcesVersion = resourcesVersion;
         this.omPiwicId = omPiwicId;
-        InfoRibbon.refreshInfoRibbonTexts();
     }
 
 

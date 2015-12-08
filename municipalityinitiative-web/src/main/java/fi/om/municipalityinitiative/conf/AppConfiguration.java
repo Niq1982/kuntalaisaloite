@@ -16,10 +16,7 @@ import fi.om.municipalityinitiative.util.ImageModifier;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
 import fi.om.municipalityinitiative.validation.LocalValidatorFactoryBeanFix;
-import fi.om.municipalityinitiative.web.CacheHeaderFilter;
-import fi.om.municipalityinitiative.web.ErrorFilter;
-import fi.om.municipalityinitiative.web.SecurityFilter;
-import fi.om.municipalityinitiative.web.Urls;
+import fi.om.municipalityinitiative.web.*;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.utility.XmlEscape;
@@ -526,5 +523,10 @@ public class AppConfiguration {
             sessionCookieConfig.setSecure(!disableSecureCookie);
         }
 
+    }
+
+    @PostConstruct
+    public void refreshInfoRibbon() {
+        InfoRibbon.refreshInfoRibbonTexts();
     }
 }
