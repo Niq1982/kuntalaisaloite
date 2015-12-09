@@ -182,7 +182,7 @@
  * @param useJsBack is handy when returning for example to search page with parameters
 -->
 <#macro returnPrevious url labelKey useJsBack=false>
-	<p class="noprint">
+	<p class="noprint mobile-margins">
 	
 	<#if useJsBack>
 		<noscript>
