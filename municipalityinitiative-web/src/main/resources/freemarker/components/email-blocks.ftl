@@ -226,7 +226,7 @@
 </#macro>
 
 <#macro attachments type>
-    <#if (attachmentCount > 0) || hasLocationAttached>
+    <#if (attachmentCount > 0) || hasLocationAttached || hasVideoAttached>
         <#if type == "html">
             <h4 style="${h4!""}">
                 <#if (attachmentCount > 0)>
@@ -235,6 +235,13 @@
                 <#if hasLocationAttached>
                     <@u.messageHTML key="email.mapAttached" args=[attachmentCount] />
                 </#if>
+                <#if hasVideoAttached>
+                    <#if hasLocationAttached>
+                        <@u.messageHTML key="email.videoAttached" args=[1] />
+                    <#else>
+                        <@u.messageHTML key="email.videoAttached" args=[attachmentCount] />
+                    </#if>
+                </#if>
             </h4>
             <#if (attachmentCount > 0)>
                 <p style="${pBottomMargin!""}"><@u.message "email.attachmentCount.info" /></p>
@@ -242,12 +249,22 @@
             <#if hasLocationAttached>
                 <p style="${pBottomMargin!""}"><@u.message "email.mapAttached.info" /></p>
             </#if>
+            <#if hasVideoAttached>
+                <p style="${pBottomMargin!""}"><@u.message "email.videoAttached.info" /></p>
+            </#if>
         <#else>
             <#if (attachmentCount > 0)>
-            <@u.message key="email.attachmentCount.total" /> ${attachmentCount}
+                <@u.message key="email.attachmentCount.total" /> ${attachmentCount}
             </#if>
             <#if hasLocationAttached>
                 <@u.message key="email.mapAttached" /> ${attachmentCount}
+            </#if>
+            <#if hasVideoAttached>
+                <#if hasLocationAttached>
+                    <@u.message key="email.videoAttached" args=[1] />
+                <#else>
+                    <@u.message key="email.videoAttached" args=[attachmentCount] />
+                </#if>
             </#if>
             <#if (attachmentCount > 0)>
                 <@u.message "email.attachmentCount.info" />

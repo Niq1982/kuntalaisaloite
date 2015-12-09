@@ -132,7 +132,24 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         assertThat(email.getBodyHtml(), containsString(urls.loginMunicipality(MUNICIPALITY_LOGIN_HASH)));
 
+        assertThat(email.getBodyHtml(), not(containsString("video")));
+
     }
+    @Test
+    public void single_to_municipality_contains_all_information_video() throws Exception {
+
+        testHelper.addVideo(initiativeId(), "randomString", "randomString");
+
+        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+
+        emailService.sendSingleToMunicipality(initiativeId(), Locales.LOCALE_FI);
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getBodyHtml(), containsString("video"));
+
+    }
+
 
     @Test
     public void author_has_been_deleted_email_to_everyone_contains_all_information() throws Exception {
@@ -249,7 +266,24 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString("1 liite"));
 
         assertThat(email.getBodyHtml(), containsString(urls.loginMunicipality(MUNICIPALITY_LOGIN_HASH)));
+
+        assertThat(email.getBodyHtml(), not(containsString("video")));
     }
+
+    @Test
+    public void collaborative_to_municipality_contains_all_information_video() throws Exception {
+
+        testHelper.addVideo(initiativeId(), "randomString", "randomString");
+
+        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+
+        emailService.sendCollaborativeToMunicipality(initiativeId(), Locales.LOCALE_FI);
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getBodyHtml(), containsString("video"));
+    }
+
 
     @Test
     public void collaborative_to_authors_contains_all_information() throws Exception {
@@ -390,6 +424,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
 
     }
+
 
     private static AuthorMessage authorMessage() {
         String contactorEmail = "someContactor@example.com";

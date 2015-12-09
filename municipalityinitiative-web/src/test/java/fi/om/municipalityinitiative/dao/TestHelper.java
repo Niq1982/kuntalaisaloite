@@ -774,6 +774,15 @@ public class TestHelper {
         return randomHash;
     }
 
+    @Transactional
+    public void addVideo(Long initiativeId, String videoName, String videoUrl) {
+        queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.videoName, videoName)
+                .set(QMunicipalityInitiative.municipalityInitiative.videoUrl, videoUrl)
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute();
+    }
+
 
     public static class AuthorDraft {
 
