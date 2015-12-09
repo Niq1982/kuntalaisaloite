@@ -83,7 +83,11 @@ public class VideoService {
 
     public String getYouTubeVideoId(String videoUrl) throws InvalidVideoUrlException {
         if (videoUrl.contains(EMBED)) {
-            return videoUrl.substring(videoUrl.indexOf(EMBED) + EMBED.length());
+            String id =  videoUrl.substring(videoUrl.indexOf(EMBED) + EMBED.length());
+            if (id.length() < 1){
+                throw new InvalidVideoUrlException();
+            }
+            return id;
         } else if (videoUrl.contains(WATCH_V)) {
             return videoUrl.substring(videoUrl.indexOf(WATCH_V) + WATCH_V.length());
         }

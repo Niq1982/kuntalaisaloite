@@ -136,6 +136,23 @@ public class MunicipalityDecisionService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(InitiativeViewInfo initiative) {
+
+        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
+        if (initiative.getDecisionDate().isPresent()) {
+            AttachmentUtil.Attachments attachments = getDecisionAttachments(initiative.getId());
+            if (decisionPresent(initiative, attachments)) {
+                municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
+                        initiative.getDecisionText(),
+                        initiative.getDecisionDate().getValue(),
+                        initiative.getDecisionModifiedDate(),
+                        attachments));
+            }
+        }
+        return municipalityDecisionInfo;
+    }
+
     private void saveFile(MunicipalityDecisionDto.FileWithName attachment, DecisionAttachmentFile fileInfo, Long attachmentId) throws InvalidAttachmentException, FileUploadException {
         File tempFile = null;
         try {
@@ -223,19 +240,4 @@ public class MunicipalityDecisionService {
     }
 
 
-    public Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(InitiativeViewInfo initiative) {
-
-        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
-        if (initiative.getDecisionDate().isPresent()) {
-            AttachmentUtil.Attachments attachments = getDecisionAttachments(initiative.getId());
-            if (decisionPresent(initiative, attachments)) {
-                municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
-                        initiative.getDecisionText(),
-                        initiative.getDecisionDate().getValue(),
-                        initiative.getDecisionModifiedDate(),
-                        attachments));
-            }
-        }
-        return municipalityDecisionInfo;
-    }
 }
