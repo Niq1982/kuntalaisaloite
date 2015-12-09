@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 
+import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.MunicipalityUserDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
@@ -12,7 +13,9 @@ import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
+import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.aspectj.util.FileUtil;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
@@ -24,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -59,6 +63,9 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     protected static String FILE_TYPE = "pdf";
 
     protected String decisionAttachmentFileDir;
+
+    @Resource
+    private InitiativeDao initiativeDao;
 
 
     @Override
@@ -221,9 +228,9 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             createDefaultMunicipalityDecisionWithAttachment(initiativeId);
 
-            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build("Edited text");
+            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build(Maybe.of("Edited text"));
 
-            municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+            municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)), new Locale("fi"));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -247,9 +254,9 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             createDefaultMunicipalityDecisionWithAttachment(initiativeId);
 
-            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build("Edited text");
+            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build(Maybe.of("Edited text"));
 
-            municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId + 1)));
+            municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId + 1)), new Locale("fi"));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -351,12 +358,99 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
         OmLoginUserHolder omLoginUserHolder = new OmLoginUserHolder(User.omUser("om user"));
 
-        municipalityUserService.renewManagementHash(omLoginUserHolder, initiativeId);
+        municipalityUserService.renewManagementHash(omLoginUserHolder, initiativeId, new Locale("fi"));
 
         String newHash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(initiativeId);
 
         assertThat(oldHash, not(newHash));
     }
+
+    @Test
+    @Transactional
+    public void decision_absent_if_decision_not_present() {
+        Long initiativeId = createVerifiedInitiativeWithAuthor();
+
+        Maybe<MunicipalityDecisionInfo> decisionDtoMaybe = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
+
+        assertThat(decisionDtoMaybe.isNotPresent(), is(true));
+    }
+
+    @Test
+    @Transactional
+    public void get_decision() {
+        Long initiativeId = createVerifiedInitiativeWithAuthor();
+
+        try {
+
+            MunicipalityDecisionDto decision = createDefaultMunicipalityDecisionWithAttachment(initiativeId);
+
+        } catch (Exception e ) {
+            Maybe<MunicipalityDecisionInfo> decisionDtoMaybe = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
+
+            assertThat(decisionDtoMaybe.isPresent(), is(true));
+        }
+    }
+
+    @Test
+    @Transactional
+    public void absent_if_decision_text_and_attachments_are_removed() {
+        Long initiativeId = createVerifiedInitiativeWithAuthor();
+
+        try {
+
+            MunicipalityDecisionDto decision = createDefaultMunicipalityDecisionWithAttachment(initiativeId);
+
+            MunicipalityDecisionDto emptyDecision = MunicipalityDecisionDto.build(Maybe.of(""));
+
+            municipalityDecisionService.saveAttachments(emptyDecision.getFiles(), initiativeId);
+
+            initiativeDao.updateInitiativeDecision(initiativeId, emptyDecision.getDescription());
+
+        } catch (Exception e ) {
+            Maybe<MunicipalityDecisionInfo> decisionDtoMaybe = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
+
+            assertThat(decisionDtoMaybe.isNotPresent(), is(true));
+        }
+    }
+    @Test
+    @Transactional
+    public void present_if_decision_contains_only_text() {
+        Long initiativeId = createVerifiedInitiativeWithAuthor();
+
+        try {
+
+            initiativeDao.createInitiativeDecision(initiativeId, "some text");
+
+        } catch (Exception e ) {
+            Maybe<MunicipalityDecisionInfo> decisionDtoMaybe = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
+
+            assertThat(decisionDtoMaybe.isPresent(), is(true));
+        }
+    }
+
+    @Test
+    @Transactional
+    public void present_if_decision_contains_only_attachments() {
+        Long initiativeId = createVerifiedInitiativeWithAuthor();
+
+        try {
+            MunicipalityDecisionDto decision = new MunicipalityDecisionDto();
+
+            addAttachmentToDecision(decision);
+
+            municipalityDecisionService.saveAttachments(decision.getFiles(), initiativeId);
+
+            initiativeDao.updateInitiativeDecision(initiativeId, decision.getDescription());
+
+        } catch (Exception e ) {
+            Maybe<MunicipalityDecisionInfo> decisionDtoMaybe = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
+
+            assertThat(decisionDtoMaybe.isPresent(), is(true));
+
+            assertThat(decisionDtoMaybe.getValue().getDecisionText(), nullValue());
+        }
+    }
+
 
 
     protected MunicipalityDecisionDto addAttachmentToDecision(MunicipalityDecisionDto decision) throws IOException {
@@ -384,7 +478,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
         decision.setDescription(DECISION_DESCRIPTION);
 
-        municipalityDecisionService.setDecision(decision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+        municipalityDecisionService.setDecision(decision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)),  new Locale("fi"));
 
         return decision;
     }

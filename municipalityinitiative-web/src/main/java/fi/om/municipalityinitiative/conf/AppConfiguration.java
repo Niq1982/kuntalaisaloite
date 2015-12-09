@@ -171,6 +171,9 @@ public class AppConfiguration {
     public MunicipalityUserDao municipalityUserDao() {return new JdbcMunicipalityUserDao() ;}
 
     @Bean
+    public FollowInitiativeDao followInitiativeDao() {return new JdbcFollowInitiativeDao();}
+
+    @Bean
     public AuthorService authorService() {
         return new AuthorService();
     }
@@ -220,6 +223,9 @@ public class AppConfiguration {
 
     @Bean
     public LocationService locationService() { return new  LocationService();}
+
+    @Bean
+    public FollowInitiativeService followInitiativeService() {return new FollowInitiativeService();}
 
     @Bean
     public JobExecutor jobExecutor() {
@@ -419,7 +425,9 @@ public class AppConfiguration {
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.isTestEmailSender)),
                 String.valueOf(env.getRequiredProperty(PropertyNames.googleMapsApiKey)),
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.googleMapsEnabled)),
-                Boolean.valueOf(env.getRequiredProperty(PropertyNames.superSearchEnabled)));
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.superSearchEnabled)),
+                Boolean.valueOf(env.getProperty(PropertyNames.videoEnabled)),
+                Boolean.valueOf(env.getProperty(PropertyNames.followEnabled)));
     }
 
     @Bean
@@ -456,6 +464,11 @@ public class AppConfiguration {
             }
          });
         return executorService;
+    }
+
+    @Bean
+    public VideoService videoService() {
+        return new VideoService();
     }
 
     @Bean

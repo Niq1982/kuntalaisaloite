@@ -5,8 +5,10 @@ import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
+import fi.om.municipalityinitiative.exceptions.InvalidVideoUrlException;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
@@ -29,6 +31,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,6 +43,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class InitiativeManagementController extends BaseController {
+
 
     @Resource
     private InitiativeManagementService initiativeManagementService;
@@ -61,6 +65,9 @@ public class InitiativeManagementController extends BaseController {
 
     @Resource
     LocationService locationService;
+
+    @Resource
+    VideoService videoService;
 
     private static final Logger log = LoggerFactory.getLogger(InitiativeManagementController.class);
 
@@ -126,6 +133,82 @@ public class InitiativeManagementController extends BaseController {
                 new AttachmentCreateDto(),
                 AttachmentUtil.ImageProperties.instance()).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
+    
+    @RequestMapping(value={ MANAGE_VIDEOS_FI+ID_PARAMETER, MANAGE_VIDEOS_SV+ID_PARAMETER }, method=GET)
+    public String manageVideos(@PathVariable("id") Long initiativeId,
+                                        Model model, Locale locale, HttpServletRequest request) {
+
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+
+        InitiativeViewInfo initiativeInfo = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
+
+        if (!environmentSettings.getVideoEnabled()) {
+            throw new AccessDeniedException("Feature not enabled");
+        }
+        if (initiativeInfo.isSent()) {
+            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
+        }
+
+        if (initiativeInfo.hasNeverBeenSaved()) {
+            return contextRelativeRedirect(Urls.get(locale).edit(initiativeId));
+        }
+
+        return ViewGenerator.manageVideosView(initiativeInfo,
+                normalInitiativeService.getManagementSettings(initiativeId),
+                new VideoCreateDto())
+                .view(model, Urls.get(locale).alt().getManagement(initiativeId));
+    }
+
+    @RequestMapping(value= {MANAGE_VIDEOS_FI+ID_PARAMETER, MANAGE_VIDEOS_SV+ID_PARAMETER }, method = POST, params = ACTION_ADD_VIDEO)
+    public String addVideo(@PathVariable("id") Long initiativeId, @ModelAttribute("video") VideoCreateDto video, BindingResult bindingResult,Model model, Locale locale, HttpServletRequest request) {
+
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+        InitiativeViewInfo initiativeInfo = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
+
+        if (!environmentSettings.getVideoEnabled()) {
+            throw new AccessDeniedException("Feature not enabled");
+        }
+        if (initiativeInfo.isSent()) {
+            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
+        }
+        if (!videoService.validationSuccessful(video, bindingResult, model)) {
+            return ViewGenerator.manageVideosView(initiativeInfo,
+                    normalInitiativeService.getManagementSettings(initiativeId),
+                    video)
+                    .view(model, Urls.get(locale).alt().getManagement(initiativeId));
+        }
+
+        try {
+            videoService.addVideoUrl(video, initiativeId);
+        } catch (InvalidVideoUrlException e) {
+            e.printStackTrace();
+            return redirectWithMessage(Urls.get(locale).getManageVideoUrl(initiativeId), RequestMessage.VIDEO_FAILURE, request);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return redirectWithMessage(Urls.get(locale).getManageVideoUrl(initiativeId), RequestMessage.VIDEO_FAILURE, request);
+        }
+        return redirectWithMessage(Urls.get(locale).getManageVideoUrl(initiativeId), RequestMessage.VIDEO_ADDED, request);
+
+    }
+
+    @RequestMapping(value= {MANAGE_VIDEOS_FI+ID_PARAMETER, MANAGE_VIDEOS_SV+ID_PARAMETER }, method = POST, params = ACTION_REMOVE_VIDEO)
+    public String removeVideo(@PathVariable("id") Long initiativeId, @ModelAttribute("video") VideoCreateDto video,  Model model, Locale locale, HttpServletRequest request) {
+
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+        InitiativeViewInfo initiativeInfo = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
+
+        if (!environmentSettings.getVideoEnabled()) {
+            throw new AccessDeniedException("Feature not enabled");
+        }
+        if (initiativeInfo.isSent()) {
+            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
+        }
+
+        videoService.removeVideoUrl(initiativeId);
+        return redirectWithMessage(Urls.get(locale).getManageVideoUrl(initiativeId), RequestMessage.VIDEO_DELETED, request);
+    }
+
+
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
     public String editView(@PathVariable("id") Long initiativeId,

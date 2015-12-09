@@ -188,6 +188,10 @@ public final class Urls {
 
     public static final String ACTION_DELETE_ATTACHMENT = "action-delete-attachment";
 
+    public static final String ACTION_ADD_VIDEO = "action-add-video";
+
+    public static final String ACTION_REMOVE_VIDEO = "action-remove-video";
+
     public static final String ACTION_RENEW_MUNICIPALITY_MANAGEMENT_HASH = "action-renew-municipality-management-hash";
 
     // Actions for the content editor
@@ -296,6 +300,10 @@ public final class Urls {
 
     public static final String MANAGE_ATTACHMENTS_SV = "/sv/bilagor" + "/";
 
+    public static final String MANAGE_VIDEOS_FI = "/fi/video" + "/";
+
+    public static final String MANAGE_VIDEOS_SV = "/sv/video" + "/";
+
     public static final String INVITATION_FI = "/fi/kutsu" + "/" + ID_PARAMETER;
 
     public static final String INVITATION_SV = "/sv/inbjudan" + "/" + ID_PARAMETER;
@@ -347,6 +355,8 @@ public final class Urls {
     private static final String  SUPERSEARCH_LAN_PARAMETER = "/#/?lan=";
 
     private static final String SUPERSEARCH_SITE_PARAMETER = "&site=";
+
+    public static final String UNSUBSCRIBE = "/unsubscribe/" + ID_PARAMETER;
 
     private final String baseUrl;
 
@@ -549,6 +559,9 @@ public final class Urls {
     
     public String getManageAttachments(Long id) {
         return getLocalizedPageUrl(MANAGE_ATTACHMENTS_FI+ID_PARAMETER, MANAGE_ATTACHMENTS_SV+ID_PARAMETER).replace(ID_PARAMETER, id.toString());
+    }
+    public String getManageVideoUrl(Long id) {
+        return getLocalizedPageUrl(MANAGE_VIDEOS_FI+ID_PARAMETER, MANAGE_VIDEOS_SV+ID_PARAMETER).replace(ID_PARAMETER, id.toString());
     }
 
     public String vetumaLogin() {
@@ -772,5 +785,8 @@ public final class Urls {
 
     public String openDecisionAttachmentsForEdit(Long initiativeId) {
         return getLocalizedPageUrl(EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV).replace(ID_PARAMETER, initiativeId.toString());
+    }
+    public String unsubscribe(long initiativeId, String hash ) {
+        return getBaseUrl() + "/" + UNSUBSCRIBE.replace(ID_PARAMETER, initiativeId+"/") + "?" + PARAM_CONFIRMATION_CODE + "="+ hash;
     }
 }

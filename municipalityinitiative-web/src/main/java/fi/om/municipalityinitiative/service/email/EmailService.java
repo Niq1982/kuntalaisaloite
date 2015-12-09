@@ -39,6 +39,10 @@ public class EmailService {
     private static final String VERIFIED_INITIATIVE_CREATED = "verified-initiative-created";
     private static final String INITIATIVE_ACCEPTED_BUT_NOT_PUBLISHED = "report-accepted-but-not-published";
     private static final String INITIATIVE_QUARTER_REPORT = "report-quarter";
+    private static final String MUNICIPALITY_DECISION = "municipality-decision";
+    private static final String MUNICIPALITY_DECISION_TO_FOLLOWERS = "municipality-decision-followers";
+    private static final String MUNICIPALITY_COLLABORATIVE_FOLLOWERS = "municipality-collaborative-followers";
+    private static final String FOLLOWERS_CONFIRM = "follow-confirmed";
 
     @Resource
     EmailServiceDataProvider dataProvider;
@@ -124,6 +128,8 @@ public class EmailService {
         Map<String, Object> dataMap = toDataMap(initiative, authors, locale);
         dataMap.put("attachmentCount", dataProvider.getAcceptedAttachmentCount(initiativeId));
         dataMap.put("hasLocationAttached", dataProvider.hasLocationAttached(initiativeId));
+        dataMap.put("hasVideoAttached", initiative.getVideoUrl().isPresent());
+
         dataMap.put("municipalityDecisionHash", dataProvider.getMunicipalityDecisionHash(initiativeId));
         emailMessageConstructor
                 .fromTemplate(initiativeId, NOT_COLLECTABLE_TEMPLATE)
@@ -176,6 +182,7 @@ public class EmailService {
         Map<String, Object> dataMap = toDataMap(initiative, dataProvider.findAuthors(initiativeId), locale);
         dataMap.put("attachmentCount", dataProvider.getAcceptedAttachmentCount(initiativeId));
         dataMap.put("hasLocationAttached", dataProvider.hasLocationAttached(initiativeId));
+        dataMap.put("hasVideoAttached", initiative.getVideoUrl().isPresent());
         dataMap.put("municipalityDecisionHash", dataProvider.getMunicipalityDecisionHash(initiativeId));
         emailMessageConstructor
                 .fromTemplate(initiativeId, COLLABORATIVE_TO_MUNICIPALITY)
@@ -186,6 +193,53 @@ public class EmailService {
                 .send();
     }
 
+    public void sendCollaborativeToMunicipalityToFollowers(Long initiativeId) {
+
+        for (Map.Entry<String, String> entry : dataProvider.getFollowers(initiativeId).entrySet())
+        {
+            sentToMunicipalityToFollower(initiativeId, entry.getKey(), entry.getValue());
+        }
+
+    }
+
+    private void sentToMunicipalityToFollower(Long initiativeId, String recipient, String hash) {
+        Locale locale = Locales.LOCALE_FI;
+
+        Initiative initiative = dataProvider.get(initiativeId);
+
+        Map<String, Object> dataMap = toDataMap(initiative, dataProvider.findAuthors(initiativeId), locale);
+        dataMap.put("attachmentCount", dataProvider.getAcceptedAttachmentCount(initiativeId));
+        dataMap.put("hasLocationAttached", dataProvider.hasLocationAttached(initiativeId));
+        dataMap.put("hasVideoAttached", initiative.getVideoUrl().isPresent());
+        dataMap.put("initiativeId", initiativeId);
+        dataMap.put("removeHash", hash);
+
+        emailMessageConstructor
+                .fromTemplate(initiativeId, MUNICIPALITY_COLLABORATIVE_FOLLOWERS)
+                .addRecipient(recipient)
+                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
+                .withDataMap(dataMap)
+                .send();
+    }
+
+    public void sendConfirmToFollower(Long initiativeId, String recipient, String hash) {
+        Locale locale = Locales.LOCALE_FI;
+
+        Initiative initiative = dataProvider.get(initiativeId);
+
+        Map<String, Object> dataMap = toDataMap(initiative, locale);
+        dataMap.put("initiativeId", initiativeId);
+        dataMap.put("removeHash", hash);
+
+        emailMessageConstructor
+                .fromTemplate(initiativeId, FOLLOWERS_CONFIRM)
+                .addRecipient(recipient)
+                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
+                .withDataMap(dataMap)
+                .send();
+    }
+
+
     public void sendCollaborativeToAuthors(Long initiativeId) {
         Locale locale = Locales.LOCALE_FI;
 
@@ -194,6 +248,7 @@ public class EmailService {
         Map<String, Object> dataMap = toDataMap(initiative, dataProvider.findAuthors(initiativeId), locale);
         dataMap.put("attachmentCount", dataProvider.getAcceptedAttachmentCount(initiative.getId()));
         dataMap.put("hasLocationAttached", dataProvider.hasLocationAttached(initiativeId));
+        dataMap.put("hasVideoAttached", initiative.getVideoUrl().isPresent());
         emailMessageConstructor.fromTemplate(initiativeId, COLLABORATIVE_TO_MUNICIPALITY)
                 .addRecipients(dataProvider.getAuthorEmails(initiativeId))
                 .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_AUTHOR_SUBJECT, toArray(), locale))
@@ -328,6 +383,35 @@ public class EmailService {
                 .send();
     }
 
+    public void sendMunicipalityDecisionToAuthors(Long initiativeId, Locale locale){
+        emailMessageConstructor
+                .fromTemplate(initiativeId, MUNICIPALITY_DECISION)
+                .addRecipients(dataProvider.getAuthorEmails(initiativeId))
+                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_ANSWERED_SUBJECT, toArray(), locale))
+                .withDataMap(toDataMap(dataProvider.get(initiativeId), locale))
+                .send();
+    }
+
+    public void sendMunicipalityDecisionToFollowers(Long initiativeId) {
+        for (Map.Entry<String, String> entry : dataProvider.getFollowers(initiativeId).entrySet())
+        {
+            decisionToFollowers(initiativeId, entry.getKey(), entry.getValue());
+        }
+
+    }
+    private void decisionToFollowers(Long initiativeId, String email, String hash) {
+        Locale locale = new Locale("fi");
+
+        HashMap<String, Object> dataMap = toDataMap(dataProvider.get(initiativeId), locale);
+        dataMap.put("removeHash", hash);
+        dataMap.put("initiativeId", initiativeId);
+        emailMessageConstructor
+                .fromTemplate(initiativeId, MUNICIPALITY_DECISION_TO_FOLLOWERS)
+                .addRecipient(email)
+                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_ANSWERED_SUBJECT, toArray(), locale))
+                .withDataMap(dataMap)
+                .send();
+    }
 
     private String solveMunicipalityEmail(Initiative initiative) {
         if (environmentSettings.isTestSendMunicipalityEmailsToAuthor()) {
@@ -374,6 +458,7 @@ public class EmailService {
         }
         dataMap.put(enumType.getSimpleName(), values);
     }
+
 
     public static class EmailLocalizationProvider {
         private final Locale locale;

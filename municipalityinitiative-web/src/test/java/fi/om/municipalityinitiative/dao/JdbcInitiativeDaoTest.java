@@ -42,6 +42,11 @@ public class JdbcInitiativeDaoTest {
     public static final String INITIATOR_NAME = "Teemu Teekkari";
     public static final String EXTRA_INFO = "Lisätietoja seuraa perästä";
     public static final int EXTERNAL_PARTICIPANT_COUNT = 12;
+    public static final String DECISION_TEXT = "Kunnan päätös";
+    public static final String NEW_DECISION_TEXT = "uusi päätös";
+    public static final String VIDEO_URL = "www.youtube.com/v=dsklfjadd";
+    public static final String VIDEONAME = "VIDEOname";
+    public static final String VIDEO_NAME = "Video name";
 
 
     @Resource
@@ -1031,6 +1036,70 @@ public class JdbcInitiativeDaoTest {
 
         assertThat(testHelper.getInitiative(accepted).getLastEmailReportTime(), is(now));
         assertThat(testHelper.getInitiative(accepted).getLastEmailReportType(), is(EmailReportType.IN_ACCEPTED));
+
+    }
+
+    @Test
+    public void create_and_edit_municipality_decision(){
+
+        Long published = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED));
+
+        initiativeDao.createInitiativeDecision(published, DECISION_TEXT);
+
+        Initiative initiative = initiativeDao.get(published);
+
+        assertThat(initiative.getDecision().getValue(), is(DECISION_TEXT));
+
+        initiativeDao.updateInitiativeDecision(published, NEW_DECISION_TEXT);
+
+        initiative = initiativeDao.get(published);
+
+        assertThat(initiative.getDecision().getValue(), is(NEW_DECISION_TEXT));
+
+        initiativeDao.updateInitiativeDecisionModifiedDate(published);
+
+        initiative = initiativeDao.get(published);
+
+        assertThat(initiative.getDecision().getValue(), is(NEW_DECISION_TEXT));
+
+    }
+
+    @Test
+    public void add_video_to_initiative() {
+        Long withVideo = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withVideoUrl(VIDEO_URL).withVideoName(VIDEONAME));
+
+        Initiative initiative = initiativeDao.get(withVideo);
+
+        assertThat(initiative.getVideoUrl().isPresent(), is(true));
+        assertThat(initiative.getVideoUrl().getValue(), is(VIDEO_URL));
+        assertThat(initiative.getVideoUrlName().getValue(), is(VIDEONAME));
+
+    }
+    @Test
+    public void can_add_video_to_initiative() {
+        Long withVideo = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
+
+
+        initiativeDao.addVideoUrl(VIDEO_URL, VIDEONAME, withVideo);
+
+        Initiative initiative = initiativeDao.get(withVideo);
+        assertThat(initiative.getVideoUrl().isPresent(), is(true));
+        assertThat(initiative.getVideoUrl().getValue(), is(VIDEO_URL));
+        assertThat(initiative.getVideoUrlName().getValue(), is(VIDEONAME));
+
+    }
+
+    @Test
+    public void can_remove_video_to_initiative() {
+        Long withVideo = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
+
+        initiativeDao.addVideoUrl(VIDEO_URL, VIDEONAME, withVideo);
+
+        initiativeDao.removeVideoUrl(withVideo);
+
+        Initiative initiative = initiativeDao.get(withVideo);
+        assertThat(initiative.getVideoUrl().isPresent(), is(false));
+        assertThat(initiative.getVideoUrlName().isPresent(), is(false));
 
     }
 

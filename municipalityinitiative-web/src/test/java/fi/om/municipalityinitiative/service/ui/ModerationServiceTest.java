@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.service.MunicipalityUserService;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.util.FixState;
@@ -41,6 +42,8 @@ public class ModerationServiceTest {
 
     private ReviewHistoryDao reviewHistoryDaoMock;
 
+    private MunicipalityUserService municipalityUserService;
+
     @Before
     public void setup() throws Exception {
         initiativeDaoMock = mock(InitiativeDao.class);
@@ -56,6 +59,9 @@ public class ModerationServiceTest {
         moderationService.attachmentDao = attachmentDaoMock;
         reviewHistoryDaoMock = mock(ReviewHistoryDao.class);
         moderationService.reviewHistoryDao = reviewHistoryDaoMock;
+
+        municipalityUserService = mock(MunicipalityUserService.class);
+        moderationService.municipalityUserService = municipalityUserService;
 
         stub(authorDaoMock.findNormalAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
 
@@ -181,6 +187,28 @@ public class ModerationServiceTest {
         verify(moderationService.emailService).sendStatusEmail(anyLong(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
         verify(moderationService.emailService).sendSingleToMunicipality(anyLong(), eq(Locales.LOCALE_FI));
 
+    }
+
+    @Test
+    public void accepting_single_initiative_adds_municipality_user() {
+
+        Initiative initiative = initiative(InitiativeState.REVIEW, InitiativeType.SINGLE);
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
+
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
+
+        verify(municipalityUserService).createMunicipalityUser(initiative.getId());
+    }
+
+    @Test
+    public void accepting_undefined_initiative_does_not_add_municipality_user() {
+
+        Initiative initiative = initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED);
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
+
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
+
+        verify(municipalityUserService, never()).createMunicipalityUser(initiative.getId());
     }
 
     @Test(expected = OperationNotAllowedException.class)

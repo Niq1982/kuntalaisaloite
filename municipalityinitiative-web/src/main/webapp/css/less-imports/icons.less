@@ -302,7 +302,8 @@
     .done &{
 
         &.icon-publish {
-            .iconPosition(0, 1, 64);
+
+            .iconPosition(0, 1, 64, -2);
             @media @mobile {
                 .iconPosition(0, 1, @mobileIconDistance, -3);
             }
@@ -351,5 +352,13 @@
         }
     }
 
+
+}
+
+.js-follow {
+    .save-and-send{
+        background-position: 0 6px;
+        padding-left: 25px;
+    }
 
 }

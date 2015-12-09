@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.service.MunicipalityDecisionService;
 import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
@@ -53,6 +54,9 @@ public class BaseController {
     private final Maybe<Integer> omPiwicId;
 
     private UrlHelper urlHelper = new UrlHelper();
+
+    @Resource
+    protected MunicipalityDecisionService municipalityDecisionService;
     
     public BaseController(boolean optimizeResources, String resourcesVersion) {
         this(optimizeResources, resourcesVersion, Maybe.<Integer>absent());
@@ -64,6 +68,8 @@ public class BaseController {
         this.omPiwicId = omPiwicId;
         InfoRibbon.refreshInfoRibbonTexts();
     }
+
+
 
     static void addRequestMessage(RequestMessage requestMessage, Model model, HttpServletRequest request) {
         FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
@@ -139,6 +145,7 @@ public class BaseController {
         }
     }
 
+
     @ModelAttribute
     public void addModelDefaults(Locale locale, HttpServletRequest request, Model model) {
         Urls urls = Urls.get(locale);
@@ -160,6 +167,8 @@ public class BaseController {
         model.addAttribute("googleMapsApiKey", environmentSettings.getGoogleMapsApiKey());
         model.addAttribute("googleMapsEnabled", environmentSettings.isGoogleMapsEnabled());
         model.addAttribute("superSearchEnabled", environmentSettings.isSuperSearchEnabled());
+        model.addAttribute("videoEnabled", environmentSettings.getVideoEnabled());
+        model.addAttribute("followEnabled", environmentSettings.isFollowEnabled());
 
         try {
             model.addAttribute("UrlConstants", freemarkerObjectWrapper.getStaticModels().get(Urls.class.getName()));

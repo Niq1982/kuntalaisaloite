@@ -70,14 +70,15 @@ public class PublicInitiativeController extends BaseController {
     private AttachmentService attachmentService;
 
     @Resource
-    private MunicipalityDecisionService municipalityDecisionService;
+    private SupportCountService supportCountService;
 
     @Resource
-    private SupportCountService supportCountService;
+    private FollowInitiativeService followInitiativeService;
 
     private static final Logger log = LoggerFactory.getLogger(PublicInitiativeController.class);
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
 
 
     public PublicInitiativeController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> piwikId) {
@@ -111,13 +112,14 @@ public class PublicInitiativeController extends BaseController {
 
         InitiativePageInfo initiativePageView = publicInitiativeService.getInitiativePageDto(initiativeId, loginUserHolder);
 
-        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageView);
+        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageView.initiative);
 
         if (initiativePageView.isCollaborative()) {
 
             return ViewGenerator.collaborativeView(initiativePageView,
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
+                    new FollowInitiativeDto(),
                     new AuthorUIMessage(),
                     supportCountService.getSupportVotesPerDateJson(initiativeId),
                     municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
@@ -125,18 +127,6 @@ public class PublicInitiativeController extends BaseController {
         else {
             return ViewGenerator.singleView(initiativePageView, municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
         }
-    }
-
-    private Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(@PathVariable("id") Long initiativeId, InitiativePageInfo initiativePageView) {
-        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
-        if (initiativePageView.initiative != null && initiativePageView.initiative.getDecisionDate().isPresent()) {
-            municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
-                    initiativePageView.initiative.getDecisionText(),
-                    initiativePageView.initiative.getDecisionDate().getValue(),
-                    initiativePageView.initiative.getDecisionModifiedDate(),
-                    municipalityDecisionService.getDecisionAttachments(initiativeId)));
-        }
-        return municipalityDecisionInfo;
     }
 
 
@@ -233,9 +223,10 @@ public class PublicInitiativeController extends BaseController {
             return ViewGenerator.collaborativeView(initiativePageInfo,
                     municipalityService.findAllMunicipalities(locale),
                     participant,
+                    new FollowInitiativeDto(),
                     new AuthorUIMessage(),
                     supportCountService.getSupportVotesPerDateJson(initiativeId),
-                    getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo)).view(model, Urls.get(locale).alt().view(initiativeId));
+                    municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(initiativeId));
 
         }
     }
@@ -381,9 +372,10 @@ public class PublicInitiativeController extends BaseController {
             return ViewGenerator.collaborativeView(initiativePageInfo,
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
+                    new FollowInitiativeDto(),
                     authorUIMessage,
                     supportCountService.getSupportVotesPerDateJson(initiativeId),
-                    getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo)
+                    municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageInfo.initiative)
             ).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
@@ -451,6 +443,29 @@ public class PublicInitiativeController extends BaseController {
     @RequestMapping(value = SUPPORTS_BY_DATE, method=GET, produces=JSON)
     public @ResponseBody JsonNode jsonSupportsByDate(@PathVariable Long id) throws IOException {
         return objectMapper.readTree(supportCountService.getSupportVotesPerDateJson(id));
+    }
+
+    @RequestMapping(value = { VIEW_FI, VIEW_SV }, method = POST, params = "action-follow")
+    public String followInitiative(@PathVariable long id, @ModelAttribute("followInitiative") FollowInitiativeDto followInitiativeDto, Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
+        if (!validationService.validationSuccessful(followInitiativeDto, bindingResult, model)) {
+            InitiativePageInfo initiativePageInfo = publicInitiativeService.getInitiativePageInfo(id);
+            return ViewGenerator.collaborativeView(initiativePageInfo,
+                    municipalityService.findAllMunicipalities(locale),
+                    new ParticipantUICreateDto(),
+                    followInitiativeDto,
+                    new AuthorUIMessage(),
+                    supportCountService.getSupportVotesPerDateJson(id),
+                    municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(id));
+
+        }
+        followInitiativeService.followInitiative(id, followInitiativeDto.getParticipantEmail());
+        return redirectWithMessage(Urls.get(locale).view(id), RequestMessage.COMFIRM_FOLLOW, request);
+    }
+
+    @RequestMapping(value = { UNSUBSCRIBE }, method = GET)
+    public String unfollowInitiative(@PathVariable long id, @RequestParam(PARAM_CONFIRMATION_CODE) String hash, Locale locale, HttpServletRequest request) {
+        followInitiativeService.stopFollowingInitiative(hash);
+        return redirectWithMessage(Urls.get(locale).view(id), RequestMessage.COMFIRM_STOP_FOLLOW, request);
     }
 
     private static void attachmentFileResponse(HttpServletResponse response, AttachmentFile file) throws IOException {

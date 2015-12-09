@@ -13,6 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Locale;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -22,6 +24,8 @@ import static org.hamcrest.core.IsNot.not;
 public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     private static final String MANAGEMENT_HASH = "managementHash";
+    public static final String FOLLOWEREMAIL = "test@test.fi";
+    public static final String MUNICIPALITY_LOGIN_HASH = "hashahs";
 
     private Urls urls;
 
@@ -104,11 +108,14 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         testHelper.addAttachment(initiativeId(), "accepted", true, "jpg");
         testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
 
+
+        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+
         emailService.sendSingleToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
         EmailDto email = testHelper.getSingleQueuedEmail();
 
-        assertThat(email.getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
+        assertThat(email.getSubject(), is("Kuntalaisaloite: " + INITIATIVE_NAME));
         assertThat(email.getRecipientsAsString(), is(MUNICIPALITY_EMAIL));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_PROPOSAL));
@@ -123,7 +130,26 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
         assertThat(email.getBodyHtml(), containsString("1 liite"));
 
+        assertThat(email.getBodyHtml(), containsString(urls.loginMunicipality(MUNICIPALITY_LOGIN_HASH)));
+
+        assertThat(email.getBodyHtml(), not(containsString("video")));
+
     }
+    @Test
+    public void single_to_municipality_contains_all_information_video() throws Exception {
+
+        testHelper.addVideo(initiativeId(), "randomString", "randomString");
+
+        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+
+        emailService.sendSingleToMunicipality(initiativeId(), Locales.LOCALE_FI);
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getBodyHtml(), containsString("video"));
+
+    }
+
 
     @Test
     public void author_has_been_deleted_email_to_everyone_contains_all_information() throws Exception {
@@ -183,10 +209,45 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     }
 
     @Test
+    public void municipality_answers_contains_all_information() {
+        emailService.sendMunicipalityDecisionToAuthors(initiativeId(), new Locale("fi"));
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getSubject(), containsString("Kunta on vastannut aloitteeseen"));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
+        assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
+
+    }
+
+    @Test
+    public void municipality_answers_to_followers_contains_all_information() {
+
+        String removeHash = testHelper.addFollower(initiativeId(), FOLLOWEREMAIL);
+
+        emailService.sendMunicipalityDecisionToFollowers(initiativeId());
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getSubject(), containsString("Kunta on vastannut aloitteeseen"));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
+        assertThat(email.getRecipientsAsString(), is(FOLLOWEREMAIL));
+        assertThat(email.getBodyHtml(), containsString(removeHash));
+
+    }
+
+
+    @Test
     public void collaborative_to_municipality_contains_all_information() throws Exception {
 
         testHelper.addAttachment(initiativeId(), "accepted", true, "jpg");
         testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
+
+        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
 
         emailService.sendCollaborativeToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
@@ -203,13 +264,34 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
         assertThat(email.getBodyHtml(), containsString("1 liite"));
+
+        assertThat(email.getBodyHtml(), containsString(urls.loginMunicipality(MUNICIPALITY_LOGIN_HASH)));
+
+        assertThat(email.getBodyHtml(), not(containsString("video")));
     }
+
+    @Test
+    public void collaborative_to_municipality_contains_all_information_video() throws Exception {
+
+        testHelper.addVideo(initiativeId(), "randomString", "randomString");
+
+        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+
+        emailService.sendCollaborativeToMunicipality(initiativeId(), Locales.LOCALE_FI);
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getBodyHtml(), containsString("video"));
+    }
+
 
     @Test
     public void collaborative_to_authors_contains_all_information() throws Exception {
 
         testHelper.addAttachment(initiativeId(), "accepted", true, "jpg");
         testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
+
+        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
 
         emailService.sendCollaborativeToAuthors(initiativeId());
 
@@ -226,7 +308,50 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
         assertThat(email.getBodyHtml(), containsString("1 liite"));
+
+
+        assertThat(email.getBodyHtml(), not(containsString(urls.loginMunicipality(MUNICIPALITY_LOGIN_HASH))));
     }
+
+    @Test
+    public void send_confirm_to_followers_contains_all_information() {
+        String removeHash = testHelper.addFollower(initiativeId(), FOLLOWEREMAIL);
+
+        emailService.sendConfirmToFollower(initiativeId(), FOLLOWEREMAIL, removeHash);
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getSubject(), is("Kuntalaisaloite: " + INITIATIVE_NAME));
+
+        assertThat(email.getRecipientsAsString(), containsString(FOLLOWEREMAIL));
+        assertThat(email.getBodyHtml(), containsString(removeHash));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getBodyHtml(), containsString("Olet tilannut aloitteen sähköpositiedotteet"));
+        assertThat(email.getBodyHtml(), containsString("Saat sähköpostitiedotteen kun aloitteen vastuuhenkilö lähettää aloitteen kuntaan tai kunta julkaisee vastauksen palvelussa"));
+
+    }
+
+    @Test
+    public void collaborative_to_municipality_to_followers() throws Exception{
+
+        String removeHash = testHelper.addFollower(initiativeId(), FOLLOWEREMAIL);
+
+        emailService.sendCollaborativeToMunicipalityToFollowers(initiativeId());
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getRecipientsAsString(), containsString(FOLLOWEREMAIL));
+        assertThat(email.getBodyHtml(), containsString(removeHash));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
+        assertThat(email.getBodyHtml(), not(containsString(SENT_COMMENT)));
+        assertThat(email.getSubject(), is("Kuntalaisaloite: " + INITIATIVE_NAME));
+
+    }
+
+
 
     @Test
     public void collaborative_to_authors_has_no_information_of_attachments_if_has_not_any() {
@@ -299,6 +424,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
 
     }
+
 
     private static AuthorMessage authorMessage() {
         String contactorEmail = "someContactor@example.com";

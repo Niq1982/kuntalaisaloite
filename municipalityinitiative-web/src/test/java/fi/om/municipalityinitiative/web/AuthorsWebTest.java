@@ -27,8 +27,7 @@ public class AuthorsWebTest extends WebTestBase {
     private static final String MSG_BTN_ADD_AUTHOR = "action.addAuthor";
     private static final String MSG_BTN_SEND = "action.sendInvitation";
     private static final String MSG_INVITATION_UNCONFIRMED = "invitation.unconfirmed";
-    
-    
+
     /**
      * Form values as constants.
      */

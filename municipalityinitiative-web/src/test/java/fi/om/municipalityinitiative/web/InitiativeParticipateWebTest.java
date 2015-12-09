@@ -366,4 +366,20 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
     }
 
+    @Test
+    public void follow_initiative() {
+        open(urls.view(normalInitiativeHelsinki));
+        clickElementByCSS(".js-follow");
+        inputText("participantEmail", "test@example.com");
+
+        getElement(By.name("action-follow")).click();
+
+        assertSuccessMessage("Aloitteen seuraaminen vahvistettu");
+
+        assertTotalEmailsInQueue(1);
+    }
+
+
+
+
 }

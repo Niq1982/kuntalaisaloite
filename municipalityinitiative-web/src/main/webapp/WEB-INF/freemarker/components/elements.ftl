@@ -56,6 +56,10 @@
  * @param initiative is initiative
 -->
 <#macro initiativeView initiative>
+    <#assign pageIsConfirmParticipation = currentRequestUri?ends_with("show-participate")/>
+    <#assign showMap = locations?? && locations?size gt 0 && !pageIsConfirmParticipation && googleMapsEnabled />
+    <#assign showVideo = (initiative.videoUrl.isPresent() && initiative.videoName.isPresent()) && videoEnabled/>
+
     <h2><@u.message "initiative.proposal.title" /></h2>
 
     <div class="initiative-content-row ${((initiative.extraInfo)?has_content)?string("","last")}">
@@ -66,15 +70,21 @@
     	<@e.attachmentsView attachments />
     </#if>
 
-    <#if (initiative.extraInfo)?has_content>
+    <#if showVideo>
+        <@video />
+    </#if>
+
+    <#if (initiative.extraInfo)?has_content || showMap>
         <h2><@u.message "initiative.extraInfo.title" /></h2>
+    </#if>
+
+    <#if (initiative.extraInfo)?has_content>
         <div class="initiative-content-row last replace-links">
             <@u.text initiative.extraInfo!"" />
         </div>
     </#if>
 
-    <#assign pageIsConfirmParticipation = currentRequestUri?ends_with("show-participate")/>
-    <#if locations?? && locations?size gt 0 && !pageIsConfirmParticipation && googleMapsEnabled>
+    <#if showMap>
         <@map locations />
     </#if>
 
@@ -113,6 +123,9 @@
  * @param initiative is initiative
 -->
 <#macro initiativeViewManage initiative>
+    <#assign showMap = locations?? && locations?size gt 0 && googleMapsEnabled />
+    <#assign showVideo = (initiative.videoUrl.isPresent() && initiative.videoName.isPresent()) && videoEnabled/>
+
     <h2><@u.message "initiative.proposal.title" /></h2>
 
     <div class="initiative-content-row ${((initiative.extraInfo)?has_content)?string("","last")}">
@@ -127,14 +140,26 @@
 		</div>
     </#if>
 
-    <#if (initiative.extraInfo)?has_content>
+    <#if showVideo>
+        <@video />
+    </#if>
+    <#if managementSettings.allowAddVideo && videoEnabled>
+    	<div class="initiative-content-row">
+    		<a href="${urls.getManageVideoUrl(initiative.id)}" class="small-button"><span class="small-icon add"><@u.message "video.add.btn" /></span></a>
+		</div>
+    </#if>
+
+    <#if showMap || (initiative.extraInfo)?has_content>
         <h2><@u.message "initiative.extraInfo.title" /></h2>
+    </#if>
+
+    <#if (initiative.extraInfo)?has_content>
         <div class="initiative-content-row last replace-links">
             <@u.text initiative.extraInfo!"" />
         </div>
     </#if>
 
-    <#if locations?? && locations?size gt 0 && googleMapsEnabled>
+    <#if showMap>
         <@map locations />
     </#if>
 
@@ -410,6 +435,7 @@
 
 </#macro>
 
+
 <#macro participateButton admin participateSuccess showForm>
     <#if !admin && !initiative.sentTime.present && !participateSuccess>
     <div class="participants-block ${showForm?string("hidden","")} noprint">
@@ -433,6 +459,11 @@
         </div>
         </#if>
     </#if>
+</#macro>
+
+
+<#macro follow >
+    <a class="js-follow"><span class="small-icon save-and-send"><@u.message "action.follow" /></span></a>
 </#macro>
 
 <#macro participantInformation>
@@ -461,41 +492,25 @@
                 <a class="small-button edit-decision" href="${urls.openDecisionForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.editDecision" /> </span></a>
             </#if>
             <@municipalityAttachmentsView attachments=decisionInfo.attachments />
+            <#if manage>
             <a class="small-button " href="${urls.openDecisionAttachmentsForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "decision.edit.attachments" /></span></a>
-
+            </#if>
         </div>
     </div>
 </#macro>
 
-
-<#--
- * deleteAattachmentForm
- *
- * Generates a form for deleting attachment
- *
- * @param modal is a boolean for selecting either JS- or NOSCRIPT-version
- * @param municipality whether this attachment is related to municipality decision
--->
-<#macro deleteAattachmentForm modal=true municipality=false>
-    <#if !modal><#assign attachmentId = RequestParameters['deleteAttachment']?number /></#if>
-
-    <form id="delete-attachment-form" action="<#if !modal>${urls.getManageAttachments(initiative.id)}</#if>" method="POST">
-        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-        <input type="hidden" id="attachmentId" name="${UrlConstants.PARAM_ATTACHMENT_ID}" value="<#if !modal>${RequestParameters['deleteAttachment']}</#if>"/>
-
-        <#if modal>
-            <div id="selected-attachment" class="details"></div>
-            <br/>
-        <#else>
-            <@attachmentDetailsById RequestParameters['deleteAttachment'] />
+<#macro video manage=false>
+    <div>
+        <#if !manage>
+            <h3><@u.message "video.title" /></h3>
         </#if>
-
-        <div class="input-block-content">
-            <button type="submit" name="${UrlConstants.ACTION_DELETE_ATTACHMENT}" class="small-button"><span class="small-icon cancel"><@u.message "deleteAttachment.btn" /></button>
-            <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
-        </div>
-    </form>
+        <iframe src="${initiative.videoUrl.value}" width="90%" height="400px"></iframe>
+        <#if manage>
+            <a href="?deleteVideoForm" class="js-delete-video delete-video trigger-tooltip"
+               title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a>
+        </#if>
+        <p>${initiative.videoName.value}</p>
+    </div>
 </#macro>
-
 
 </#escape> 

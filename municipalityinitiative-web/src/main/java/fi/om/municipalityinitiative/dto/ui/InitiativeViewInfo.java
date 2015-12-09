@@ -111,4 +111,11 @@ public final class InitiativeViewInfo {
     }
 
 
+    public Maybe<String> getVideoUrl() {
+        return initiative.getVideoUrl();
+    }
+
+    public Maybe<String> getVideoName() {
+        return initiative.getVideoUrlName();
+    }
 }

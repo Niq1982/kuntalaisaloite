@@ -46,6 +46,8 @@ public interface InitiativeDao {
 
     void updateSentComment(Long initiativeId, String sentComment);
 
+    void createInitiativeDecision(Long initiativeId, String decisionText);
+
     void updateInitiativeDecision(Long initiativeId, String decisionText);
 
     void updateInitiativeDecisionModifiedDate(Long initiativeId);
@@ -74,4 +76,7 @@ public interface InitiativeDao {
 
     Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay);
 
+    void addVideoUrl(String url, String name, Long initiativeId);
+
+    void removeVideoUrl(Long initiativeId);
 }

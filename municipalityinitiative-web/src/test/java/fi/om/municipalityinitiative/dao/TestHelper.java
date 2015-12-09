@@ -80,6 +80,7 @@ public class TestHelper {
     private Long lastVerifiedUserId;
     private String previousTestManagementHash;
     private String previousUserSsnHash;
+    private String lastMunicipalityHash;
 
     public TestHelper() {
     }
@@ -110,6 +111,7 @@ public class TestHelper {
         queryFactory.delete(QLocation.location).execute();
         queryFactory.delete(QDecisionAttachment.decisionAttachment).execute();
         queryFactory.delete(QMunicipalityUser.municipalityUser).execute();
+        queryFactory.delete(QFollowInitiative.followInitiative).execute();
         queryFactory.delete(QMunicipalityInitiative.municipalityInitiative).execute();
         queryFactory.delete(QInfoText.infoText).execute();
         queryFactory.delete(QAdminUser.adminUser).execute();
@@ -119,6 +121,7 @@ public class TestHelper {
         lastVerifiedUserId = null;
         previousUserSsnHash = null;
         previousTestManagementHash = null;
+        lastMunicipalityHash = null;
     }
 
     @Transactional
@@ -254,7 +257,17 @@ public class TestHelper {
             insert.set(municipalityInitiative.supportCountData, initiativeDraft.supporCountData);
         }
 
+        if (initiativeDraft.videoUrl.isPresent()) {
+            insert.set(municipalityInitiative.videoUrl, initiativeDraft.videoUrl.getValue());
+        }
 
+        if (initiativeDraft.videoName.isPresent()) {
+            insert.set(municipalityInitiative.videoName, initiativeDraft.videoName.getValue());
+        }
+
+        if (initiativeDraft.decisionDate.isPresent()) {
+            insert.set(municipalityInitiative.municipalityDecisionDate, initiativeDraft.decisionDate.getValue());
+        }
 
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
@@ -732,6 +745,44 @@ public class TestHelper {
         queryFactory.delete(QEmail.email).execute();
     }
 
+    @Transactional
+    public void sendToMunicipality(Long verifiedInitiativeId) {
+
+        String managementHash = RandomHashGenerator.longHash();
+        queryFactory.insert(QMunicipalityUser.municipalityUser)
+                .set(QMunicipalityUser.municipalityUser.initiativeId, verifiedInitiativeId)
+                .set(QMunicipalityUser.municipalityUser.managementHash, managementHash)
+                .executeWithKey(QMunicipalityUser.municipalityUser.id);
+
+        lastMunicipalityHash =  managementHash;
+
+    }
+
+    public String getPreviousMunicipalityHash() {
+        return lastMunicipalityHash;
+    }
+
+    @Transactional
+    public String addFollower(Long initiativeId, String s) {
+        String randomHash =  RandomHashGenerator.shortHash();
+        queryFactory.insert(QFollowInitiative.followInitiative)
+                .set(QFollowInitiative.followInitiative.initiativeId, initiativeId)
+                .set(QFollowInitiative.followInitiative.email, s)
+                .set(QFollowInitiative.followInitiative.unsubscribeHash, randomHash)
+                .execute();
+
+        return randomHash;
+    }
+
+    @Transactional
+    public void addVideo(Long initiativeId, String videoName, String videoUrl) {
+        queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.videoName, videoName)
+                .set(QMunicipalityInitiative.municipalityInitiative.videoUrl, videoUrl)
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute();
+    }
+
 
     public static class AuthorDraft {
 
@@ -834,6 +885,9 @@ public class TestHelper {
         public DateTime emailReportDateTime;
         public String supporCountData;
         public List<Location> locations = new ArrayList<Location>();
+        private Maybe<String> videoUrl = Maybe.absent();
+        private Maybe<String> videoName = Maybe.absent();
+        private Maybe<DateTime> decisionDate = Maybe.absent();
 
 
         public AuthorDraft applyAuthor() {
@@ -932,6 +986,20 @@ public class TestHelper {
             return this;
         }
 
+        public InitiativeDraft withVideoUrl(String url) {
+            this.videoUrl = Maybe.of(url);
+            return this;
+        }
+
+        public InitiativeDraft withVideoName(String videoname) {
+            this.videoName = Maybe.of(videoname);
+            return this;
+        }
+
+        public InitiativeDraft withDecisionDate(DateTime dateTime){
+            this.decisionDate = Maybe.of(dateTime);
+            return this;
+        }
     }
     public Long getLastInitiativeId() {
         return lastInitiativeId;
