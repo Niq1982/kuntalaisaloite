@@ -112,7 +112,7 @@ public class PublicInitiativeController extends BaseController {
 
         InitiativePageInfo initiativePageView = publicInitiativeService.getInitiativePageDto(initiativeId, loginUserHolder);
 
-        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageView.initiative);
+        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageView.initiative);
 
         if (initiativePageView.isCollaborative()) {
 
@@ -226,7 +226,7 @@ public class PublicInitiativeController extends BaseController {
                     new FollowInitiativeDto(),
                     new AuthorUIMessage(),
                     supportCountService.getSupportVotesPerDateJson(initiativeId),
-                    getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(initiativeId));
+                    municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(initiativeId));
 
         }
     }
@@ -375,7 +375,7 @@ public class PublicInitiativeController extends BaseController {
                     new FollowInitiativeDto(),
                     authorUIMessage,
                     supportCountService.getSupportVotesPerDateJson(initiativeId),
-                    getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo.initiative)
+                    municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageInfo.initiative)
             ).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
@@ -455,7 +455,7 @@ public class PublicInitiativeController extends BaseController {
                     followInitiativeDto,
                     new AuthorUIMessage(),
                     supportCountService.getSupportVotesPerDateJson(id),
-                    getMunicipalityDecisionInfoMaybe(id, initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(id));
+                    municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(id));
 
         }
         followInitiativeService.followInitiative(id, followInitiativeDto.getParticipantEmail());

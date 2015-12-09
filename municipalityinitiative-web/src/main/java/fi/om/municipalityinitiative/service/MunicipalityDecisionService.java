@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
@@ -16,7 +17,9 @@ import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.email.EmailService;
+import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.util.ImageModifier;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +61,10 @@ public class MunicipalityDecisionService {
     }
 
     public MunicipalityDecisionService() { // For spring AOP
+    }
+
+    public static boolean decisionPresent(InitiativeViewInfo initiative, AttachmentUtil.Attachments attachments) {
+        return initiative.getDecisionText().isPresent() || attachments.count() > 0;
     }
 
 
@@ -117,7 +124,7 @@ public class MunicipalityDecisionService {
     }
 
     @Transactional(readOnly = false, rollbackFor = Throwable.class)
-    private void saveAttachments(List<MunicipalityDecisionDto.FileWithName> files, Long initiativeId) throws FileUploadException, InvalidAttachmentException {
+    public void saveAttachments(List<MunicipalityDecisionDto.FileWithName> files, Long initiativeId) throws FileUploadException, InvalidAttachmentException {
 
         for (MunicipalityDecisionDto.FileWithName attachment: files) {
 
@@ -216,4 +223,19 @@ public class MunicipalityDecisionService {
     }
 
 
+    public Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(InitiativeViewInfo initiative) {
+
+        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
+        if (initiative.getDecisionDate().isPresent()) {
+            AttachmentUtil.Attachments attachments = getDecisionAttachments(initiative.getId());
+            if (decisionPresent(initiative, attachments)) {
+                municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
+                        initiative.getDecisionText(),
+                        initiative.getDecisionDate().getValue(),
+                        initiative.getDecisionModifiedDate(),
+                        attachments));
+            }
+        }
+        return municipalityDecisionInfo;
+    }
 }

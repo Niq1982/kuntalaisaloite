@@ -79,7 +79,7 @@ public class ModerationController extends BaseController{
                 reviewHistory,
                 reviewHistoryDiff,
                 locationService.getLocations(initiativeId),
-                getMunicipalityDecisionInfoMaybe(initiativeId, initiative)
+                municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiative)
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 
