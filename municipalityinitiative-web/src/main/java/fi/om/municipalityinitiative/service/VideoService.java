@@ -23,8 +23,8 @@ public class VideoService {
     public static final String YOUTUBE_SHORT ="youtu.be";
     public static final String VIMEO = "vimeo.com";
 
-    private static final String YOUTUBE_BASE_URL = "//www.youtube.com/embed/";
-    private static final String VIMEO_BASE_URL = "//player.vimeo.com/video/";
+    private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/embed/";
+    private static final String VIMEO_BASE_URL = "https://player.vimeo.com/video/";
 
 
     public static final String VIDEO_REGEX = "^https://((www.youtube.com/(watch\\?v=|embed/)([^#&?]*))|(youtu.be/([^#&?]*))|(vimeo.com/([^#&?]*)))";
@@ -66,11 +66,17 @@ public class VideoService {
         initiativeDao.removeVideoUrl(initiativeId);
     }
 
-    private String getVidemoId(String path) {
+    private String getVidemoId(String path) throws InvalidVideoUrlException {
+        if (!path.contains("/") || path.length() < 2){
+            throw new InvalidVideoUrlException();
+        }
         return path.substring(path.indexOf("/") + 1);
     }
 
-    private String getYouTubeVideoIdFromShort(String path) {
+    private String getYouTubeVideoIdFromShort(String path) throws InvalidVideoUrlException {
+        if (!path.contains("/") || path.length() < 2){
+            throw new InvalidVideoUrlException();
+        }
         return path.substring(path.indexOf("/") + 1);
     }
 
