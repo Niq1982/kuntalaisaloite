@@ -135,13 +135,14 @@ public final class ViewGenerator {
         return new ViewGenerator(GRAPH_IFRAME_GENERATOR_VIEW, new AttributeBuilder().build());
     }
 
-    public static ViewGenerator singleView(InitiativePageInfo initiativePageView, Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo) {
+    public static ViewGenerator singleView(InitiativePageInfo initiativePageView, FollowInitiativeDto followInitiativeDto, Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo) {
         return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativePageView.initiative)
                         .add("authors", initiativePageView.authors)
                         .add("attachments", initiativePageView.attachments)
                         .add("locations", initiativePageView.locations)
+                        .add("followInitiative", followInitiativeDto)
                         .add("decisionInfo", municipalityDecisionInfo)
                         .build());
     }

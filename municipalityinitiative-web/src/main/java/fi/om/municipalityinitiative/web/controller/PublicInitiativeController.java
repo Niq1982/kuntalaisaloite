@@ -125,7 +125,7 @@ public class PublicInitiativeController extends BaseController {
                     municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
-            return ViewGenerator.singleView(initiativePageView, municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
+            return ViewGenerator.singleView(initiativePageView, new FollowInitiativeDto(), municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 

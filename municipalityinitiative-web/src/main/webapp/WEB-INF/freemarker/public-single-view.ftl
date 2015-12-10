@@ -35,17 +35,26 @@
         <@e.initiativeView initiative />
     </div>
 
-    <div class="view-block public last">
+    <#assign canFollow = ( initiative.state == InitiativeState.PUBLISHED && !initiative.decisionDate.present && followEnabled) />
+    <#assign showFollowForm = canFollow && (RequestParameters['formError']?? && RequestParameters['formError'] == "follow") />
+
+    <div class="view-block public <#if !canFollow>last</#if>">
         <div class="initiative-content-row last">
             <h2><@u.message key="initiative.authors.title" args=[1] /></h2>
             <@e.initiativeAuthor authors />
         </div>
     </div>
-    
-    
+
+    <#if canFollow>
+        <div class="view-block public last" >
+            <h2><@u.message key= "followInitiative.h2.title" args=[1] /></h2>
+            <div class="initiative-content-row last">
+                <@e.follow />
+            </div>
+        </div>
+    </#if>
 
 
-    
     <#if user.hasRightToInitiative(initiative.id) && !initiative.sent>
         <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
     <#else>
@@ -57,6 +66,41 @@
     <#if initiative.state == InitiativeState.PUBLISHED>
         <@some.some pageTitle=initiative.name!"" />
     </#if>
+
+
+
+    <#assign followInitiativeFormHTML>
+        <@compress single_line=true>
+            <@u.message "follow.text" />
+        <form action="${springMacroRequestContext.requestUri}?formError=follow" method="POST">
+            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+
+            <div class="input-block-content">
+                <@f.textField path="followInitiative.participantEmail" required="" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
+            </div>
+            <button id="participate" type="submit"  value="true" name="action-follow" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
+            <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+        </form>
+        </@compress>
+    </#assign>
+
+    <script type="text/javascript">
+        var modalData = {};
+        modalData.followInitiative = function(){
+            return [{
+                title: '<@u.message "followInitiative.title"/>',
+                content: '<#noescape>${followInitiativeFormHTML?replace("'","&#39;")}</#noescape>'
+            }]
+        };
+        <#if showFollowForm>
+        modalData.followFormAutoLoad = function() {
+            return [{
+                title:     '<@u.message "followInitiative.title"/>',
+                content:   '<#noescape>${followInitiativeFormHTML?replace("'","&#39;")}</#noescape>'
+            }]
+        };
+        </#if>
+    </script>
 
 </@l.main>
 
