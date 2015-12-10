@@ -35,7 +35,7 @@
     
     <@u.spacer "15" />
 
-    <#if (attachmentCount > 0) || hasLocationAttached>
+    <#if (attachmentCount > 0) || hasLocationAttached || hasVideoAttached>
         <@b.contentBlock type>
             <@b.attachments type/>
         </@b.contentBlock>

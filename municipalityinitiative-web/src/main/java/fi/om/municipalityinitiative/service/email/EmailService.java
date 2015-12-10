@@ -128,6 +128,8 @@ public class EmailService {
         Map<String, Object> dataMap = toDataMap(initiative, authors, locale);
         dataMap.put("attachmentCount", dataProvider.getAcceptedAttachmentCount(initiativeId));
         dataMap.put("hasLocationAttached", dataProvider.hasLocationAttached(initiativeId));
+        dataMap.put("hasVideoAttached", initiative.getVideoUrl().isPresent());
+
         dataMap.put("municipalityDecisionHash", dataProvider.getMunicipalityDecisionHash(initiativeId));
         emailMessageConstructor
                 .fromTemplate(initiativeId, NOT_COLLECTABLE_TEMPLATE)
@@ -180,6 +182,7 @@ public class EmailService {
         Map<String, Object> dataMap = toDataMap(initiative, dataProvider.findAuthors(initiativeId), locale);
         dataMap.put("attachmentCount", dataProvider.getAcceptedAttachmentCount(initiativeId));
         dataMap.put("hasLocationAttached", dataProvider.hasLocationAttached(initiativeId));
+        dataMap.put("hasVideoAttached", initiative.getVideoUrl().isPresent());
         dataMap.put("municipalityDecisionHash", dataProvider.getMunicipalityDecisionHash(initiativeId));
         emailMessageConstructor
                 .fromTemplate(initiativeId, COLLABORATIVE_TO_MUNICIPALITY)
@@ -207,6 +210,7 @@ public class EmailService {
         Map<String, Object> dataMap = toDataMap(initiative, dataProvider.findAuthors(initiativeId), locale);
         dataMap.put("attachmentCount", dataProvider.getAcceptedAttachmentCount(initiativeId));
         dataMap.put("hasLocationAttached", dataProvider.hasLocationAttached(initiativeId));
+        dataMap.put("hasVideoAttached", initiative.getVideoUrl().isPresent());
         dataMap.put("initiativeId", initiativeId);
         dataMap.put("removeHash", hash);
 
@@ -244,6 +248,7 @@ public class EmailService {
         Map<String, Object> dataMap = toDataMap(initiative, dataProvider.findAuthors(initiativeId), locale);
         dataMap.put("attachmentCount", dataProvider.getAcceptedAttachmentCount(initiative.getId()));
         dataMap.put("hasLocationAttached", dataProvider.hasLocationAttached(initiativeId));
+        dataMap.put("hasVideoAttached", initiative.getVideoUrl().isPresent());
         emailMessageConstructor.fromTemplate(initiativeId, COLLABORATIVE_TO_MUNICIPALITY)
                 .addRecipients(dataProvider.getAuthorEmails(initiativeId))
                 .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_AUTHOR_SUBJECT, toArray(), locale))

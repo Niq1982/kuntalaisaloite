@@ -2680,10 +2680,11 @@ function findLocation(locations, location) {
 			} else if (videoIDPos < endOfID) {
 				url = [YOUTUBEBASEURL, escapeHtml(queryParam.substring(videoIDPos, endOfID))].join('');
 			}
-
 		} else if (path.indexOf("embed") > 0) {
 			videoIDPos = path.indexOf("embed") + 6;
 			url = [YOUTUBEBASEURL, escapeHtml(path.substring(videoIDPos))].join('');
+		} else if (a.hostname === "youtu.be") {
+			url = [YOUTUBEBASEURL, escapeHtml(path)].join('');
 		}
 		return url;
 	}
@@ -2701,7 +2702,7 @@ function findLocation(locations, location) {
 
 		var a = $('<a>', {href: url})[0];
 
-		if (a.hostname === "www.youtube.com") {
+		if (a.hostname === "www.youtube.com" || a.hostname === "youtu.be") {
 			return convertToYoutubeEmbed(a);
 		}
 		if (a.hostname === "vimeo.com") {
@@ -2714,17 +2715,20 @@ function findLocation(locations, location) {
 
 
 	$(".videoUrl").on('input propertychange', function () {
-
-		var url = validateVideoLink($("#videoUrl").val());
-
-		var videoContainer = $("#videoContainer");
+		var videoInput = $("#videoUrl"),
+			videoContainer = $("#videoContainer");
 
 		videoContainer.empty();
-		if (url) {
-			videoContainer.append("<iframe src=" + url + " width='760' height='447' />");
-		} else {
-			videoContainer.append("<p>Videolinkki ei osoita Youtube tai Vimeo -verkkopalveluihin.</p>");
+
+		if (videoInput.val()) {
+			var url = validateVideoLink(videoInput.val());
+			if (url) {
+				videoContainer.append("<iframe src=" + url + " width='100%' height='447' />");
+			} else {
+				videoContainer.append("<p>"+videoWarning+"</p>");
+			}
 		}
+
 	});
 
 })();

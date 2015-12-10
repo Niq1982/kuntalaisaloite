@@ -20,20 +20,20 @@ public class VideoService {
     public static final String WATCH_V = "watch?v=";
 
     public static final String YOUTUBE = "www.youtube.com";
+    public static final String YOUTUBE_SHORT ="youtu.be";
     public static final String VIMEO = "vimeo.com";
 
-    private static final String YOUTUBE_BASE_URL = "//www.youtube.com/embed/";
-    private static final String VIMEO_BASE_URL = "//player.vimeo.com/video/";
+    private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/embed/";
+    private static final String VIMEO_BASE_URL = "https://player.vimeo.com/video/";
 
 
-    public static final String VIDEO_REGEX = "^https://((www.youtube.com/(watch\\?v=|embed/)([^#&?]*))|(vimeo.com/([^#&?]*)))";
+    public static final String VIDEO_REGEX = "^https://((www.youtube.com/(watch\\?v=|embed/)([^#&?]*))|(youtu.be/([^#&?]*))|(vimeo.com/([^#&?]*)))";
 
     @Resource
     InitiativeDao initiativeDao;
 
     @Resource
     private ValidationService validationService;
-
 
 
 
@@ -48,6 +48,10 @@ public class VideoService {
                 initiativeDao.addVideoUrl(YOUTUBE_BASE_URL + htmlEscape(getYouTubeVideoId(url.toString())), video.getVideoName(), initiativeId);
                 break;
 
+            case YOUTUBE_SHORT:
+                initiativeDao.addVideoUrl(YOUTUBE_BASE_URL + htmlEscape(getYouTubeVideoIdFromShort(url.getPath())), video.getVideoName(), initiativeId);
+                break;
+
             case VIMEO:
                 initiativeDao.addVideoUrl(VIMEO_BASE_URL + htmlEscape(getVidemoId(url.getPath())), video.getVideoName(), initiativeId);
                 break;
@@ -57,18 +61,33 @@ public class VideoService {
         }
     }
 
-    private String getVidemoId(String path) {
-        return path.substring(path.indexOf("/") + 1);
-    }
-
     @Transactional
     public void removeVideoUrl(Long initiativeId) {
         initiativeDao.removeVideoUrl(initiativeId);
     }
 
+    private String getVidemoId(String path) throws InvalidVideoUrlException {
+        if (!path.contains("/") || path.length() < 2){
+            throw new InvalidVideoUrlException();
+        }
+        return path.substring(path.indexOf("/") + 1);
+    }
+
+    private String getYouTubeVideoIdFromShort(String path) throws InvalidVideoUrlException {
+        if (!path.contains("/") || path.length() < 2){
+            throw new InvalidVideoUrlException();
+        }
+        return path.substring(path.indexOf("/") + 1);
+    }
+
+
     public String getYouTubeVideoId(String videoUrl) throws InvalidVideoUrlException {
         if (videoUrl.contains(EMBED)) {
-            return videoUrl.substring(videoUrl.indexOf(EMBED) + EMBED.length());
+            String id =  videoUrl.substring(videoUrl.indexOf(EMBED) + EMBED.length());
+            if (id.length() < 1){
+                throw new InvalidVideoUrlException();
+            }
+            return id;
         } else if (videoUrl.contains(WATCH_V)) {
             return videoUrl.substring(videoUrl.indexOf(WATCH_V) + WATCH_V.length());
         }
