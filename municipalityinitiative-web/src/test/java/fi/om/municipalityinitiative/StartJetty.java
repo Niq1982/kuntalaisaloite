@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative;
 
+import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.server.JettyServer;
 import org.eclipse.jetty.server.Server;
 
@@ -24,6 +25,7 @@ public class StartJetty {
     }
 
     public static void main(String[] args) throws Throwable {
+        System.setProperty(PropertyNames.optimizeResources, "false");
         startService(8080, "dev,disableSecureCookie").join();
 
     }
