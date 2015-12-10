@@ -135,7 +135,7 @@ public class SecurityFilter implements Filter {
     private String initializeCSRFToken(HttpServletRequest request, HttpServletResponse response) {
         String csrfToken;
         csrfToken = encryptionService.randomToken(CSRF_TOKEN_LENGTH);
-        setCookie(CSRF_TOKEN_NAME, csrfToken, request, response);
+        setCookie(CSRF_TOKEN_NAME, csrfToken, response);
         getExistingSession(request).setAttribute(CSRF_TOKEN_NAME, csrfToken);
         return csrfToken;
     }
@@ -217,26 +217,11 @@ public class SecurityFilter implements Filter {
         propagateException(e);
     }
 
-    private void setCookie(String name, String value, HttpServletRequest request, HttpServletResponse response) {
+    private void setCookie(String name, String value, HttpServletResponse response) {
         Cookie cookie = new Cookie(name, value);
-
-        String contextPath = request.getContextPath();
-        if (Strings.isNullOrEmpty(contextPath)) {
-            contextPath = "/";
-        }
-        cookie.setPath(contextPath);
-        cookie.setSecure(request.isSecure());
-
-
-        response.setHeader("Set-Cookie", name + "=" + value + "; Path=" + contextPath + (disableSecureCookie ? "" : "Secure; ")+ "HttpOnly");
-
-        if (cookie.getSecure()) {
-            // For enabling httpOnly we need to write the raw cookie data instead of response.addCookie(cookie)
-            response.setHeader("SET-COOKIE", name + "=" + value + "; Path=" + contextPath + "; Secure; HttpOnly");
-        }
-        else {
-            response.setHeader("SET-COOKIE", name + "=" + value + "; Path=" + contextPath + "; HttpOnly");
-        }
+        cookie.setHttpOnly(true);
+        cookie.setSecure(!disableSecureCookie);
+        response.addCookie(cookie);
     }
 
     private void propagateException(Exception e) throws IOException, ServletException {
