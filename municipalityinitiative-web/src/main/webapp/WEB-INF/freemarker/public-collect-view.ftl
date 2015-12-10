@@ -268,15 +268,19 @@
              * - Hide when not published. OM sees this view in REVIEW state.
             -->
 
-            <div class="initiative-content-row last">
-                <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
 
+            <div class="initiative-content-row">
+                <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
             </div>
+
             <#assign canFollow = ( initiative.state == InitiativeState.PUBLISHED && !initiative.decisionDate.present && followEnabled) />
             <#assign showFollowForm = canFollow && (RequestParameters['formError']?? && RequestParameters['formError'] == "follow") />
-            <#if canFollow>
-                <@e.follow />
-            </#if>
+
+            <div class="initiative-content-row last">
+                <#if canFollow>
+                    <@e.follow />
+                </#if>
+            </div>
         </div>
     </#if>
 
