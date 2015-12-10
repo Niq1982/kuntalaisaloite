@@ -516,7 +516,7 @@
         <iframe src="${initiative.videoUrl.value}" width="90%" height="400px"></iframe>
         <#if manage>
             <a href="?deleteVideoForm" class="js-delete-video delete-video trigger-tooltip"
-               title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a>
+               title="<@u.message "deleteVideo.btn" />"><span class="icon-small icon-16 cancel"></span></a>
         </#if>
         <p>${initiative.videoName.value}</p>
     </div>

@@ -130,6 +130,7 @@
         };
 
         var videoWarning = '<@u.message "warning.videoUrl"/>';
+        var invalidUrlWarning = '<@u.message "invalidUrl" />';
     </script>
 
 </@l.main>

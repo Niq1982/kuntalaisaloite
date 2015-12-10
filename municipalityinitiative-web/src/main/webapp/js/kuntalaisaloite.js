@@ -2734,11 +2734,20 @@ function findLocation(locations, location) {
 		"/": '&#x2F;'
 	};
 
+
+	var INVALID_URL_PARAMETER = -1;
+	var INVALID_HOST = -2;
+
+
 	var escapeHtml = function (string) {
 		return String(string).replace(/[&<>"'\/]/g, function (s) {
 			return entityMap[s];
 		});
 	};
+
+	function invalidUrlParameters(queryParam, videoIDPos) {
+		return queryParam.indexOf("&") > -1 || queryParam.indexOf("?") > -1 || queryParam.indexOf("#") > -1 || queryParam.indexOf("^") > -1;
+	}
 
 	function convertToYoutubeEmbed(a) {
 		var url = null, videoIDPos = -1;
@@ -2746,18 +2755,29 @@ function findLocation(locations, location) {
 		var path = a.pathname;
 		if (queryParam.indexOf("v=") > 0) {
 			videoIDPos = queryParam.indexOf("v=") + 2;
-			var endOfID = queryParam.indexOf("&");
-			if (endOfID < 0) {
-				url = [YOUTUBEBASEURL, escapeHtml(queryParam.substring(videoIDPos))].join('');
-			} else if (videoIDPos < endOfID) {
-				url = [YOUTUBEBASEURL, escapeHtml(queryParam.substring(videoIDPos, endOfID))].join('');
+
+			if (invalidUrlParameters(queryParam.substring(videoIDPos), videoIDPos)) {
+				url = INVALID_URL_PARAMETER;
 			}
+			else {
+				url = [YOUTUBEBASEURL, escapeHtml(queryParam.substring(videoIDPos))].join('');
+			}
+
 		} else if (path.indexOf("embed") > 0) {
 			videoIDPos = path.indexOf("embed") + 6;
-			url = [YOUTUBEBASEURL, escapeHtml(path.substring(videoIDPos))].join('');
+			if (queryParam.length  > 0) {
+				url = INVALID_URL_PARAMETER;
+			} else {
+				url = [YOUTUBEBASEURL, escapeHtml(path.substring(videoIDPos))].join('');
+			}
 		} else if (a.hostname === "youtu.be") {
-			url = [YOUTUBEBASEURL, escapeHtml(path)].join('');
+			if (queryParam.length  > 0) {
+				url =  INVALID_URL_PARAMETER;
+			} else {
+				url = [YOUTUBEBASEURL, escapeHtml(path)].join('');
+			}
 		}
+
 		return url;
 	}
 
@@ -2775,13 +2795,16 @@ function findLocation(locations, location) {
 		var a = $('<a>', {href: url})[0];
 
 		if (a.hostname === "www.youtube.com" || a.hostname === "youtu.be") {
+
 			return convertToYoutubeEmbed(a);
 		}
-		if (a.hostname === "vimeo.com") {
+		else if (a.hostname === "vimeo.com") {
+
 			return convertToVimeoEmbed(a);
 		}
+
 		else {
-			return null;
+			return INVALID_HOST;
 		}
 	}
 
@@ -2794,10 +2817,15 @@ function findLocation(locations, location) {
 
 		if (videoInput.val()) {
 			var url = validateVideoLink(videoInput.val());
-			if (url) {
-				videoContainer.append("<iframe src=" + url + " width='100%' height='447' />");
+			if ( url === INVALID_HOST ) {
+				videoContainer.append("<p>" + videoWarning + "</p>");
+
+
+			} else if (url === INVALID_URL_PARAMETER) {
+				videoContainer.append("<p>Videolinkki on virheellinen.</p>");
+
 			} else {
-				videoContainer.append("<p>"+videoWarning+"</p>");
+				videoContainer.append("<iframe src=" + url + " width='100%' height='447' />");
 			}
 		}
 
