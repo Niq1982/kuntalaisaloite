@@ -19,8 +19,7 @@
 
         <@b.contentBlock type>
             <#if removeHash??>
-                <@u.message "email.unSubscribe"/>
-                <@u.button "Lopeta tilaus" urls.unsubscribe(initiativeId, removeHash) "green" />
+                <@b.unfollow initiativeId removeHash type/>
             </#if>
         </@b.contentBlock>
 

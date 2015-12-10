@@ -396,7 +396,11 @@
     </#if>
 </#macro>
 
-
+<#macro unfollow initiativeId removeHash type>
+    <@u.message "email.unSubscribe"/> 
+    <#assign label><@u.message "email.ensubscribe.button"/></#assign>
+    <@u.button label urls.unsubscribe(initiativeId, removeHash) "green" />
+</#macro>
 <#--
  * separator
  *

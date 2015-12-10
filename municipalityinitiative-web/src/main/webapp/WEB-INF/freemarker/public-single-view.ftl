@@ -84,6 +84,9 @@
         </@compress>
     </#assign>
 
+    <@u.modalTemplate />
+    <@u.jsMessageTemplate />
+
     <script type="text/javascript">
         var modalData = {};
         modalData.followInitiative = function(){
