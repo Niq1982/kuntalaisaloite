@@ -34,11 +34,11 @@ public class FollowInitiativeService {
         String hash = RandomHashGenerator.longHash();
         try {
             followInitiativeDao.addFollow(initiativeId, email, hash);
+            emailService.sendConfirmToFollower(initiativeId, email, hash);
         }
         catch (QueryException e) {
             e.printStackTrace();
         }
-        emailService.sendConfirmToFollower(initiativeId, email, hash);
 
     }
 
