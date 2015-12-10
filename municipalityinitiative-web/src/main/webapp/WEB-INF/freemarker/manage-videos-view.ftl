@@ -24,8 +24,9 @@
     <div class="msg-block">
         <div class="system-msg msg-info">
             <h2><@u.message "video.videoUrl" /></h2>
-			<p><@u.message "video.instruction.1"/></p>
+			<p><@u.messageHTML "video.instruction.1"/></p>
 			<p><@u.message "video.instruction.2"/></p>
+			<p><@u.message "video.instruction.3"/></p>
         </div>
     </div>
 
@@ -52,10 +53,10 @@
                 </div>
 
                 <div class="input-block-content no-top-margin">
-                    <@f.textField cssClass="large" required="" optional=false path="video.videoName" key="video.videoName"/>
+                    <@f.textarea cssClass="large" required="" optional=false path="video.videoName" key="video.videoName"/>
                 </div>
 
-                <div class="input-block-content no-top-margin">
+                <div class="input-block-content">
                     <button type="submit" name="${UrlConstants.ACTION_ADD_VIDEO}" class="small-button dbl-click-check-no-msg"><span class="small-icon save-and-send"><@u.message "video.attach"/></span></button>
                 </div>
 
