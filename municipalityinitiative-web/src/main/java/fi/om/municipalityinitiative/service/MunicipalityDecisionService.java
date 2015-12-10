@@ -222,7 +222,7 @@ public class MunicipalityDecisionService {
         return initiative.getDecisionDate().isPresent();
     }
 
-
+    @Transactional
     public Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(InitiativeViewInfo initiative) {
 
         Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();

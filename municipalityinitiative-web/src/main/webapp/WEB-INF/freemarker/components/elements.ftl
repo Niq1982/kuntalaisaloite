@@ -379,6 +379,16 @@
     </#list>
 </#macro>
 
+<#macro participantInfo admin=false>
+    <div class="participant-info view-block last">
+        <h2><@u.message key="initiative.participants.title" args=[participantCount.total] /></h2>
+        <#if admin><h3><span><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></h3></#if>
+        <@e.participantInformation/>
+        <#if supportCountData?? && supportCountData!="[]" && participantCount.total gt 0>
+            <@participantGraph initiative supportCountData!"{}" participantCount.total/>
+        </#if>
+    </div>
+</#macro>
 
 <#-- 
  * participants
@@ -397,7 +407,6 @@
         </#if>
     </#list>
 
-    <#if admin><h3><span><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></h3></#if>
     <@participateButton admin participateSuccess showForm/>
 
     <#if !admin && initiative.sentTime.present>
@@ -430,7 +439,6 @@
         </#if>
     </#if>
 
-    <@participantInformation/>
 
 
 </#macro>

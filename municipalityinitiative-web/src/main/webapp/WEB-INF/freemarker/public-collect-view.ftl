@@ -226,7 +226,7 @@
 
     <div id = "authors" class="view-block public">
         <h2><@u.message key="initiative.authors.title" args=[authors.getPublicNameCount() + authors.getPrivateNameCount()] /></h2>
-        <div class="initiative-content-row">
+        <div class="initiative-content-row last">
             <@e.initiativeAuthor authors />
 
             <#if initiative.state == InitiativeState.PUBLISHED && !initiative.sentTime.present>
@@ -242,18 +242,15 @@
                     </noscript>
                 </#if>
             </#if>
-            <#assign canFollow = ( initiative.state == InitiativeState.PUBLISHED && !initiative.decisionDate.present && followEnabled) />
-            <#assign showFollowForm = canFollow && (RequestParameters['formError']?? && RequestParameters['formError'] == "follow") />
-            <#if canFollow>
-                <@e.follow />
-            </#if>
         </div>
 
     </div>
 
+    <@e.participantInfo />
+
     <#if initiative.state == InitiativeState.PUBLISHED>
-        <div id="participants" class="view-block public last participants">
-            <h2><@u.message key="initiative.participants.title" args=[participantCount.total] /></h2>
+        <div id="participants" class="view-block public participants">
+            <h2><@u.message key="initiative.participation.title"/></h2>
 
             <#--
              * Do NOT show participate button:
@@ -273,12 +270,17 @@
 
             <div class="initiative-content-row last">
                 <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
-                <#if supportCountData?? && supportCountData!="[]" && participantCount.total gt 0>
-                    <@e.participantGraph initiative supportCountData!"{}" participantCount.total/>
-                </#if>
+
             </div>
+            <#assign canFollow = ( initiative.state == InitiativeState.PUBLISHED && !initiative.decisionDate.present && followEnabled) />
+            <#assign showFollowForm = canFollow && (RequestParameters['formError']?? && RequestParameters['formError'] == "follow") />
+            <#if canFollow>
+                <@e.follow />
+            </#if>
         </div>
     </#if>
+
+
 
     <@mobile.participantsBlock participantCount/>
     

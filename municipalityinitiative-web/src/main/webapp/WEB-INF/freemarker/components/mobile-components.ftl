@@ -32,7 +32,7 @@
             <form action="${springMacroRequestContext.requestUri}" method="get">
                 <h3><@u.message "mobile.municipalities"/></h3>
                 <@f.municipalitySelect path="currentSearch.municipalities" options=municipalities required="" cssClass="" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true multiple=true id="mobileSelection "/>
-                </br>
+                <br/>
 
                 <h3><@u.message "mobile.type"/></h3>
 
@@ -40,13 +40,13 @@
                 <@f.mobileCheckBox path=currentSearch.type  prefix="type.normal" name="type" value="normal" id="normal"  />
                 <@f.mobileCheckBox path=currentSearch.type  prefix="type.council" name="type" value="council" id="council"  />
                 <@f.mobileCheckBox path=currentSearch.type  prefix="type.citizen" name="type" value="citizen" id="citizen"  />
-                </br>
+                <br/>
                 <h3><@u.message "mobile.show"/></h3>
                 <@f.mobileCheckBox path=currentSearch.show  prefix="show.all" name="show" value="all" id="show-all"  />
                 <@f.mobileCheckBox path=currentSearch.show  prefix="show.collecting" name="show" value="collecting" id="collecting"  />
                 <@f.mobileCheckBox path=currentSearch.show  prefix="show.sent" name="show" value="sent" id="sent"  />
 
-                </br>
+                <br/>
                 <h3><@u.message "mobile.sort" /></h3>
                 <@f.mobileCheckBox path=currentSearch.orderBy prefix="orderBy.latest" name="orderBy" value="latest" id="latest"  />
                 <@f.mobileCheckBox path=currentSearch.orderBy prefix="orderBy.oldest" name="orderBy" value="oldest" id="oldest"  />
@@ -80,7 +80,7 @@
 <#macro participantsBlock participantCount>
 
     <div id="participants" class="view-block public participants mobile last">
-        <h2><@u.message key="initiative.participants.title" args=[participantCount.total] /></h2>
+        <h2><@u.message key="initiative.participation.title" args=[participantCount.total] /></h2>
 
     <#--
      * Do NOT show participate button:

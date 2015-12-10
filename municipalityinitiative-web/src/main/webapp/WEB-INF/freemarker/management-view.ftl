@@ -40,16 +40,13 @@
     <div id = "authors" class="view-block public">
         <h2><@u.message key="initiative.authors.title" args=[authors?size] /></h2>
 
-        <div class="initiative-content-row ${(initiative.state == InitiativeState.PUBLISHED)?string("","last")}">
+        <div class="initiative-content-row last"}">
             <@e.initiativeContactInfo authorList=authors showTitle=false/>
         </div>
     </div>
 
     <#if !initiative.single && initiative.state == InitiativeState.PUBLISHED>
-        <div class="view-block cf">
-            <h2><@u.message key="initiative.participants.title" args=[participantCount.total] /></h2>
-            <@e.participants showForm=false admin=true />
-        </div>
+        <@e.participantInfo admin=true/>
     </#if>
 
     <#if !initiative.single>
