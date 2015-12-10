@@ -220,6 +220,7 @@ public class SecurityFilter implements Filter {
     private void setCookie(String name, String value, HttpServletResponse response) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
+        cookie.setPath("/");
         cookie.setSecure(!disableSecureCookie);
         response.addCookie(cookie);
     }
