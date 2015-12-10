@@ -35,6 +35,8 @@
             </#if>
         </@b.contentBlock>
 
+        <@u.spacer "15" />
+
     </@l.emailHtml>
 
 </#escape>
