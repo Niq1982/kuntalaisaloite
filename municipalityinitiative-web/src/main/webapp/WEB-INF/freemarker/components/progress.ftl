@@ -36,18 +36,42 @@
  * @param steps is a hashMap for initiative's progress steps
 -->
 <#macro progressSteps steps fixState>
+
 	<div>
+
+		<#assign activeLabel>
+			<#noescape><@u.message "progress.management.draft" /></#noescape>
+		</#assign>
+
+
 		<#list steps as step>
 			<#assign disableClass="" />
     		<#if (fixState != FixState.OK && (step.icon != "draft" && step.icon != "mgmnt"))><#assign disableClass="disabled" /></#if>
     		<#if fixState == FixState.FIX && step.icon != "draft"><#assign disableClass="disabled" /></#if>
 			<#if step.done && (!step_has_next || !steps[step_index+1].done)><#assign active=true><#else><#assign active=false></#if>
+			<#if active>
+				<#assign activeLabel>
+					<#noescape>${step.label}</#noescape>
+				</#assign>
+			</#if>
+
 		    <div class="step nth-child-${step_index + 1} ${step_has_next?string("","last-child")} ${step.done?string("done", "")} ${disableClass} <#if active>active</#if>">
 		    	<div class="step-icon-holder"><i class="icon-progress icon-${step.icon}"></i></div>
 		    	<span class="label"><#noescape>${step.label}</#noescape></span>
+				<#if active>
+                    <span class="arrow-up <#if step_index == 0>first</#if>"/>
+					<span class="arrow-middle"/>
+
+				</#if>
+
 		    </div>
+
 	    </#list>
+
 	</div>
+
+	<span class="mobile-label"><#noescape>${activeLabel}</#noescape></span>
+
 </#macro>
 
 <#-- 

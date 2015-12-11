@@ -2822,7 +2822,7 @@ function findLocation(locations, location) {
 
 
 			} else if (url === INVALID_URL_PARAMETER) {
-				videoContainer.append("<p>Videolinkki on virheellinen.</p>");
+				videoContainer.append("<p>" +invalidUrlWarning +"</p>");
 
 			} else {
 				videoContainer.append("<iframe src=" + url + " width='100%' height='447' />");
