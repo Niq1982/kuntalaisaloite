@@ -472,7 +472,7 @@
 
 <#macro follow >
     <h3><@u.message "followInitiative.title" /></h3>
-    <a class="js-follow small-button trigger-tooltip" title="<@u.message "followInitiative.tooltip" />"><@u.message "action.follow" /></a>
+    <a class="js-follow small-button trigger-tooltip" title="<@u.message "followInitiative.tooltip" />"> <span class="small-icon mail"><@u.message "action.follow" /></span></a>
 </#macro>
 
 <#macro participantInformation>
