@@ -171,9 +171,9 @@
 
 <#macro mobileSearchResult initiative manage=false>
     <#if manage>
-        <a href="${urls.view(initiative.id)}" class="search-result-mobile">
-    <#else>
         <a href="${urls.management(initiative.id)}" class="search-result-mobile">
+    <#else>
+        <a href="${urls.view(initiative.id)}" class="search-result-mobile">
     </#if>
             <div class="search-result-info-mobile">
                 <span class="date"> <@u.localDate initiative.stateTime!"" /></span>
