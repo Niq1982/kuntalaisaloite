@@ -169,4 +169,39 @@
     </div>
 </#macro>
 
+<#macro mobileSearchResult initiative>
+    <a href="${urls.view(initiative.id)}" class="search-result-mobile">
+
+            <div class="search-result-info-mobile">
+                <span class="date"> <@u.localDate initiative.stateTime!"" /></span>
+                <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span>
+                <#if !initiative.public>
+                    <span class="state"><@u.message "searchResults.notPublic" /></span>
+                <#elseif !initiative.sentTime.present>
+                    <span class="state"><@u.message "initiative.state.collecting" /></span>
+                <#else>
+                    <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>
+                    <span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
+                </#if>
+                <span class="title"><span class="name"><@u.limitStringLength initiative.name!"" 150 /></span></span>
+
+                <span class="initiative-type">
+                    <@u.message "initiative.initiativeType."+initiative.type />
+                </span>
+            </div>
+
+           <span class="participants">
+                <span class="participants-container">
+                    <#if !initiative.public>
+                        <span class="no-participants"><@u.message "searchResults.notPublic" /></span>
+                    <#elseif !initiative.collaborative>
+                        <span class="no-participants"><@u.message "searchResults.notCollaborative" /></span>
+                    <#else>
+                        <span class="participant-count">${initiative.participantCount!""}</span>
+                    </#if>
+                </span>
+            </span>
+    </a>
+</#macro>
+
 </#escape>

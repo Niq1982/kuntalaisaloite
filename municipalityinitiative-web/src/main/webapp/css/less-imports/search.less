@@ -99,63 +99,60 @@ h3 {
             background-color: white;
             margin: 1em 0;
             border: none;
-            height: 180px;
+           // height: 180px;
             padding-left: 3%;
             position:relative;
             a.search-result {
-                height: 180px;
-                padding: 0;
-                .participants{
-                    display: block;
-                    border-left: solid;
-                    border-color: rgb(240, 240, 240);
-                    padding: 10px 3px;
-                    height: 180px;
-                    text-align: center;
-                    .participant-count{
-                        background: none;
-                        padding: 0;
-                    }
+                display: none;
 
+
+            }
+
+        }
+
+    }
+    a.search-result-mobile{
+        display: none;
+
+        @media @mobile {
+            display: block;
+            padding: 0;
+
+            .search-result-info-mobile{
+                padding: 1em 0.5em 1em 0;
+                width: 70%;
+                float: left;
+                border-right: solid;
+                border-color: rgb(240, 240, 240);
+                box-sizing: border-box;
+                font-size: 0.9em;
+                color: #686868;
+
+                .state {
+                    display: block;
                 }
                 .title {
-                    position: absolute;
-                    top: 4em;
+                    color: #0089f2;
+                    font-size: 1.1em;
                     font-weight: bold;
-                    margin-right: 8em;
-                    font-size: 0.9em;
+                    margin: 0.5em auto;
                 }
                 .date {
-                    position: absolute;
-                    top: 5px;
-                }
-                .municipality-search-result{
-                    position: absolute;
-                    top: 5px;
-                    left: 100px;
-
-                }
-                .state{
-                    position: absolute;
-                    bottom: 5px;
-                    margin-right: 6em;
-                }
-                .info {
-
-
-                    .bull {
-                        display: none;
-                    }
-                    .initiative-type{
-                        position: absolute;
-                        top: 25px;
-                        margin-right: 6em;
-                    }
+                    margin-right: 0.5em;
                 }
 
             }
+            .participants {
+                width: 28%;
+                display: block;
+                text-align: center;
+                padding-top: 5%;
+                .participant-count{
+                    background: none;
+                    padding: 0;
+                }
+            }
         }
-
     }
 
     .date {
@@ -174,7 +171,7 @@ h3 {
     }
 
 
-    @media @mobile, @tablet  {
+    @media  @tablet  {
         .date {
             float: none;
             color: @secondaryTextColor;
@@ -202,9 +199,7 @@ h3 {
 
     .participants {
         float:right;
-        @media @mobile {
-            width:5em;
-        }
+
         width:15em;
         text-align:right;
 

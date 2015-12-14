@@ -205,6 +205,7 @@
                     </span>
                 </span>
             </a>
+         <@mobile.mobileSearchResult initiative/>
         </li>
         <#if !initiative_has_next></ul></#if>
     </#list>
