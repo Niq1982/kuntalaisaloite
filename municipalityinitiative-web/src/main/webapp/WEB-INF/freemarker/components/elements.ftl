@@ -67,7 +67,7 @@
     </div>
 
     <#if attachments??>
-    	<@e.attachmentsView attachments />
+    	<@attachmentsView attachments />
     </#if>
 
     <#if showVideo>
@@ -511,7 +511,9 @@
 <#macro video manage=false>
     <div>
         <#if !manage>
-            <h3><@u.message "video.title" /></h3>
+            <div class="initiative-content-row" />
+                <h3><@u.message "video.title" /></h3>
+            </div>
         </#if>
         <iframe src="${initiative.videoUrl.value}" width="90%" height="400px"></iframe>
         <#if manage>
