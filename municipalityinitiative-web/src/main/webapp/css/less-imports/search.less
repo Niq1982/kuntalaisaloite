@@ -97,15 +97,16 @@ h3 {
         }
         li {
             background-color: white;
-            margin: 7px 0;
+            margin: 1em 0;
             border: none;
             height: 180px;
             padding-left: 3%;
             position:relative;
-            a {
+            a.search-result {
                 height: 180px;
                 padding: 0;
                 .participants{
+                    display: block;
                     border-left: solid;
                     border-color: rgb(240, 240, 240);
                     padding: 10px 3px;
@@ -113,6 +114,7 @@ h3 {
                     text-align: center;
                     .participant-count{
                         background: none;
+                        padding: 0;
                     }
 
                 }
@@ -130,7 +132,7 @@ h3 {
                 .municipality-search-result{
                     position: absolute;
                     top: 5px;
-                    left: 35%;
+                    left: 100px;
 
                 }
                 .state{
@@ -419,6 +421,9 @@ h3 {
 
 
     margin:2em 0 1em;
+    @media @mobile {
+        margin:2em 3%;
+    }
 
     &.bottom {
         margin-top:1em;
