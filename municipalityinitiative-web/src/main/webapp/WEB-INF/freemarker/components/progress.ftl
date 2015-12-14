@@ -61,7 +61,6 @@
 		    	<span class="label"><#noescape>${step.label}</#noescape></span>
 				<#if active>
                     <span class="arrow-up "/>
-					<span class="arrow-middle"/>
 				</#if>
 
 		    </div>

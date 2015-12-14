@@ -49,6 +49,9 @@
 
 .initiative-progress-container {
  height: @progressContainerHeight;
+  @media @mobile {
+    margin: 3% 0;
+  }
 
 }
 
@@ -300,12 +303,12 @@
     display: block;
     width: 0;
     height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
     border-bottom: 20px solid #e2e2e2;
     position: absolute;
     bottom: -23px;
-    right: -5px;
+    right: -10px;
 
   }
 
