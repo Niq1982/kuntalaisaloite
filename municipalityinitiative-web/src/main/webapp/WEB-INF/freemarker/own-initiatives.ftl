@@ -5,6 +5,7 @@
 <#import "components/pagination.ftl" as p />
 <#import "components/forms.ftl" as f />
 <#import "components/elements.ftl" as e />
+<#import "components/mobile-components.ftl" as mobile />
 
 <#escape x as x?html>
 
@@ -40,7 +41,7 @@
     <#list initiatives as initiative>
         <#if initiative_index == 0><ul></#if>
         <li <#if initiative_index == 0>class="first"</#if>>
-            <a href="${urls.management(initiative.id)}">
+            <a href="${urls.management(initiative.id)}" class="search-result">
                 <span class="participants">
                     <span class="participants-container">
                         <#if !initiative.public>
@@ -78,6 +79,7 @@
                     </span>
                 </span>
             </a>
+            <@mobile.mobileSearchResult initiative=initiative manage=true/>
         </li>
         <#if !initiative_has_next></ul></#if>
     </#list>

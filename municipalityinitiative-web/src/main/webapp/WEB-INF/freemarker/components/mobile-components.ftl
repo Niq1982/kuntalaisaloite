@@ -68,7 +68,7 @@
         <div class="mobile-image image-${imageNumber}-2" ></div>
         <div class="mobile-image image-${imageNumber}-3" ></div>
         <div class="mobile-big-link-container">
-            <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="front-page-links-mobile"><@u.message "front.bigLink.Mobile1" /><span class="arrow"><@u.message "front.bigLink.Mobile2" /></span></a>
+            <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="front-page-links-mobile"><@u.message "front.bigLink.Mobile1" /><strong><@u.message "front.bigLink.Mobile2" /></strong><span class="arrow"></span></a>
         </div>
         <#if requestMessages?? && (requestMessages?size > 0)>
         <@u.frontpageRequestMessage requestMessages />
@@ -169,9 +169,12 @@
     </div>
 </#macro>
 
-<#macro mobileSearchResult initiative>
-    <a href="${urls.view(initiative.id)}" class="search-result-mobile">
-
+<#macro mobileSearchResult initiative manage=false>
+    <#if manage>
+        <a href="${urls.view(initiative.id)}" class="search-result-mobile">
+    <#else>
+        <a href="${urls.management(initiative.id)}" class="search-result-mobile">
+    </#if>
             <div class="search-result-info-mobile">
                 <span class="date"> <@u.localDate initiative.stateTime!"" /></span>
                 <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span>
