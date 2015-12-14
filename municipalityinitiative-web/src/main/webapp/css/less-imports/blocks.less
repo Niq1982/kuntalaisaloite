@@ -52,7 +52,7 @@
         width: 585px;
     }
     @media @mobile {
-        width: 95%;
+        width: 100%;
         margin-top:1em;
     }
 
@@ -152,13 +152,16 @@
     .initiative-type {
         position:relative;
         float:left;
-        @media @mobile {
-            width: 95%;
-        }
+
         width:32.5%;
         margin-right:0.5%;
 
         border:1px solid @borderGray;
+
+        @media @mobile {
+            width: 100%;
+            margin: 0.5em 0;
+        }
         .gradient (#fff, #f1f1f1);
 
         .boxSizing(border-box);
@@ -190,6 +193,9 @@
 
             @media @desktop-xl {
                 height: 8em;
+            }
+            @media @mobile {
+                height: auto;
             }
             padding:20px 20px 60px 20px;
         }
