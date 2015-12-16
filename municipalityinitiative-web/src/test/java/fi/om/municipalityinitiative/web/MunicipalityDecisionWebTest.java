@@ -16,7 +16,7 @@ public class MunicipalityDecisionWebTest  extends WebTestBase {
 
     public static final String DECISIONTEXT = "Kunnalla ei ole varattu määrärahoja tällä valtuustokaudella.";
     public static final String PUBLISH = "Julkaise vastaus";
-    public static final String SUCCESS = "Vastaus lisätty";
+    public static final String SUCCESS = "Kunnan vastaus on julkaistu Kuntalaisaloite.fi-palvelussa";
     public static final String VERIFIED_USER_AUTHOR_SSN = "010190-0001";
     public static final String MUNICIPALITY_ANSWER = "Kunnan vastaus";
 
