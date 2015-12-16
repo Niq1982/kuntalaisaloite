@@ -114,7 +114,7 @@
 * @param showForm is boolean for toggling form visibility
 * @param admin is boolean for toggling participate button and participant manage -link
 -->
-<#macro participantsMobile formHTML="" showForm=true admin=false>
+<#macro participantsMobile formHTML="" showForm=true>
     <#assign participateSuccess=false />
     <#list requestMessages as requestMessage>
         <#if requestMessage == RequestMessage.PARTICIPATE>
@@ -122,7 +122,7 @@
         </#if>
     </#list>
 
-    <#if admin><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
+    <#if user.hasRightToInitiative(initiative.id)><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
 
     <#if  !initiative.sentTime.present && !user.hasRightToInitiative(initiative.id)>
         <#if user.hasParticipatedToInitiative(initiative.id)>
@@ -133,13 +133,13 @@
             <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
         </#if>
     </#if>
-    <#if !admin && initiative.sentTime.present>
+    <#if initiative.sentTime.present>
         <@u.systemMessage path="participate.sentToMunicipality" type="info" />
     </#if>
 
     <@participantInformationMobile/>
 
-    <@e.participateButton admin participateSuccess showForm/>
+    <@e.participateButton participateSuccess showForm/>
 
     <#-- NOSCRIPT participate -->
     <#if showForm>

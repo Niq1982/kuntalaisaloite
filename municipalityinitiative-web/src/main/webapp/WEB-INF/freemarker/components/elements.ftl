@@ -399,7 +399,7 @@
  * @param showForm is boolean for toggling form visibility 
  * @param admin is boolean for toggling participate button and participant manage -link 
 -->
-<#macro participants formHTML="" showForm=true admin=false>
+<#macro participants formHTML="" showForm=true>
     <#assign participateSuccess=false />
     <#list requestMessages as requestMessage>
         <#if requestMessage == RequestMessage.PARTICIPATE>
@@ -407,15 +407,9 @@
         </#if>
     </#list>
 
-    <@participateButton admin participateSuccess showForm/>
+    <@participateButton participateSuccess showForm/>
 
-    <#if !admin && initiative.sentTime.present>
-    <div class="participants-block last noprint">
-        <div class="participate not-allowed">
-            <@u.systemMessage path="participate.sentToMunicipality" type="info" />
-        </div>
-    </div>
-    </#if>
+
     <#-- NOSCRIPT participate -->
     <#if showForm>
         <#noescape><noscript>
@@ -425,17 +419,27 @@
             </div>
         </noscript></#noescape>
     </#if>
-    <br class="clear" />
-    <br class="clear" />
 
+    <#if initiative.sentTime.present>
+        <div class="participants-block last noprint">
+            <div class="participate not-allowed">
+                <@u.systemMessage path="participate.sentToMunicipality" type="info" />
+            </div>
+        </div>
+    </#if>
+
+    <br class="clear" />
 
     <#if  !initiative.sentTime.present && !user.hasRightToInitiative(initiative.id)>
         <#if user.hasParticipatedToInitiative(initiative.id)>
             <@u.systemMessage path="warning.already.participated" type="warning" />
+             <br class="clear" />
         <#elseif initiative.verifiable && user.isVerifiedUser() && !user.allowVerifiedParticipation(initiative.id, initiative.municipality)>
+            <br class="clear" />
             <@u.systemMessage path="warning.participant.notMember" type="warning" />
         <#elseif initiative.verifiable && ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
             <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
+            <br class="clear" />
         </#if>
     </#if>
 
@@ -444,23 +448,23 @@
 </#macro>
 
 
-<#macro participateButton admin participateSuccess showForm>
-    <#if !admin && !initiative.sentTime.present && !participateSuccess>
-    <div class="participants-block ${showForm?string("hidden","")} noprint">
-        <#if initiative.verifiable>
-            <#if user.isVerifiedUser()>
-                <#if !user.hasParticipatedToInitiative(initiative.id) && (user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
-                    <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
+<#macro participateButton participateSuccess showForm>
+    <#if !initiative.sentTime.present && !participateSuccess>
+        <div class="participants-block ${showForm?string("hidden","")} noprint">
+            <#if initiative.verifiable>
+                <#if user.isVerifiedUser()>
+                    <#if !user.hasParticipatedToInitiative(initiative.id) && (user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
+                        <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
+                    </#if>
+                <#else>
+                    <a class="small-button" href="${urls.vetumaLogin(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
                 </#if>
             <#else>
-                <a class="small-button" href="${urls.vetumaLogin(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
+                <#if !user.hasParticipatedToInitiative(initiative.id)>
+                    <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
+                </#if>
             </#if>
-        <#else>
-            <#if !user.hasParticipatedToInitiative(initiative.id)>
-                <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
-            </#if>
-        </#if>
-    </div>
+        </div>
         <#if !user.hasParticipatedToInitiative(initiative.id)>
         <div class="participants-block last ${showForm?string("hidden","")} noprint">
             <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="${urls.help(HelpPage.PARTICIPANTS.getUri(locale))}"><@u.messageHTML "action.participate.infoLink" /></a>
@@ -471,7 +475,6 @@
 
 
 <#macro follow >
-    <h3><@u.message "followInitiative.title" /></h3>
     <a class="js-follow small-button trigger-tooltip" title="<@u.message "followInitiative.tooltip" />"> <span class="small-icon mail"><@u.message "action.follow" /></span></a>
 </#macro>
 

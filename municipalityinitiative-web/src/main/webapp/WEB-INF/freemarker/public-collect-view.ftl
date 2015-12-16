@@ -245,9 +245,6 @@
         </div>
 
     </div>
-
-    <@e.participantInfo />
-
     <#assign canFollow = ( initiative.state == InitiativeState.PUBLISHED && !initiative.decisionDate.present && followEnabled) />
     <#assign showFollowForm = canFollow && (RequestParameters['formError']?? && RequestParameters['formError'] == "follow") />
 
@@ -255,25 +252,25 @@
         <div id="participants" class="view-block public participants">
             <h2><@u.message key="initiative.participation.title"/></h2>
 
-            <#--
-             * Do NOT show participate button:
-             *  - when modal request message is showed
-             *  - when participate form is showed (RequestParameter for NOSCRIPT)
-             *  - when the form has validation errors
-             *  - when sent to municipality (initiative.sentTime.present)
-            -->
+        <#--
+         * Do NOT show participate button:
+         *  - when modal request message is showed
+         *  - when participate form is showed (RequestParameter for NOSCRIPT)
+         *  - when the form has validation errors
+         *  - when sent to municipality (initiative.sentTime.present)
+        -->
             <#assign showParticipateForm = (RequestParameters['formError']?? && RequestParameters['formError'] == "participate")
-                                        || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true") />
+            || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true") />
 
-            <#--
-             * Show participant counts and participate form
-             *
-             * - Hide when not published. OM sees this view in REVIEW state.
-            -->
+        <#--
+         * Show participant counts and participate form
+         *
+         * - Hide when not published. OM sees this view in REVIEW state.
+        -->
 
 
 
-            <div class="initiative-content-row <#if !canFollow>last</#if>">
+            <div class="initiative-content-row no-bottom-margin">
                 <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
             </div>
 
@@ -288,8 +285,12 @@
 
 
 
+    <@e.participantInfo />
+
+
     <@mobile.participantsBlock participantCount/>
-    
+
+
     <#if user.hasRightToInitiative(initiative.id) && !initiative.sent>
         <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
     <#else>
