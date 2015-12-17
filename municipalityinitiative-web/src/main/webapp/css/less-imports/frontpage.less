@@ -80,6 +80,10 @@
         height: 100px;
         outline: solid white 5px;
         margin-top: 5px;
+        @media @mini-tablet {
+            height: 175px;
+        }
+
 
         &.image-1 {
             &-1{
@@ -162,9 +166,13 @@
     width: 60%;
     float: right;
     height: 100px;
+
     margin-top: 5px;
     outline: solid white 5px;
     background: @mainColorLight;
+    @media @mini-tablet {
+        height: 175px;
+    }
 
     &:hover {
         background-color: @mainColor;
@@ -174,11 +182,18 @@
 
         .sv &{
             font-size: 18px;
+            @media @mini-tablet {
+                font-size: 24px;
+            }
         }
 
         padding: 5% 2% 2% 6%;
         color: #fff;
         font-size: 20px;
+
+        @media @mini-tablet {
+           font-size: 24px;
+        }
 
         text-decoration: none;
         display: block;
