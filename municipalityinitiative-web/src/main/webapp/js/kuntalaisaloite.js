@@ -2831,6 +2831,17 @@ function findLocation(locations, location) {
 
 	});
 
+	$(".show-video-form").click(function() {
+		$(".video-form").toggleClass("hide-form");
+		if ($(".video-form").hasClass("hide-form")) {
+			$(".show-video-form").show();
+		} else {
+			$(".show-video-form").hide();
+		}
+
+	});
+
+
 })();
 
 

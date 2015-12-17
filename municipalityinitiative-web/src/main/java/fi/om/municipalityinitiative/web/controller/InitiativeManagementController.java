@@ -152,10 +152,11 @@ public class InitiativeManagementController extends BaseController {
         if (initiativeInfo.hasNeverBeenSaved()) {
             return contextRelativeRedirect(Urls.get(locale).edit(initiativeId));
         }
+        VideoCreateDto video = new VideoCreateDto(initiativeInfo.getVideoUrl(), initiativeInfo.getVideoName());
 
         return ViewGenerator.manageVideosView(initiativeInfo,
                 normalInitiativeService.getManagementSettings(initiativeId),
-                new VideoCreateDto())
+                video)
                 .view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
 

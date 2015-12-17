@@ -32,14 +32,20 @@
 
     
     <div class="view-block cf">
-
+        <#assign videoPresent=initiative.videoUrl.isPresent() && initiative.videoName.isPresent() />
 
         <h2><@u.message "video.attachVideoLink"/></h2>
 
-        <#if initiative.videoUrl.isPresent() && initiative.videoName.isPresent()>
+        <#if videoPresent>
             <@e.video manage=true />
         </#if>
-        <div class="initiative-content-row cf">
+
+        <#if videoPresent>
+            <a class="small-button show-video-form"><span class="small-icon edit"><@u.message "video.change"/></span></a>
+
+        </#if>
+
+        <div class="initiative-content-row cf video-form <#if videoPresent>hide-form</#if>" >
 
             <form id="form-video-url"  action="${urls.getManageVideoUrl(initiative.id)}" method="POST">
                 <@f.securityFilters/>
@@ -63,10 +69,8 @@
             </form>
         </div>
 
-
         <div class="initiative-content-row cf last">
-            <a href="${managementURL}" class="small-button" ><@u.message "attachment.ready" /></a>
-
+            <a href="${managementURL}" class="small-button" ><@u.message "video.ready" /></a>
         </div>
 
     </div>

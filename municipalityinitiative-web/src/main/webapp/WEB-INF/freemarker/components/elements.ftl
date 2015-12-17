@@ -140,22 +140,20 @@
 		</div>
     </#if>
 
-    <#if showVideo>
-        <@video />
-    </#if>
-    <#if managementSettings.allowAddVideo && videoEnabled>
-    	<div class="initiative-content-row">
-    		<a href="${urls.getManageVideoUrl(initiative.id)}" class="small-button"><span class="small-icon add"><@u.message "video.add.btn" /></span></a>
-		</div>
-    </#if>
-
-    <#if showMap || (initiative.extraInfo)?has_content>
-        <h2><@u.message "initiative.extraInfo.title" /></h2>
-    </#if>
+    <h2><@u.message "initiative.extraInfo.title" /></h2>
 
     <#if (initiative.extraInfo)?has_content>
         <div class="initiative-content-row last replace-links">
             <@u.text initiative.extraInfo!"" />
+        </div>
+    </#if>
+    <#if showVideo>
+        <@video />
+    </#if>
+
+    <#if managementSettings.allowAddVideo && videoEnabled>
+        <div class="initiative-content-row">
+            <a href="${urls.getManageVideoUrl(initiative.id)}" class="small-button"><span class="small-icon add"><@u.message "video.add.btn" /></span></a>
         </div>
     </#if>
 
