@@ -1451,10 +1451,13 @@ $('.municipality-filter').change( function() {
  * ===============================
  *
  * */
+
+var $tooltip = null;
+
 var tooltip = (function() {
 	return {
 		load : function(){
-			$('.trigger-tooltip[title]').tooltip({
+			$tooltip = $('.trigger-tooltip[title]').tooltip({
 				animation:	true,
 				effect:		'fade',
 				placement:	'top right', // FIXME: this doesn't seem to work correctly
@@ -1469,6 +1472,20 @@ var tooltip = (function() {
 		}
 	};
 })();
+
+$("body").click(function(){
+	hideTooltip();
+});
+
+function hideTooltip() {
+	if($tooltip) {
+		$tooltip.each(function(index){
+			var $this = $(this).data('tooltip');
+			if($this.isShown(true))
+				$this.hide();
+		});
+	}
+}
 
 tooltip.load();
 
