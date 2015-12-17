@@ -464,7 +464,9 @@ public class PublicInitiativeController extends BaseController {
 
     @RequestMapping(value = { UNSUBSCRIBE }, method = GET)
     public String unfollowInitiative(@PathVariable long id, @RequestParam(PARAM_CONFIRMATION_CODE) String hash, Locale locale, HttpServletRequest request) {
-        followInitiativeService.stopFollowingInitiative(hash);
+        if (followInitiativeService.stopFollowingInitiative(hash) != 1) {
+            return redirectWithMessage(Urls.get(locale).view(id), RequestMessage.FAILED_STOP_FOLLOW, request);
+        }
         return redirectWithMessage(Urls.get(locale).view(id), RequestMessage.COMFIRM_STOP_FOLLOW, request);
     }
 

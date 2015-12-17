@@ -21,8 +21,8 @@ public class JdbcFollowInitiativeDao implements  FollowInitiativeDao{
     }
 
     @Override
-    public void removeFollow(String hash) {
-        queryFactory.delete(QFollowInitiative.followInitiative)
+    public Long removeFollow(String hash) {
+        return queryFactory.delete(QFollowInitiative.followInitiative)
                 .where(QFollowInitiative.followInitiative.unsubscribeHash.eq(hash))
                 .execute();
 

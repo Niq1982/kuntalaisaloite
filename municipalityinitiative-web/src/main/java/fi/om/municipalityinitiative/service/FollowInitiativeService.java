@@ -43,8 +43,8 @@ public class FollowInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void stopFollowingInitiative(String hash) {
-        followInitiativeDao.removeFollow(hash);
+    public long stopFollowingInitiative(String hash) {
+        return followInitiativeDao.removeFollow(hash);
     }
 
     @Transactional(readOnly = true)

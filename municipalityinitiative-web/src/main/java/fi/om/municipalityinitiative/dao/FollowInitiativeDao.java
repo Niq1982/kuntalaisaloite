@@ -6,7 +6,7 @@ public interface FollowInitiativeDao {
 
     void addFollow(Long initiativeId, String email, String hash);
 
-    void removeFollow(String hash);
+    Long removeFollow(String hash);
 
     Map<String, String> listFollowers(Long initiativeId);
 }
