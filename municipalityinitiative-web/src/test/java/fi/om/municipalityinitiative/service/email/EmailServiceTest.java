@@ -9,10 +9,16 @@ import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
+import org.apache.commons.io.FileUtils;
+import org.aspectj.util.FileUtil;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,6 +40,27 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         super.setup();
         urls = Urls.get(Locales.LOCALE_FI);
     }
+
+    private static final String EMAIL_TEMP_DIR = "target/test-emails/";
+
+    @BeforeClass
+    public static void lol() throws IOException {
+        FileUtils.forceMkdir(new File(EMAIL_TEMP_DIR));
+        FileUtils.cleanDirectory(new File(EMAIL_TEMP_DIR));
+    }
+
+    @After
+    public void printEmail() {
+        EmailDto singleQueuedEmail = testHelper.getSingleQueuedEmail();
+
+        File file = new File(EMAIL_TEMP_DIR
+                + singleQueuedEmail.getEmailId()
+                + "_"
+                + singleQueuedEmail.getSubject().replace("/", " - ")
+                + ".html");
+        FileUtil.writeAsString(file, singleQueuedEmail.getBodyHtml());
+    }
+
 
     @Test
     public void prepare_initiative_sets_subject_and_login_url() throws Exception {
