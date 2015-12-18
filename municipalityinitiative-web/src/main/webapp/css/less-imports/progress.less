@@ -2,6 +2,7 @@
 @progressContainerHeightMobile: 180px;
 @stepSize: 94px; // use even values to prevent half pixels
 @mobileStepSize: 54px;
+@bigStepSize: 84px;
 @stepLabelWidth: 8.75em; // 140px
 @stepLabelWidthMobile: 5.75em;
 
@@ -49,7 +50,10 @@
 
 .initiative-progress-container {
  height: @progressContainerHeight;
-  @media @mobile {
+  @media @small-mobile {
+    margin: 3% 0;
+  }
+  @media @big-mobile {
     margin: 3% 0;
   }
 
@@ -150,7 +154,7 @@
   position: relative;
   height: @stepSize;
   margin: 0 @stepLabelWidth / 2;
-  @media @mobile {
+  @media @small-mobile {
     margin: 0 15% 20px 15%;
     height: @mobileStepSize;
   }
@@ -180,13 +184,17 @@
       display: inline-block;
       width: @stepSize;
       height: @stepSize;
-      @media @mobile {
+      @media @small-mobile {
         width: @mobileStepSize;
         height: @mobileStepSize;
       }
+      @media @big-mobile {
+        width: @bigStepSize;
+        height: @bigStepSize;
+      }
       border-radius: 100%;
       margin-left: -@stepSize / 2;
-      @media @mobile {
+      @media @small-mobile {
         margin-left: -@mobileStepSize / 2
       }
       background: @progBarColor;
@@ -200,9 +208,13 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        @media @mobile {
+        @media @small-mobile {
           top : 74%;
           left: 78%;
+        }
+        @media @big-mobile {
+          top: 54%;
+          left: 57%;
         }
         margin: -32px 0 0 -32px;
       }
@@ -213,7 +225,7 @@
       width: @stepLabelWidth;
       margin-left: -@stepLabelWidth / 2;
       text-align: center;
-      @media @mobile {
+      @media @small-mobile {
         display: none;
       }
     }
@@ -254,7 +266,7 @@
 
   &.steps-2 {
     margin: 0 13.5 + @stepLabelWidth / 2; // em -> 0 286px (216 + 140/2)
-    @media @mobile {
+    @media @small-mobile {
       margin: 0 30% 20px 30%; // em -> 0 286px (216 + 140/2)
 
     }
@@ -298,7 +310,7 @@
 .mobile-label {
   display: none;
 }
-@media @mobile {
+@media @small-mobile {
   .arrow-up {
     display: block;
     width: 0;
