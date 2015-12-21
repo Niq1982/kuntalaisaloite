@@ -112,7 +112,7 @@ public class VideoServiceTest extends ServiceIntegrationTestBase{
             assertThat(initiative.getVideoUrlName().isPresent(), is(true));
 
             VideoCreateDto videoCreateDto = new VideoCreateDto(initiative.getVideoUrl(), initiative.getVideoUrlName());
-            assertThat(videoCreateDto.getVideoUrl(), is(EMBEDDED_YOUTUBE_VIDEO_URL_BASE + "/" + P_ESCAPED));
+            assertThat(videoCreateDto.getVideoUrl(), is(EMBEDDED_YOUTUBE_VIDEO_URL_BASE + P_ESCAPED));
             assertThat(videoCreateDto.getVideoName(), is(VIDEONAME));
         }
         testEscapeVideoUrl(SHORT_YOUTUBE_VIDEO_URL_BASE);

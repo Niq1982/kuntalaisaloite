@@ -12,7 +12,7 @@
 
     <@l.emailHtml title=title footer=true>
         <@b.mainContentBlock title>
-            <@b.municipalityDecision type />
+            <@b.municipalityDecisionFollowers type />
         </@b.mainContentBlock>
 
         <@u.spacer "15" />

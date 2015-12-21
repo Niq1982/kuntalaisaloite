@@ -41,8 +41,8 @@ public class OmLoginUser extends User {
     }
 
     @Override
-    public boolean isMunicipalityUser() {
-        return false;
+    public boolean isMunicipalityUser(Long initiativeId) {
+        return true;
     }
 
     public String getName() {

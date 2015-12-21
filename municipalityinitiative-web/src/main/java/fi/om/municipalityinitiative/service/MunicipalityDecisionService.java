@@ -70,7 +70,7 @@ public class MunicipalityDecisionService {
 
     @Transactional(readOnly = false, rollbackFor = Throwable.class)
     public void setDecision(MunicipalityDecisionDto decision, Long initiativeId, MunicipalityUserHolder user,  Locale locale) throws FileUploadException, InvalidAttachmentException {
-        user.assertManagementRightsForInitiative(initiativeId);
+        user.assertMunicipalityLoginUser(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
         saveAttachments(decision.getFiles(), initiativeId);
 
@@ -88,7 +88,7 @@ public class MunicipalityDecisionService {
 
     @Transactional(readOnly = false, rollbackFor = Throwable.class)
     public void updateAttachments(Long initiativeId, List<MunicipalityDecisionDto.FileWithName> files, MunicipalityUserHolder user) throws FileUploadException, InvalidAttachmentException {
-        user.assertManagementRightsForInitiative(initiativeId);
+        user.assertMunicipalityLoginUser(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
         if (initiative.getDecisionDate().isNotPresent()) {
             throw new InvalidAttachmentException("Can't attach files to decision that doesn't exist");
@@ -101,7 +101,7 @@ public class MunicipalityDecisionService {
     @Transactional
     public void removeAttachmentFromDecision(Long attachmentId, MunicipalityUserHolder user){
         DecisionAttachmentFile file = decisionAttachmentDao.getAttachment(attachmentId);
-        user.assertManagementRightsForInitiative(file.getInitiativeId());
+        user.assertMunicipalityLoginUser(file.getInitiativeId());
         initiativeDao.updateInitiativeDecisionModifiedDate(file.getInitiativeId());
         decisionAttachmentDao.removeAttachment(attachmentId);
     }
@@ -123,7 +123,6 @@ public class MunicipalityDecisionService {
         return AttachmentUtil.getAttachmentFile(fileName, attachmentInfo, attachmentDir);
     }
 
-    @Transactional(readOnly = false, rollbackFor = Throwable.class)
     public void saveAttachments(List<MunicipalityDecisionDto.FileWithName> files, Long initiativeId) throws FileUploadException, InvalidAttachmentException {
 
         for (MunicipalityDecisionDto.FileWithName attachment: files) {
@@ -134,6 +133,23 @@ public class MunicipalityDecisionService {
 
             saveFile(attachment, fileInfo, attachmentId);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(InitiativeViewInfo initiative) {
+
+        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
+        if (initiative.getDecisionDate().isPresent()) {
+            AttachmentUtil.Attachments attachments = getDecisionAttachments(initiative.getId());
+            if (decisionPresent(initiative, attachments)) {
+                municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
+                        initiative.getDecisionText(),
+                        initiative.getDecisionDate().getValue(),
+                        initiative.getDecisionModifiedDate(),
+                        attachments));
+            }
+        }
+        return municipalityDecisionInfo;
     }
 
     private void saveFile(MunicipalityDecisionDto.FileWithName attachment, DecisionAttachmentFile fileInfo, Long attachmentId) throws InvalidAttachmentException, FileUploadException {
@@ -222,20 +238,5 @@ public class MunicipalityDecisionService {
         return initiative.getDecisionDate().isPresent();
     }
 
-    @Transactional
-    public Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(InitiativeViewInfo initiative) {
 
-        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
-        if (initiative.getDecisionDate().isPresent()) {
-            AttachmentUtil.Attachments attachments = getDecisionAttachments(initiative.getId());
-            if (decisionPresent(initiative, attachments)) {
-                municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
-                        initiative.getDecisionText(),
-                        initiative.getDecisionDate().getValue(),
-                        initiative.getDecisionModifiedDate(),
-                        attachments));
-            }
-        }
-        return municipalityDecisionInfo;
-    }
 }

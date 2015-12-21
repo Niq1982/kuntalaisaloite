@@ -5,9 +5,7 @@ import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
 import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
-import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.MunicipalityDecisionService;
-import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -36,12 +34,6 @@ public class MunicipalityDecisionController extends BaseController{
     private NormalInitiativeService normalInitiativeService;
 
     @Resource
-    private AuthorService authorService;
-
-    @Resource
-    private AttachmentService attachmentService;
-
-    @Resource
     private MunicipalityDecisionService municipalityDecisionService;
 
 
@@ -52,7 +44,7 @@ public class MunicipalityDecisionController extends BaseController{
     @RequestMapping(value = {MUNICIPALITY_DECISION_FI, MUNICIPALITY_DECISION_SV}, method = GET)
     public String municipalityModerationView(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
 
-        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request, initiativeId);
 
         InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
@@ -63,7 +55,7 @@ public class MunicipalityDecisionController extends BaseController{
     @RequestMapping(value = {EDIT_MUNICIPALITY_DECISION_FI, EDIT_MUNICIPALITY_DECISION_SV}, method = GET)
     public String editDecisionText(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
 
-        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request, initiativeId);
 
         InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
@@ -73,7 +65,7 @@ public class MunicipalityDecisionController extends BaseController{
     @RequestMapping(value = {EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV}, method = GET)
     public String editDecisionAttachments(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
 
-        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request, initiativeId);
 
         InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
@@ -91,7 +83,7 @@ public class MunicipalityDecisionController extends BaseController{
         // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
         SecurityFilter.verifyAndGetCurrentCSRFToken(request);
 
-        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request, initiativeId);
 
         InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
@@ -130,7 +122,7 @@ public class MunicipalityDecisionController extends BaseController{
         // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
         SecurityFilter.verifyAndGetCurrentCSRFToken(request);
 
-        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request, initiativeId);
         if(!municipalityDecisionService.validationSuccessful(decision.getFiles(), bindingResult, model)) {
 
             return showMunicipalityDecisionView(initiativeId, decision, model, locale, loginUserHolder, true, false);
@@ -154,7 +146,7 @@ public class MunicipalityDecisionController extends BaseController{
                                    HttpServletRequest request,
                                    Locale locale) {
 
-        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+        MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request, initiativeId);
         municipalityDecisionService.removeAttachmentFromDecision(attachmentId, loginUserHolder);
         return redirectWithMessage(Urls.get(locale).openDecisionAttachmentsForEdit(initiativeId), RequestMessage.ATTACHMENT_DELETED, request);
     }
@@ -183,7 +175,7 @@ public class MunicipalityDecisionController extends BaseController{
                 decisionInfo,
                 showDecisionForm,
                 editAttachments
-        ).view(model, Urls.get(locale).alt().municipalityModeration());
+        ).view(model, Urls.get(locale).alt().getMunicipalityDecisionView(initiativeId));
     }
 
 }

@@ -37,7 +37,8 @@ public class AnonymUser extends User {
     }
 
     @Override
-    public boolean isMunicipalityUser() {
+    public boolean isMunicipalityUser(Long initiativeId) {
         return false;
     }
+
 }

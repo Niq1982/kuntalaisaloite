@@ -66,7 +66,7 @@ public class VerifiedUser extends User{
     }
 
     @Override
-    public boolean isMunicipalityUser() {
+    public boolean isMunicipalityUser(Long initiativeId) {
         return false;
     }
 

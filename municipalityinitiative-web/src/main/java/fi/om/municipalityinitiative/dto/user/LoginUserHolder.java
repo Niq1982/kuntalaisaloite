@@ -64,8 +64,8 @@ public class LoginUserHolder<E extends User> {
         }
     }
 
-    public void assertMunicipalityLoginUser() {
-        if (user.isNotMunicipalityLoginUser()) {
+    public void assertMunicipalityLoginUser(Long initiativeId) {
+        if (user.isNotMunicipalityLoginUser(initiativeId)) {
             throw new AccessDeniedException("No privileges");
         }
     }
