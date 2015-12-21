@@ -214,7 +214,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         EmailDto email = testHelper.getSingleQueuedEmail();
 
-        assertThat(email.getSubject(), containsString("Kunta on vastannut aloitteeseen"));
+        assertThat(email.getSubject(), containsString("Kunta on vastannut tekemääsi kuntalaisaloitteeseen."));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
         assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
@@ -231,7 +231,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         EmailDto email = testHelper.getSingleQueuedEmail();
 
-        assertThat(email.getSubject(), containsString("Kunta on vastannut aloitteeseen"));
+        assertThat(email.getSubject(), containsString("Kunta on vastannut tekemääsi kuntalaisaloitteeseen."));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
         assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));

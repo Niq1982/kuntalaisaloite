@@ -24,7 +24,7 @@ public class MunicipalityLoginUser extends User {
 
     @Override
     public boolean hasRightToInitiative(Long initiativeId) {
-       return this.initiativeId.equals(initiativeId);
+       return false;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class MunicipalityLoginUser extends User {
     }
 
     @Override
-    public boolean isMunicipalityUser() {
-        return true;
+    public boolean isMunicipalityUser(Long initiativeId) {
+        return initiativeId.equals(this.initiativeId);
     }
 }

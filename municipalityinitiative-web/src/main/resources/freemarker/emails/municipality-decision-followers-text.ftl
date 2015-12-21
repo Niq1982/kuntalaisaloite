@@ -4,7 +4,7 @@
 <#assign type="text" />
 
 <@b.contentBlock type>
-    <@b.municipalityDecision type />
+    <@b.municipalityDecisionFollowers type />
 </@b.contentBlock>
 
 <@b.contentBlock type>

@@ -239,14 +239,14 @@ public class UserService {
         }
     }
 
-    public MunicipalityUserHolder getRequiredMunicipalityUserHolder(HttpServletRequest request) {
+    public MunicipalityUserHolder getRequiredMunicipalityUserHolder(HttpServletRequest request, Long initiativeId) {
 
         Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request);
 
         if (loginUserHolder.isNotPresent()) {
             throw new AuthenticationRequiredException();
         }
-        loginUserHolder.get().assertMunicipalityLoginUser();
+        loginUserHolder.get().assertMunicipalityLoginUser(initiativeId);
 
         return new MunicipalityUserHolder((MunicipalityLoginUser) loginUserHolder.get().getUser());
     }

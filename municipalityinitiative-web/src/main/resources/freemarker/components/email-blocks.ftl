@@ -396,6 +396,19 @@
     </#if>
 </#macro>
 
+<#macro municipalityDecisionFollowers type>
+    <#if type == "html">
+    <h4 style="${h4!""}">${initiative.name!""}</h4>
+    <p style="${pBottomMargin!""}">${initiative.municipality.getLocalizedName(switchLocale!locale)!""}</p>
+        <@u.message "email.municipality.answered.followers.body" />
+        <@publicViewLink type/>
+    <#else>
+    "${initiative.name!""}"
+    ${initiative.municipality.getLocalizedName(switchLocale!locale)!""}
+        <@u.message "email.municipality.answered.followers.body" />
+        <@publicViewLink type />
+    </#if>
+</#macro>
 
 <#--
  * separator
