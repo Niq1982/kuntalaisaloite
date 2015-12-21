@@ -48,6 +48,9 @@
 
         <#global switchLocale = altLocale />
 
+
+        <#assign title><@u.message "email.follow.sent.to.municipality" /></#assign>
+
         <@b.mainContentBlock title>
             <h4 style="${h4!""}">${initiative.name!""}</h4>
             <p style="${pBottomMargin!""}">${initiative.municipality.getLocalizedName(switchLocale!locale)!""}</p>

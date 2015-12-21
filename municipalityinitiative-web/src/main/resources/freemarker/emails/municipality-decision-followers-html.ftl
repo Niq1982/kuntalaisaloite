@@ -30,6 +30,8 @@
 
         <#global switchLocale = altLocale />
 
+        <#assign title><@u.message "email.initiative" /></#assign>
+
         <@b.mainContentBlock title>
             <@b.municipalityDecision type />
         </@b.mainContentBlock>
