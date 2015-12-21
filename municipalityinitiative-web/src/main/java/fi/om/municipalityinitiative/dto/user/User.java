@@ -47,10 +47,10 @@ public abstract class User implements Serializable {
 
     public abstract boolean isLoggedIn();
 
-    public abstract boolean isMunicipalityUser();
+    public abstract boolean isMunicipalityUser(Long initiativeId);
 
-    public boolean isNotMunicipalityLoginUser() {
-        return !isMunicipalityUser();
+    public boolean isNotMunicipalityLoginUser(Long initiativeId) {
+        return !isMunicipalityUser(initiativeId);
     }
 
 }
