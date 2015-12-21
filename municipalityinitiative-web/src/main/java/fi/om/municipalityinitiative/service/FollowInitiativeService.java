@@ -12,6 +12,7 @@ import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Locale;
 import java.util.Map;
 
 public class FollowInitiativeService {
@@ -26,7 +27,7 @@ public class FollowInitiativeService {
     InitiativeDao initiativeDao;
 
     @Transactional(readOnly = false)
-    public void followInitiative(Long initiativeId, String email ) {
+    public void followInitiative(Long initiativeId, String email, Locale locale) {
         Initiative initiative = initiativeDao.get(initiativeId);
         if (initiative.getDecisionDate().isPresent() || !initiative.getState().equals(InitiativeState.PUBLISHED)) {
             throw new AccessDeniedException("Can't follow initiative.");
@@ -34,7 +35,7 @@ public class FollowInitiativeService {
         String hash = RandomHashGenerator.longHash();
         try {
             followInitiativeDao.addFollow(initiativeId, email, hash);
-            emailService.sendConfirmToFollower(initiativeId, email, hash);
+            emailService.sendConfirmToFollower(initiativeId, email, hash, locale);
         }
         catch (QueryException e) {
             e.printStackTrace();

@@ -25,6 +25,28 @@
 
         <@u.spacer "15" />
 
+
+        <#-- Swedish part -->
+
+        <#global switchLocale = altLocale />
+
+        <@b.mainContentBlock title>
+            <@b.municipalityDecision type />
+        </@b.mainContentBlock>
+
+        <@u.spacer "15" />
+
+        <@b.contentBlock type>
+            <#if removeHash??>
+                <@b.unfollow initiativeId removeHash type/>
+            </#if>
+        </@b.contentBlock>
+
+        <@u.spacer "15" />
+
+        <#-- Switch to default locale -->
+        <#global switchLocale = locale />
+
     </@l.emailHtml>
 
 </#escape>

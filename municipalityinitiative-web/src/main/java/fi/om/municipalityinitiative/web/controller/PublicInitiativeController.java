@@ -458,7 +458,7 @@ public class PublicInitiativeController extends BaseController {
                     municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(id));
 
         }
-        followInitiativeService.followInitiative(id, followInitiativeDto.getParticipantEmail());
+        followInitiativeService.followInitiative(id, followInitiativeDto.getParticipantEmail(), locale);
         return redirectWithMessage(Urls.get(locale).view(id), RequestMessage.COMFIRM_FOLLOW, request);
     }
 

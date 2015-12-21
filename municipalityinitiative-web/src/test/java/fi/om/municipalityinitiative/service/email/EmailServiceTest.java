@@ -344,7 +344,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     public void send_confirm_to_followers_contains_all_information() {
         String removeHash = testHelper.addFollower(initiativeId(), FOLLOWEREMAIL);
 
-        emailService.sendConfirmToFollower(initiativeId(), FOLLOWEREMAIL, removeHash);
+        emailService.sendConfirmToFollower(initiativeId(), FOLLOWEREMAIL, removeHash, new Locale("fi"));
 
         EmailDto email = testHelper.getSingleQueuedEmail();
 

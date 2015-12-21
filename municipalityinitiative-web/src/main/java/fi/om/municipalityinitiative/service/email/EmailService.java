@@ -222,8 +222,7 @@ public class EmailService {
                 .send();
     }
 
-    public void sendConfirmToFollower(Long initiativeId, String recipient, String hash) {
-        Locale locale = Locales.LOCALE_FI;
+    public void sendConfirmToFollower(Long initiativeId, String recipient, String hash, Locale locale) {
 
         Initiative initiative = dataProvider.get(initiativeId);
 
