@@ -561,7 +561,7 @@
                     </execution>
                     <execution>
                         <id>iframe-minify</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <configuration>
                             <webappTargetDir>target/tmp</webappTargetDir>
                             <cssSourceDir>css</cssSourceDir>
