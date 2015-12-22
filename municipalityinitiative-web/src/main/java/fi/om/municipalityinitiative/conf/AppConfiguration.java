@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.conf;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.conf.AppConfiguration.AppDevConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.ProdPropertiesConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.TestPropertiesConfigurer;
@@ -15,13 +16,12 @@ import fi.om.municipalityinitiative.util.ImageModifier;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
 import fi.om.municipalityinitiative.validation.LocalValidatorFactoryBeanFix;
-import fi.om.municipalityinitiative.web.CacheHeaderFilter;
-import fi.om.municipalityinitiative.web.ErrorFilter;
-import fi.om.municipalityinitiative.web.SecurityFilter;
-import fi.om.municipalityinitiative.web.Urls;
+import fi.om.municipalityinitiative.web.*;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.utility.XmlEscape;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
@@ -30,6 +30,7 @@ import org.springframework.context.annotation.*;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -40,6 +41,10 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
+import javax.servlet.SessionCookieConfig;
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,7 +55,12 @@ import java.util.concurrent.Executors;
 @Import({ProdPropertiesConfiguration.class, TestPropertiesConfigurer.class, JdbcConfiguration.class, AppDevConfiguration.class})
 public class AppConfiguration {
 
+    private static Logger logger = LoggerFactory.getLogger(AppConfiguration.class);
+
     @Inject Environment env;
+
+    @Inject
+    ServletContext servletContext;
     
     @Resource JdbcConfiguration jdbcConfiguration; 
 
@@ -68,8 +78,13 @@ public class AppConfiguration {
     public static class ProdPropertiesConfiguration {
 
         @Bean
-        public static EncryptablePropertiesConfigurer propertyProcessor() {
-            return new EncryptablePropertiesConfigurer(new ClassPathResource("app.properties"));
+        public static EncryptablePropertiesConfigurer propertyProcessor() throws IOException {
+            File appProperties = new File("config/app.properties");
+            if (!appProperties.exists()) {
+                logger.warn("config/app.properties not found: \n USING DEFAULT PROPERTIES!");
+            }
+
+            return new EncryptablePropertiesConfigurer(new FileSystemResource(appProperties));
         }
     }
     
@@ -269,8 +284,8 @@ public class AppConfiguration {
         int messageSourceCacheSeconds = env.getProperty(PropertyNames.testMessageSourceCacheSeconds, Integer.class, TEST_MESSAGE_SOURCE_CACHE_SECONDS_DEFAULT);
         boolean testFreemarkerShowErrorsOnPage = env.getProperty(PropertyNames.testFreemarkerShowErrorsOnPage, Boolean.class, TEST_FREEMARKER_SHOW_ERRORS_ON_PAGE_DEFAULT);
 
-        return new StatusServiceImpl(testEmailSendTo,
-                testEmailConsoleOutput, messageSourceCacheSeconds, testFreemarkerShowErrorsOnPage,
+        return new StatusServiceImpl(
+                messageSourceCacheSeconds, testFreemarkerShowErrorsOnPage,
                 WebConfiguration.optimizeResources(env),
                 WebConfiguration.resourcesVersion(env),
                 WebConfiguration.appVersion(env));
@@ -427,7 +442,8 @@ public class AppConfiguration {
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.googleMapsEnabled)),
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.superSearchEnabled)),
                 Boolean.valueOf(env.getProperty(PropertyNames.videoEnabled)),
-                Boolean.valueOf(env.getProperty(PropertyNames.followEnabled)));
+                Boolean.valueOf(env.getProperty(PropertyNames.followEnabled)),
+                env.getRequiredProperty(PropertyNames.appEnvironment));
     }
 
     @Bean
@@ -441,12 +457,12 @@ public class AppConfiguration {
     }
 
     @Bean
-    public SQLExceptionTranslator sqlExceptionTranslator() {
+    public SQLExceptionTranslator sqlExceptionTranslator() throws IOException {
         return new SQLErrorCodeSQLExceptionTranslator(jdbcConfiguration.dataSource());
     }
 
     @Bean
-    public SQLExceptionTranslatorAspect sqlExceptionTranslatorAspect() {
+    public SQLExceptionTranslatorAspect sqlExceptionTranslatorAspect() throws IOException {
         return new SQLExceptionTranslatorAspect(sqlExceptionTranslator());
     }
 
@@ -473,7 +489,7 @@ public class AppConfiguration {
 
     @Bean
     public SecurityFilter securityFilter() {
-        return new SecurityFilter();
+        return new SecurityFilter(disableSecureCookie());
     }
 
     @Bean
@@ -509,5 +525,25 @@ public class AppConfiguration {
                 env.getProperty(PropertyNames.apiBaseUrl, baseUrl),
                 env.getRequiredProperty(PropertyNames.youthInitiativeBaseUrl),
                 env.getRequiredProperty(PropertyNames.superSearchBaseUrl));
+    }
+
+    @PostConstruct
+    public void setSecureCookie() {
+        SessionCookieConfig sessionCookieConfig = servletContext.getSessionCookieConfig();
+
+        // servletContext is mocked in integrationTests so it will return null.
+        if (sessionCookieConfig != null) {
+            sessionCookieConfig.setSecure(!disableSecureCookie());
+        }
+
+    }
+
+    private boolean disableSecureCookie() {
+        return Sets.newHashSet(env.getActiveProfiles()).contains("disableSecureCookie");
+    }
+
+    @PostConstruct
+    public void refreshInfoRibbon() {
+        InfoRibbon.refreshInfoRibbonTexts();
     }
 }

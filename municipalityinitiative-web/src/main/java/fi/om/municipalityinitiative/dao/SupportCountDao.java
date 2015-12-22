@@ -7,8 +7,8 @@ import org.joda.time.LocalDate;
 import javax.annotation.Resource;
 import java.util.Map;
 
-import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QInitiativeSupportVoteDay.initiativeSupportVoteDay;
+import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 /**
  * Created by liisasa on 20.5.2015.

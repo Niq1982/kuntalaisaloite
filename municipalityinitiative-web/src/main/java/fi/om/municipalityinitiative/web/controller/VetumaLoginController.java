@@ -176,7 +176,7 @@ public class VetumaLoginController extends DefaultLoginController {
     private View redirectToTarget(HttpSession session) {
         String target = (String) session.getAttribute(TARGET_SESSION_PARAM);
         session.removeAttribute(TARGET_SESSION_PARAM);
-        return redirect(target);
+        return redirect(Urls.get(Locales.LOCALE_FI).getBaseUrl() + target);
     }
 
 

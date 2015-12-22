@@ -4,7 +4,6 @@ public final class PropertyNames {
 
     public static final String isTestEmailSender = "test.mail.sender";
 
-
     private PropertyNames() {}
 
     public static final String omImageDirection = "om.image.directory";
@@ -28,6 +27,10 @@ public final class PropertyNames {
     public static final String jdbcUser = "jdbc.user";
     
     public static final String jdbcPassword = "jdbc.password";
+
+    public static final String flywayPassword = "flyway.password";
+
+    public static final String flywayUser = "flyway.user";
 
     public static final String enableVerifiedInitiatives = "enable.verified.initiatives";
 
@@ -90,6 +93,8 @@ public final class PropertyNames {
     public static final String attachmentDir = "attachment.directory";
 
     public static final String decisionAttachmentDir = "decisionAttachment.directory";
+
+    public static final String appEnvironment = "app.environment";
 
     public static final String videoEnabled = "video.enabled";
 

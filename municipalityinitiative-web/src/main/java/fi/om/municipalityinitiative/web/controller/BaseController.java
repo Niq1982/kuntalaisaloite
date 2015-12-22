@@ -66,7 +66,6 @@ public class BaseController {
         this.optimizeResources = optimizeResources;
         this.resourcesVersion = resourcesVersion;
         this.omPiwicId = omPiwicId;
-        InfoRibbon.refreshInfoRibbonTexts();
     }
 
 
@@ -149,6 +148,7 @@ public class BaseController {
     @ModelAttribute
     public void addModelDefaults(Locale locale, HttpServletRequest request, Model model) {
         Urls urls = Urls.get(locale);
+        model.addAttribute("appEnvironment", environmentSettings.getAppEnvironment());
         model.addAttribute("locale", urls.getLang());
         model.addAttribute("enableVerifiedInitiatives", environmentSettings.isEnableVerifiedInitiatives());
         model.addAttribute("user", userService.getUser(request));

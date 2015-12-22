@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dao.EmailDao;
 import fi.om.municipalityinitiative.dao.JdbcSchemaVersionDao;
 import fi.om.municipalityinitiative.dto.SchemaVersion;
@@ -21,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,8 +36,6 @@ public class StatusServiceImpl implements StatusService {
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
     private static final String DATETIME_FORMAT_SHORT = "yyyy-MM-dd HH:mm:ss";
 
-    private final String testEmailSendTo;
-    private final boolean testEmailConsoleOutput;
     private final int  messageSourceCacheSeconds;
     private final boolean testFreemarkerShowErrorsOnPage;
     private final Boolean optimizeResources;
@@ -57,6 +58,9 @@ public class StatusServiceImpl implements StatusService {
     @Resource
     private InfoTextService infoTextService;
 
+    @Resource
+    private EnvironmentSettings environmentSettings;
+
     public static class KeyValueInfo {
         private String key;
         private Object value;
@@ -74,11 +78,8 @@ public class StatusServiceImpl implements StatusService {
         }
     }
 
-    public StatusServiceImpl(String testEmailSendTo, boolean testEmailConsoleOutput,
-                             int messageSourceCacheSeconds, boolean testFreemarkerShowErrorsOnPage,
+    public StatusServiceImpl(int messageSourceCacheSeconds, boolean testFreemarkerShowErrorsOnPage,
                              Boolean optimizeResources, String resourcesVersion, String appVersion) {
-        this.testEmailSendTo = testEmailSendTo;
-        this.testEmailConsoleOutput = testEmailConsoleOutput;
         this.messageSourceCacheSeconds = messageSourceCacheSeconds;
         this.testFreemarkerShowErrorsOnPage = testFreemarkerShowErrorsOnPage;
         this.optimizeResources = optimizeResources;
@@ -130,20 +131,27 @@ public class StatusServiceImpl implements StatusService {
         list.add(new KeyValueInfo("resourcesVersion", resourcesVersion));
         list.add(new KeyValueInfo("optimizeResources", ""+optimizeResources));
 
+        addEnvironmentSettings(list);
+
         return list;
     }
 
-    @Override
-    @Transactional(readOnly=true)
-    public List<KeyValueInfo> getConfigurationTestInfo() {
-        List<KeyValueInfo> list = Lists.newArrayList();
+    private void addEnvironmentSettings(List<KeyValueInfo> list) {
+        for (Method method : EnvironmentSettings.class.getDeclaredMethods()) {
+            if (method.getParameterCount() == 0
+                    && method.getReturnType() != Void.TYPE) {
+                try {
+                    list.add(new KeyValueInfo(method.getName(), String.valueOf(method.invoke(environmentSettings))));
+                } catch (IllegalAccessException e) {
+                    log.error("iae", e);
+                } catch (InvocationTargetException e) {
+                    log.error("ite", e);
+                }
+            }
+        }
 
-        list.add(new KeyValueInfo("testEmailSendTo", testEmailSendTo));
-        list.add(new KeyValueInfo("testEmailConsoleOutput", ""+testEmailConsoleOutput));
         list.add(new KeyValueInfo("testMessageSourceCacheSeconds", messageSourceCacheSeconds));
         list.add(new KeyValueInfo("testFreemarkerShowErrorsOnPage", ""+testFreemarkerShowErrorsOnPage));
-
-        return list;
     }
 
     @Override

@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class AttachmentUtilTest extends MunicipalityDecisionServiceIntegrationTest {
+public class AttachmentUtilTest  {
 
     public static final long ATTACHMENT_ID = 1L;
     public static final String FILE_TYPE = "pdf";
@@ -39,38 +39,6 @@ public class AttachmentUtilTest extends MunicipalityDecisionServiceIntegrationTe
     public void is_pdf_type() {
         assertThat(AttachmentUtil.isPdfContentType("application/pdf"), is(true));
     }
-    /*@Test
-    public void get_attachment_file(){
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
-
-        try {
-            createDefaultMunicipalityDecisionWithAttachment(initiativeId);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (FileUploadException e) {
-            e.printStackTrace();
-        } catch (InvalidAttachmentException e) {
-            e.printStackTrace();
-        } finally {
-
-            AttachmentUtil.Attachments attachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
-            assertThat(attachments.getAll().size(), is(1));
-            AttachmentFileBase attachment = attachments.getAll().get(0);
-            AttachmentFile attachmentFile = null;
-            try {
-                attachmentFile = AttachmentUtil.getAttachmentFile(attachment.getFileName(), attachment, AttachmentUtil.getFilePathForMunicipalityAttachment(attachment.getAttachmentId(), attachment.getFileType(), decisionAttachmentFileDir));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }finally {
-                assertThat(attachmentFile, notNullValue());
-                assertThat(attachmentFile.getFileName(), is(attachment.getFileName()));
-                // TODO assert file contents
-            }
-
-        }
-    }*/
-
 
 
 }

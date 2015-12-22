@@ -36,7 +36,6 @@ public class StatusPageController extends BaseController {
         model.addAttribute("applicationInfoRows", statusService.getApplicationInfo());
         model.addAttribute("schemaVersionInfoRows", statusService.getSchemaVersionInfo());
         model.addAttribute("configurationInfoRows", statusService.getConfigurationInfo());
-        model.addAttribute("configurationTestInfoRows", statusService.getConfigurationTestInfo());
         model.addAttribute("systemInfoRows", statusService.getSystemInfo());
         model.addAttribute("hardCodedUris", statusService.getInvalidHelpUris());
 
