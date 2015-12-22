@@ -123,17 +123,5 @@
         </tbody>
     </table>
 
-    <h3>Configuration Test</h3>
-    <table class="data status">
-        <tbody>
-            <#list configurationTestInfoRows as infoRow>
-            <tr>
-                <td>${infoRow.key}</td>
-                <td>${infoRow.value}</td>
-            </tr>
-            </#list>
-        </tbody>
-    </table>
-
 </@l.main>
 </#escape> 

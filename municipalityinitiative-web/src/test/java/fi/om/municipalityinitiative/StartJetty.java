@@ -1,56 +1,32 @@
 package fi.om.municipalityinitiative;
 
 import fi.om.municipalityinitiative.conf.PropertyNames;
-import org.eclipse.jetty.http.ssl.SslContextFactory;
-import org.eclipse.jetty.server.Connector;
+import fi.om.municipalityinitiative.server.JettyServer;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
-import org.eclipse.jetty.webapp.WebAppContext;
+
 
 public class StartJetty {
-    
-    public static final int PORT = 8080;
 
-    public static void main(String[] args) {
+
+
+    public static Server startService(int port, String springProfile) {
         try {
-            System.setProperty(PropertyNames.optimizeResources, "false");
-            startService(PORT, "dev").join();
-        } catch (Exception e) {
-            e.printStackTrace() ;
+            return JettyServer.start(new JettyServer.JettyProperties(
+                    port,
+                    10,
+                    springProfile,
+                    "config/log4j.properties",
+                    "src/main/webapp/"));
+
+        } catch (Throwable throwable) {
+            throw new RuntimeException(throwable);
+
         }
     }
 
-    public static Server startService(int port, String profile) {
-        Server server = new Server();
-        SslContextFactory sslContext = new SslContextFactory("keystore");
-        sslContext.setKeyStorePassword("aloitepalvelu");
+    public static void main(String[] args) throws Throwable {
+        System.setProperty(PropertyNames.optimizeResources, "false");
+        startService(8080, "dev,disableSecureCookie").join();
 
-        SelectChannelConnector connector = new SelectChannelConnector();
-        connector.setPort(port);
-        
-        //SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(sslContext);
-        //sslConnector.setPort(port);
-        server.setConnectors(new Connector[] { connector });
-                
-        WebAppContext context = new WebAppContext();
-        context.setDescriptor("src/main/webapp/WEB-INF/web.xml");
-        context.setResourceBase("src/main/webapp/");
-        context.setContextPath("/");
-        context.setParentLoaderPriority(true);
-        context.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
-        
-        if (profile != null) {
-            context.setInitParameter("spring.profiles.active", profile);
-        }
-
-        server.setHandler(context);
-        
-        try {
-            server.start();
-            return server;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
-    
 }

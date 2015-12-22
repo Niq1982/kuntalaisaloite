@@ -25,7 +25,7 @@ public class ExportQTypes {
 
     @org.springframework.context.annotation.Configuration
     @Import(JdbcConfiguration.class)
-    @PropertySource("classpath:test.properties")
+    @PropertySource("classpath:default.properties")
     public static class StandaloneJdbcConfiguration {
     }
 

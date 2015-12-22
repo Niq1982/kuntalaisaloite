@@ -7,6 +7,8 @@ import fi.om.municipalityinitiative.exceptions.CookiesRequiredException;
 import fi.om.municipalityinitiative.exceptions.VerifiedLoginRequiredException;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.util.UrlHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.util.NestedServletException;
 import org.springframework.web.util.WebUtils;
 
@@ -26,15 +28,24 @@ public class SecurityFilter implements Filter {
     private static final String COOKIE_ERROR = "cookieError";
     public static final String UNWANTED_HIDDEN_EMAIL_FIELD = "email";
 
+    protected final Logger log = LoggerFactory.getLogger(SecurityFilter.class);
+
     private UrlHelper urlPathHelper = new UrlHelper();
 
     @Resource
     private EncryptionService encryptionService;
 
+    private final boolean disableSecureCookie;
+
+    public SecurityFilter(boolean disableSecureCookie) {
+        this.disableSecureCookie = disableSecureCookie;
+    }
+
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
-    
+
 
     public static void setNoCache(HttpServletResponse response) {
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
@@ -47,6 +58,8 @@ public class SecurityFilter implements Filter {
                          FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        log.info("REQ: " + request.getRequestURI() + "?" + request.getQueryString());
 
         setNoCache(response);
 
@@ -122,7 +135,7 @@ public class SecurityFilter implements Filter {
     private String initializeCSRFToken(HttpServletRequest request, HttpServletResponse response) {
         String csrfToken;
         csrfToken = encryptionService.randomToken(CSRF_TOKEN_LENGTH);
-        setCookie(CSRF_TOKEN_NAME, csrfToken, request, response);
+        setCookie(CSRF_TOKEN_NAME, csrfToken, response);
         getExistingSession(request).setAttribute(CSRF_TOKEN_NAME, csrfToken);
         return csrfToken;
     }
@@ -149,6 +162,8 @@ public class SecurityFilter implements Filter {
         if (IS_POST(request)) {
             String requestToken = request.getParameter(CSRF_TOKEN_NAME);
             if (requestToken == null || !requestToken.equals(sessionToken)) {
+                System.out.println(cookieToken + " = " + sessionToken);
+                System.out.println(cookieToken.length() + "=" + sessionToken.length());
                 throw new CSRFException("CSRFToken -request parameter missing or doesn't match session");
             }
         }
@@ -202,23 +217,12 @@ public class SecurityFilter implements Filter {
         propagateException(e);
     }
 
-    private void setCookie(String name, String value, HttpServletRequest request, HttpServletResponse response) {
+    private void setCookie(String name, String value, HttpServletResponse response) {
         Cookie cookie = new Cookie(name, value);
-
-        String contextPath = request.getContextPath();
-        if (Strings.isNullOrEmpty(contextPath)) {
-            contextPath = "/";
-        }
-        cookie.setPath(contextPath);
-        cookie.setSecure(request.isSecure());
-
-        if (cookie.getSecure()) {
-            // For enabling httpOnly we need to write the raw cookie data instead of response.addCookie(cookie)
-            response.setHeader("SET-COOKIE", name + "=" + value + "; Path=" + contextPath + "; Secure; HttpOnly");
-        }
-        else {
-            response.setHeader("SET-COOKIE", name + "=" + value + "; Path=" + contextPath + "; HttpOnly");
-        }
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setSecure(!disableSecureCookie);
+        response.addCookie(cookie);
     }
 
     private void propagateException(Exception e) throws IOException, ServletException {

@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.MunicipalityUserDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
+import fi.om.municipalityinitiative.dto.service.AttachmentFileBase;
 import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
@@ -15,8 +16,12 @@ import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
+import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.apache.commons.io.FileUtils;
 import org.aspectj.util.FileUtil;
+import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,8 +67,6 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
     protected static String FILE_TYPE = "pdf";
 
-    protected String decisionAttachmentFileDir;
-
     @Resource
     private InitiativeDao initiativeDao;
 
@@ -77,7 +80,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void save_decision_and_get_decision() {
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         DecisionAttachmentFile fileInfo = null;
         try {
@@ -123,7 +126,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void save_decision_and_get_attachment() {
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         DecisionAttachmentFile fileInfo = null;
         AttachmentFile attachmentFile = null;
@@ -159,7 +162,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void remove_attachment_from_decision() {
 
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         MunicipalityDecisionDto decision;
 
@@ -192,7 +195,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void cant_remove_attachment_from_decision_if_not_correct_municipality_user() {
 
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         try {
 
@@ -222,7 +225,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void can_edit_decision() {
 
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         try {
 
@@ -248,7 +251,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void cant_edit_decision_if_no_access() {
 
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         try {
 
@@ -272,7 +275,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void can_add_attachments_to_decision() {
 
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         try {
 
@@ -299,7 +302,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void cant_add_attachments_to_decision_if_no_access() {
 
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         try {
 
@@ -326,7 +329,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void cant_add_attachments_to_decision_if_decision_doesnt_exist() {
 
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         try {
 
@@ -350,7 +353,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     @Test
     @Transactional
     public void renew_municipality_management_hash() {
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         municipalityUserService.createMunicipalityUser(initiativeId);
 
@@ -368,7 +371,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     @Test
     @Transactional
     public void decision_absent_if_decision_not_present() {
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         Maybe<MunicipalityDecisionInfo> decisionDtoMaybe = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
 
@@ -378,7 +381,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     @Test
     @Transactional
     public void get_decision() {
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         try {
 
@@ -394,7 +397,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     @Test
     @Transactional
     public void absent_if_decision_text_and_attachments_are_removed() {
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         try {
 
@@ -415,7 +418,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     @Test
     @Transactional
     public void present_if_decision_contains_only_text() {
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         try {
 
@@ -431,7 +434,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     @Test
     @Transactional
     public void present_if_decision_contains_only_attachments() {
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
         try {
             MunicipalityDecisionDto decision = new MunicipalityDecisionDto();
@@ -451,6 +454,27 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
         }
     }
 
+    @Test
+    public void get_attachment_file() throws FileUploadException, InvalidAttachmentException, IOException {
+        File ATTACHMENT_TEMP_DIR = new File("target/tmp/");
+        FileUtils.forceMkdir(ATTACHMENT_TEMP_DIR);
+
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
+
+        createDefaultMunicipalityDecisionWithAttachment(initiativeId);
+        AttachmentUtil.Attachments attachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
+        Assert.assertThat(attachments.getAll().size(), is(1));
+        AttachmentFileBase attachment = attachments.getAll().get(0);
+
+        // Write some temporarly attachment file
+        FileUtils.write(new File(AttachmentUtil.getFilePathForMunicipalityAttachment(attachment.getAttachmentId(), attachment.getFileType(), ATTACHMENT_TEMP_DIR.getAbsolutePath())), "lol");
+
+        AttachmentFile attachmentFile = AttachmentUtil.getAttachmentFile(attachment.getFileName(), attachment, ATTACHMENT_TEMP_DIR.getAbsolutePath());
+
+        Assert.assertThat(attachmentFile, notNullValue());
+        Assert.assertThat(attachmentFile.getFileName(), is(attachment.getFileName()));
+
+    }
 
 
     protected MunicipalityDecisionDto addAttachmentToDecision(MunicipalityDecisionDto decision) throws IOException {
@@ -485,8 +509,10 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
 
 
-    protected  Long createVerifiedInitiativeWithAuthor() {
-        return testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().toInitiativeDraft());
+    protected  Long createSentVerifiedInitiativeWithAuthor() {
+        return testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId)
+                .withState(InitiativeState.PUBLISHED)
+                .withSent(DateTime.now()).applyAuthor().toInitiativeDraft());
     }
 
     protected static MultipartFile createDefaultFile() throws IOException {

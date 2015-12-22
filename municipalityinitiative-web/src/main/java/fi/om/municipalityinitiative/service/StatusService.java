@@ -16,8 +16,6 @@ public interface StatusService {
 
     List<KeyValueInfo> getConfigurationInfo();
 
-    List<KeyValueInfo> getConfigurationTestInfo();
-
     String getAppVersion();
 
     List<EmailDto> findTriedNotSucceededEmails();

@@ -39,7 +39,8 @@ public class IntegrationTestFakeEmailConfiguration {
                 googleMapsEnabled,
                 superSearchEnabled,
                 videoEnabled,
-                followEnabled);
+                followEnabled,
+                "prod");
     }
 
     @Bean

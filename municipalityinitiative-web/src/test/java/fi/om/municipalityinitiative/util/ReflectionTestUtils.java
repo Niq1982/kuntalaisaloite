@@ -24,7 +24,6 @@ import static org.junit.Assert.fail;
 
 public class ReflectionTestUtils {
 
-
     /**
      * Sets random values to all fields recursively.
      */
