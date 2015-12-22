@@ -15,6 +15,7 @@ public class EnvironmentSettings {
     private final String googleMapsApiKey;
     private final boolean googleMapsEnabled;
     private final boolean superSearchEnabled;
+    private String appEnvironment;
     private final boolean videoEnabled;
     private final boolean followEnabled;
 
@@ -31,7 +32,8 @@ public class EnvironmentSettings {
                                boolean googleMapsEnabled,
                                boolean superSearchEnabled,
                                boolean videoEnabled,
-                               boolean followEnabled
+                               boolean followEnabled,
+                               String appEnvironment
                                ) {
         this.defaultReplyTo = defaultReplyTo;
         this.testSendTo = testSendTo;
@@ -44,6 +46,7 @@ public class EnvironmentSettings {
         this.googleMapsApiKey = googleMapsApiKey;
         this.googleMapsEnabled = googleMapsEnabled;
         this.superSearchEnabled = superSearchEnabled;
+        this.appEnvironment = appEnvironment;
         this.videoEnabled = videoEnabled;
         this.followEnabled = followEnabled;
     }
@@ -108,5 +111,9 @@ public class EnvironmentSettings {
 
     public boolean isFollowEnabled() {
         return followEnabled;
+    }
+
+    public String getAppEnvironment() {
+        return appEnvironment;
     }
 }

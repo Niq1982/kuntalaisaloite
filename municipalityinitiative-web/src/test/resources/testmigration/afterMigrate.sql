@@ -1,0 +1,4 @@
+GRANT CONNECT, TEMP ON DATABASE muninitdb TO muninitest;
+GRANT USAGE ON SCHEMA muninitest TO muninitest;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA muninitest TO muninitest;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA  muninitest TO muninitest;

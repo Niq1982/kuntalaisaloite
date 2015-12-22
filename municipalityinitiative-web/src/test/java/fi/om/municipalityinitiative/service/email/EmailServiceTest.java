@@ -354,8 +354,8 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(removeHash));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
-        assertThat(email.getBodyHtml(), containsString("Olet tilannut aloitteen sähköpositiedotteet"));
-        assertThat(email.getBodyHtml(), containsString("Saat sähköpostitiedotteen kun aloitteen vastuuhenkilö lähettää aloitteen kuntaan tai kunta julkaisee vastauksen palvelussa"));
+        assertThat(email.getBodyHtml(), containsString("Olet tilannut aloitteen sähköpostitiedotteet"));
+        assertThat(email.getBodyHtml(), containsString("Saat viestin sähköpostiisi kun aloite lähetetään kuntaan käsitelväksi ja jos kunta vastaa aloitteeseen palvelussa"));
 
     }
 

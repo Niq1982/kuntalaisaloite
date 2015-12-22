@@ -8,6 +8,7 @@ syntax: regexp
 ^municipalityinitiative-web/scrap\.jpage$
 ^municipalityinitiative-web/src/main/resources/app\.properties$
 ^municipalityinitiative-web/src/test/resources/bonecp-config\.xml$
+^municipalityinitiative-web/config/app\.properties$
 
 syntax: glob
 municipalityinitiative-loadtests/results/*.jtl
@@ -23,6 +24,7 @@ municipalityinitiative-web/.idea/*
 syntax: regexp
 ^(.)*\.DS_Store$
 ^municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite-ie\.css$
+^municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite-ie.min.css$
 ^municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite-iframe\.css$
 ^municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite\.css$
 ^municipalityinitiative-web/src/main/webapp/css/style-iframe\.css$

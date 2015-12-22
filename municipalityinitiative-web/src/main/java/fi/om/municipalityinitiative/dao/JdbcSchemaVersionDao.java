@@ -1,11 +1,13 @@
 package fi.om.municipalityinitiative.dao;
 
 import com.mysema.query.Tuple;
+import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.SchemaVersion;
+import fi.om.municipalityinitiative.sql.QFlywaySchema;
 import fi.om.municipalityinitiative.sql.QSchemaVersion;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +24,16 @@ public class JdbcSchemaVersionDao {
     @Transactional(readOnly = true)
     public List<SchemaVersion> findExecutedScripts() {
 
-        return queryFactory.from(QSchemaVersion.schemaVersion)
+        List<SchemaVersion> oldMigrations = queryFactory.from(QSchemaVersion.schemaVersion)
                 .orderBy(QSchemaVersion.schemaVersion.executed.desc())
                 .list(schemaVersionMapper);
+
+        oldMigrations.addAll(queryFactory.from(QFlywaySchema.flywaySchema)
+                .orderBy(QFlywaySchema.flywaySchema.installedOn.asc())
+                .list(flywaySchemaVersionMapping));
+
+
+        return oldMigrations;
 
     }
 
@@ -38,5 +47,24 @@ public class JdbcSchemaVersionDao {
             return schemaVersion;
         }
     };
+
+    private static final MappingProjection<SchemaVersion> flywaySchemaVersionMapping =
+            new MappingProjection<SchemaVersion>(SchemaVersion.class, QFlywaySchema.flywaySchema.all()) {
+
+                private static final long serialVersionUID = -1940230714453573464L;
+
+                @Override
+                protected SchemaVersion map(Tuple tuple) {
+                    if (tuple == null) {
+                        return null;
+                    }
+                    SchemaVersion schemaVersion = new SchemaVersion();
+                    schemaVersion.setExecuted(tuple.get(QFlywaySchema.flywaySchema.installedOn));
+                    schemaVersion.setScript(tuple.get(QFlywaySchema.flywaySchema.script));
+                    return schemaVersion;
+                }
+
+            };
+
 
 }
