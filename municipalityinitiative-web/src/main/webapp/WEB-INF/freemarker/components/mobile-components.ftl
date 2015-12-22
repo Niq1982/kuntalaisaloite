@@ -68,7 +68,7 @@
         <div class="mobile-image image-${imageNumber}-2" ></div>
         <div class="mobile-image image-${imageNumber}-3" ></div>
         <div class="mobile-big-link-container">
-            <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="front-page-links-mobile"><@u.message "front.bigLink.Mobile1" /><strong><@u.message "front.bigLink.Mobile2" /></strong><span class="arrow"></span></a>
+            <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="front-page-links-mobile"><@u.message "front.bigLink.Mobile1" /><br/><strong><@u.message "front.bigLink.Mobile2" /></strong><span class="arrow"></span></a>
         </div>
         <#if requestMessages?? && (requestMessages?size > 0)>
         <@u.frontpageRequestMessage requestMessages />
