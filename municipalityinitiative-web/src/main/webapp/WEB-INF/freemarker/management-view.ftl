@@ -4,6 +4,7 @@
 <#import "components/forms.ftl" as f />
 <#import "components/elements.ftl" as e />
 <#import "components/progress.ftl" as prog />
+<#import "components/mobile-components.ftl" as mobile />
 
 <#escape x as x?html> 
 
@@ -47,6 +48,7 @@
 
     <#if !initiative.single && initiative.state == InitiativeState.PUBLISHED>
         <@e.participantInfo admin=true/>
+        <@mobile.participantsBlock participantCount=participantCount admin=true/>
     </#if>
 
     <#if !initiative.single>

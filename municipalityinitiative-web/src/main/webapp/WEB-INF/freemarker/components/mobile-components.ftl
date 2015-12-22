@@ -77,7 +77,7 @@
 
 </#macro>
 
-<#macro participantsBlock participantCount>
+<#macro participantsBlock participantCount admin=false>
 
     <div id="participants" class="view-block public participants mobile last">
         <h2><@u.message key="initiative.participation.title" args=[participantCount.total] /></h2>
@@ -99,7 +99,7 @@
     -->
 
     <div class="initiative-content-row last">
-        <@participantsMobile formHTML=participateFormHTML showForm=showParticipateForm />
+        <@participantsMobile formHTML=participateFormHTML showForm=showParticipateForm admin=admin />
     </div>
 </div>
 
@@ -114,7 +114,7 @@
 * @param showForm is boolean for toggling form visibility
 * @param admin is boolean for toggling participate button and participant manage -link
 -->
-<#macro participantsMobile formHTML="" showForm=true>
+<#macro participantsMobile formHTML="" showForm=true admin=false>
     <#assign participateSuccess=false />
     <#list requestMessages as requestMessage>
         <#if requestMessage == RequestMessage.PARTICIPATE>
@@ -122,7 +122,11 @@
         </#if>
     </#list>
 
-    <#if user.hasRightToInitiative(initiative.id)><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
+    <#if user.hasRightToInitiative(initiative.id) && admin>
+        <h3>
+        <span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span>
+        </h3>
+    </#if>
 
     <#if  !initiative.sentTime.present && !user.hasRightToInitiative(initiative.id)>
         <#if user.hasParticipatedToInitiative(initiative.id)>
@@ -139,7 +143,9 @@
 
     <@participantInformationMobile/>
 
+    <#if !admin>
     <@e.participateButton participateSuccess showForm/>
+    </#if>
 
     <#-- NOSCRIPT participate -->
     <#if showForm>
