@@ -33,7 +33,7 @@
         <#assign title><@u.message "email.initiative" /></#assign>
 
         <@b.mainContentBlock title>
-            <@b.municipalityDecision type />
+            <@b.municipalityDecisionFollowers type />
         </@b.mainContentBlock>
 
         <@u.spacer "15" />
