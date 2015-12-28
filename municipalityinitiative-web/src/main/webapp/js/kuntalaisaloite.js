@@ -2055,7 +2055,7 @@ if ($(".search-options-mobile").length > 0) {
 			container = $(".container"),
 			resultList = $(".search-results"),
 			footer = $(".om-footer"),
-			paginationBottom = $(".pagination .bottom");
+			paginationBottom = $(".pagination.bottom");
 
 		var contentPaddingBottom = content.css("padding-bottom");
 
