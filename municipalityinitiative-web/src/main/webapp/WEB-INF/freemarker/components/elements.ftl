@@ -247,7 +247,7 @@
     <#if (attachments.images?size + attachments.pdfs?size) gt 0>
     <div class="initiative-content-row thumbnail-list cf">
 
-        <#assign userCanRemoveAttachments = manage && user.hasRightToInitiative(initiative.id)/>
+        <#assign userCanRemoveAttachments = manage />
         <#if !manage>
             <h3><@u.message "attachments.title" /></h3>
         </#if>
