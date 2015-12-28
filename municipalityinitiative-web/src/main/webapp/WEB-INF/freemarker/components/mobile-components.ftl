@@ -31,7 +31,9 @@
         <div class="search-parameters-wrapper">
             <form action="${springMacroRequestContext.requestUri}" method="get">
                 <h3><@u.message "mobile.municipalities"/></h3>
+
                 <@f.municipalitySelect path="currentSearch.municipalities" options=municipalities required="" cssClass="" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true multiple=true id="mobileSelection "/>
+
                 <br/>
 
                 <h3><@u.message "mobile.type"/></h3>
