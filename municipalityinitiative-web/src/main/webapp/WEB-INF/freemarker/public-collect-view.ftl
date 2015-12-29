@@ -111,7 +111,11 @@
 
     <#assign followInitiativeFormHTML>
         <@compress single_line=true>
-            <@u.message "follow.text" />
+            <#if initiative.isSent()>
+                <@u.message "followSent.text" />
+            <#else>
+                <@u.message "follow.text" />
+            </#if>
             <form action="${springMacroRequestContext.requestUri}?formError=follow" method="POST">
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
 

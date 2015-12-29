@@ -47,7 +47,7 @@
 
     <#if canFollow>
         <div class="view-block public last" >
-            <h2><@u.message key= "followInitiative.h2.title" args=[1] /></h2>
+            <h2><@u.message key= "followInitiative.h2.title"  /></h2>
             <div class="initiative-content-row last">
                 <@e.follow />
             </div>
@@ -71,7 +71,7 @@
 
     <#assign followInitiativeFormHTML>
         <@compress single_line=true>
-            <@u.message "follow.text" />
+            <@u.message key="followSent.text"/>
         <form action="${springMacroRequestContext.requestUri}?formError=follow" method="POST">
             <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
 

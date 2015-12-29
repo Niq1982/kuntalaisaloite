@@ -478,7 +478,18 @@
 
 
 <#macro follow >
-    <a class="js-follow small-button trigger-tooltip" title="<@u.message "followInitiative.tooltip" />"> <span class="small-icon mail"><@u.message "action.follow" /></span></a>
+    <#if initiative.isSent()>
+        <#assign tooltipTitle>followInitiativeSent.tooltip</#assign>
+    <#else>
+        <#assign tooltipTitle>followInitiative.tooltip</#assign>
+    </#if>
+    <p class="noprint">
+        <a class="js-follow trigger-tooltip" title="<@u.message tooltipTitle />">
+            <span class="icon-small icon-16 envelope margin-right"></span>
+            <@u.message "action.follow" />
+        </a>
+
+    </p>
 </#macro>
 
 <#macro participantInformation>
