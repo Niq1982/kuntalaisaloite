@@ -2872,9 +2872,6 @@ $(window).on('resize', function () {
     headerNav.headerNav('resize');
   }
 
-  if (closeSearchFilter) {
-	  closeSearchFilter();
-  }
 
 }).trigger('resize');
 
