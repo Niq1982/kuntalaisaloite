@@ -200,7 +200,9 @@ label  {
 }
 @media @mobile {
     .input-block-content{
-        input, textarea {
+        input[type="text"],
+        input[type="email"],
+        input[type="password"], textarea {
             padding: 3%;
             width: 94%;
             &.large {
