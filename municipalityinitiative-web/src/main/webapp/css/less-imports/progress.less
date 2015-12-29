@@ -51,9 +51,12 @@
 .initiative-progress-container {
  height: @progressContainerHeight;
 
-  @media @mobile {
-    height: auto;
+  @media @big-mobile {
     margin: 7% 0;
+  }
+  @media @small-mobile {
+    height: auto;
+    margin: 5% 0;
   }
 
 }
