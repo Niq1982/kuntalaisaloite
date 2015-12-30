@@ -123,6 +123,9 @@ public class MunicipalityDecisionController extends BaseController{
         SecurityFilter.verifyAndGetCurrentCSRFToken(request);
 
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request, initiativeId);
+
+        decision.setFiles(municipalityDecisionService.clearEmptyFiles(decision.getFiles()));
+
         if(!municipalityDecisionService.validationSuccessful(decision.getFiles(), bindingResult, model)) {
 
             return showMunicipalityDecisionView(initiativeId, decision, model, locale, loginUserHolder, true, false);
