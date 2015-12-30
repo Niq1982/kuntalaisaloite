@@ -81,7 +81,7 @@
         outline: solid white 5px;
         margin-top: 5px;
         @media @big-mobile {
-            height: 175px;
+            height: 200px;
         }
 
 
@@ -174,7 +174,7 @@
     outline: solid white 5px;
     background: @mainColorLight;
     @media @big-mobile {
-        height: 175px;
+        height: 200px;
     }
 
     &:hover {
@@ -189,16 +189,19 @@
                 font-size: 16px;
             }
             @media @big-mobile {
-                font-size: 24px;
+                font-size: 28px;
             }
         }
 
         padding: 5% 2% 2% 6%;
+        @media @big-mobile {
+            padding: 8% 12% 2% 15%;
+        }
         color: #fff;
         font-size: 20px;
 
         @media @big-mobile {
-           font-size: 24px;
+           font-size: 28px;
         }
 
         text-decoration: none;
@@ -208,6 +211,14 @@
             border-bottom: solid white 2px;
             display: inline-block;
             vertical-align: top;
+            @media @big-mobile {
+                border-bottom: solid white 4px;
+            }
+        }
+        @media @big-mobile {
+            br {
+                display: none;
+            }
         }
         .arrow {
 
@@ -220,6 +231,13 @@
             font-style: italic;
             background-size: 190px;
             vertical-align: top;
+
+            @media @big-mobile {
+                background: url("http://localhost:8080/img/icons-sprite.png?version=${timestamp}") -225px -115px no-repeat;
+                height: 46px;
+                width: 52px;
+                background-size: 280px;
+            }
         }
     }
 }
