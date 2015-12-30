@@ -201,11 +201,12 @@
     }
 }
 @media @mobile, @tablet {
+    @tooltipColor : @mainColorDark;
 
     #tooltip {
         text-align: center;
         color: #fff;
-        background: #111;
+        background: @tooltipColor;
         position: absolute;
         z-index: 100;
         padding: 15px;
@@ -217,7 +218,7 @@
         height: 0;
         border-left: 10px solid transparent;
         border-right: 10px solid transparent;
-        border-top: 10px solid #111;
+        border-top: 10px solid @tooltipColor;
         content: '';
         position: absolute;
         left: 50%;
@@ -227,7 +228,7 @@
 
     #tooltip.top:after {
         border-top-color: transparent;
-        border-bottom: 10px solid #111;
+        border-bottom: 10px solid @tooltipColor;
         top: -20px;
         bottom: auto;
     }

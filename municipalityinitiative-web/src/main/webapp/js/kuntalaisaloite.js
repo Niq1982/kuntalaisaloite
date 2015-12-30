@@ -1542,6 +1542,7 @@ $( function() {
 		init_tooltip();
 		$( window ).resize( init_tooltip );
 
+
 		var remove_tooltip = function()
 		{
 			tooltip.animate( { top: '-=10', opacity: 0 }, 50, function()
@@ -1554,6 +1555,8 @@ $( function() {
 
 		target.bind( 'mouseleave', remove_tooltip );
 		tooltip.bind( 'click', remove_tooltip );
+
+		$( window ).scroll( remove_tooltip );
 	});
 });
 
