@@ -2168,6 +2168,11 @@ if ($(".search-options-mobile").length > 0) {
 		});
 	})();
 }
+$(window).on("orientationchange",function(event){
+	if (closeSearchFilter) {
+		closeSearchFilter();
+	}
+});
 
 /*
  * Main menu in mobile
