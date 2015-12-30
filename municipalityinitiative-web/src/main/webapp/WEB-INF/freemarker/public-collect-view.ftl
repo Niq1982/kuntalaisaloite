@@ -289,11 +289,11 @@
 
 
 
-    <@e.participantInfo />
-
 
     <@mobile.participantsBlock participantCount/>
 
+
+    <@e.participantInfo />
 
     <#if user.hasRightToInitiative(initiative.id) && !initiative.sent>
         <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />

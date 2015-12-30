@@ -300,8 +300,20 @@
 
 }
 .participant-info {
-    @media @mobile {
+    @media @small-mobile {
         display: none;
+    }
+    @media @big-mobile {
+        .participants-block {
+            display: none;
+        }
+        .switch-buttons {
+            display: block;
+        }
+        br {
+            display: none;
+        }
+        margin-top: 0.5em;
     }
 }
 
