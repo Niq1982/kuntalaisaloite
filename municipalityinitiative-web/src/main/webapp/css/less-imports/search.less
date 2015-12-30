@@ -104,12 +104,15 @@ h3 {
             position:relative;
             a.search-result {
                 display: none;
-
-
             }
 
         }
 
+    }
+    @media @big-mobile {
+        li {
+            padding-left: 10%;
+        }
     }
     a.search-result-mobile{
         display: none;
@@ -503,6 +506,7 @@ h3 {
 .search-options-mobile, .open-filters {
     display: none;
 }
+
 @media @mobile {    
     .show-more {
         display: block;
@@ -607,7 +611,7 @@ h3 {
 
         }
         .search-parameters-wrapper {
-            padding: 10px;
+            padding: 3%;
 
             h3 {
                 margin: 2px 0 0 0;
@@ -648,5 +652,18 @@ h3 {
     }
 
 
+}
+
+
+
+@media @big-mobile {
+    .open-filters {
+        width: 80%;
+    }
+    .search-options-mobile {
+        .search-parameters-wrapper {
+            padding: 3% 10%;
+        }
+    }
 }
 
