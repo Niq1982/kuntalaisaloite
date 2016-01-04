@@ -45,8 +45,14 @@
             <@edit.initiativeBlock "updateData" locationSelected/>
         </div>
 
+
         <div class="form-block-container">
-            <@edit.blockHeader key="initiative.currentAuthor.title" step=2 />
+            <@edit.blockHeader key="initiative.extraInfo" step=2 />
+            <@edit.updateInitiativeBlock "updateData" locationSelected/>
+        </div>
+
+        <div class="form-block-container">
+            <@edit.blockHeader key="initiative.currentAuthor.title" step=3 />
             <#if initiative.isVerifiable()>
                 <@edit.currentVerifiedAuthorBlock "updateData" />
             <#else>

@@ -262,7 +262,6 @@
             <div class="input-block-extra-content">
                 <@f.helpText "help.name" />
                 <@f.helpText "help.proposal" />
-                <@f.helpText "help.extraInfo" />
             </div>
         </div>
 
@@ -278,16 +277,7 @@
         <div class="input-block-content no-top-margin">
             <@f.textarea path=path+".proposal" key="initiative.proposal" required="required" optional=false cssClass="textarea-tall" maxLength=InitiativeConstants.INITIATIVE_PROPOSAL_MAX?string("#") />
         </div>
-        
-        <div class="input-block-content">
-            <@f.textarea path=path+".extraInfo" key="initiative.extraInfo" required="" optional=true cssClass="textarea" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
-        </div>
 
-        <#if googleMapsEnabled>
-            <div class="input-block-content">
-                <@mapSelection path locationSelected/>
-            </div>
-        </#if>
 
     </div>
 </#macro>
