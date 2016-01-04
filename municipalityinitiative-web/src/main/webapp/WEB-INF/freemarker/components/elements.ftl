@@ -495,7 +495,7 @@
 
 <#macro participantInformation>
     <div class="participants-block">
-        <span class="user-count-total">${participantCount.total+initiative.externalParticipantCount}</span>
+        <span class="user-count-total test-user-count-total">${participantCount.total+initiative.externalParticipantCount}</span>
     </div>
     <div class="participants-block separate">
             <span class="user-count-sub-total">
