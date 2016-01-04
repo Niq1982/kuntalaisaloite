@@ -56,6 +56,7 @@
 
                     <#if !decisionInfo.isPresent()>
                         <div class="input-block-content">
+                            <p><@u.message "decision.allowed.fileTypes" /></p>
                             <@f.uploadField path="decision.files[0].file" cssClass="multi" name="files[0].file" multiple=false/>
                         </div>
                     </#if>
@@ -81,7 +82,9 @@
     <#if editAttachments>
         <div class="msg-block cf">
             <h2><@u.message "decision.edit.attachments" /></h2>
+            <p><@u.message "decision.allowed.fileTypes" /></p>
             <@e.municipalityAttachmentsView attachments=decisionInfo.getValue().attachments manage=true/>
+
             <form action="${urls.openDecisionAttachmentsForEdit(initiative.id)}" method="POST" id="form-accept" class="sodirty" enctype="multipart/form-data">
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                 <@spring.bind "decision" />
