@@ -8,9 +8,9 @@
 
 <#escape x as x?html>
 
-    <#assign title><@u.message "email.initiative" /></#assign>
+    <#assign title><@u.message "email.municipality.answered" /></#assign>
 
-    <@l.emailHtml title=title footer=true>
+    <@l.emailHtml title=title footer=false>
         <@b.mainContentBlock title>
             <@b.municipalityDecisionFollowers type />
         </@b.mainContentBlock>
@@ -25,12 +25,15 @@
 
         <@u.spacer "15" />
 
+        <@b.emailFooter type />
+
+        <@u.spacer "15" />
 
         <#-- Swedish part -->
 
         <#global switchLocale = altLocale />
 
-        <#assign title><@u.message "email.initiative" /></#assign>
+        <#assign title><@u.message "email.municipality.answered" /></#assign>
 
         <@b.mainContentBlock title>
             <@b.municipalityDecisionFollowers type />
@@ -45,6 +48,8 @@
         </@b.contentBlock>
 
         <@u.spacer "15" />
+
+        <@b.emailFooter type />
 
         <#-- Switch to default locale -->
         <#global switchLocale = locale />

@@ -44,6 +44,10 @@
 
         <@u.spacer "15" />
 
+        <@b.emailFooter type />
+
+        <@u.spacer "15" />
+
         <#-- Swedish part -->
 
         <#global switchLocale = altLocale />
@@ -83,11 +87,10 @@
 
         <@u.spacer "15" />
 
+        <@b.emailFooter type />
 
         <#-- Switch to default locale -->
         <#global switchLocale = locale />
-
-        <@b.emailFooter type ".sentToMunicipality" />
 
 
     </@l.emailHtml>

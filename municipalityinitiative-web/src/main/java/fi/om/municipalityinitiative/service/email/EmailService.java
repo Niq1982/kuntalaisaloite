@@ -46,7 +46,7 @@ public class EmailService {
 
     @Resource
     EmailServiceDataProvider dataProvider;
-    
+
     @Resource
     private MessageSource messageSource;
 
@@ -118,7 +118,7 @@ public class EmailService {
                 .send();
     }
 
-    
+
     public void sendSingleToMunicipality(Long initiativeId, Locale locale) {
 
         Initiative initiative = dataProvider.get(initiativeId);
@@ -139,7 +139,7 @@ public class EmailService {
                 .send();
     }
 
-    
+
     public void sendAuthorDeletedEmailToOtherAuthors(Long initiativeId, ContactInfo removedAuthorsContactInfo) {
 
         Map<String, String> managementLinksByAuthorEmails = dataProvider.getManagementLinksByAuthorEmails(initiativeId);
@@ -161,7 +161,7 @@ public class EmailService {
         }
     }
 
-    
+
     public void sendAuthorDeletedEmailToDeletedAuthor(Long initiativeId, String deletedAuthorEmail) {
 
         emailMessageConstructor
@@ -217,7 +217,9 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(initiativeId, MUNICIPALITY_COLLABORATIVE_FOLLOWERS)
                 .addRecipient(recipient)
-                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
+                .withSubject(messageSource.getMessage("email.follow.sent.to.municipality", null, Locales.LOCALE_FI)
+                        + " / "
+                        + messageSource.getMessage("email.follow.sent.to.municipality", null, Locales.LOCALE_SV))
                 .withDataMap(dataMap)
                 .send();
     }
@@ -233,7 +235,7 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(initiativeId, FOLLOWERS_CONFIRM)
                 .addRecipient(recipient)
-                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
+                .withSubject(messageSource.getMessage("email.followConfirm.title", null, locale))
                 .withDataMap(dataMap)
                 .send();
     }
@@ -386,7 +388,9 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(initiativeId, MUNICIPALITY_DECISION)
                 .addRecipients(dataProvider.getAuthorEmails(initiativeId))
-                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_ANSWERED_SUBJECT, toArray(), locale))
+                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_ANSWERED_SUBJECT, toArray(), Locales.LOCALE_FI)
+                + " / "
+                + messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_ANSWERED_SUBJECT, toArray(), Locales.LOCALE_SV))
                 .withDataMap(toDataMap(dataProvider.get(initiativeId), locale))
                 .send();
     }
@@ -407,7 +411,9 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(initiativeId, MUNICIPALITY_DECISION_TO_FOLLOWERS)
                 .addRecipient(email)
-                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_ANSWERED_SUBJECT, toArray(), locale))
+                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_ANSWERED_SUBJECT, toArray(), Locales.LOCALE_FI)
+                        + " / "
+                        + messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_ANSWERED_SUBJECT, toArray(), Locales.LOCALE_SV))
                 .withDataMap(dataMap)
                 .send();
     }
