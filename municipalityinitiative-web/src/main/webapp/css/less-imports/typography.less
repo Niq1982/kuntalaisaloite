@@ -23,6 +23,16 @@ h1 {
     clear: both;
     color: #111;
     font-weight:normal;
+    @media @mobile {
+        margin: 10px 3%;
+        text-align: center;
+    }
+    @media @big-mobile {
+        margin: 10px 10%;
+    }
+    @media @tablet {
+        text-align: center;
+    }
 }
 
 h2 {
@@ -114,6 +124,11 @@ pre {
     display:block;
     margin:-0.7em 0 1em 0;
     font-size:1.17em;
+    @media @mobile {
+        font-size: 100%;
+        text-align: center;
+        margin: 0 3%;
+    }
 }
 
 .user-count-total {
@@ -126,3 +141,12 @@ pre {
     font-size:1.7em;
     font-style:italic;
 }
+.bread-text {
+    @media @mobile {
+        padding: 3%;
+    }
+    @media @big-mobile {
+        padding: 3% 10%;
+    }
+}
+

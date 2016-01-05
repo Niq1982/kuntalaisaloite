@@ -224,7 +224,7 @@ public class MunicipalityDecisionService {
         bindingResult.addError(new FieldError("decision", field, "", false, new String[]{error}, new String[]{error}, ""));
     }
 
-    private List<MunicipalityDecisionDto.FileWithName> clearEmptyFiles(List<MunicipalityDecisionDto.FileWithName> files) {
+    public List<MunicipalityDecisionDto.FileWithName> clearEmptyFiles(List<MunicipalityDecisionDto.FileWithName> files) {
         return Lists.newArrayList(Iterables.filter(files, new Predicate<MunicipalityDecisionDto.FileWithName>() {
             @Override
             public boolean apply(MunicipalityDecisionDto.FileWithName fileWithName) {

@@ -1,6 +1,7 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
 <#import "components/forms.ftl" as f />
+<#import "components/mobile-components.ftl" as mobile />
 
 <#escape x as x?html> 
 <@l.main "page.frontpage">
@@ -22,6 +23,10 @@
 <#assign _rand = 0.36 />
 <#assign imageNumber = rand(1, 4)?c />
 
+
+<@mobile.mobileFrontPageImageContainer imageNumber/>
+
+
 <div class="image-container image-${imageNumber}">
 <#if requestMessages?? && (requestMessages?size > 0)>
     <@u.frontpageRequestMessage requestMessages />
@@ -33,6 +38,7 @@
         <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="big-link"><@u.message "front.bigLink" /> <span class="arrow"></span></a>
     </div>
 
+
     <div id="content">
         
         <div class="front-container">
@@ -42,7 +48,7 @@
     
                     <div class="front-block block-1">
                         <h1><@u.message "front.hero.title" /></h1>
-            
+
                         <p><@u.message "front.hero.description-1" /></p>
                         <p><@u.message "front.hero.description-2" /></p>
                         <p><@u.message "front.hero.description-3" /></p>
@@ -55,11 +61,11 @@
                     </div>
                 
                 </div>
-                <div class="col-2">
+                <div class="col-2 first">
                 
                     <div class="front-block block-2 noprint">
                         <h2><@u.message "front.browse.title" /></h2>
-            
+
                         <p><@u.message "front.browse.description" /></p>
                         
                         <div class="flat-style">
@@ -81,10 +87,12 @@
                             </form>
                         </div>
                     </div>
-                    
+                </div>
+
+                <div class="col-2">
                     <div class="front-block block-3">
                         <h2><@u.message "front.latest.title" /></h2>
-                    
+
                         <#if initiatives?? && (initiatives?size > 0)>
                             <#list initiatives as initiative>
                                 <#if initiative_index == 0><ul class="initiative-list no-style"></#if>

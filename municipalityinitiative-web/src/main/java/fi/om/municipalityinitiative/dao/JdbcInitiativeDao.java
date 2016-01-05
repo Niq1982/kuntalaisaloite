@@ -560,11 +560,12 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public void updateExtraInfo(Long initiativeId, String extraInfo, Integer externalParticipantCount) {
+    public void updateExtraInfo(Long initiativeId, String extraInfo, Integer externalParticipantCount, String videoUrl) {
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.extraInfo, extraInfo)
                 .set(municipalityInitiative.externalparticipantcount, externalParticipantCount)
+                .set(municipalityInitiative.videoUrl, videoUrl)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
     }
@@ -619,9 +620,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public void addVideoUrl(String url, String name, Long initiativeId) {
+    public void addVideoUrl(String url, Long initiativeId) {
         queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.videoName, name)
                 .set(municipalityInitiative.videoUrl, url)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute();

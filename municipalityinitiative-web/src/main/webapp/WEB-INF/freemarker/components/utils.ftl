@@ -182,7 +182,7 @@
  * @param useJsBack is handy when returning for example to search page with parameters
 -->
 <#macro returnPrevious url labelKey useJsBack=false>
-	<p class="noprint">
+	<p class="noprint mobile-margins">
 	
 	<#if useJsBack>
 		<noscript>
@@ -468,6 +468,17 @@
 <@compress single_line=true>
     <a href="${urls.search()}${queryString[parameter]}" class="${cssClass}<#if tooltip> trigger-tooltip</#if>" <#if tooltip>title="<@message "searchParameters."+parameter+".tooltip" />"</#if>><@messageHTML "searchParameters."+parameter /><#if (count > -1)><span class="count">${count}</span></#if></a>
 </@compress>
+</#macro>
+
+<#macro searchLinkMobile parameter cssClass="" count=-1 >
+    <@compress single_line=true>
+    <div class="mobile-search-link">
+        <a class="mobile-checkbox"></a>
+        <a href="#"><@messageHTML "searchParameters."+parameter />
+        <#if (count > -1)><span class="count">(${count})</span></#if>
+        </a>
+    </div>
+    </@compress>
 </#macro>
 
 <#--

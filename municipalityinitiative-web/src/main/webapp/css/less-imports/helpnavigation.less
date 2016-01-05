@@ -1,0 +1,46 @@
+.help-text-content-mobile {
+  display: none;
+  @media @mobile {
+    display: block;
+
+  }
+}
+@media @mobile {
+  .help-text-content {
+    display: none;
+  }
+}
+
+.navigation-mobile {
+  display: none;
+
+  @media @mobile {
+
+      padding: 3%;
+      display: block;
+      h3 {
+        border-bottom: none;
+        margin-top: 0.8em;
+      }
+      .box-mobile {
+        background-color: @mainColorLight;
+        display: block;
+        padding: 20px;
+        margin: 5px auto;
+        color: white;
+        border-radius: 2px;
+        box-sizing: border-box;
+        width: 100%;
+
+        .help-nav-icon {
+          display: block;
+          padding: 5px 0 0 29px;
+          max-width: 16em;
+
+      }
+    }
+  }
+  @media @big-mobile {
+    padding: 3% 10%;
+  }
+}

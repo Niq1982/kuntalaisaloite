@@ -76,7 +76,13 @@ public class InfoTextController extends BaseController {
         model.addAttribute(ALT_URI_ATTR, urls.alt().help(""));
         model.addAttribute("helpPage", localizedPageName);
         model.addAttribute("categoryLinksMap", infoTextService.getPublicSubjectList(locale));
-        model.addAttribute("content", infoTextService.getPublished(localizedPageName));
+        if (urls.isShortlyPage(localizedPageName)) {
+            model.addAttribute("showInfoGraph", true);
+        }
+        else {
+            model.addAttribute("content", infoTextService.getPublished(localizedPageName));
+        }
+
         model.addAttribute("omUser", userService.getUser(request).isOmUser());
 
         addPiwicIdIfNotAuthenticated(model, request);

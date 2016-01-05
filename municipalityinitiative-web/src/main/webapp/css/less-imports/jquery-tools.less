@@ -7,6 +7,9 @@
     // had to add important rule here. other solution would be reset CSS on modal load
     z-index:9998 !important;
     width:600px;
+    @media @mobile {
+        width: 90%;
+    }
     //max-width:95%;
     background:#fff;
     .rounded-corners(2px);
@@ -17,6 +20,9 @@
     
     &.full {
         width:700px;
+        @media @mobile {
+            width: 90%;
+        }
     }
     
     &.fixed {
@@ -33,7 +39,9 @@
     .modal-header {
         position:relative;
         padding:10px 20px;
-        
+        @media @mobile {
+            padding:10px 50px 10px 5%;
+        }
         border-top-left-radius:@cornerRadiusSmall;
         -moz-border-top-left-radius:@cornerRadiusSmall;
         -webkit-border-top-left-radius:@cornerRadiusSmall;
@@ -58,7 +66,9 @@
             border-left:1px solid #f1f1f1;
             color: @bodyColor;
             font-weight:bold;
-            
+            @media @mobile {
+                border: none;
+            }
             &:hover {
                 color:@black;
                 border-top-right-radius:@cornerRadiusSmall;
@@ -71,8 +81,13 @@
                 background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
                 background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
                 background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+                @media @mobile {
+                    background: none;
+                }
+                
             }
         }
+
     }
     
     .modal-title {
@@ -81,7 +96,7 @@
  
     .modal-content {
         //overflow:auto;
-        padding:20px 30px 30px 30px;
+        padding: 2% 5% 5% 5%;
         background-color:#fff;
         border-bottom-left-radius:@cornerRadiusSmall;
         -moz-border-bottom-left-radius:@cornerRadiusSmall;
@@ -180,6 +195,53 @@
             margin-bottom:-6px;
             top:-5px;
         }
+    }
+    @media @mobile, @tablet {
+        display: none;
+    }
+}
+@media @mobile, @tablet {
+    @tooltipColor : @mainColorDark;
+
+    #tooltip {
+        text-align: center;
+        color: #fff;
+        background: @tooltipColor;
+        position: absolute;
+        z-index: 100;
+        padding: 15px;
+    }
+
+    #tooltip:after /* triangle decoration */
+    {
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid @tooltipColor;
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: -10px;
+        margin-left: -10px;
+    }
+
+    #tooltip.top:after {
+        border-top-color: transparent;
+        border-bottom: 10px solid @tooltipColor;
+        top: -20px;
+        bottom: auto;
+    }
+
+    #tooltip.left:after {
+        left: 10px;
+        margin: 0;
+    }
+
+    #tooltip.right:after {
+        right: 10px;
+        left: auto;
+        margin: 0;
     }
 }
 

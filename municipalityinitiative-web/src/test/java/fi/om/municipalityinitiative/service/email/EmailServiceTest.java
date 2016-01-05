@@ -9,10 +9,16 @@ import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
+import org.apache.commons.io.FileUtils;
+import org.aspectj.util.FileUtil;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,6 +40,27 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         super.setup();
         urls = Urls.get(Locales.LOCALE_FI);
     }
+
+    private static final String EMAIL_TEMP_DIR = "target/test-emails/";
+
+    @BeforeClass
+    public static void lol() throws IOException {
+        FileUtils.forceMkdir(new File(EMAIL_TEMP_DIR));
+        FileUtils.cleanDirectory(new File(EMAIL_TEMP_DIR));
+    }
+
+    @After
+    public void printEmail() {
+        EmailDto singleQueuedEmail = testHelper.getSingleQueuedEmail();
+
+        File file = new File(EMAIL_TEMP_DIR
+                + singleQueuedEmail.getEmailId()
+                + "_"
+                + singleQueuedEmail.getSubject().replace("/", " - ")
+                + ".html");
+        FileUtil.writeAsString(file, singleQueuedEmail.getBodyHtml());
+    }
+
 
     @Test
     public void prepare_initiative_sets_subject_and_login_url() throws Exception {
@@ -210,11 +237,12 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @Test
     public void municipality_answers_contains_all_information() {
-        emailService.sendMunicipalityDecisionToAuthors(initiativeId(), new Locale("fi"));
+        emailService.sendMunicipalityDecisionToAuthors(initiativeId(), Locales.LOCALE_FI);
 
         EmailDto email = testHelper.getSingleQueuedEmail();
 
-        assertThat(email.getSubject(), containsString("Kunta on vastannut tekemääsi kuntalaisaloitteeseen."));
+        assertThat(email.getSubject(), containsString("Kunta on vastannut tekemääsi kuntalaisaloitteeseen"));
+        assertThat(email.getSubject(), containsString("Kommunen har svarat på ditt invånarinitiativ"));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
         assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
@@ -231,7 +259,8 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         EmailDto email = testHelper.getSingleQueuedEmail();
 
-        assertThat(email.getSubject(), containsString("Kunta on vastannut tekemääsi kuntalaisaloitteeseen."));
+        assertThat(email.getSubject(), containsString("Kunta on vastannut tekemääsi kuntalaisaloitteeseen"));
+        assertThat(email.getSubject(), containsString("Kommunen har svarat på ditt invånarinitiativ"));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
         assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
@@ -317,18 +346,18 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     public void send_confirm_to_followers_contains_all_information() {
         String removeHash = testHelper.addFollower(initiativeId(), FOLLOWEREMAIL);
 
-        emailService.sendConfirmToFollower(initiativeId(), FOLLOWEREMAIL, removeHash);
+        emailService.sendConfirmToFollower(initiativeId(), FOLLOWEREMAIL, removeHash, Locales.LOCALE_FI);
 
         EmailDto email = testHelper.getSingleQueuedEmail();
 
-        assertThat(email.getSubject(), is("Kuntalaisaloite: " + INITIATIVE_NAME));
+        assertThat(email.getSubject(), is("Olet tilannut aloitteen sähköpostitiedotteet"));
 
         assertThat(email.getRecipientsAsString(), containsString(FOLLOWEREMAIL));
         assertThat(email.getBodyHtml(), containsString(removeHash));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
-        assertThat(email.getBodyHtml(), containsString("Olet tilannut aloitteen sähköpositiedotteet"));
-        assertThat(email.getBodyHtml(), containsString("Saat sähköpostitiedotteen kun aloitteen vastuuhenkilö lähettää aloitteen kuntaan tai kunta julkaisee vastauksen palvelussa"));
+        assertThat(email.getBodyHtml(), containsString("Olet tilannut aloitteen sähköpostitiedotteet"));
+        assertThat(email.getBodyHtml(), containsString("Saat viestin sähköpostiisi kun aloite lähetetään kuntaan käsitelväksi ja jos kunta vastaa aloitteeseen palvelussa"));
 
     }
 
@@ -347,7 +376,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
         assertThat(email.getBodyHtml(), not(containsString(SENT_COMMENT)));
-        assertThat(email.getSubject(), is("Kuntalaisaloite: " + INITIATIVE_NAME));
+        assertThat(email.getSubject(), is("Aloite toimitettu kuntaan / Initiativet har skickats till kommunen"));
 
     }
 

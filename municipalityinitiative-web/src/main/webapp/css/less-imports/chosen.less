@@ -1,8 +1,48 @@
 // Chosen overrides
+
 .chzn-select {
-    width:250px;
+
+    width: 250px;
+
 }
+.search-options-mobile {
+
+    .chzn-container-multi .chzn-choices .search-choice {
+
+        margin: 3px 0 3px 5px;
+        height: 20px;
+        position: relative;
+        border-radius: 14px;
+        border: none;
+        background-color: #E8E8E8;
+        background-image: none;
+
+    }
+
+}
+
+.chzn-container .chzn-results li {
+
+    display: none;
+    line-height: 15px;
+    padding: 5px 6px;
+    margin: 0;
+    list-style: none;
+
+    @media @mobile {
+
+        display: none;
+        line-height: 15px;
+        padding: 15px 6px;
+        margin: 0;
+        list-style: none;
+        border-bottom: solid lightgrey 1px;
+    }
+}
+
 .chzn-container {
+    
+    color: black;
     display:block;
     font-size:1em;
 
@@ -78,7 +118,7 @@
     }
 
     .chzn-results {
-        padding:0 4px;
+        padding:0;
 
         .highlighted {
             .gradient(@mainColor, @mainColorDark);
@@ -96,9 +136,43 @@
         .chzn-drop {
             padding-top: 1px;
         }
+        @media @mobile {
+            .search-field {
+                height: 33px;
+                input {
+                    padding: 10px;
+                    margin: 0;
+                }
+            }
+
+            .chzn-choices {
+                border: solid 1px #adad2d;
+                box-shadow: none;
+            }
+            &.chzn-container-active{
+                .chzn-choices {
+                    border: solid 1px #adad2d;
+                    box-shadow: none;
+                }
+
+            }
+
+        }
+
     }
+
 }
 
+/*#mobileSelection__chzn {
+    .chzn-select {
+        width: 80%;
+    }
+} */
+#prepare-municipality-selection {
+    .chzn-select {
+        width: 100%;
+    }
+}
 // Frontpage Browse initiatives
 .flat-style {
     #municipality {
@@ -106,6 +180,7 @@
             width:100%;
             // For NOJS users
             margin-bottom:1em;
+
         }
     }
     .chzn-container {
@@ -115,6 +190,10 @@
             padding:0 0.3em 0 0.9em;
             border: 1px solid @mainColorDark;
             background: @mainColorDark;
+            @media @mobile {
+                border: 1px solid @mainColorLight;
+                background: @mainColorLight;
+            }
             color: #fff;
             font-weight: bold;
 
@@ -148,6 +227,9 @@
         .chzn-results {
             .highlighted {
                 background: @mainColorDark;
+                @media @mobile {
+                    background: @mainColorLight;
+                }
             }
         }
     }

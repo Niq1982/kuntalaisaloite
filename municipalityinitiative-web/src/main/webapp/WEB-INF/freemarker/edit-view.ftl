@@ -45,8 +45,14 @@
             <@edit.initiativeBlock "updateData" locationSelected/>
         </div>
 
+
         <div class="form-block-container">
-            <@edit.blockHeader key="initiative.currentAuthor.title" step=2 />
+            <@edit.blockHeader key="initiative.extraInfo" step=2 />
+            <@edit.updateInitiativeBlock "updateData" locationSelected/>
+        </div>
+
+        <div class="form-block-container">
+            <@edit.blockHeader key="initiative.currentAuthor.title" step=3 />
             <#if initiative.isVerifiable()>
                 <@edit.currentVerifiedAuthorBlock "updateData" />
             <#else>
@@ -119,7 +125,8 @@
             content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[springMacroRequestContext.requestUri] /></div>'
         }]
     };
-
+    var videoWarning = '<@u.message "warning.videoUrl"/>';
+    var invalidUrlWarning = '<@u.message "invalidUrl" />';
 
 </script>
 

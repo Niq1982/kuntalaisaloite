@@ -32,7 +32,7 @@ public interface InitiativeDao {
 
     void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
 
-    void updateExtraInfo(Long initiativeId, String extraInfo, Integer externalParticipantCount);
+    void updateExtraInfo(Long initiativeId, String extraInfo, Integer externalParticipantCount, String videoUrl);
 
     void updateInitiativeState(Long initiativeId, InitiativeState state);
 
@@ -76,7 +76,7 @@ public interface InitiativeDao {
 
     Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay);
 
-    void addVideoUrl(String url, String name, Long initiativeId);
+    void addVideoUrl(String url, Long initiativeId);
 
     void removeVideoUrl(Long initiativeId);
 }

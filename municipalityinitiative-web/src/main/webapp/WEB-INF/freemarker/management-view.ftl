@@ -4,6 +4,7 @@
 <#import "components/forms.ftl" as f />
 <#import "components/elements.ftl" as e />
 <#import "components/progress.ftl" as prog />
+<#import "components/mobile-components.ftl" as mobile />
 
 <#escape x as x?html> 
 
@@ -37,18 +38,19 @@
         <@e.initiativeViewManage initiative />
     </div>
 
-    <div class="view-block cf">
-        <h2><@u.message key="initiative.people.title" args=[participantCount.total] /></h2>
-        
-        <div class="initiative-content-row ${(initiative.state == InitiativeState.PUBLISHED)?string("","last")}">
-            <@e.initiativeContactInfo authors />
-        </div>
+    <div id = "authors" class="view-block public">
+        <h2><@u.message key="initiative.authors.title" args=[authors?size] /></h2>
 
-        <#if initiative.state == InitiativeState.PUBLISHED>
-            <@e.participants showForm=false admin=true />
-        </#if>
+        <div class="initiative-content-row last"}">
+            <@e.initiativeContactInfo authorList=authors showTitle=false/>
+        </div>
     </div>
-    
+
+    <#if !initiative.single && initiative.state == InitiativeState.PUBLISHED>
+        <@e.participantInfo admin=true/>
+        <@mobile.participantsBlock participantCount=participantCount admin=true/>
+    </#if>
+
     <#if !initiative.single>
         <#if initiative.state == InitiativeState.REVIEW>
             <div class="msg-block">
@@ -454,6 +456,8 @@
                 content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[managementURL] /></div>'
             }]
         };
+
+
     </script>
 
 </@l.main>

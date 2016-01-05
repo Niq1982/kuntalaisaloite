@@ -125,7 +125,7 @@ public class PublicInitiativeController extends BaseController {
                     municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
-            return ViewGenerator.singleView(initiativePageView, municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
+            return ViewGenerator.singleView(initiativePageView, new FollowInitiativeDto(), municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 
@@ -458,13 +458,15 @@ public class PublicInitiativeController extends BaseController {
                     municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(id));
 
         }
-        followInitiativeService.followInitiative(id, followInitiativeDto.getParticipantEmail());
+        followInitiativeService.followInitiative(id, followInitiativeDto.getParticipantEmail(), locale);
         return redirectWithMessage(Urls.get(locale).view(id), RequestMessage.COMFIRM_FOLLOW, request);
     }
 
     @RequestMapping(value = { UNSUBSCRIBE }, method = GET)
     public String unfollowInitiative(@PathVariable long id, @RequestParam(PARAM_CONFIRMATION_CODE) String hash, Locale locale, HttpServletRequest request) {
-        followInitiativeService.stopFollowingInitiative(hash);
+        if (followInitiativeService.stopFollowingInitiative(hash) != 1) {
+            return redirectWithMessage(Urls.get(locale).view(id), RequestMessage.FAILED_STOP_FOLLOW, request);
+        }
         return redirectWithMessage(Urls.get(locale).view(id), RequestMessage.COMFIRM_STOP_FOLLOW, request);
     }
 

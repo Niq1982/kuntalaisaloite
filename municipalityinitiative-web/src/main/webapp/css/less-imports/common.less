@@ -84,6 +84,12 @@
 .pushdown { position:relative; top:1em; }
 .pullup { position:relative; top:-1em; }
 
+@media @mobile {
+    .push, .pull{
+        left: auto;
+    }
+
+}
 
 // Hide unwanted elements
 .hide,
@@ -213,4 +219,13 @@ a.block-link {
     margin-bottom:1em;
     font-weight:bold;
     border-bottom:1px solid @borderGray;
+}
+
+.mobile-margins{
+    @media @small-mobile {
+        margin: 1em 3%;
+    }
+    @media @big-mobile {
+        margin: 1em 10%;
+    }
 }

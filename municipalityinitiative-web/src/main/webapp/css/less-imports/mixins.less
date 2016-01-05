@@ -110,8 +110,8 @@
 }
 
 // Icons
-.iconPosition(@xIndex, @yIndex, @offsetSize: 16, @horizontalFix: 0) {
-    background-position: (-@xIndex*@offsetSize)+@horizontalFix+0px (-@yIndex*@offsetSize)+0px;
+.iconPosition(@xIndex, @yIndex, @offsetSize: 16, @horizontalFix: 0, @verticalFix: 0) {
+    background-position: (-@xIndex*@offsetSize)+@horizontalFix+0px (-@yIndex*@offsetSize)+@verticalFix+0px;
 }
 
 .backgroundImage(@fileName, @size: 100%, @postFix: "") {

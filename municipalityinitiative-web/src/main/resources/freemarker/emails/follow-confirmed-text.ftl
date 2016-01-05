@@ -7,7 +7,6 @@
 
 "${initiative.name!""}"
 ${initiative.municipality.getLocalizedName(switchLocale!locale)!""}
-<@u.message "email.sentToMunicipality" />
 
 <@b.separator />
 

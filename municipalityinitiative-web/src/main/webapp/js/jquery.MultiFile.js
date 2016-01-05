@@ -293,9 +293,9 @@
          v = String(slave.value || ''/*.attr('value)*/),
          title = MultiFile.STRING.file.replace('$file', v.match(/[^\/\\]+$/gi)[0]),
          a = $('<span class="MultiFile-title" title="'+MultiFile.STRING.selected.replace('$file', v)+'">'+MultiFile.STRING.file.replace('$file', v.match(/[^\/\\]+$/gi)[0])+'</span>'),
-         b = $('<a class="MultiFile-remove icon-small icon-16 cancel" href="#'+MultiFile.wrapID+'"></a>'),
+         b = $('<a class="MultiFile-remove icon-small icon-16 cancel" title="Poista valinta" href="#'+MultiFile.wrapID+'"></a>'),
          nameField = $('<input style="display:none" name=files['+ slave_count +'].name value="'+ title +'"/>'),
-         editButton = $('<a class=" small-icon edit" id="edit"></a>'),
+         editButton = $('<a class=" small-icon edit" id="edit" title="Nimeä uudelleen"></a>'),
          saveButton = $('<a style="display:none" class="small-icon save-and-send" id="save"></a>');
 
         // Insert label

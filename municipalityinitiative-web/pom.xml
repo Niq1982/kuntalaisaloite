@@ -551,6 +551,7 @@
                                 <jsSourceFile>jquery.participantgraph.js</jsSourceFile>
                                 <jsSourceFile>jquery.MultiFile.js</jsSourceFile>
 
+
                                 <jsSourceFile>kuntalaisaloite.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>script.js</jsFinalFile>

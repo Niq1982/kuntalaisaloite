@@ -103,6 +103,16 @@
 
             .close-msg {
                 right:26px;
+                @media @mobile {
+                    right: 3%;
+                }
+            }
+            @media @mobile {
+                padding: 3%;
+
+            }
+            @media @big-mobile {
+                padding: 3% 10%;
             }
         }
 
@@ -125,6 +135,13 @@
         background-image:none;
         padding:5px;
         margin:5px 5px 5px 0;
+    }
+    
+    @media @mobile {
+        background: none;
+        background-color: #e2e2e2;
+        padding: 3%;
+
     }
 }
 
@@ -179,7 +196,9 @@
 .msg-block {
     min-height:67px;
     margin:1em 0 30px 0;
+
     padding:15px 25px 15px 126px;
+
     font-size:0.9em;
     border-left:4px solid @secondaryColor;
 
@@ -198,6 +217,10 @@
         a {
             color: @bodyColor;
         }
+        @media @mobile {
+            background: none;
+            background-color: white;
+        }
     }
 
     .msg-info {
@@ -215,6 +238,16 @@
         &:first-child {
             border:0;
         }
+    }
+    @media @mobile {
+        padding: 3%;
+        background: none;
+        background-color: white;
+        border: none;
+        margin:0.5em 0;
+    }
+    @media @big-mobile {
+        padding: 3% 10%;
     }
 }
 

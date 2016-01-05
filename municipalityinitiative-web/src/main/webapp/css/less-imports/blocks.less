@@ -32,6 +32,9 @@
         color: #fff;
         font-weight:normal;
     }
+    @media @mobile {
+        padding: 2% 3%;
+    }
 }
 
 
@@ -40,9 +43,21 @@
 }
 
 .input-block-content {
-    width: 585px;
+
+    width: 51%;
     position:relative;
     margin-top:2em;
+
+    @media @desktop-xl {
+        width: 585px;
+    }
+    @media @mobile {
+        width: 100%;
+        margin-top:1em;
+    }
+
+
+
 
     &.wide { width:100%; }
 }
@@ -68,6 +83,9 @@
         p {
             margin: 0px 0px 1em 0px;
         }
+    }
+    @media @mobile {
+        display: none;
     }
 }
 
@@ -102,6 +120,9 @@
         padding:0;
         border:0;
     }
+    @media @mobile {
+        margin-bottom: 10px;
+    }
 }
 
 .initiative-content-tools {
@@ -134,10 +155,16 @@
     .initiative-type {
         position:relative;
         float:left;
+
         width:32.5%;
         margin-right:0.5%;
 
         border:1px solid @borderGray;
+
+        @media @mobile {
+            width: 100%;
+            margin: 0.5em 0;
+        }
         .gradient (#fff, #f1f1f1);
 
         .boxSizing(border-box);
@@ -164,7 +191,15 @@
 
         .inner {
             display:block;
-            height:8em;
+
+            height: 12em;
+
+            @media @desktop-xl {
+                height: 8em;
+            }
+            @media @mobile {
+                height: auto;
+            }
             padding:20px 20px 60px 20px;
         }
 
@@ -247,6 +282,9 @@
 .top-margin {
     margin-top: 1em;
 }
+.bottom-margin {
+    margin-bottom: 1em;
+}
 
 
 .choose-workflow {
@@ -261,7 +299,60 @@
     }
 
 }
+.participant-info {
+    @media @small-mobile {
+        display: none;
+    }
+    @media @big-mobile {
+        .participants-block {
+            display: none;
+        }
+        .switch-buttons {
+            display: block;
+        }
+        br {
+            display: none;
+        }
+        margin-top: 0.5em;
+    }
+}
 
+.participants {
+    &.mobile{
+        display: none;
+        @media @mobile {
+            display: block;
+
+            .participants-block {
+                float: none;
+                margin: 0 auto 1em auto;
+                &.separate{
+                    margin: 0 auto 1em auto;
+                }
+            }
+            .user-count-total{
+                float: none;
+                display: block;
+                margin-top: 0.5em;
+            }
+            .small-button {
+                display: block;
+                width: 200px;
+                margin: auto;
+            }
+            .participants-block{
+                text-align: center;
+                a br {
+                    display: none;
+                }
+            }
+
+        }
+    }
+    @media @mobile {
+        display: none;
+    }
+}
 
 .participants-block {
     float:left;
@@ -344,4 +435,10 @@
 .column-separator {
     //padding-bottom:0.5em;
     background:url("@{imagesPath}/border.png?version=${timestamp}") 291px 0 repeat-y;
+}
+
+.hide-in-mobile {
+    @media @mobile {
+        display: none;
+    }
 }

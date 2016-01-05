@@ -18,6 +18,7 @@
 <html lang="${locale}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><@u.message page /> - <@u.message "siteName" /></title>
 
     <link href="${urls.baseUrl}/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
@@ -96,6 +97,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <#--
      * Disallow create-page indexing
@@ -216,7 +218,7 @@
 
 
 	<#include "om-header.ftl" />
-        
+
 
     <div id="header">
     	<#if page == "page.frontpage"><div class="header-wrap-front"></#if>
@@ -269,12 +271,26 @@
             </div>
 
             <#if (naviItems?size > 0) >
-                <div id="main-navigation">
+                <a class="toggle-dropdown" >Menu <i class="hamburger-nav-icon-black"></i></a>
+                <div id="main-navigation" >
                     <ul>
                         <#list naviItems as item>
                             <li <#if item.naviName == page>class="active"</#if>><a href="${item.naviUrl}"><@u.message item.naviName /></a></li>
                         </#list>
+                        <li><a href="${altUri!"/"+altLocale}" class="language-selection-mobile"><@u.message "lang.alternative"/></a></li>
                     </ul>
+                    <div class="mobile-user-actions">
+
+                        <#if user.isVerifiedUser()>
+                            <span>${userName}</span>
+                            <div class="user-actions-wrapper">
+                                <a href="${urls.ownInitiatives()}"><@u.message "page.ownInitiatives.mobile" /></a>
+                                <a href="${urls.logout()}" id="logout"><@u.message "common.logout"/></a>
+                            </div>
+                        <#else>
+                            <a href="${urls.authenticate(currentRequestUri)}" title="<@u.message "authenticate.title"/>" class="header-tool-link login">Kirjaudu</a>
+                        </#if>
+                    </div>
                 </div>
             </#if>
 

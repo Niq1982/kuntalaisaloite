@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.exceptions.InvalidVideoUrlException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.MunicipalityUserService;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
@@ -26,6 +27,7 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +41,7 @@ import static org.junit.Assert.fail;
 public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrationTestBase {
 
 
+    public static final String VALID_VIDEO_URL = "https://www.youtube.com/watch?v=P4W1VSb-dGU";
     @Resource
     InitiativeManagementService service;
 
@@ -92,7 +95,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test(expected = AccessDeniedException.class)
-    public void editing_initiative_throws_exception_if_wrong_author() {
+    public void editing_initiative_throws_exception_if_wrong_author() throws MalformedURLException, InvalidVideoUrlException {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
         InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()), new ContactInfo(), new ArrayList<Location>());
@@ -106,7 +109,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test(expected = OperationNotAllowedException.class)
-    public void edit_initiative_fails_if_initiative_accepted() {
+    public void edit_initiative_fails_if_initiative_accepted() throws MalformedURLException, InvalidVideoUrlException {
         Long collaborativeAccepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
         service.editInitiativeDraft(collaborativeAccepted, TestHelper.authorLoginUserHolder, new InitiativeDraftUIEditDto(), fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
     }
@@ -131,11 +134,13 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test
-    public void editing_initiative_updates_all_required_fields() {
+    public void editing_initiative_updates_all_required_fields() throws MalformedURLException, InvalidVideoUrlException {
 
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
+
+        randomlyFilledInitiative.setVideoUrl(VALID_VIDEO_URL);
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
         List<Location> locations = new ArrayList<Location>();
         locations.add(ReflectionTestUtils.modifyAllFields(new Location()));
@@ -161,7 +166,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test
-    public void editing_verified_initiative_updates_all_required_fields() {
+    public void editing_verified_initiative_updates_all_required_fields() throws MalformedURLException, InvalidVideoUrlException {
 
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.DRAFT)
@@ -172,8 +177,9 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
 
-        ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
+        randomlyFilledInitiative.setVideoUrl(VALID_VIDEO_URL);
 
+        ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
 
         InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative, randomlyFilledContactInfo, new ArrayList<Location>());
 
@@ -560,11 +566,12 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test
-    public void update_initiative_updates_given_fields() {
+    public void update_initiative_updates_given_fields() throws MalformedURLException, InvalidVideoUrlException {
 
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality.getId());
 
         InitiativeUIUpdateDto updateDto = ReflectionTestUtils.modifyAllFields(new InitiativeUIUpdateDto());
+        updateDto.setVideoUrl(VALID_VIDEO_URL);
 
         service.updateInitiative(initiativeId, TestHelper.authorLoginUserHolder, updateDto);
 
@@ -577,7 +584,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test
-    public void update_verified_initiative_updates_given_fields() {
+    public void update_verified_initiative_updates_given_fields() throws MalformedURLException, InvalidVideoUrlException {
 
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
@@ -585,6 +592,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         String originalName = TestHelper.DEFAULT_PARTICIPANT_NAME;
 
         InitiativeUIUpdateDto updateDto = ReflectionTestUtils.modifyAllFields(new InitiativeUIUpdateDto());
+        updateDto.setVideoUrl(VALID_VIDEO_URL);
 
         service.updateInitiative(initiativeId, TestHelper.authorLoginUserHolder, updateDto);
 
@@ -606,7 +614,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test(expected = OperationNotAllowedException.class)
-    public void update_initiative_fails_if_initiative_sent() {
+    public void update_initiative_fails_if_initiative_sent() throws MalformedURLException, InvalidVideoUrlException {
         Long sent = testHelper.createSingleSent(testMunicipality.getId());
         service.updateInitiative(sent, TestHelper.authorLoginUserHolder, new InitiativeUIUpdateDto());
     }

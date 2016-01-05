@@ -1,12 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dto.ui.VideoCreateDto;
 import fi.om.municipalityinitiative.exceptions.InvalidVideoUrlException;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 import javax.annotation.Resource;
 import java.net.MalformedURLException;
@@ -36,35 +31,30 @@ public class VideoService {
     private ValidationService validationService;
 
 
-
-    @Transactional
-    public void addVideoUrl(VideoCreateDto video, Long initiativeId) throws InvalidVideoUrlException, MalformedURLException {
-
-        URL url = new URL(video.getVideoUrl());
+    public String convertVideoUrl(String rawurl) throws MalformedURLException, InvalidVideoUrlException {
+        if (rawurl == null || rawurl.equals("")) {
+            return "";
+        }
+        URL url = new URL(rawurl);
 
         switch (url.getHost()) {
 
             case YOUTUBE:
-                initiativeDao.addVideoUrl(YOUTUBE_BASE_URL + htmlEscape(getYouTubeVideoId(url.toString())), video.getVideoName(), initiativeId);
-                break;
+                return YOUTUBE_BASE_URL + htmlEscape(getYouTubeVideoId(url.toString()));
 
             case YOUTUBE_SHORT:
-                initiativeDao.addVideoUrl(YOUTUBE_BASE_URL + htmlEscape(getYouTubeVideoIdFromShort(url.getPath())), video.getVideoName(), initiativeId);
-                break;
+                return VIMEO_BASE_URL + htmlEscape(getYouTubeVideoIdFromShort(url.getPath()));
 
             case VIMEO:
-                initiativeDao.addVideoUrl(VIMEO_BASE_URL + htmlEscape(getVidemoId(url.getPath())), video.getVideoName(), initiativeId);
-                break;
+                return VIMEO_BASE_URL + htmlEscape(getVidemoId(url.getPath()));
 
             default:
                 throw new InvalidVideoUrlException();
+
         }
     }
 
-    @Transactional
-    public void removeVideoUrl(Long initiativeId) {
-        initiativeDao.removeVideoUrl(initiativeId);
-    }
+
 
     private String getVidemoId(String path) throws InvalidVideoUrlException {
         if (!path.contains("/") || path.length() < 2){
@@ -94,11 +84,5 @@ public class VideoService {
         throw new InvalidVideoUrlException();
     }
 
-    public boolean validationSuccessful(VideoCreateDto video, BindingResult bindingResult, Model model) {
-        if (!video.getVideoUrl().matches(VIDEO_REGEX)) {
-            bindingResult.addError(new FieldError("video", "videoUrl", video.getVideoUrl(), false, new String[]{"invalidUrl"}, new String[]{"invalidUrl"}, ""));
-        }
-        return validationService.validationSuccessful(video, bindingResult, model);
 
-    }
 }

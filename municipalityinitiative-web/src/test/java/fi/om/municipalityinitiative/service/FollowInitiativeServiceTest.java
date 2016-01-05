@@ -57,7 +57,7 @@ public class FollowInitiativeServiceTest extends ServiceIntegrationTestBase {
     public void follow_initiative_sends_confirm_email(){
 
         Long id = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).withState(InitiativeState.PUBLISHED).applyAuthor().toInitiativeDraft());
-        followInitiativeService.followInitiative(id, FOLLOWER_EMAIL);
+        followInitiativeService.followInitiative(id, FOLLOWER_EMAIL, new Locale("fi"));
         EmailDto sentEmail = testHelper.getSingleQueuedEmail();
 
         Map<String, String> followers = followInitiativeDao.listFollowers(id);
@@ -72,7 +72,7 @@ public class FollowInitiativeServiceTest extends ServiceIntegrationTestBase {
     public void send_email_to_follower_when_sending_to_municipality(){
 
         Long id = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).withState(InitiativeState.PUBLISHED).applyAuthor(VERIFIED_INITIATIVE_AURHOR_SSN).toInitiativeDraft());
-        followInitiativeService.followInitiative(id, FOLLOWER_EMAIL);
+        followInitiativeService.followInitiative(id, FOLLOWER_EMAIL, new Locale("fi"));
         EmailDto sentEmail = testHelper.getSingleQueuedEmail();
 
         Map<String, String> followers = followInitiativeDao.listFollowers(id);
@@ -90,7 +90,7 @@ public class FollowInitiativeServiceTest extends ServiceIntegrationTestBase {
     public void send_email_to_follower_when_municipality_answers_to_initiative(){
 
         Long id = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).withState(InitiativeState.PUBLISHED).applyAuthor(VERIFIED_INITIATIVE_AURHOR_SSN).toInitiativeDraft());
-        followInitiativeService.followInitiative(id, FOLLOWER_EMAIL);
+        followInitiativeService.followInitiative(id, FOLLOWER_EMAIL, new Locale("fi"));
         EmailDto sentEmail = testHelper.getSingleQueuedEmail();
 
         Map<String, String> followers = followInitiativeDao.listFollowers(id);
@@ -114,7 +114,7 @@ public class FollowInitiativeServiceTest extends ServiceIntegrationTestBase {
     public void stop_following_initiative(){
 
         Long id = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).withState(InitiativeState.PUBLISHED).applyAuthor().toInitiativeDraft());
-        followInitiativeService.followInitiative(id, FOLLOWER_EMAIL);
+        followInitiativeService.followInitiative(id, FOLLOWER_EMAIL, new Locale("fi"));
 
         Map<String, String> followers = followInitiativeDao.listFollowers(id);
         assertThat(followers.values(), hasSize(1));
@@ -133,7 +133,7 @@ public class FollowInitiativeServiceTest extends ServiceIntegrationTestBase {
 
         Long id = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).withState(InitiativeState.REVIEW).applyAuthor().toInitiativeDraft());
         try {
-            followInitiativeService.followInitiative(id, FOLLOWER_EMAIL);
+            followInitiativeService.followInitiative(id, FOLLOWER_EMAIL, new Locale("fi"));
         } catch (Exception e) {
 
         } finally {
@@ -151,7 +151,7 @@ public class FollowInitiativeServiceTest extends ServiceIntegrationTestBase {
 
         Long id = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).withState(InitiativeState.REVIEW).withDecisionDate(twoDaysAgo.toDateTime(new LocalTime("12:00"))).applyAuthor().toInitiativeDraft());
         try {
-            followInitiativeService.followInitiative(id, FOLLOWER_EMAIL);
+            followInitiativeService.followInitiative(id, FOLLOWER_EMAIL, new Locale("fi"));
         } catch (Exception e) {
 
         } finally {

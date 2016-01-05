@@ -24,21 +24,28 @@
     <div class="msg-block">
         <div class="system-msg msg-info">
             <h2><@u.message "video.videoUrl" /></h2>
-			<p><@u.message "video.instruction.1"/></p>
+			<p><@u.messageHTML "video.instruction.1"/></p>
 			<p><@u.message "video.instruction.2"/></p>
+			<p><@u.message "video.instruction.3"/></p>
         </div>
     </div>
 
     
     <div class="view-block cf">
-
+        <#assign videoPresent=initiative.videoUrl.isPresent()/>
 
         <h2><@u.message "video.attachVideoLink"/></h2>
 
-        <#if initiative.videoUrl.isPresent() && initiative.videoName.isPresent()>
+        <#if videoPresent>
             <@e.video manage=true />
         </#if>
-        <div class="initiative-content-row cf">
+
+        <#if videoPresent>
+            <a class="small-button show-video-form"><span class="small-icon edit"><@u.message "video.change"/></span></a>
+
+        </#if>
+
+        <div class="initiative-content-row cf video-form <#if videoPresent>hide-form</#if>" >
 
             <form id="form-video-url"  action="${urls.getManageVideoUrl(initiative.id)}" method="POST">
                 <@f.securityFilters/>
@@ -52,20 +59,18 @@
                 </div>
 
                 <div class="input-block-content no-top-margin">
-                    <@f.textField cssClass="large" required="" optional=false path="video.videoName" key="video.videoName"/>
+                    <@f.textarea cssClass="large" required="" optional=false path="video.videoName" key="video.videoName"/>
                 </div>
 
-                <div class="input-block-content no-top-margin">
+                <div class="input-block-content">
                     <button type="submit" name="${UrlConstants.ACTION_ADD_VIDEO}" class="small-button dbl-click-check-no-msg"><span class="small-icon save-and-send"><@u.message "video.attach"/></span></button>
                 </div>
 
             </form>
         </div>
 
-
         <div class="initiative-content-row cf last">
-            <a href="${managementURL}" class="small-button" ><@u.message "attachment.ready" /></a>
-
+            <a href="${managementURL}" class="small-button" ><@u.message "video.ready" /></a>
         </div>
 
     </div>
@@ -129,6 +134,7 @@
         };
 
         var videoWarning = '<@u.message "warning.videoUrl"/>';
+        var invalidUrlWarning = '<@u.message "invalidUrl" />';
     </script>
 
 </@l.main>

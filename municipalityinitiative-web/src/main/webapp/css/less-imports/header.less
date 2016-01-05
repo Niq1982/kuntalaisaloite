@@ -6,11 +6,71 @@
 
     border-bottom: 1px solid @borderGray;
 
+    @media @mobile {
+        margin-bottom: 0;
+    }
+
     .header-content {
         position: relative;
-        height: 130px;
+
+
         width: 960px;
+        height: 130px;
         margin: 0 auto;
+
+
+        @media @mobile, @tablet {
+
+            width: auto;
+            height: 40px;
+            margin: 0;
+
+            .toggle-dropdown {
+                display: block;
+                margin: 0;
+                padding: 0 7px;
+                line-height: @omHeaderHeight - @omHeaderPad;
+                width: 70px;
+                text-align: left;
+                color: @omHeaderTextColor;
+
+                font-size: 16px;
+                outline: none;
+                border: 0;
+
+                position: absolute;
+                top: 0;
+                right: 3%;
+                background-color: @mainColorLight;
+                border-radius: 2px;
+
+                .hamburger-nav-icon-black {
+                    display: inline-block;
+                    width: 20px;
+                    height: 18px;
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
+                    .backgroundImage('om-header-nav-icon', 20px auto);
+                }
+            }
+
+        }
+
+        @media @tablet{
+            width: auto;
+            height: 100px;
+            margin: 0 auto;
+        }
+
+        @media @desktop {
+            width: 75%;
+        }
+        @media @desktop-xl{
+            width: 960px;
+            height: 130px;
+            margin: 0 auto;
+        }
 
         .header-additional-content {
             position: absolute;
@@ -18,6 +78,10 @@
             top: 0;
             text-align: right;
             max-width: 450px;
+
+            @media @mobile, @tablet {
+                visibility: hidden;
+            }
 
             .additional-tools {
                 font-size: 90%;
@@ -30,51 +94,156 @@
 
     #logo {
         display: block;
-        width: 354px;
+        width: 90%;
         height: 72px;
+
         background: url("@{imagesPath}/logo-kuntalaisaloite.png?version=${timestamp}") 0 0 no-repeat;
         background-image: url("@{imagesPath}/logo-kuntalaisaloite.svg?version=${timestamp}"), none;
         background-size: contain;
+
+        @media @mobile {
+            height: 32px;
+
+        }
+        @media @mobile, @tablet {
+            margin-left: 3%;
+        }
+
     }
     #logo span { display: none; }
-
-    #main-navigation {
-        margin: 0;
-        padding: 0;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        border-left: 1px solid #ccc;
-
-        a {
-            display: inline-block;
-            text-decoration: none;
-            color: #111;
-            font-size: 1.1em;
-            padding: 0.2em 0.9em 0.5em 0.9em;
-            border-right: 1px solid @borderGray;
-
-            .transition(color, 0.2s, ease-in);
+        .toggle-dropdown {
+            display: none;
         }
 
-        a:hover, .active a:hover {
-            color: @secondaryColorDark;
-        }
 
-        .active a {
-            color: black;
-            font-weight: bold;
-        }
-    }
+         #main-navigation {
+
+                 margin: 0;
+                 padding: 0;
+                 position: absolute;
+
+
+
+                 left: 0;
+                 bottom: 0;
+
+
+                 > ul {
+                     height: 35px;
+
+                     &.push {
+                         position: relative;
+
+                     }
+
+                     a {
+                         display: inline-block;
+                         text-decoration: none;
+                         color: #111;
+                         font-size: 1.1em;
+                         padding: 0.2em 0.9em 0.5em 0.9em;
+                         border-right: 1px solid @borderGray;
+
+                         .transition(color, 0.2s, ease-in);
+                     }
+
+                     a:hover, .active a:hover {
+                         color: @secondaryColorDark;
+                     }
+
+                     .active a {
+                         color: black;
+                         font-weight: bold;
+                     }
+                 }
+
+             @media @mobile, @tablet {
+
+                 display: none;
+                 &.open {
+                     display: block;
+                     top: 7px;
+                     z-index: 100;
+                     position: relative;
+                     background-color: @mainColorLight;
+                     font-size: 20px;
+
+                     ul {
+                         height: auto;
+
+                         padding: 17px;
+                         li {
+                             display: block;
+                             a {
+                                 color: white;
+                                 text-decoration: none;
+                                 display: block;
+                                 padding: 10px;
+                                 border: none;
+                             }
+                             a:hover, .active a:hover {
+                                 text-decoration: underline;
+                                 color: white;
+                             }
+                         }
+                     }
+                     .language-selection-mobile{
+                         visibility: visible;
+                     }
+                     .mobile-user-actions {
+                         display: block;
+                         padding: 25px 17px;
+                         background-color: @mainColorDark;
+                         font-size: 14px;
+                         span {
+                             color: white;
+                             display: block;
+                             margin: 13px 0;
+                         }
+
+                         a {
+                             &#logout{
+                                 color: black;
+                             }
+                             &.login{
+                                 width: 70%;
+                                 margin: 5px auto 0 auto;
+                                 display: block;
+                             }
+                             text-decoration: none;
+                             color: @mainColorLight;
+                             padding: 5px 0;
+                             background-color: white;
+                             border-radius: 1px;
+                             font-weight: bold;
+                             text-align: center;
+                             width: 49%;
+                             display: inline-block;
+
+                         }
+
+                     }
+                 }
+             }
+
+         }
+ //   }
 }
 .front #header {
 	margin-bottom: 0;
 	border-bottom: 0;
 
-	.header-wrap-front {
-		margin: 0 10px;
-		border-bottom: 1px solid @borderGray;
-	}
+    .header-wrap-front {
+        margin: 0 10px;
+        border-bottom: 1px solid @borderGray;
+        @media @mobile{
+            margin: 0;
+        }
+        @media @tablet{
+            margin: 0;
+        }
+    }
+
 
 }
 
@@ -88,6 +257,11 @@
         width: 349px;
         background: url("@{imagesPath}/logo-invanarinitiativ.png?version=${timestamp}") 0 0 no-repeat;
         background-image: url("@{imagesPath}/logo-invanarinitiativ.svg?version=${timestamp}"), none;
+        @media @mobile {
+            height: 32px;
+            width: 90%;
+            background-size: contain;
+        }
     }
 }
 
@@ -115,3 +289,19 @@
         }
     }
 }
+
+/*.hidden {
+    display: none;
+} */
+
+.mobile-user-actions{
+    display: none;
+
+}
+
+.language-selection-mobile{
+    visibility: hidden;
+}
+
+
+

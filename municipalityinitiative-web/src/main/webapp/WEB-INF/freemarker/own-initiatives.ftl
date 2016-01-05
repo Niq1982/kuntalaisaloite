@@ -5,6 +5,7 @@
 <#import "components/pagination.ftl" as p />
 <#import "components/forms.ftl" as f />
 <#import "components/elements.ftl" as e />
+<#import "components/mobile-components.ftl" as mobile />
 
 <#escape x as x?html>
 
@@ -40,7 +41,7 @@
     <#list initiatives as initiative>
         <#if initiative_index == 0><ul></#if>
         <li <#if initiative_index == 0>class="first"</#if>>
-            <a href="${urls.management(initiative.id)}">
+            <a href="${urls.management(initiative.id)}" class="search-result">
                 <span class="participants">
                     <span class="participants-container">
                         <#if !initiative.public>
@@ -65,17 +66,20 @@
                 </span>
                 <span class="info">
                     <#if !initiative.public>
-                        ${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span>
+                        <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span>
                     <#elseif !initiative.sentTime.present>
-                        ${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span>
+                        <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span>
                     <#else>
                         <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>
-                        ${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
+                        <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
                     </#if>
                     <span class="bull">&bull;</span>
-                    <@u.message "initiative.initiativeType."+initiative.type />
+                    <span class="initiative-type">
+                        <@u.message "initiative.initiativeType."+initiative.type />
+                    </span>
                 </span>
             </a>
+            <@mobile.mobileSearchResult initiative=initiative manage=true/>
         </li>
         <#if !initiative_has_next></ul></#if>
     </#list>

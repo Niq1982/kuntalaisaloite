@@ -58,7 +58,7 @@
 <#macro initiativeView initiative>
     <#assign pageIsConfirmParticipation = currentRequestUri?ends_with("show-participate")/>
     <#assign showMap = locations?? && locations?size gt 0 && !pageIsConfirmParticipation && googleMapsEnabled />
-    <#assign showVideo = (initiative.videoUrl.isPresent() && initiative.videoName.isPresent()) && videoEnabled/>
+    <#assign showVideo = initiative.videoUrl.isPresent() && videoEnabled/>
 
     <h2><@u.message "initiative.proposal.title" /></h2>
 
@@ -67,14 +67,12 @@
     </div>
 
     <#if attachments??>
-    	<@e.attachmentsView attachments />
+    	<@attachmentsView attachments />
     </#if>
 
-    <#if showVideo>
-        <@video />
-    </#if>
 
-    <#if (initiative.extraInfo)?has_content || showMap>
+
+    <#if (initiative.extraInfo)?has_content || showMap ||showVideo>
         <h2><@u.message "initiative.extraInfo.title" /></h2>
     </#if>
 
@@ -86,6 +84,11 @@
 
     <#if showMap>
         <@map locations />
+    </#if>
+
+    <#if showVideo>
+        <br/>
+        <@video />
     </#if>
 
     <#if (initiative.youthInitiativeId.present)>
@@ -124,7 +127,7 @@
 -->
 <#macro initiativeViewManage initiative>
     <#assign showMap = locations?? && locations?size gt 0 && googleMapsEnabled />
-    <#assign showVideo = (initiative.videoUrl.isPresent() && initiative.videoName.isPresent()) && videoEnabled/>
+    <#assign showVideo = initiative.videoUrl.isPresent() && videoEnabled/>
 
     <h2><@u.message "initiative.proposal.title" /></h2>
 
@@ -140,16 +143,9 @@
 		</div>
     </#if>
 
-    <#if showVideo>
-        <@video />
-    </#if>
-    <#if managementSettings.allowAddVideo && videoEnabled>
-    	<div class="initiative-content-row">
-    		<a href="${urls.getManageVideoUrl(initiative.id)}" class="small-button"><span class="small-icon add"><@u.message "video.add.btn" /></span></a>
-		</div>
-    </#if>
 
-    <#if showMap || (initiative.extraInfo)?has_content>
+
+    <#if (initiative.extraInfo)?has_content || showMap || showVideo>
         <h2><@u.message "initiative.extraInfo.title" /></h2>
     </#if>
 
@@ -159,9 +155,16 @@
         </div>
     </#if>
 
+
     <#if showMap>
         <@map locations />
     </#if>
+
+    <#if showVideo>
+        <br/>
+        <@video />
+    </#if>
+
 
     <#if (initiative.youthInitiativeId.present)>
         <h2><@u.message "initiative.youthInitiative.title" /></h2>
@@ -322,7 +325,6 @@
  * @param initiative is initiative
 -->
 <#macro initiativeAuthor publicAuthors>
-    <h3><@u.message key="initiative.authors.title" args=[publicAuthors.publicNameCount+publicAuthors.privateNameCount] /></h3>
 
     <#if (publicAuthors.publicNameCount > 0)>
         <#list publicAuthors.publicAuthors as publicAuthor>
@@ -380,6 +382,17 @@
     </#list>
 </#macro>
 
+<#macro participantInfo admin=false>
+    <#assign showParticipangGraph = supportCountData?? && supportCountData!="[]" && participantCount.total gt 0 />
+    <div class="participant-info view-block last <#if !showParticipangGraph> hide-in-mobile</#if>">
+        <h2><@u.message key="initiative.participants.title" args=[participantCount.total] /></h2>
+        <#if admin><h3><span><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></h3></#if>
+        <@e.participantInformation/>
+        <#if showParticipangGraph>
+            <@participantGraph initiative supportCountData!"{}" participantCount.total/>
+        </#if>
+    </div>
+</#macro>
 
 <#-- 
  * participants
@@ -390,36 +403,17 @@
  * @param showForm is boolean for toggling form visibility 
  * @param admin is boolean for toggling participate button and participant manage -link 
 -->
-<#macro participants formHTML="" showForm=true admin=false>
+<#macro participants formHTML="" showForm=true>
     <#assign participateSuccess=false />
     <#list requestMessages as requestMessage>
         <#if requestMessage == RequestMessage.PARTICIPATE>
             <#assign participateSuccess=true />
         </#if>
     </#list>
-    <#if !admin && !initiative.sentTime.present && !participateSuccess>
-    <div class="participants-block ${showForm?string("hidden","")} noprint">
-        <#if initiative.verifiable && !user.isVerifiedUser()>
-            <a class="small-button" href="${urls.vetumaLogin(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
-        <#else>
-            <#if !user.hasParticipatedToInitiative(initiative.id) && (!initiative.verifiable || user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
-                <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
-            </#if>
-        </#if>
-    </div>
-        <#if !user.hasParticipatedToInitiative(initiative.id)>
-        <div class="participants-block last ${showForm?string("hidden","")} noprint">
-            <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="${urls.help(HelpPage.PARTICIPANTS.getUri(locale))}"><@u.messageHTML "action.participate.infoLink" /></a>
-        </div>
-        </#if>
-    </#if>
-    <#if !admin && initiative.sentTime.present>
-    <div class="participants-block last noprint">
-        <div class="participate not-allowed">
-            <@u.systemMessage path="participate.sentToMunicipality" type="info" />
-        </div>
-    </div>
-    </#if>
+
+    <@participateButton participateSuccess showForm/>
+
+
     <#-- NOSCRIPT participate -->
     <#if showForm>
         <#noescape><noscript>
@@ -429,33 +423,79 @@
             </div>
         </noscript></#noescape>
     </#if>
+
+    <#if initiative.sentTime.present>
+        <div class="participants-block last noprint">
+            <div class="participate not-allowed">
+                <@u.systemMessage path="participate.sentToMunicipality" type="info" />
+            </div>
+        </div>
+    </#if>
+
     <br class="clear" />
-    <br class="clear" />
-    <h3><@u.message key="initiative.participants.title" args=[participantCount.total+initiative.externalParticipantCount] />
-    <#if admin><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
 
     <#if  !initiative.sentTime.present && !user.hasRightToInitiative(initiative.id)>
         <#if user.hasParticipatedToInitiative(initiative.id)>
             <@u.systemMessage path="warning.already.participated" type="warning" />
+             <br class="clear" />
         <#elseif initiative.verifiable && user.isVerifiedUser() && !user.allowVerifiedParticipation(initiative.id, initiative.municipality)>
+            <br class="clear" />
             <@u.systemMessage path="warning.participant.notMember" type="warning" />
         <#elseif initiative.verifiable && ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
             <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
+            <br class="clear" />
         </#if>
     </#if>
 
-    <@participantInformation/>
 
 
 </#macro>
 
+
+<#macro participateButton participateSuccess showForm>
+    <#if !initiative.sentTime.present && !participateSuccess>
+        <div class="participants-block ${showForm?string("hidden","")} noprint">
+            <#if initiative.verifiable>
+                <#if user.isVerifiedUser()>
+                    <#if !user.hasParticipatedToInitiative(initiative.id) && (user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
+                        <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
+                    </#if>
+                <#else>
+                    <a class="small-button" href="${urls.vetumaLogin(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
+                </#if>
+            <#else>
+                <#if !user.hasParticipatedToInitiative(initiative.id)>
+                    <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
+                </#if>
+            </#if>
+        </div>
+        <#if !user.hasParticipatedToInitiative(initiative.id)>
+        <div class="participants-block last ${showForm?string("hidden","")} noprint">
+            <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="${urls.help(HelpPage.PARTICIPANTS.getUri(locale))}"><@u.messageHTML "action.participate.infoLink" /></a>
+        </div>
+        </#if>
+    </#if>
+</#macro>
+
+
 <#macro follow >
-    <a class="js-follow"><span class="small-icon save-and-send"><@u.message "action.follow" /></span></a>
+    <#if initiative.isSent()>
+        <#assign tooltipTitle>followInitiativeSent.tooltip</#assign>
+    <#else>
+        <#assign tooltipTitle>followInitiative.tooltip</#assign>
+    </#if>
+    <p class="noprint">
+        <a class="js-follow trigger-tooltip" title="<@u.message tooltipTitle />">
+            <span class="icon-small icon-16 envelope margin-right"></span>
+            <@u.message "action.follow" />
+        </a>
+
+    </p>
 </#macro>
 
 <#macro participantInformation>
     <div class="participants-block">
-        <span class="user-count-total">${participantCount.total+initiative.externalParticipantCount}</span>
+        <span class="user-count-total test-user-count-total">${participantCount.total+initiative.externalParticipantCount}</span>
     </div>
     <div class="participants-block separate">
             <span class="user-count-sub-total">
@@ -488,15 +528,9 @@
 
 <#macro video manage=false>
     <div>
-        <#if !manage>
-            <h3><@u.message "video.title" /></h3>
+        <#if initiative.videoUrl.isPresent() && initiative.videoUrl.getValue()?? && initiative.videoUrl.getValue() != "">
+            <iframe src="${initiative.videoUrl.value}" width="90%" height="400px"></iframe>
         </#if>
-        <iframe src="${initiative.videoUrl.value}" width="90%" height="400px"></iframe>
-        <#if manage>
-            <a href="?deleteVideoForm" class="js-delete-video delete-video trigger-tooltip"
-               title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a>
-        </#if>
-        <p>${initiative.videoName.value}</p>
     </div>
 </#macro>
 

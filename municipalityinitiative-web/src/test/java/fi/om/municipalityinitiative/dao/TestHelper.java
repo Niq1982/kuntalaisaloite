@@ -60,6 +60,7 @@ public class TestHelper {
     public static final double LOCATION_LNG = 23.456789;
     public static final double LOCATION_LAT = 23.455678;
     public static final List<Location> LOCATIONS = new ArrayList<Location>() {{ add(new Location(LOCATION_LAT, LOCATION_LNG));}};
+    public static final String VALID_VIDEO_URL = "https://www.youtube.com/watch?v=P4W1VSb-dGU";
 
     public static LoginUserHolder authorLoginUserHolder;
     public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
@@ -169,6 +170,7 @@ public class TestHelper {
                 .withState(InitiativeState.ACCEPTED)
                 .withType(InitiativeType.COLLABORATIVE)
                 .withLocations(LOCATIONS)
+                .withVideoUrl(VALID_VIDEO_URL)
                 .applyAuthor().toInitiativeDraft());
     }
 

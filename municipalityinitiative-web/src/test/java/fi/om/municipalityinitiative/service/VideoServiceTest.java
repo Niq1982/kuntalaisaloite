@@ -1,21 +1,16 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.ui.VideoCreateDto;
 import fi.om.municipalityinitiative.exceptions.InvalidVideoUrlException;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.Maybe;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.net.MalformedURLException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+@Ignore
 public class VideoServiceTest extends ServiceIntegrationTestBase{
 
     public static final String VIDEONAME = "randomname";
@@ -88,193 +83,5 @@ public class VideoServiceTest extends ServiceIntegrationTestBase{
         assertThat(UNALLOWED_QUERY_PARAMETERS.matches(videoService.VIDEO_REGEX), is(false));
     }
 
-    @Test
-    @Transactional
-    public void video_id_is_escaped(){
-        Long initiativeId = testHelper.createDefaultInitiative(
-                new TestHelper.InitiativeDraft(testMunicipalityId)
-                        .withState(InitiativeState.PUBLISHED)
-                        .applyAuthor()
-                        .toInitiativeDraft());
-        try {
-            videoService.addVideoUrl(new VideoCreateDto(Maybe.of(SHORT_YOUTUBE_VIDEO_URL_BASE + P_TAG), Maybe.of(VIDEONAME)), initiativeId);
-        } catch (InvalidVideoUrlException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } finally {
-            Initiative initiative = initiativeDao.get(initiativeId);
 
-
-            assertThat(initiative.getVideoUrl().isPresent(), is(true));
-            assertThat(initiative.getVideoUrlName().isPresent(), is(true));
-
-            VideoCreateDto videoCreateDto = new VideoCreateDto(initiative.getVideoUrl(), initiative.getVideoUrlName());
-            assertThat(videoCreateDto.getVideoUrl(), is(EMBEDDED_YOUTUBE_VIDEO_URL_BASE + P_ESCAPED));
-            assertThat(videoCreateDto.getVideoName(), is(VIDEONAME));
-        }
-        testEscapeVideoUrl(SHORT_YOUTUBE_VIDEO_URL_BASE);
-    }
-
-    private void testEscapeVideoUrl(String base) {
-        Long initiativeId = testHelper.createDefaultInitiative(
-                new TestHelper.InitiativeDraft(testMunicipalityId)
-                        .withState(InitiativeState.PUBLISHED)
-                        .applyAuthor()
-                        .toInitiativeDraft());
-        try {
-            videoService.addVideoUrl(new VideoCreateDto(Maybe.of(base + P_TAG), Maybe.of(VIDEONAME)), initiativeId);
-        } catch (InvalidVideoUrlException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } finally {
-            Initiative initiative = initiativeDao.get(initiativeId);
-
-
-            assertThat(initiative.getVideoUrl().isPresent(), is(true));
-            assertThat(initiative.getVideoUrlName().isPresent(), is(true));
-
-            VideoCreateDto videoCreateDto = new VideoCreateDto(initiative.getVideoUrl(), initiative.getVideoUrlName());
-            if (base.contains("youtu")) {
-                assertThat(videoCreateDto.getVideoUrl(), is(EMBEDDED_YOUTUBE_VIDEO_URL_BASE + P_ESCAPED));
-            } else {
-                assertThat(videoCreateDto.getVideoUrl(), is(VIMEO_EMBEDDED_BASE + P_ESCAPED));
-            }
-            assertThat(videoCreateDto.getVideoName(), is(VIDEONAME));
-        }
-    }
-
-    @Test
-    @Transactional
-    public void save_public_youtube_video_url(){
-        testEscapeVideoUrl(EMBEDDED_YOUTUBE_VIDEO_URL_BASE);
-        testEscapeVideoUrl(NORMAL_YOUTUBE_VIDEO_URL_BASE);
-        testEscapeVideoUrl(SHORT_YOUTUBE_VIDEO_URL_BASE);
-        testEscapeVideoUrl(VIMEO_URL_BASE);
-    }
-
-    @Test
-    @Transactional
-    public void save_short_youtube_video_url(){
-        Long initiativeId = testHelper.createDefaultInitiative(
-                new TestHelper.InitiativeDraft(testMunicipalityId)
-                        .withState(InitiativeState.PUBLISHED)
-                        .applyAuthor()
-                        .toInitiativeDraft());
-        try {
-            videoService.addVideoUrl(new VideoCreateDto(Maybe.of(VALID_YOUTUBE_SHORT_URL), Maybe.of(VIDEONAME)), initiativeId);
-        } catch (InvalidVideoUrlException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } finally {
-            Initiative initiative = initiativeDao.get(initiativeId);
-
-            assertThat(initiative.getVideoUrl().isPresent(), is(true));
-            assertThat(initiative.getVideoUrlName().isPresent(), is(true));
-
-            VideoCreateDto videoCreateDto = new VideoCreateDto(initiative.getVideoUrl(), initiative.getVideoUrlName());
-            assertThat(videoCreateDto.getVideoUrl(), is(VALID_EMBED_VIDEO_URL));
-            assertThat(videoCreateDto.getVideoName(), is(VIDEONAME));
-        }
-    }
-    @Test
-    @Transactional
-    public void save_embed_youtube_video_url(){
-        Long initiativeId = testHelper.createDefaultInitiative(
-                new TestHelper.InitiativeDraft(testMunicipalityId)
-                        .withState(InitiativeState.PUBLISHED)
-                        .applyAuthor()
-                        .toInitiativeDraft());
-        try {
-            videoService.addVideoUrl(new VideoCreateDto(Maybe.of(VALID_EMBED_VIDEO_URL), Maybe.of(VIDEONAME)), initiativeId);
-        } catch (InvalidVideoUrlException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } finally {
-            Initiative initiative = initiativeDao.get(initiativeId);
-
-            assertThat(initiative.getVideoUrl().isPresent(), is(true));
-            assertThat(initiative.getVideoUrlName().isPresent(), is(true));
-
-            VideoCreateDto videoCreateDto = new VideoCreateDto(initiative.getVideoUrl(), initiative.getVideoUrlName());
-            assertThat(videoCreateDto.getVideoUrl(), is(VALID_EMBED_VIDEO_URL));
-            assertThat(videoCreateDto.getVideoName(), is(VIDEONAME));
-        }
-    }
-
-
-    @Test
-    @Transactional
-    public void save_valid_vimeo_video_url(){
-        Long initiativeId = testHelper.createDefaultInitiative(
-                new TestHelper.InitiativeDraft(testMunicipalityId)
-                        .withState(InitiativeState.PUBLISHED)
-                        .applyAuthor()
-                        .toInitiativeDraft());
-        try {
-            videoService.addVideoUrl(new VideoCreateDto(Maybe.of(VALID_VIMEO_URL), Maybe.of(VIDEONAME)), initiativeId);
-        } catch (InvalidVideoUrlException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } finally {
-            Initiative initiative = initiativeDao.get(initiativeId);
-
-            assertThat(initiative.getVideoUrl().isPresent(), is(true));
-            assertThat(initiative.getVideoUrlName().isPresent(), is(true));
-
-            VideoCreateDto videoCreateDto = new VideoCreateDto(initiative.getVideoUrl(), initiative.getVideoUrlName());
-            assertThat(videoCreateDto.getVideoUrl(), is(EMBEDDED_VIMEO_URL));
-            assertThat(videoCreateDto.getVideoName(), is(VIDEONAME));
-        }
-    }
-
-    @Test
-    @Transactional
-    public void cant_save_vimeo_video_url_without_id(){
-        Long initiativeId = testHelper.createDefaultInitiative(
-                new TestHelper.InitiativeDraft(testMunicipalityId)
-                        .withState(InitiativeState.PUBLISHED)
-                        .applyAuthor()
-                        .toInitiativeDraft());
-        try {
-            videoService.addVideoUrl(new VideoCreateDto(Maybe.of(VIMEO_URL_BASE), Maybe.of(VIDEONAME)), initiativeId);
-        } catch (InvalidVideoUrlException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } finally {
-            Initiative initiative = initiativeDao.get(initiativeId);
-
-            assertThat(initiative.getVideoUrl().isNotPresent(), is(true));
-            assertThat(initiative.getVideoUrlName().isNotPresent(), is(true));
-
-        }
-    }
-
-    @Test
-    @Transactional
-    public void cant_save_embedded_youtube_video_url_without_id(){
-        Long initiativeId = testHelper.createDefaultInitiative(
-                new TestHelper.InitiativeDraft(testMunicipalityId)
-                        .withState(InitiativeState.PUBLISHED)
-                        .applyAuthor()
-                        .toInitiativeDraft());
-        try {
-            videoService.addVideoUrl(new VideoCreateDto(Maybe.of(EMBEDDED_YOUTUBE_VIDEO_URL_BASE), Maybe.of(VIDEONAME)), initiativeId);
-        } catch (InvalidVideoUrlException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } finally {
-            Initiative initiative = initiativeDao.get(initiativeId);
-
-            assertThat(initiative.getVideoUrl().isNotPresent(), is(true));
-            assertThat(initiative.getVideoUrlName().isNotPresent(), is(true));
-
-        }
-    }
 }

@@ -1,6 +1,11 @@
 @progressContainerHeight: 150px;
+@progressContainerHeightMobile: 180px;
 @stepSize: 94px; // use even values to prevent half pixels
+@mobileStepSize: 54px;
+@bigStepSize: 84px;
 @stepLabelWidth: 8.75em; // 140px
+@stepLabelWidthMobile: 5.75em;
+
 @progBarHeight: 10px; // use even values to prevent half pixels
 @progBarBorderSize: @progBarHeight / 2;
 @progBarColor: #fff;
@@ -45,11 +50,21 @@
 
 .initiative-progress-container {
  height: @progressContainerHeight;
+
+  @media @big-mobile {
+    margin: 7% 0;
+  }
+  @media @small-mobile {
+    height: auto;
+    margin: 5% 0;
+  }
+
 }
 
 .initiative-progress-bar {
   position: absolute;
   top: 50%;
+
   width: 100%;
   left: 0;
   margin-top: -@progBarHeight / 2;
@@ -141,6 +156,10 @@
   position: relative;
   height: @stepSize;
   margin: 0 @stepLabelWidth / 2;
+  @media @small-mobile {
+    margin: 0 15% 20px 15%;
+    height: @mobileStepSize;
+  }
 
   .step {
     display: inline-block;
@@ -167,9 +186,21 @@
       display: inline-block;
       width: @stepSize;
       height: @stepSize;
+      @media @small-mobile {
+        width: @mobileStepSize;
+        height: @mobileStepSize;
+      }
+      @media @big-mobile {
+        width: @bigStepSize;
+        height: @bigStepSize;
+      }
       border-radius: 100%;
       margin-left: -@stepSize / 2;
+      @media @small-mobile {
+        margin-left: -@mobileStepSize / 2
+      }
       background: @progBarColor;
+
 
       .ie8 & {
         background: transparent url("@{imagesPath}/ie/progress-step.png?version=${timestamp}") no-repeat 0 0;
@@ -179,6 +210,14 @@
         position: absolute;
         top: 50%;
         left: 50%;
+        @media @small-mobile {
+          top : 74%;
+          left: 78%;
+        }
+        @media @big-mobile {
+          top: 54%;
+          left: 57%;
+        }
         margin: -32px 0 0 -32px;
       }
     }
@@ -188,11 +227,18 @@
       width: @stepLabelWidth;
       margin-left: -@stepLabelWidth / 2;
       text-align: center;
+      @media @big-mobile {
+        width: 7.75em;;
+      }
+      @media @small-mobile {
+        display: none;
+      }
     }
 
     &.done {
       .step-icon-holder {
         background: @progBarColorDone;
+
 
         .ie8 & {
           background: transparent url("@{imagesPath}/ie/progress-step.png?version=${timestamp}") no-repeat 0 -100px;
@@ -217,16 +263,29 @@
         }
       }
     }
+
   }
+
+
+
 
   &.steps-2 {
     margin: 0 13.5 + @stepLabelWidth / 2; // em -> 0 286px (216 + 140/2)
+    @media @mobile {
+      margin: 0 30% 20px 30%;
+
+    }
   }
 
   &.steps-3 {
     .progressStepPosition(2, 3);
     .progressBar(1, 3);
     .progressBar(2, 3);
+    @media @big-mobile {
+      margin: 0 20%;
+
+    }
+
   }
 
   &.steps-4 {
@@ -235,6 +294,12 @@
     .progressBar(1, 4);
     .progressBar(2, 4);
     .progressBar(3, 4);
+    @media @small-mobile {
+      margin: 0 30px 20px 30px;
+    }
+    @media @big-mobile {
+      margin: 0 15%;
+    }
   }
 
   &.steps-5 {
@@ -245,6 +310,9 @@
     .progressBar(2, 5);
     .progressBar(3, 5);
     .progressBar(4, 5);
+    @media @small-mobile {
+      margin: 0 30px 20px 30px;
+    }
   }
   &.steps-6 {
     .progressStepPosition(2, 6);
@@ -256,5 +324,44 @@
     .progressBar(3, 6);
     .progressBar(4, 6);
     .progressBar(5, 6);
+    @media @small-mobile {
+      margin: 0 30px 20px 30px;
+    }
+  }
+}
+.mobile-label {
+  display: none;
+}
+@media @small-mobile {
+  .arrow-up {
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 20px solid #e2e2e2;
+    position: absolute;
+    bottom: -23px;
+    right: -10px;
+
+  }
+
+  .mobile-label {
+    display: block;
+
+    width: 94%;
+    margin: 0 auto;
+    text-align: center;
+
+    background-color: #e2e2e2;
+    border-radius: 2px;
+    color: black;
+    padding: 1em 0;
+    font-weight: bold;
+    font-size: 1.1em;
+    br {
+      display: none;
+    }
+
   }
 }

@@ -172,7 +172,7 @@ $(document).ready(function () {
 		isIE9 =			$('html').hasClass('ie9'),	// Boolean for IE9. Used browser detection instead of jQuery.support().
 		locale =		Init.getLocale(),			// Current locale: fi, sv
 		hideClass =		'js-hide',					// Set general hidden class
-		fireParticipantGraph, headerNav;
+		fireParticipantGraph, headerNav, mainNav;
 
 /**
  * Common helpers
@@ -244,6 +244,8 @@ $(document).ready(function () {
     headerNav.headerNav({
       btnTitle: locale === 'sv' ? 'Visa mer' : 'Näytä lisää'
     });
+
+
 
 	/**
 	 *	Prevent double clicks
@@ -1449,6 +1451,9 @@ $('.municipality-filter').change( function() {
  * ===============================
  *
  * */
+
+
+
 var tooltip = (function() {
 	return {
 		load : function(){
@@ -1468,8 +1473,92 @@ var tooltip = (function() {
 	};
 })();
 
+
 tooltip.load();
 
+/**
+ *
+ *  Mobile tooltip
+ *  http://osvaldas.info/elegant-css-and-jquery-tooltip-responsive-mobile-friendly
+ */
+$( function() {
+	var targets = $( '[rel~=tooltip]' ),
+		target  = false,
+		tooltip = false,
+		title   = false;
+
+	targets.bind( 'mouseenter', function()
+	{
+		target  = $( this );
+		tip     = target.attr( 'title' );
+		tooltip = $( '<div id="tooltip"></div>' );
+
+		if( !tip || tip == '' )
+			return false;
+
+		target.removeAttr( 'title' );
+		tooltip.css( 'opacity', 0 )
+			.html( tip )
+			.appendTo( 'body' );
+
+		var init_tooltip = function()
+		{
+			if( $( window ).width() < tooltip.outerWidth() * 1.5 )
+				tooltip.css( 'max-width', $( window ).width() / 2 );
+			else
+				tooltip.css( 'max-width', 340 );
+
+			var pos_left = target.offset().left + ( target.outerWidth() / 2 ) - ( tooltip.outerWidth() / 2 ),
+				pos_top  = target.offset().top - tooltip.outerHeight() - 20;
+
+			if( pos_left < 0 )
+			{
+				pos_left = target.offset().left + target.outerWidth() / 2 - 20;
+				tooltip.addClass( 'left' );
+			}
+			else
+				tooltip.removeClass( 'left' );
+
+			if( pos_left + tooltip.outerWidth() > $( window ).width() )
+			{
+				pos_left = target.offset().left - tooltip.outerWidth() + target.outerWidth() / 2 + 20;
+				tooltip.addClass( 'right' );
+			}
+			else
+				tooltip.removeClass( 'right' );
+
+			if( pos_top < 0 )
+			{
+				var pos_top  = target.offset().top + target.outerHeight();
+				tooltip.addClass( 'top' );
+			}
+			else
+				tooltip.removeClass( 'top' );
+
+			tooltip.css( { left: pos_left, top: pos_top } )
+				.animate( { top: '+=10', opacity: 1 }, 50 );
+		};
+
+		init_tooltip();
+		$( window ).resize( init_tooltip );
+
+
+		var remove_tooltip = function()
+		{
+			tooltip.animate( { top: '-=10', opacity: 0 }, 50, function()
+			{
+				$( this ).remove();
+			});
+
+			target.attr( 'title', tip );
+		};
+
+		target.bind( 'mouseleave', remove_tooltip );
+		tooltip.bind( 'click', remove_tooltip );
+
+		$( window ).scroll( remove_tooltip );
+	});
+});
 
 /**
  * DirtyForms jQuery plugin
@@ -1525,7 +1614,7 @@ $.DirtyForms.dialog = {
 
 (function() {
 	var ignoreHelper = {
-		ignoreAnchorSelector: 'a[rel="external"], .modal a, a#openMap, .map-marker a,  #open-remove-location a, #edit, #save'
+		ignoreAnchorSelector: 'a[rel="external"], .modal a, a#openMap, .map-marker a,  #open-remove-location a, #edit, #save, .toggle-dropdown'
 	};
 
 	$.DirtyForms.helpers.push(ignoreHelper);
@@ -2020,6 +2109,81 @@ if (window.hasIGraphFrame) {
   });
 
 }());
+
+var closeSearchFilter;
+
+/*
+* Search filter  in mobile
+*
+*/
+if ($(".search-options-mobile").length > 0) {
+	(function () {
+		var filtersWidth = "100%", filtersHeight = "100%";
+		var filters = $(".search-options-mobile"),
+			pageWrapper = $("#wrapper"),
+			content = $("#content"),
+			container = $(".container"),
+			resultList = $(".search-results"),
+			footer = $(".om-footer"),
+			paginationBottom = $(".pagination.bottom");
+
+		var contentPaddingBottom = content.css("padding-bottom");
+
+		var openSearchFilter = function () {
+			filters.addClass("open");
+
+			$(".chzn-container-multi").css("width", filtersWidth);
+			$(".chzn-drop").css("width", filtersWidth);
+
+			pageWrapper.height(filtersHeight);
+			container.height(filtersHeight);
+			content.height(filtersHeight);
+
+			content.css("padding-bottom", 0);
+			resultList.hide();
+			footer.hide();
+			paginationBottom.hide();
+
+		};
+		closeSearchFilter = function () {
+			filters.removeClass("open");
+
+			pageWrapper.height("auto");
+			content.height("auto");
+			container.height("auto");
+
+			content.css("padding-bottom", contentPaddingBottom);
+			resultList.show();
+			footer.show();
+			paginationBottom.show();
+		};
+
+		$(".open-filters").click(function () {
+			if (filters.hasClass("open")) {
+				closeSearchFilter();
+			} else {
+				openSearchFilter();
+			}
+
+		});
+	})();
+}
+$(window).on("orientationchange",function(event){
+	if (closeSearchFilter) {
+		closeSearchFilter();
+	}
+});
+
+/*
+ * Main menu in mobile
+ *
+*/
+$(".toggle-dropdown").click(function () {
+	$("#main-navigation").toggleClass("open");
+		if (closeSearchFilter) {
+			closeSearchFilter();
+		}
+});
 
 
 /**
@@ -2662,11 +2826,20 @@ function findLocation(locations, location) {
 		"/": '&#x2F;'
 	};
 
+
+	var INVALID_URL_PARAMETER = -1;
+	var INVALID_HOST = -2;
+
+
 	var escapeHtml = function (string) {
 		return String(string).replace(/[&<>"'\/]/g, function (s) {
 			return entityMap[s];
 		});
 	};
+
+	function invalidUrlParameters(queryParam, videoIDPos) {
+		return queryParam.indexOf("&") > -1 || queryParam.indexOf("?") > -1 || queryParam.indexOf("#") > -1 || queryParam.indexOf("^") > -1;
+	}
 
 	function convertToYoutubeEmbed(a) {
 		var url = null, videoIDPos = -1;
@@ -2674,18 +2847,29 @@ function findLocation(locations, location) {
 		var path = a.pathname;
 		if (queryParam.indexOf("v=") > 0) {
 			videoIDPos = queryParam.indexOf("v=") + 2;
-			var endOfID = queryParam.indexOf("&");
-			if (endOfID < 0) {
-				url = [YOUTUBEBASEURL, escapeHtml(queryParam.substring(videoIDPos))].join('');
-			} else if (videoIDPos < endOfID) {
-				url = [YOUTUBEBASEURL, escapeHtml(queryParam.substring(videoIDPos, endOfID))].join('');
+
+			if (invalidUrlParameters(queryParam.substring(videoIDPos), videoIDPos)) {
+				url = INVALID_URL_PARAMETER;
 			}
+			else {
+				url = [YOUTUBEBASEURL, escapeHtml(queryParam.substring(videoIDPos))].join('');
+			}
+
 		} else if (path.indexOf("embed") > 0) {
 			videoIDPos = path.indexOf("embed") + 6;
-			url = [YOUTUBEBASEURL, escapeHtml(path.substring(videoIDPos))].join('');
+			if (queryParam.length  > 0) {
+				url = INVALID_URL_PARAMETER;
+			} else {
+				url = [YOUTUBEBASEURL, escapeHtml(path.substring(videoIDPos))].join('');
+			}
 		} else if (a.hostname === "youtu.be") {
-			url = [YOUTUBEBASEURL, escapeHtml(path)].join('');
+			if (queryParam.length  > 0) {
+				url =  INVALID_URL_PARAMETER;
+			} else {
+				url = [YOUTUBEBASEURL, escapeHtml(path)].join('');
+			}
 		}
+
 		return url;
 	}
 
@@ -2703,13 +2887,16 @@ function findLocation(locations, location) {
 		var a = $('<a>', {href: url})[0];
 
 		if (a.hostname === "www.youtube.com" || a.hostname === "youtu.be") {
+
 			return convertToYoutubeEmbed(a);
 		}
-		if (a.hostname === "vimeo.com") {
+		else if (a.hostname === "vimeo.com") {
+
 			return convertToVimeoEmbed(a);
 		}
+
 		else {
-			return null;
+			return INVALID_HOST;
 		}
 	}
 
@@ -2722,20 +2909,36 @@ function findLocation(locations, location) {
 
 		if (videoInput.val()) {
 			var url = validateVideoLink(videoInput.val());
-			if (url) {
-				videoContainer.append("<iframe src=" + url + " width='100%' height='447' />");
+			if ( url === INVALID_HOST ) {
+				videoContainer.append("<p>" + videoWarning + "</p>");
+
+
+			} else if (url === INVALID_URL_PARAMETER) {
+				videoContainer.append("<p>" +invalidUrlWarning +"</p>");
+
 			} else {
-				videoContainer.append("<p>"+videoWarning+"</p>");
+				videoContainer.append("<iframe src=" + url + " width='100%' height='447' />");
 			}
 		}
 
 	});
 
+	$(".show-video-form").click(function() {
+		$(".video-form").toggleClass("hide-form");
+		if ($(".video-form").hasClass("hide-form")) {
+			$(".show-video-form").show();
+		} else {
+			$(".show-video-form").hide();
+		}
+
+	});
+
+
 })();
 
 
-
 $(window).on('resize', function () {
+
   if (fireParticipantGraph !== undefined) {
     fireParticipantGraph();
   }
@@ -2743,6 +2946,8 @@ $(window).on('resize', function () {
   if (headerNav !== undefined) {
     headerNav.headerNav('resize');
   }
+
+
 }).trigger('resize');
 
 

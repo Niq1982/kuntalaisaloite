@@ -262,7 +262,6 @@
             <div class="input-block-extra-content">
                 <@f.helpText "help.name" />
                 <@f.helpText "help.proposal" />
-                <@f.helpText "help.extraInfo" />
             </div>
         </div>
 
@@ -278,16 +277,7 @@
         <div class="input-block-content no-top-margin">
             <@f.textarea path=path+".proposal" key="initiative.proposal" required="required" optional=false cssClass="textarea-tall" maxLength=InitiativeConstants.INITIATIVE_PROPOSAL_MAX?string("#") />
         </div>
-        
-        <div class="input-block-content">
-            <@f.textarea path=path+".extraInfo" key="initiative.extraInfo" required="" optional=true cssClass="textarea" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
-        </div>
 
-        <#if googleMapsEnabled>
-            <div class="input-block-content">
-                <@mapSelection path locationSelected/>
-            </div>
-        </#if>
 
     </div>
 </#macro>
@@ -307,6 +297,9 @@
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.extraInfo" />
+                <#if videoEnabled>
+                    <@f.helpText "help.videoInfo" />
+                </#if>
                 <#if initiative.collaborative && initiative.state == InitiativeState.PUBLISHED>
                     <@f.helpText "help.externalParticipantCount" />
                 </#if>
@@ -322,6 +315,14 @@
                 <@mapSelection path locationSelected/>
             </div>
         </#if>
+
+        <#if videoEnabled>
+            <div class="input-block-content">
+                <@f.textField cssClass="videoUrl large" required="" optional=false path=path+".videoUrl" key="video.videoUrl"/>
+            </div>
+            <div id="videoContainer" class="input-block-content  no-top-margin"></div>
+        </#if>
+
         <#if initiative.collaborative && initiative.state == InitiativeState.PUBLISHED>
             <div class="input-block-content">
                 <@f.textField path=path+".externalParticipantCount" required="" cssClass="small" optional=false  maxLength=7 />
