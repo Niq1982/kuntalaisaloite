@@ -58,7 +58,7 @@
 <#macro initiativeView initiative>
     <#assign pageIsConfirmParticipation = currentRequestUri?ends_with("show-participate")/>
     <#assign showMap = locations?? && locations?size gt 0 && !pageIsConfirmParticipation && googleMapsEnabled />
-    <#assign showVideo = (initiative.videoUrl.isPresent() && initiative.videoName.isPresent()) && videoEnabled/>
+    <#assign showVideo = initiative.videoUrl.isPresent() && videoEnabled/>
 
     <h2><@u.message "initiative.proposal.title" /></h2>
 
@@ -70,11 +70,9 @@
     	<@attachmentsView attachments />
     </#if>
 
-    <#if showVideo>
-        <@video />
-    </#if>
 
-    <#if (initiative.extraInfo)?has_content || showMap>
+
+    <#if (initiative.extraInfo)?has_content || showMap ||showVideo>
         <h2><@u.message "initiative.extraInfo.title" /></h2>
     </#if>
 
@@ -86,6 +84,11 @@
 
     <#if showMap>
         <@map locations />
+    </#if>
+
+    <#if showVideo>
+        <br/>
+        <@video />
     </#if>
 
     <#if (initiative.youthInitiativeId.present)>
@@ -124,7 +127,7 @@
 -->
 <#macro initiativeViewManage initiative>
     <#assign showMap = locations?? && locations?size gt 0 && googleMapsEnabled />
-    <#assign showVideo = (initiative.videoUrl.isPresent() && initiative.videoName.isPresent()) && videoEnabled/>
+    <#assign showVideo = initiative.videoUrl.isPresent() && videoEnabled/>
 
     <h2><@u.message "initiative.proposal.title" /></h2>
 
@@ -140,18 +143,9 @@
 		</div>
     </#if>
 
-    <#if showVideo>
-        <@video />
-    </#if>
-
-    <#if managementSettings.allowAddVideo && videoEnabled>
-    <div class="initiative-content-row">
-        <a href="${urls.getManageVideoUrl(initiative.id)}" class="small-button"><span class="small-icon add"><@u.message "video.add.btn" /></span></a>
-    </div>
-    </#if>
 
 
-    <#if (initiative.extraInfo)?has_content || showMap>
+    <#if (initiative.extraInfo)?has_content || showMap || showVideo>
         <h2><@u.message "initiative.extraInfo.title" /></h2>
     </#if>
 
@@ -165,6 +159,12 @@
     <#if showMap>
         <@map locations />
     </#if>
+
+    <#if showVideo>
+        <br/>
+        <@video />
+    </#if>
+
 
     <#if (initiative.youthInitiativeId.present)>
         <h2><@u.message "initiative.youthInitiative.title" /></h2>
@@ -528,17 +528,13 @@
 
 <#macro video manage=false>
     <div>
-        <#if !manage>
-            <div class="initiative-content-row" />
-                <h3><@u.message "video.title" /></h3>
-            </div>
+        <#if initiative.videoUrl.isPresent()>
+            <iframe src="${initiative.videoUrl.value}" width="90%" height="400px"></iframe>
         </#if>
-        <iframe src="${initiative.videoUrl.value}" width="90%" height="400px"></iframe>
         <#if manage>
             <a href="?deleteVideoForm" class="js-delete-video delete-video trigger-tooltip"
                title="<@u.message "deleteVideo.btn" />"><span class="icon-small icon-16 cancel"></span></a>
         </#if>
-        <p>${initiative.videoName.value}</p>
     </div>
 </#macro>
 

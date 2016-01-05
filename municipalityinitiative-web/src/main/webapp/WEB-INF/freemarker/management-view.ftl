@@ -456,6 +456,8 @@
                 content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[managementURL] /></div>'
             }]
         };
+
+
     </script>
 
 </@l.main>

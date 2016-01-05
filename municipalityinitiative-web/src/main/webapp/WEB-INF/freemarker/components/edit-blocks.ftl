@@ -312,6 +312,14 @@
                 <@mapSelection path locationSelected/>
             </div>
         </#if>
+
+        <#if videoEnabled>
+            <div class="input-block-content">
+                <@f.textField cssClass="videoUrl large" required="" optional=false path=path+".videoUrl" key="video.videoUrl"/>
+            </div>
+            <div id="videoContainer" class="input-block-content  no-top-margin"></div>
+        </#if>
+
         <#if initiative.collaborative && initiative.state == InitiativeState.PUBLISHED>
             <div class="input-block-content">
                 <@f.textField path=path+".externalParticipantCount" required="" cssClass="small" optional=false  maxLength=7 />

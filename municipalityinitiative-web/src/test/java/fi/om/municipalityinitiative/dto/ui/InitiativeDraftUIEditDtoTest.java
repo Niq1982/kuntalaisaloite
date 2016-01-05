@@ -27,7 +27,7 @@ public class InitiativeDraftUIEditDtoTest {
     @Test
     public void parse_from_initiative() {
         Initiative originalInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
-
+        originalInitiative.setVideoUrl("videourl");
         ContactInfo originalContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
 
         List<Location> locations = new ArrayList<Location>();

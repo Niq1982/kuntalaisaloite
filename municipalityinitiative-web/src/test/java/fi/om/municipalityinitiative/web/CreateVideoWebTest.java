@@ -4,8 +4,11 @@ package fi.om.municipalityinitiative.web;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import org.junit.Ignore;
 import org.junit.Test;
 
+
+@Ignore
 public class CreateVideoWebTest extends WebTestBase {
 
     private Long normalInitiativeId;

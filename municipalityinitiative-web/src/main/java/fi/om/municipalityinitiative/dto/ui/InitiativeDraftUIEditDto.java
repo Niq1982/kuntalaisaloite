@@ -43,6 +43,8 @@ public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformati
 
     private List<Location> locations = new ArrayList<Location>();
 
+    private String videoUrl;
+
     public InitiativeDraftUIEditDto() {
         // For freemarker
     }
@@ -56,6 +58,9 @@ public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformati
         editDto.setContactInfo(new ContactInfo(contactInfo));
         editDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
         editDto.setLocations(locations);
+        if (initiative.getVideoUrl().isPresent()) {
+            editDto.setVideoUrl(initiative.getVideoUrl().getValue());
+        }
         return editDto;
     }
 
@@ -112,4 +117,11 @@ public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformati
     }
 
 
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
 }

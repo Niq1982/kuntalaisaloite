@@ -11,9 +11,11 @@ import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
+import fi.om.municipalityinitiative.exceptions.InvalidVideoUrlException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.MunicipalityUserService;
+import fi.om.municipalityinitiative.service.VideoService;
 import fi.om.municipalityinitiative.service.YouthInitiativeWebServiceNotifier;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
@@ -22,6 +24,7 @@ import fi.om.municipalityinitiative.util.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,11 +59,15 @@ public class InitiativeManagementService {
     @Resource
     private MunicipalityUserService municipalityUserService;
 
+    @Resource
+    private VideoService videoService;
+
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
         assertAllowance("Edit initiative", ManagementSettings.of(initiative).isAllowEdit());
+
         ContactInfo contactInfo;
 
         if (initiative.getType().isNotVerifiable()) {
@@ -76,13 +83,15 @@ public class InitiativeManagementService {
     }
 
     @Transactional(readOnly = false)
-    public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto, Locale locale) {
+    public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto, Locale locale) throws MalformedURLException, InvalidVideoUrlException {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         Initiative initiative = initiativeDao.get(initiativeId);
 
         assertAllowance("Edit initiative", ManagementSettings.of(initiative).isAllowEdit());
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
+        initiativeDao.addVideoUrl(videoService.convertVideoUrl(editDto.getVideoUrl()), initiativeId);
+
         locationDao.removeLocations(initiativeId);
         locationDao.setLocations(initiativeId, editDto.getLocations());
         if (initiative.getType().isNotVerifiable()) {
@@ -124,7 +133,9 @@ public class InitiativeManagementService {
         updateDto.setExtraInfo(initiative.getExtraInfo());
         updateDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
         updateDto.setLocations(locationDao.getLocations(initiativeId));
-
+        if (initiative.getVideoUrl().isPresent()) {
+            updateDto.setVideoUrl(initiative.getVideoUrl().getValue());
+        }
         return updateDto;
     }
 
@@ -152,12 +163,12 @@ public class InitiativeManagementService {
     }
 
     @Transactional(readOnly = false)
-    public void updateInitiative(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeUIUpdateDto updateDto) {
+    public void updateInitiative(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeUIUpdateDto updateDto) throws MalformedURLException, InvalidVideoUrlException {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
         assertAllowance("Update initiative", ManagementSettings.of(initiative).isAllowUpdate());
 
-        initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo(), updateDto.getExternalParticipantCount());
+        initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo(), updateDto.getExternalParticipantCount(), videoService.convertVideoUrl(updateDto.getVideoUrl()));
 
         locationDao.removeLocations(initiativeId);
         locationDao.setLocations(initiativeId, updateDto.getLocations());

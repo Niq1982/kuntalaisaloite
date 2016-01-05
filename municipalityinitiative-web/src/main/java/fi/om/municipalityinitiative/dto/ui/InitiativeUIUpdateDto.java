@@ -27,6 +27,9 @@ public class InitiativeUIUpdateDto implements InitiativeWithLocationInformation 
 
     private List<Location> locations =  new ArrayList<Location>();
 
+
+    private String videoUrl;
+
     public String getExtraInfo() {
         return extraInfo;
     }
@@ -59,5 +62,13 @@ public class InitiativeUIUpdateDto implements InitiativeWithLocationInformation 
 
     public void setLocations(List<Location> locations) {
         this.locations = locations;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 }
