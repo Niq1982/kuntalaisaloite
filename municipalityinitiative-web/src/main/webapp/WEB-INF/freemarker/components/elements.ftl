@@ -528,12 +528,8 @@
 
 <#macro video manage=false>
     <div>
-        <#if initiative.videoUrl.isPresent()>
+        <#if initiative.videoUrl.isPresent() && initiative.videoUrl.getValue()?? && initiative.videoUrl.getValue() != "">
             <iframe src="${initiative.videoUrl.value}" width="90%" height="400px"></iframe>
-        </#if>
-        <#if manage>
-            <a href="?deleteVideoForm" class="js-delete-video delete-video trigger-tooltip"
-               title="<@u.message "deleteVideo.btn" />"><span class="icon-small icon-16 cancel"></span></a>
         </#if>
     </div>
 </#macro>

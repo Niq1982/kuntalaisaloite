@@ -297,6 +297,9 @@
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.extraInfo" />
+                <#if videoEnabled>
+                    <@f.helpText "help.videoInfo" />
+                </#if>
                 <#if initiative.collaborative && initiative.state == InitiativeState.PUBLISHED>
                     <@f.helpText "help.externalParticipantCount" />
                 </#if>
