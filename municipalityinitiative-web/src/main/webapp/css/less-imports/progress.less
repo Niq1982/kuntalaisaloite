@@ -169,16 +169,25 @@
 
     &:first-child {
       left: 0;
+
+      .ie8 & {
+          left: auto;
+        }
     }
 
     &:last-child {
       right: 0;
-    }
 
+      .ie8 & {
+        right: auto;
+      }
+    }
     .ie8 & {
       &.last-child {
         right: 0;
+
       }
+
     }
 
     .step-icon-holder {
