@@ -65,17 +65,17 @@
 
 
 <#macro mobileFrontPageImageContainer imageNumber>
-    <div class="image-container-mobile">
+    <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="image-container-mobile">
         <div class="mobile-image image-${imageNumber}-1" ></div>
         <div class="mobile-image image-${imageNumber}-2" ></div>
         <div class="mobile-image image-${imageNumber}-3" ></div>
         <div class="mobile-big-link-container">
-            <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="front-page-links-mobile"><@u.message "front.bigLink.Mobile1" /><br/><strong><@u.message "front.bigLink.Mobile2" /></strong><span class="arrow"></span></a>
+            <span class="front-page-links-mobile"><@u.message "front.bigLink.Mobile1" /><br/><strong><@u.message "front.bigLink.Mobile2" /></strong><span class="arrow"></span></span>
         </div>
         <#if requestMessages?? && (requestMessages?size > 0)>
         <@u.frontpageRequestMessage requestMessages />
     </#if>
-    </div>
+    </a>
 
 </#macro>
 
