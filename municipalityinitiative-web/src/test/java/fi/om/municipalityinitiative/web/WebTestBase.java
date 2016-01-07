@@ -157,6 +157,7 @@ public abstract class WebTestBase {
 
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); // default is 0!!!
         driver.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS); // default is 0!!!
+        driver.manage().window().setSize(new Dimension(1024, 768));
     }
 
     @After
