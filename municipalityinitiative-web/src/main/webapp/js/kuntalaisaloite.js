@@ -1429,20 +1429,6 @@ $('.municipality-filter').change( function() {
     }
   });
 
- $('.js-delete-video').click(function(e) {
-
-	 e.preventDefault();
-	 $('.js-delete-video.active').removeClass('active');
-	 $(this).addClass('active');
-
-	 try {
-		 generateModal(modalData.deleteVideoForm(), 'full');
-		 return false;
-	 } catch(e) {
-		 console.log(e);
-	 }
-
- });
 
 
 /**
@@ -2909,7 +2895,9 @@ function findLocation(locations, location) {
 
 		if (videoInput.val()) {
 			var url = validateVideoLink(videoInput.val());
-			if ( url === INVALID_HOST ) {
+			if (url === null) {
+				videoContainer.append("<p>" +invalidUrlWarning +"</p>");
+			} else if ( url === INVALID_HOST ) {
 				videoContainer.append("<p>" + videoWarning + "</p>");
 
 

@@ -120,6 +120,10 @@
             content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[springMacroRequestContext.requestUri] /></div>'
         }]
     };
+
+    var videoWarning = '<@u.message "warning.videoUrl"/>';
+    var invalidUrlWarning = '<@u.message "invalidUrl" />';
+
 </script>
 
 <@edit.sessionExpired />
