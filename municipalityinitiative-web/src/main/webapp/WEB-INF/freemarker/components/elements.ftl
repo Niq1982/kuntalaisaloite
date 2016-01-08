@@ -58,7 +58,7 @@
 <#macro initiativeView initiative>
     <#assign pageIsConfirmParticipation = currentRequestUri?ends_with("show-participate")/>
     <#assign showMap = locations?? && locations?size gt 0 && !pageIsConfirmParticipation && googleMapsEnabled />
-    <#assign showVideo = initiative.videoUrl.isPresent() && videoEnabled/>
+    <#assign showVideo = initiative.videoUrl.isPresent() && initiative.videoUrl.getValue()?has_content && videoEnabled/>
 
     <h2><@u.message "initiative.proposal.title" /></h2>
 
