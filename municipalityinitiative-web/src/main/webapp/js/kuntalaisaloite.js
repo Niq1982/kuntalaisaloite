@@ -2154,11 +2154,7 @@ if ($(".search-options-mobile").length > 0) {
 		});
 	})();
 }
-$(window).on("orientationchange",function(event){
-	if (closeSearchFilter) {
-		closeSearchFilter();
-	}
-});
+
 
 /*
  * Main menu in mobile
@@ -2924,6 +2920,21 @@ function findLocation(locations, location) {
 
 })();
 
+$(window).on("orientationchange", function(event){
+	if (closeSearchFilter) {
+		closeSearchFilter();
+	}
+	var chosenPlugins = $(".chzn-done");
+
+	if (chosenPlugins.length > 0) {
+		for (var i = 0; i < chosenPlugins.length; i++) {
+			var chosen = $(chosenPlugins[i]);
+			chosen.removeClass("chzn-done");
+			chosen.next().remove();
+			chosen.loadChosen();
+		}
+	}
+});
 
 $(window).on('resize', function () {
 
