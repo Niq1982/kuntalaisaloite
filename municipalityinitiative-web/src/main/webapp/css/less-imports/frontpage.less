@@ -21,7 +21,10 @@
     width: 40%;
     float: left;
 }
-
+.arrow-icon{
+    background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -225px -115px no-repeat;
+    background: url("@{imagesPath}/front-icons.svg?version=${timestamp}"), none;
+}
 
 // Frontpage
 .image-container {
@@ -225,8 +228,7 @@
             display: inline-block;
             height: 29px;
 
-            background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -192px -78px no-repeat;
-            background: url("@{imagesPath}/front-icons.svg?version=${timestamp}");
+            .arrow-icon();
             background-size: 120px;
             text-decoration: underline;
             width: 35px;
@@ -236,8 +238,7 @@
 
             @media @big-mobile {
 
-                background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -225px -115px no-repeat;
-                background: url("@{imagesPath}/front-icons.svg?version=${timestamp}");
+                .arrow-icon();
                 height: 46px;
                 width: 42px;
                 background-size: 140px;
@@ -288,8 +289,7 @@
             width: 29px;
             height: 29px;
 
-            background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -192px -96px no-repeat;
-            background: url("@{imagesPath}/front-icons.svg?version=${timestamp}");
+            .arrow-icon();
             background-size: 120px;
         }
     }
