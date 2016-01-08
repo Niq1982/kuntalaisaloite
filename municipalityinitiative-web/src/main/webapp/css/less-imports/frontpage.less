@@ -224,19 +224,25 @@
 
             display: inline-block;
             height: 29px;
+
             background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -192px -78px no-repeat;
-            background-position-x: 100%;
+            background: url("@{imagesPath}/front-icons.svg?version=${timestamp}");
+            background-size: 120px;
             text-decoration: underline;
             width: 35px;
             font-style: italic;
-            background-size: 190px;
             vertical-align: top;
+            margin-left: 0.2em;
 
             @media @big-mobile {
+
                 background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -225px -115px no-repeat;
+                background: url("@{imagesPath}/front-icons.svg?version=${timestamp}");
                 height: 46px;
-                width: 52px;
-                background-size: 280px;
+                width: 42px;
+                background-size: 140px;
+                margin-left: 0.2em;
+                margin-top: 0.2em;
             }
         }
     }
@@ -281,7 +287,10 @@
             display: inline-block;
             width: 29px;
             height: 29px;
+
             background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -192px -96px no-repeat;
+            background: url("@{imagesPath}/front-icons.svg?version=${timestamp}");
+            background-size: 120px;
         }
     }
 
