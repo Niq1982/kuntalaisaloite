@@ -2926,14 +2926,14 @@ $(window).on("orientationchange", function(event){
 	}
 	var chosenPlugins = $(".chzn-done");
 
-	if (chosenPlugins.length > 0) {
+	/*if (chosenPlugins.length > 0) {
 		for (var i = 0; i < chosenPlugins.length; i++) {
 			var chosen = $(chosenPlugins[i]);
 			chosen.removeClass("chzn-done");
 			chosen.next().remove();
 			chosen.loadChosen();
 		}
-	}
+	}*/
 });
 
 $(window).on('resize', function () {
