@@ -16,11 +16,14 @@ and <a href="http://en.wikipedia.org/wiki/JSONP">JSONP</a> formats.</p>
 Id of an initiative is an URI of initiative details in <a href="http://www.json.org/">JSON</a> format.</p>
 
 <p>Parameters <tt>${UrlConstants.JSON_OFFSET}</tt> and <tt>${UrlConstants.JSON_LIMIT}</tt> may be used to restrict the results. ${UrlConstants.DEFAULT_INITIATIVE_JSON_RESULT_COUNT} initiatives will be returned by default. Maximum amount of initiatives to return is ${UrlConstants.MAX_INITIATIVE_JSON_RESULT_COUNT}.
-
+<tt>
 <p>Results might be ordered with parameter <tt>${UrlConstants.JSON_ORDER_BY}</tt>. Possible values are
     <#list orderByValues as o>
     ${o}<#if orderByValues?size - 2 = o_index>  and<#elseif o_has_next>,<#elseif orderByValues?size - 1 = o_index>.</#if>
     </#list>
+</p>
+
+</tt>
 
 <p>If <tt>${UrlConstants.JSON_MUNICIPALITY}</tt> parameter is given, only initiatives for given municipality id are returned. </p>
 
