@@ -116,14 +116,16 @@
             <#else>
                 <@u.message "follow.text" />
             </#if>
-            <form action="${springMacroRequestContext.requestUri}?formError=follow" method="POST">
+            <form action="${springMacroRequestContext.requestUri}?formError=follow" id="follow-form" method="POST">
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
 
                 <div class="input-block-content">
                     <@f.textField path="followInitiative.participantEmail" required="" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
                 </div>
-                <button id="participate" type="submit"  value="true" name="action-follow" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
-                <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+                <div class="input-block-content">
+                    <button id="participate" type="submit"  value="true" name="action-follow" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
+                    <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+                </div>
             </form>
         </@compress>
     </#assign>
@@ -250,7 +252,7 @@
 
     </div>
     <#assign canFollow = ( initiative.state == InitiativeState.PUBLISHED && !initiative.decisionDate.present && followEnabled) />
-    <#assign showFollowForm = canFollow && (RequestParameters['formError']?? && RequestParameters['formError'] == "follow") />
+    <#assign showFollowForm = canFollow && ((RequestParameters['formError']?? && RequestParameters['formError'] == "follow") || (RequestParameters['follow']?? && RequestParameters['follow'] == "true"))/>
 
     <#if initiative.state == InitiativeState.PUBLISHED>
         <div id="participants" class="view-block public participants">
@@ -274,15 +276,22 @@
 
 
 
-            <div class="initiative-content-row no-bottom-margin">
-                <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
-            </div>
+        <div class="initiative-content-row no-bottom-margin">
+            <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
+        </div>
 
-            <#if canFollow>
-                <div class="initiative-content-row last">
-                    <@e.follow />
-                </div>
-            </#if>
+        <#if canFollow>
+            <div class="initiative-content-row last">
+                <@e.follow />
+            </div>
+            <#noescape><noscript>
+                <#if showFollowForm>
+                    <div id="follow-form" class="form-container cf top-margin">
+                        ${followInitiativeFormHTML!""}
+                    </div>
+                </#if>
+            </noscript></#noescape>
+        </#if>
 
         </div>
     </#if>

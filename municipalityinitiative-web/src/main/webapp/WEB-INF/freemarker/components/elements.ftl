@@ -485,7 +485,7 @@
         <#assign tooltipTitle>followInitiative.tooltip</#assign>
     </#if>
     <p class="noprint">
-        <a class="js-follow trigger-tooltip" title="<@u.message tooltipTitle />">
+        <a class="js-follow trigger-tooltip"  href="?follow=true#follow-form" title="<@u.message tooltipTitle />">
             <span class="icon-small icon-16 envelope margin-right"></span>
             <@u.message "action.follow" />
         </a>
