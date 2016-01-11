@@ -56,6 +56,7 @@ public class ApiController extends BaseController {
         json = jsonConverter.getObjectMapper().writeValueAsString(Collections.singletonList(TAMPERE));
         model.addAttribute("municipalities", JsonStringParser.toParts(json));
 
+        model.addAttribute("orderByValues", InitiativeSearch.OrderBy.values());
 
         return Views.API_VIEW;
     }
@@ -64,7 +65,8 @@ public class ApiController extends BaseController {
     public @ResponseBody
     List<InitiativeListJson> initiativeList(@RequestParam(value = JSON_OFFSET, required = false) Integer offset,
                                             @RequestParam(value = JSON_LIMIT, required = false) Integer givenLimit,
-                                            @RequestParam(value = JSON_MUNICIPALITY, required = false) Long municipality) {
+                                            @RequestParam(value = JSON_MUNICIPALITY, required = false) Long municipality,
+                                            @RequestParam(value = JSON_ORDER_BY, required = false) InitiativeSearch.OrderBy orderBy) {
 
         int limit = Optional.fromNullable(givenLimit).or(DEFAULT_INITIATIVE_JSON_RESULT_COUNT);
 
@@ -78,6 +80,9 @@ public class ApiController extends BaseController {
         if (municipality != null) {
             search.setMunicipalities(municipality);
         }
+        if (orderBy != null) {
+            search.setOrderBy(orderBy);
+        }
         return jsonDataService.findJsonInitiatives(search);
     }
 
@@ -85,8 +90,9 @@ public class ApiController extends BaseController {
     public @ResponseBody JsonpObject<List<InitiativeListJson>> initiativeListJsonp(@RequestParam(JSONP_CALLBACK) String callback,
                                                                                    @RequestParam(value = JSON_OFFSET, required = false) Integer offset,
                                                                                    @RequestParam(value = JSON_LIMIT, required = false) Integer limit,
-                                                                                   @RequestParam(value = JSON_MUNICIPALITY, required = false) Long municipality) {
-        return new JsonpObject<>(callback, initiativeList(offset, limit, municipality));
+                                                                                   @RequestParam(value = JSON_MUNICIPALITY, required = false) Long municipality,
+                                                                                   @RequestParam(value = JSON_ORDER_BY, required = false) InitiativeSearch.OrderBy orderBy) {
+        return new JsonpObject<>(callback, initiativeList(offset, limit, municipality, orderBy));
     }
 
     @RequestMapping(value=INITIATIVE, method=GET, produces=JSON)
