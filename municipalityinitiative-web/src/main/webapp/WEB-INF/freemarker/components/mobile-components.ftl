@@ -70,7 +70,7 @@
         <div class="mobile-image image-${imageNumber}-2" ></div>
         <div class="mobile-image image-${imageNumber}-3" ></div>
         <div class="mobile-big-link-container">
-            <span class="front-page-links-mobile"><@u.message "front.bigLink.Mobile1" /><br/><strong><@u.message "front.bigLink.Mobile2" /></strong><span class="arrow"></span></span>
+            <span class="front-page-links-mobile"><span class="own-line"><@u.message "front.bigLink.Mobile1" /></span><span class="own-line"><@u.message "front.bigLink.Mobile2" /></span><strong><@u.message "front.bigLink.Mobile3" /></strong><span class="arrow"></span></span>
         </div>
         <#if requestMessages?? && (requestMessages?size > 0)>
         <@u.frontpageRequestMessage requestMessages />
