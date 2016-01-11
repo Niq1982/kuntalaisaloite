@@ -1073,7 +1073,7 @@ public class JdbcInitiativeDaoTest {
 
         assertThat(initiative.getVideoUrl().isPresent(), is(true));
         assertThat(initiative.getVideoUrl().getValue(), is(VIDEO_URL));
-        assertThat(initiative.getVideoUrlName().getValue(), is(VIDEONAME));
+
 
     }
     @Test
@@ -1087,23 +1087,11 @@ public class JdbcInitiativeDaoTest {
         Initiative initiative = initiativeDao.get(withVideo);
         assertThat(initiative.getVideoUrl().isPresent(), is(true));
         assertThat(initiative.getVideoUrl().getValue(), is(VIDEO_URL));
-        assertThat(initiative.getVideoUrlName().getValue(), is(VIDEONAME));
+
 
     }
 
-    @Test
-    public void can_remove_video_to_initiative() {
-        Long withVideo = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
 
-        //initiativeDao.addVideoUrl(VIDEO_URL, VIDEONAME, withVideo);
-
-        initiativeDao.removeVideoUrl(withVideo);
-
-        Initiative initiative = initiativeDao.get(withVideo);
-        assertThat(initiative.getVideoUrl().isPresent(), is(false));
-        assertThat(initiative.getVideoUrlName().isPresent(), is(false));
-
-    }
 
     private void createPublicInitiativesOfAllType() {
         for (InitiativeType initiativeType : InitiativeType.values()) {

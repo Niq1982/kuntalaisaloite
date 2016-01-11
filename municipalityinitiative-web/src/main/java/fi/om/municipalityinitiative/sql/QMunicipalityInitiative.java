@@ -1,14 +1,16 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
-import com.mysema.query.types.path.*;
-
-import com.mysema.query.types.PathMetadata;
-import javax.annotation.Generated;
-import com.mysema.query.types.Path;
-
 import com.mysema.query.sql.ColumnMetadata;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
+import com.mysema.query.types.path.DateTimePath;
+import com.mysema.query.types.path.EnumPath;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.StringPath;
+
+import javax.annotation.Generated;
+
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -64,8 +66,6 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
     public final StringPath supportCountData = createString("supportCountData");
 
     public final EnumPath<fi.om.municipalityinitiative.util.InitiativeType> type = createEnum("type", fi.om.municipalityinitiative.util.InitiativeType.class);
-
-    public final StringPath videoName = createString("videoName");
 
     public final StringPath videoUrl = createString("videoUrl");
 
@@ -141,7 +141,6 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
         addMetadata(stateTimestamp, ColumnMetadata.named("state_timestamp").ofType(93).withSize(29).withDigits(6).notNull());
         addMetadata(supportCountData, ColumnMetadata.named("support_count_data").ofType(12).withSize(2147483647));
         addMetadata(type, ColumnMetadata.named("type").ofType(1111).withSize(2147483647).notNull());
-        addMetadata(videoName, ColumnMetadata.named("video_name").ofType(12).withSize(2147483647));
         addMetadata(videoUrl, ColumnMetadata.named("video_url").ofType(12).withSize(2147483647));
         addMetadata(youthInitiativeId, ColumnMetadata.named("youth_initiative_id").ofType(-5).withSize(19));
     }

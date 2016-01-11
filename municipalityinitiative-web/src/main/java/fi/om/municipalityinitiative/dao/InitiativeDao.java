@@ -78,5 +78,4 @@ public interface InitiativeDao {
 
     void addVideoUrl(String url, Long initiativeId);
 
-    void removeVideoUrl(Long initiativeId);
 }

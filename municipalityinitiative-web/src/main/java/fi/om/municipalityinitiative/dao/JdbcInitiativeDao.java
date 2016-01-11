@@ -121,10 +121,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     if (videoUrl != null) {
                         info.setVideoUrl(videoUrl);
                     }
-                    String videoName = row.get(municipalityInitiative.videoName);
-                    if (videoName != null) {
-                        info.setVideoUrlName(videoName);
-                    }
+
                     return info;
                 }
             };
@@ -627,14 +624,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .execute();
     }
 
-    @Override
-    public void removeVideoUrl(Long initiativeId) {
-        queryFactory.update(municipalityInitiative)
-                .setNull(municipalityInitiative.videoName)
-                .setNull(municipalityInitiative.videoUrl)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .execute();
-    }
+
 
 
     public static void assertSingleAffection(long affectedRows) {

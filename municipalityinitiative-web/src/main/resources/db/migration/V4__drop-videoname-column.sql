@@ -1,0 +1,1 @@
+ALTER TABLE municipality_initiative DROP column video_name;

@@ -36,7 +36,7 @@ public class Initiative {
     private Maybe<DateTime> decisionDate = Maybe.absent();
     private Maybe<DateTime> decisionModifiedDate = Maybe.absent();
     private Maybe<String> videoUrl = Maybe.absent();
-    private Maybe<String> videoUrlName = Maybe.absent();
+
 
     public Maybe<Long> getYouthInitiativeId() {
         return youthInitiativeId;
@@ -230,11 +230,4 @@ public class Initiative {
         return videoUrl;
     }
 
-    public Maybe<String> getVideoUrlName() {
-        return videoUrlName;
-    }
-
-    public void setVideoUrlName(String videoName) {
-        this.videoUrlName = Maybe.of(videoName);
-    }
 }
