@@ -49,7 +49,7 @@
     </div>
 
     <div class="editor-buttons bootstrap-icons edit-mode hidden js-hide">
-        <a class="btn btn-success js-wysihtml5-save js-submit" data-form="wysihtml5-form" href="#"><i class="icon-ok icon-white"></i>&nbsp;&nbsp;<@u.message "editor.save-draft" /></a>
+        <a class="btn btn-success js-wysihtml5-save js-submit" data-form="wysihtml5-form" href="${urls.helpEdit(helpPage)}"><i class="icon-ok icon-white"></i>&nbsp;&nbsp;<@u.message "editor.save-draft" /></a>
         <a class="btn" href="${springMacroRequestContext.requestUri}"><@u.message "editor.cancel-edit" /></a>
     </div>
 
