@@ -112,7 +112,7 @@
         <@helpNavigation />
         <@helpNavigationMobile />
 
-        <#if omUser>
+        <#if omUser && helpPage!= "">
             <div class="editor-buttons bootstrap-icons hidden">
                 <a href="${urls.helpEdit(helpPage)}" class="btn" href="#"><@u.message "editor.switchToEdit" />&nbsp;&nbsp;<i class="icon-chevron-right"></i></a>
             </div>
