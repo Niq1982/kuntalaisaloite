@@ -11,6 +11,9 @@
 
 <#if superSearchEnabled?? && superSearchEnabled>
 	<style>
+		body.superSearchOpen {
+			overflow: hidden;
+		}
 		#searchIframe {
 			width: 100%;
 			border: none;
@@ -29,12 +32,18 @@
 	</style>
 
 	<script type="text/javascript">
+		var initialHeight = 45;
 
 		window.onmessage = function(e){
             if (e.origin === "${urls.superSearchIFrameOrigin()}") {
                 var newHeight = e.data;
 				if (newHeight) {
 					$("#searchIframe").height(newHeight);
+				}
+				if( $("#searchIframe").height() > initialHeight) {
+					$("body").addClass("superSearchOpen");
+                } else {
+                    $("body").removeClass("superSearchOpen")
 				}
 			}
 		};
