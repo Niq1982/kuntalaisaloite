@@ -2926,14 +2926,18 @@ $(window).on("orientationchange", function(event){
 	}
 	var chosenPlugins = $(".chzn-done");
 
-	/*if (chosenPlugins.length > 0) {
-		for (var i = 0; i < chosenPlugins.length; i++) {
-			var chosen = $(chosenPlugins[i]);
-			chosen.removeClass("chzn-done");
-			chosen.next().remove();
-			chosen.loadChosen();
-		}
-	}*/
+	var chosenContainer = $(".chzn-container");
+	if (chosenContainer.length > 0) {
+		chosenContainer.width("100%");
+		chosenContainer.find("*").each(function() {
+			console.log(this);
+			//Dont resize the logo
+			if (!$(this).is("b") && !$(this).children("b").length > 0) {
+				$(this).css({width: "100%",  "box-sizing" : "border-box"});
+			}
+
+		});
+	}
 });
 
 $(window).on('resize', function () {
