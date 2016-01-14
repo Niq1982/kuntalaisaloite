@@ -671,4 +671,35 @@ h3 {
         }
     }
 }
+@filtersWidth : 100%;
+@filtersHeight : 100%;
 
+@media @mobile {
+    body.searchFiltersOpen {
+        #wrapper {
+            height: @filtersHeight;
+        }
+        #content {
+            height: @filtersHeight;
+            padding-bottom: 0;
+        }
+        .container {
+            height: @filtersHeight;
+        }
+        .search-results {
+            display: none;
+        }
+        .om-footer {
+            display: none;
+        }
+        .pagination.bottom {
+            display: none;
+        }
+        .chzn-container-multi {
+            width: @filtersWidth;
+        }
+        .chzn-drop {
+            width: @filtersWidth;
+        }
+    }
+}
