@@ -43,7 +43,7 @@ public class VideoService {
                 return YOUTUBE_BASE_URL + htmlEscape(getYouTubeVideoId(url.toString()));
 
             case YOUTUBE_SHORT:
-                return VIMEO_BASE_URL + htmlEscape(getYouTubeVideoIdFromShort(url.getPath()));
+                return YOUTUBE_BASE_URL + htmlEscape(getYouTubeVideoIdFromShort(url.getPath()));
 
             case VIMEO:
                 return VIMEO_BASE_URL + htmlEscape(getVidemoId(url.getPath()));
