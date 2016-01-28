@@ -1,5 +1,7 @@
 <#import "utils.ftl" as u />
 
+<!-- Demo-kommentti ->
+
 <script type="text/javascript">
 	<#if superSearchEnabled?? && superSearchEnabled>
 		var showSuperSearch = true;
