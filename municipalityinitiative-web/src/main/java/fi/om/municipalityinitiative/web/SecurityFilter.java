@@ -59,8 +59,6 @@ public class SecurityFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        log.info("REQ: " + request.getRequestURI() + "?" + request.getQueryString());
-
         setNoCache(response);
 
         try {
