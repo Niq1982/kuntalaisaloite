@@ -2,6 +2,7 @@
 *.orig
 .idea/*
 /municipalityinitiative-loadtests/*.log
+/municipalityinitiative-web/logs/
 /municipalityinitiative-loadtests/*.pyc
 /municipalityinitiative-loadtests/results/*.jtl
 /municipalityinitiative-web/.classpath
@@ -14,6 +15,9 @@
 /municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite-ie.css
 /municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite-ie.min.css
 /municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite-iframe.css
+/municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite-graph-iframe.css 
+/municipalityinitiative-web/src/main/webapp/css/style-graph-iframe.css
+/municipalityinitiative-web/src/main/webapp/css/style-graph-iframe.min.css 
 /municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite.css
 /municipalityinitiative-web/src/main/webapp/css/print.css
 /municipalityinitiative-web/src/main/webapp/css/style-iframe.css
