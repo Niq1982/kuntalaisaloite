@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -136,7 +135,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
 
 
-        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
 
         emailService.sendSingleToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
@@ -167,7 +166,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         testHelper.addVideo(initiativeId(), "randomString", "randomString");
 
-        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
 
         emailService.sendSingleToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
@@ -276,7 +275,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         testHelper.addAttachment(initiativeId(), "accepted", true, "jpg");
         testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
 
-        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
 
         emailService.sendCollaborativeToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
@@ -304,7 +303,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         testHelper.addVideo(initiativeId(), "randomString", "randomString");
 
-        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
 
         emailService.sendCollaborativeToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
@@ -320,7 +319,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         testHelper.addAttachment(initiativeId(), "accepted", true, "jpg");
         testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
 
-        municipalityUserDao.createMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
 
         emailService.sendCollaborativeToAuthors(initiativeId());
 

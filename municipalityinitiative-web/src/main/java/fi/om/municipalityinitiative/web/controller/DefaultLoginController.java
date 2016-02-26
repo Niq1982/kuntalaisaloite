@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.base.Strings;
+import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -63,7 +64,7 @@ public class DefaultLoginController extends BaseLoginController {
 
     @RequestMapping(value =  {LOGIN_FI, LOGIN_SV}, method = RequestMethod.GET, params = PARAM_MANAGEMENT_CODE)
     public String authorLoginGet(@RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
-                                 Model model, Locale locale, HttpServletRequest request) {
+                                 Model model, Locale locale) {
         model.addAttribute("managementHash", managementHash);
         model.addAttribute(ALT_URI_ATTR, Urls.get(locale).alt().loginAuthor(managementHash));
         return SINGLE_LOGIN_VIEW;
@@ -78,8 +79,8 @@ public class DefaultLoginController extends BaseLoginController {
     }
 
     @RequestMapping(value={LOGOUT_FI, LOGOUT_SV}, method=GET)
-    public String logout(@RequestParam(required = false) String target, Locale locale, HttpServletRequest request, HttpServletResponse response) {
-        userService.logout(request);
+    public String logout(@RequestParam(required = false) String target, Locale locale, HttpServletRequest request) {
+        UserService.logout(request);
         Urls urls = Urls.get(locale);
         if (target != null) {
             target = getValidLoginTarget(target, urls);
@@ -92,7 +93,6 @@ public class DefaultLoginController extends BaseLoginController {
     @RequestMapping(value = {MUNICIPALITY_LOGIN_FI, MUNICIPALITY_LOGIN_SV}, method = RequestMethod.GET, params = PARAM_MANAGEMENT_CODE)
     public RedirectView municipalityLoginPost(@RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                               Model model, Locale locale, HttpServletRequest request) {
-        // TODO write tests
         Long initiativeId = userService.municipalityUserLogin(managementHash, request);
         return new RedirectView(Urls.get(locale).getMunicipalityDecisionView(initiativeId), false, true, false);
     }

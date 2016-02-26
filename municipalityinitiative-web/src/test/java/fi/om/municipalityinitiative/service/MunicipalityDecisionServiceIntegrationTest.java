@@ -18,6 +18,7 @@ import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.apache.commons.io.FileUtils;
 import org.aspectj.util.FileUtil;
 import org.joda.time.DateTime;
@@ -43,9 +44,6 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
     @Resource
     protected MunicipalityDecisionService municipalityDecisionService;
-
-    @Resource
-    protected MunicipalityUserService municipalityUserService;
 
     @Resource
     private NormalInitiativeService normalInitiativeService;
@@ -349,24 +347,6 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
         }
     }
 
-
-    @Test
-    @Transactional
-    public void renew_municipality_management_hash() {
-        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
-
-        municipalityUserService.createMunicipalityUser(initiativeId);
-
-        String oldHash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(initiativeId);
-
-        OmLoginUserHolder omLoginUserHolder = new OmLoginUserHolder(User.omUser("om user"));
-
-        municipalityUserService.renewManagementHash(omLoginUserHolder, initiativeId, new Locale("fi"));
-
-        String newHash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(initiativeId);
-
-        assertThat(oldHash, not(newHash));
-    }
 
     @Test
     @Transactional

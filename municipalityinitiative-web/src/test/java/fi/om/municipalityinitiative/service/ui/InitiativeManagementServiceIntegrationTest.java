@@ -13,7 +13,6 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidVideoUrlException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
-import fi.om.municipalityinitiative.service.MunicipalityUserService;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
@@ -44,9 +43,6 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     public static final String VALID_VIDEO_URL = "https://www.youtube.com/watch?v=P4W1VSb-dGU";
     @Resource
     InitiativeManagementService service;
-
-    @Resource
-    MunicipalityUserService municipalityUserService;
 
     @Resource
     MunicipalityUserDao municipalityUserDao;

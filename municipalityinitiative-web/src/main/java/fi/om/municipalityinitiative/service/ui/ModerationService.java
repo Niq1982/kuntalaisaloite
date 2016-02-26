@@ -10,7 +10,6 @@ import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
-import fi.om.municipalityinitiative.service.MunicipalityUserService;
 import fi.om.municipalityinitiative.service.YouthInitiativeWebServiceNotifier;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
@@ -49,7 +48,7 @@ public class ModerationService {
     YouthInitiativeWebServiceNotifier youthInitiativeWebServiceNotifier;
 
     @Resource
-    MunicipalityUserService municipalityUserService;
+    MunicipalityUserDao municipalityUserDao;
 
     @Transactional(readOnly = false)
     public void accept(OmLoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment, Locale locale) {
@@ -93,7 +92,7 @@ public class ModerationService {
 
     private void sendSingleToMunicipality(Locale locale, Initiative initiative) {
         initiativeDao.markInitiativeAsSent(initiative.getId());
-        municipalityUserService.createMunicipalityUser(initiative.getId());
+        municipalityUserDao.assignMunicipalityUser(initiative.getId(), RandomHashGenerator.longHash());
 
         emailService.sendStatusEmail(initiative.getId(), EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
         emailService.sendSingleToMunicipality(initiative.getId(), locale);
@@ -188,5 +187,21 @@ public class ModerationService {
     public void addComment(OmLoginUserHolder requiredOmLoginUserHolder, Long initiativeId, String comment) {
         requiredOmLoginUserHolder.assertOmUser();
         reviewHistoryDao.addReviewComment(initiativeId, requiredOmLoginUserHolder.getUser().getName() + ": " + comment);
+    }
+
+    @Transactional(readOnly = false)
+    public void renewMunicipalityManagementHash(OmLoginUserHolder omLoginUserHolder, Long initiativeId, Locale locale) {
+        omLoginUserHolder.assertOmUser();
+        municipalityUserDao.assignMunicipalityUser(initiativeId, RandomHashGenerator.longHash());
+        sendRenewedHashToMunicipality(initiativeId, locale);
+    }
+
+    private void sendRenewedHashToMunicipality(Long initiativeId, Locale locale) {
+        Initiative initiative = initiativeDao.get(initiativeId);
+        if (initiative.getType().isCollaborative()) {
+            emailService.sendCollaborativeToMunicipality(initiativeId, locale);
+        } else{
+            emailService.sendSingleToMunicipality(initiativeId, locale);
+        }
     }
 }

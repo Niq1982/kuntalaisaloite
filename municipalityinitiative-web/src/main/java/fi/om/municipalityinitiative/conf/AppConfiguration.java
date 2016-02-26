@@ -227,11 +227,6 @@ public class AppConfiguration {
     }
 
     @Bean
-    public MunicipalityUserService municipalityUserService() {
-        return new MunicipalityUserService();
-    }
-
-    @Bean
     public ParticipantService participantService() {
         return new ParticipantService();
     }

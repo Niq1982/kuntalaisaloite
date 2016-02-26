@@ -12,7 +12,11 @@ public class JdbcMunicipalityUserDao implements MunicipalityUserDao {
     PostgresQueryFactory queryFactory;
 
     @Override
-    public Long createMunicipalityUser(Long initiativeId, String managementHash) {
+    public Long assignMunicipalityUser(Long initiativeId, String managementHash) {
+        queryFactory.delete(QMunicipalityUser.municipalityUser)
+                .where(QMunicipalityUser.municipalityUser.initiativeId.eq(initiativeId))
+                .execute();
+
         return queryFactory.insert(QMunicipalityUser.municipalityUser)
                 .set(QMunicipalityUser.municipalityUser.initiativeId, initiativeId)
                 .set(QMunicipalityUser.municipalityUser.managementHash, managementHash)
@@ -20,26 +24,17 @@ public class JdbcMunicipalityUserDao implements MunicipalityUserDao {
     }
 
     @Override
-    public void removeMunicipalityUser(Long initiativeId) {
-        queryFactory.delete(QMunicipalityUser.municipalityUser)
-                .where(QMunicipalityUser.municipalityUser.initiativeId.eq(initiativeId))
-                .execute();
-    }
-
-    @Override
     public Long getInitiativeId(String managementHash) {
-        Long initiativeId = queryFactory.from(QMunicipalityUser.municipalityUser)
+        return queryFactory.from(QMunicipalityUser.municipalityUser)
                 .where(QMunicipalityUser.municipalityUser.managementHash.eq(managementHash))
                 .uniqueResult(QMunicipalityUser.municipalityUser.initiativeId);
-        return initiativeId;
     }
 
     @Override
     public String getMunicipalityUserHashAttachedToInitiative(Long initiativeId) {
-        String hash =  queryFactory.from(QMunicipalityUser.municipalityUser)
+
+        return queryFactory.from(QMunicipalityUser.municipalityUser)
                 .where(QMunicipalityUser.municipalityUser.initiativeId.eq(initiativeId))
                 .uniqueResult(QMunicipalityUser.municipalityUser.managementHash);
-
-        return hash;
     }
 }

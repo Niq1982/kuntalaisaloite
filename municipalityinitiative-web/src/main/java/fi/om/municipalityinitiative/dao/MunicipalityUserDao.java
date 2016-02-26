@@ -3,9 +3,7 @@ package fi.om.municipalityinitiative.dao;
 
 public interface MunicipalityUserDao {
 
-    Long createMunicipalityUser(Long initiativeId, String managementHash);
-
-    void removeMunicipalityUser(Long initiativeId);
+    Long assignMunicipalityUser(Long initiativeId, String managementHash);
 
     Long getInitiativeId(String managementHash);
 

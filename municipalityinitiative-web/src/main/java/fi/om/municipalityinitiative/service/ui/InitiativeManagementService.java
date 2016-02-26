@@ -14,7 +14,6 @@ import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.InvalidVideoUrlException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
-import fi.om.municipalityinitiative.service.MunicipalityUserService;
 import fi.om.municipalityinitiative.service.VideoService;
 import fi.om.municipalityinitiative.service.YouthInitiativeWebServiceNotifier;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
@@ -57,7 +56,7 @@ public class InitiativeManagementService {
     private YouthInitiativeWebServiceNotifier youthInitiativeWebServiceNotifier;
 
     @Resource
-    private MunicipalityUserService municipalityUserService;
+    private MunicipalityUserDao municipalityUserDao;
 
     @Resource
     private VideoService videoService;
@@ -261,7 +260,7 @@ public class InitiativeManagementService {
 
         initiativeDao.markInitiativeAsSent(initiativeId);
         initiativeDao.updateSentComment(initiativeId, sentComment);
-        municipalityUserService.createMunicipalityUser(initiativeId);
+        municipalityUserDao.assignMunicipalityUser(initiativeId, RandomHashGenerator.longHash());
 
         if (!initiative.getType().isCollaborative()) {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);

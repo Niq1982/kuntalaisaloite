@@ -1,15 +1,11 @@
 package fi.om.municipalityinitiative.service.ui;
 
-import fi.om.municipalityinitiative.dao.AttachmentDao;
-import fi.om.municipalityinitiative.dao.AuthorDao;
-import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dao.ReviewHistoryDao;
+import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
-import fi.om.municipalityinitiative.service.MunicipalityUserService;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.util.FixState;
@@ -42,7 +38,7 @@ public class ModerationServiceTest {
 
     private ReviewHistoryDao reviewHistoryDaoMock;
 
-    private MunicipalityUserService municipalityUserService;
+    private MunicipalityUserDao municipalityUserDao;
 
     @Before
     public void setup() throws Exception {
@@ -60,8 +56,8 @@ public class ModerationServiceTest {
         reviewHistoryDaoMock = mock(ReviewHistoryDao.class);
         moderationService.reviewHistoryDao = reviewHistoryDaoMock;
 
-        municipalityUserService = mock(MunicipalityUserService.class);
-        moderationService.municipalityUserService = municipalityUserService;
+        municipalityUserDao = mock(MunicipalityUserDao.class);
+        moderationService.municipalityUserDao = municipalityUserDao;
 
         stub(authorDaoMock.findNormalAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
 
@@ -197,7 +193,7 @@ public class ModerationServiceTest {
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
-        verify(municipalityUserService).createMunicipalityUser(initiative.getId());
+        verify(municipalityUserDao).assignMunicipalityUser(eq(initiative.getId()), any(String.class));
     }
 
     @Test
@@ -208,7 +204,7 @@ public class ModerationServiceTest {
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
-        verify(municipalityUserService, never()).createMunicipalityUser(initiative.getId());
+        verify(municipalityUserDao, never()).assignMunicipalityUser(eq(initiative.getId()), any(String.class));
     }
 
     @Test(expected = OperationNotAllowedException.class)
