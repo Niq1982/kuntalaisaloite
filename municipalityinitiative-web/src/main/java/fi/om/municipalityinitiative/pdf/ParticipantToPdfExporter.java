@@ -125,12 +125,6 @@ public class ParticipantToPdfExporter {
             document.add(lastPage);
         }
     }
-    /*
-     * iText License:
-     * - http://itextpdf.com/terms-of-use/agpl.php
-     * - In accordance with Section 7(b) of the GNU Affero General Public License,
-     *   you must retain the producer line in every PDF that is created or manipulated using iText.
-     */
 
     // iText allows to add metadata to the PDF which can be viewed in your Adobe
     // Reader
