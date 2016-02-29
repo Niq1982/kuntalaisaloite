@@ -11,7 +11,8 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.util.Membership;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
+import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
 import org.junit.Test;
@@ -142,7 +143,7 @@ public class YouthInitiativeServiceTest {
 
         YouthInitiativeService.YouthInitiativeCreateResult result = youthInitiativeService.prepareYouthInitiative(editDto);
 
-        assertThat(result.getManagementLink(), is(Urls.FI.loginAuthor(RandomHashGenerator.getPrevious())));
+        assertThat(result.getManagementLink(), is(Urls.FI.loginAuthor(PreviousHashGetter.get())));
 
         EmailDto sentEmail = testHelper.getSingleQueuedEmail();
 
@@ -160,7 +161,7 @@ public class YouthInitiativeServiceTest {
 
         YouthInitiativeService.YouthInitiativeCreateResult result = youthInitiativeService.prepareYouthInitiative(editDto);
 
-        assertThat(result.getManagementLink(), is(Urls.SV.loginAuthor(RandomHashGenerator.getPrevious())));
+        assertThat(result.getManagementLink(), is(Urls.SV.loginAuthor(PreviousHashGetter.get())));
 
         EmailDto sentEmail = testHelper.getSingleQueuedEmail();
         assertThat(sentEmail.getSubject(), is("Du har fått en länk för att skapa ett initiativ i webbtjänsten Invånarinitiativ.fi"));

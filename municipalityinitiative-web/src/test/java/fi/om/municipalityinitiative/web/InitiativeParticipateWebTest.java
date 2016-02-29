@@ -4,7 +4,8 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
+import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -81,7 +82,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
        
         assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a"), isNotPresent());
         
-        open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
+        open(urls.confirmParticipant(testHelper.getLastParticipantId(), PreviousHashGetter.get()));
         
         assertTextContainedByClass("public-names", "1 nimi julkaistu palvelussa");
 
@@ -98,7 +99,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         open(urls.confirmParticipant(participantId, "asdasd")); // Invalid confirmationCode
         assertParticipationLinkInvalidPage();
 
-        open(urls.confirmParticipant(participantId, RandomHashGenerator.getPrevious()));
+        open(urls.confirmParticipant(participantId, PreviousHashGetter.get()));
         assertSuccessMessage("Osallistumisesi aloitteeseen on nyt vahvistettu");
     }
 
@@ -214,7 +215,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a"), isNotPresent());
 
-        open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
+        open(urls.confirmParticipant(testHelper.getLastParticipantId(), PreviousHashGetter.get()));
 
         assertTextContainedByClass("private-names", "1 nimi ei julkaistu palvelussa");
     }
@@ -246,7 +247,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         assertSuccessMessage("Linkki yhteydenottopyynnön vahvistamiseen on lähetetty sähköpostiisi");
 
-        open(urls.confirmAuthorMessage(RandomHashGenerator.getPrevious()));
+        open(urls.confirmAuthorMessage(PreviousHashGetter.get()));
 
         assertSuccessMessage("Viesti on nyt lähetetty vastuuhenkilöille");
 

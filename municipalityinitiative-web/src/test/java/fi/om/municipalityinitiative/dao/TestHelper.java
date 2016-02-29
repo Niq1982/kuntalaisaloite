@@ -20,6 +20,7 @@ import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.hamcrest.core.Is;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;

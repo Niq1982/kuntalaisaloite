@@ -7,7 +7,7 @@ import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.YouthInitiativeWebServiceNotifier;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.TestDataTemplates;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.context.annotation.Profile;
@@ -99,7 +99,7 @@ public class TestDataController extends BaseController {
             }
         }
 
-        addRequestAttribute(Urls.get(locale).loginAuthor(RandomHashGenerator.getPrevious()), request);
+        addRequestAttribute(Urls.get(locale).loginAuthor(testDataService.getPreviousHash().or("????")), request);
         return contextRelativeRedirect(urls.testDataGeneration());
     }
 

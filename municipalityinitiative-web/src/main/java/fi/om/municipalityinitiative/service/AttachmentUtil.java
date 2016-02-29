@@ -10,7 +10,7 @@ import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.util.ImageModifier;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.aspectj.util.FileUtil;
 import org.im4java.core.IM4JavaException;
 import org.springframework.web.multipart.MultipartFile;

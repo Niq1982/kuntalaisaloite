@@ -12,7 +12,8 @@ import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
+import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
@@ -264,7 +265,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         Long participantId = participantService.createParticipant(participantUICreateDto(), initiativeId, null);
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), Matchers.is(originalParticipantCount));
 
-        participantService.confirmParticipation(participantId, RandomHashGenerator.getPrevious());
+        participantService.confirmParticipation(participantId, PreviousHashGetter.get());
         assertThat(getSingleInitiativeInfo().getParticipantCount(), Matchers.is(originalParticipantCount + 1));
 
         assertUniqueSentEmail(participantUICreateDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PARTICIPATION_CONFIRMATION_SUBJECT);

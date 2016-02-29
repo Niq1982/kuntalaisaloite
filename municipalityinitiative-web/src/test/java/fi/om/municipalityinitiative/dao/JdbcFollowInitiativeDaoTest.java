@@ -4,7 +4,7 @@ package fi.om.municipalityinitiative.dao;
 import com.mysema.query.QueryException;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

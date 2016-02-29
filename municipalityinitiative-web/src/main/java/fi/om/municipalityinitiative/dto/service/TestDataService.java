@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dto.service;
 
+import com.google.common.base.Optional;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
@@ -15,6 +16,7 @@ import fi.om.municipalityinitiative.service.YouthInitiativeService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,8 +42,16 @@ public class TestDataService {
 
     private static final Random randomizer = new Random();
 
+    private Optional<String> previousHash;
+
+    public Optional<String> getPreviousHash() {
+        return previousHash;
+    }
+
     @Transactional(readOnly = false)
     public Long createTestMunicipalityInitiative(TestDataTemplates.InitiativeTemplate template, LoginUserHolder<User> loginUserHolder) {
+
+        this.previousHash = Optional.absent();
 
         if (template.getInitiative().getType().isNotVerifiable()) {
 
@@ -58,6 +68,8 @@ public class TestDataService {
 
     private Long createDefaultInitiative(TestDataTemplates.InitiativeTemplate template) {
         String managementHash = RandomHashGenerator.randomString(10);
+
+        this.previousHash = Optional.of(managementHash);
 
         Long initiativeId = initiativeDao.prepareInitiative(template.initiative.getMunicipality().getId());
         Long participantId = participantDao.prepareConfirmedParticipant(initiativeId, template.initiative.getMunicipality().getId(), null, Membership.community, template.getAuthor().getContactInfo().isShowName());

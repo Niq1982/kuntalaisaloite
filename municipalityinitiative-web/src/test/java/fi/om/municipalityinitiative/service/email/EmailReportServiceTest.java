@@ -7,7 +7,8 @@ import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
+import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -73,7 +74,7 @@ public class EmailReportServiceTest {
         emailReportService.sendReportEmailsForInitiativesAcceptedButNotPublished();
         EmailDto singleQueuedEmail = testHelper.getSingleQueuedEmail();
         assertThat(singleQueuedEmail.getSubject(), containsString("Aloitteesi odottaa julkaisua kuntalaisaloite.fi-palvelussa"));
-        assertThat(singleQueuedEmail.getBodyHtml(), containsString(urls.loginAuthor(RandomHashGenerator.getPrevious())));
+        assertThat(singleQueuedEmail.getBodyHtml(), containsString(urls.loginAuthor(PreviousHashGetter.get())));
         assertThat(singleQueuedEmail.getRecipientsAsString(), is("author@example.com"));
 
         emailReportService.sendReportEmailsForInitiativesAcceptedButNotPublished();
@@ -120,7 +121,7 @@ public class EmailReportServiceTest {
         assertThat(singleQueuedEmail.getBodyHtml(), containsString(
                 "Aloitteesi on julkaistu kuntalaisaloite.fi-palvelussa "+stateTime.toString("d.M.yyyy")+" ja se on kerännyt 14 osallistujaa."
         ));
-        assertThat(singleQueuedEmail.getBodyHtml(), containsString(urls.loginAuthor(RandomHashGenerator.getPrevious())));
+        assertThat(singleQueuedEmail.getBodyHtml(), containsString(urls.loginAuthor(PreviousHashGetter.get())));
 
         emailReportService.sendQuarterReports();
 

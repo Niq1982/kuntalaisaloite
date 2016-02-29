@@ -25,6 +25,8 @@ import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
+import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -84,8 +86,8 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitationUICreateDto);
 
-        AuthorInvitation createdInvitation = testHelper.getAuthorInvitation(RandomHashGenerator.getPrevious());
-        assertThat(createdInvitation.getConfirmationCode(), is(RandomHashGenerator.getPrevious()));
+        AuthorInvitation createdInvitation = testHelper.getAuthorInvitation(PreviousHashGetter.get());
+        assertThat(createdInvitation.getConfirmationCode(), is(PreviousHashGetter.get()));
         assertThat(createdInvitation.getName(), is("name"));
         assertThat(createdInvitation.getInvitationTime(), is(notNullValue()));
         assertThat(createdInvitation.getEmail(), is("email"));
@@ -96,11 +98,11 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         Long initiativeId = testHelper.createCollaborativeAccepted(testHelper.createTestMunicipality("name"));
 
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
-        precondition(testHelper.getAuthorInvitation(RandomHashGenerator.getPrevious()).isRejected(), is(false));
+        precondition(testHelper.getAuthorInvitation(PreviousHashGetter.get()).isRejected(), is(false));
 
-        authorService.rejectInvitation(initiativeId, RandomHashGenerator.getPrevious());
+        authorService.rejectInvitation(initiativeId, PreviousHashGetter.get());
 
-        assertThat(testHelper.getAuthorInvitation(RandomHashGenerator.getPrevious()).isRejected(), is(true));
+        assertThat(testHelper.getAuthorInvitation(PreviousHashGetter.get()).isRejected(), is(true));
 
     }
 
@@ -249,11 +251,11 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         Long initiativeId = testHelper.createCollaborativeAccepted(municipalityId);
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
 
-        AuthorInvitationUIConfirmDto confirmDto = authorService.getAuthorInvitationConfirmData(initiativeId, RandomHashGenerator.getPrevious(), TestHelper.unknownLoginUserHolder).authorInvitationUIConfirmDto;
+        AuthorInvitationUIConfirmDto confirmDto = authorService.getAuthorInvitationConfirmData(initiativeId, PreviousHashGetter.get(), TestHelper.unknownLoginUserHolder).authorInvitationUIConfirmDto;
         assertThat(confirmDto.getMunicipality(), is(municipalityId));
         assertThat(confirmDto.getContactInfo().getName(), is(authorInvitation().getAuthorName()));
         assertThat(confirmDto.getContactInfo().getEmail(), is(authorInvitation().getAuthorEmail()));
-        assertThat(confirmDto.getConfirmCode(), is(RandomHashGenerator.getPrevious()));
+        assertThat(confirmDto.getConfirmCode(), is(PreviousHashGetter.get()));
     }
 
     @Test
@@ -271,7 +273,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
                 .withState(InitiativeState.ACCEPTED));
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
 
-        String confirmCode = RandomHashGenerator.getPrevious();
+        String confirmCode = PreviousHashGetter.get();
         LoginUserHolder<VerifiedUser> verifiedLoginUserHolderFor = getVerifiedLoginUserHolderFor(initiativeId);
 
         AuthorInvitationConfirmViewData authorInvitationConfirmData = authorService.getAuthorInvitationConfirmData(initiativeId, confirmCode, verifiedLoginUserHolderFor);
@@ -300,7 +302,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         Long initiativeId = testHelper.createCollaborativeAccepted(municipalityId);
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
 
-        InitiativeViewInfo confirmDto = authorService.getAuthorInvitationConfirmData(initiativeId, RandomHashGenerator.getPrevious(), TestHelper.unknownLoginUserHolder).initiativeViewInfo;
+        InitiativeViewInfo confirmDto = authorService.getAuthorInvitationConfirmData(initiativeId, PreviousHashGetter.get(), TestHelper.unknownLoginUserHolder).initiativeViewInfo;
         assertThat(confirmDto.getId(), is(initiativeId));
     }
 
@@ -311,7 +313,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
                 .withState(InitiativeState.ACCEPTED));
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
 
-        InitiativeViewInfo confirmDto = authorService.getAuthorInvitationConfirmData(initiativeId, RandomHashGenerator.getPrevious(), getVerifiedLoginUserHolderFor(municipalityId)).initiativeViewInfo;
+        InitiativeViewInfo confirmDto = authorService.getAuthorInvitationConfirmData(initiativeId, PreviousHashGetter.get(), getVerifiedLoginUserHolderFor(municipalityId)).initiativeViewInfo;
         assertThat(confirmDto.getId(), is(initiativeId));
     }
 
