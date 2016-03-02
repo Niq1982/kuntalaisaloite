@@ -57,13 +57,10 @@ public class ManagementSettings {
     }
 
     public boolean isAllowOmSendBackForFixing() {
-        if ((initiative.getState() == InitiativeState.PUBLISHED || initiative.getState() == InitiativeState.ACCEPTED)
+        return (initiative.getState() == InitiativeState.PUBLISHED || initiative.getState() == InitiativeState.ACCEPTED)
                 && initiative.getSentTime().isNotPresent()
-                && initiative.getFixState() == FixState.OK) {
-            return true;
-        }
+                && initiative.getFixState() == FixState.OK;
 
-        return false;
     }
 
     public boolean isAllowAddAttachments() {

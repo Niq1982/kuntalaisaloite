@@ -45,11 +45,11 @@ public class ApiController extends BaseController {
     @RequestMapping(API)
     public String api(Model model) throws IOException {
 
-        InitiativeJson initiativeJsonObject = jsonDataService.createInitiativeJsonObject();
+        InitiativeJson initiativeJsonObject = JsonDataService.createInitiativeJsonObject();
         String json = jsonConverter.getObjectMapper().writeValueAsString(initiativeJsonObject);
         model.addAttribute("initiativeDetails", JsonStringParser.toParts(json));
 
-        List<InitiativeListJson> initiativeListJson = jsonDataService.createInitiativeListJsonObject();
+        List<InitiativeListJson> initiativeListJson = JsonDataService.createInitiativeListJsonObject();
         json = jsonConverter.getObjectMapper().writeValueAsString(initiativeListJson);
         model.addAttribute("initiativeList", JsonStringParser.toParts(json));
 

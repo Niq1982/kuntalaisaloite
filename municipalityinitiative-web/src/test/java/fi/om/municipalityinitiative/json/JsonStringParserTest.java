@@ -28,7 +28,7 @@ public class JsonStringParserTest {
         participantCount.setPrivateNames(10);
         participantCount.setPublicNames(1);
 
-        ArrayList<Participant> publicParticipants = Lists.<Participant>newArrayList();
+        ArrayList<Participant> publicParticipants = Lists.newArrayList();
 
         publicParticipants.add(participant(TAMPERE, "Teemu Teekkari"));
         publicParticipants.add(participant(TAMPERE, "Taina Teekkari"));

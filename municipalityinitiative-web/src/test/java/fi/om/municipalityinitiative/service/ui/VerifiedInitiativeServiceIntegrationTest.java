@@ -77,7 +77,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         ContactInfo contactInfo = contactInfo();
 
         verifiedLoginUserHolder = new LoginUserHolder<>(
-                User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo, Collections.<Long>emptySet(), Collections.<Long>emptySet(), Maybe.<Municipality>of(testMunicipality))
+                User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo, Collections.<Long>emptySet(), Collections.<Long>emptySet(), Maybe.of(testMunicipality))
         );
 
     }

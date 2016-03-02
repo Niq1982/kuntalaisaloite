@@ -101,7 +101,7 @@ public class JsonDataService {
         participantCount.setPrivateNames(10);
         participantCount.setPublicNames(1);
 
-        ArrayList<Participant> publicParticipants = Lists.<Participant>newArrayList();
+        ArrayList<Participant> publicParticipants = Lists.newArrayList();
 
         NormalParticipant participant = new NormalParticipant();
         participant.setParticipateDate(new LocalDate(2010, 1, 1));

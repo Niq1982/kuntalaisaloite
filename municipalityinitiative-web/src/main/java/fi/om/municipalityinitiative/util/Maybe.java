@@ -17,7 +17,7 @@ public class Maybe<T> {
     }
 
     public static <T> Maybe<T> of(T object) {
-        return new Maybe<T>(Optional.<T>of(object));
+        return new Maybe<T>(Optional.of(object));
     }
 
     public static <T> Maybe<T> fromNullable(T object) {
@@ -64,9 +64,8 @@ public class Maybe<T> {
 
         Maybe maybe = (Maybe) o;
 
-        if (!optional.equals(maybe.optional)) return false;
+        return optional.equals(maybe.optional);
 
-        return true;
     }
 
     @Override

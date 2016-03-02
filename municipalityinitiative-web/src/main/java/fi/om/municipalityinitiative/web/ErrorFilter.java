@@ -41,7 +41,7 @@ public class ErrorFilter implements Filter {
 
             Throwable nested;
             if (e instanceof NestedServletException) {
-                nested = ((NestedServletException) e).getCause();
+                nested = e.getCause();
             } else {
                 nested = e;
             }

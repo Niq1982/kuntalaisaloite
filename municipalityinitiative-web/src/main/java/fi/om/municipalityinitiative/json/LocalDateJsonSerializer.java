@@ -17,8 +17,7 @@ public class LocalDateJsonSerializer extends JsonSerializer<LocalDate> {
     
     @Override
     public void serialize(LocalDate value, JsonGenerator jgen,
-            SerializerProvider provider) throws IOException,
-            JsonProcessingException {
+            SerializerProvider provider) throws IOException {
         jgen.writeString(dtf.print(value));
     }
 

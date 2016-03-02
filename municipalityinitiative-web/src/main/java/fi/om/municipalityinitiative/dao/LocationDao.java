@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface LocationDao {
 
-    public void setLocations(Long initiativeId, List<Location> locations);
+    void setLocations(Long initiativeId, List<Location> locations);
 
-    public List<Location> getLocations(Long initiativeId);
+    List<Location> getLocations(Long initiativeId);
 
-    public void removeLocations(Long initiativeId);
+    void removeLocations(Long initiativeId);
 }

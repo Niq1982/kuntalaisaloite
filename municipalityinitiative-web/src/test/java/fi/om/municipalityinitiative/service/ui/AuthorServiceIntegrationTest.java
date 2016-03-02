@@ -58,7 +58,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private final NormalAuthorId someAuthorId = new NormalAuthorId(-5);;
+    private final NormalAuthorId someAuthorId = new NormalAuthorId(-5);
 
     @Override
     public void childSetup() {

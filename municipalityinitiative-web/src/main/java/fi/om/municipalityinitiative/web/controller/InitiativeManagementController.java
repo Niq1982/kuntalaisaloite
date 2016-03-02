@@ -443,8 +443,6 @@ public class InitiativeManagementController extends BaseController {
         // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
         SecurityFilter.verifyAndGetCurrentCSRFToken(request);
 
-        // TODO: Validate whole world.
-
         if (!attachmentService.validationSuccessful(initiativeId, attachmentCreateDto, bindingResult, model)) {
             LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
             return ViewGenerator.manageAttachmentsView(

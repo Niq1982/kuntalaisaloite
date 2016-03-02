@@ -104,7 +104,6 @@ public class ApiTest extends WebTestBase {
 
     @Test
     public void api_single_initiative(){
-;
         String collaborativeCitizenInitiativeNameHelsinki = "Aloite helsingista";
         Long id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)

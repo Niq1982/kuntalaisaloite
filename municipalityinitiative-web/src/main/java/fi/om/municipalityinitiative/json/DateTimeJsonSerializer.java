@@ -17,8 +17,7 @@ public class DateTimeJsonSerializer extends JsonSerializer<DateTime> {
     
     @Override
     public void serialize(DateTime value, JsonGenerator jgen,
-            SerializerProvider provider) throws IOException,
-            JsonProcessingException {
+            SerializerProvider provider) throws IOException {
         jgen.writeString(dtf.print(value));
     }
 

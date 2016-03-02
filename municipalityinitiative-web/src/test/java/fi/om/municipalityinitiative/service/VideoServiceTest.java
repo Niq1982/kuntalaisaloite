@@ -60,27 +60,27 @@ public class VideoServiceTest extends ServiceIntegrationTestBase{
 
     @Test
     public void validate_youtube_video_url_success() {
-        assertThat(VALID_VIDEO_URL.matches(videoService.VIDEO_REGEX), is(true));
+        assertThat(VALID_VIDEO_URL.matches(VideoService.VIDEO_REGEX), is(true));
     }
 
     @Test
     public void validate_embedded_youtube_video_url_success() {
-        assertThat(VALID_EMBED_VIDEO_URL.matches(videoService.VIDEO_REGEX), is(true));
+        assertThat(VALID_EMBED_VIDEO_URL.matches(VideoService.VIDEO_REGEX), is(true));
     }
 
     @Test
     public void validate_vimeo_url_success(){
-        assertThat(VALID_VIMEO_URL.matches(videoService.VIDEO_REGEX), is(true));
+        assertThat(VALID_VIMEO_URL.matches(VideoService.VIDEO_REGEX), is(true));
     }
 
     @Test
     public void get_parameters_invalid(){
-        assertThat(INVALID_YOUTUBE_URL.matches(videoService.VIDEO_REGEX), is(false));
+        assertThat(INVALID_YOUTUBE_URL.matches(VideoService.VIDEO_REGEX), is(false));
     }
 
     @Test
     public void wrong_host_invalid() {
-        assertThat(UNALLOWED_QUERY_PARAMETERS.matches(videoService.VIDEO_REGEX), is(false));
+        assertThat(UNALLOWED_QUERY_PARAMETERS.matches(VideoService.VIDEO_REGEX), is(false));
     }
 
 

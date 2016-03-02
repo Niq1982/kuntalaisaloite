@@ -193,9 +193,9 @@ public class SearchParameterQueryStringTest {
     @Test
     public void get_with_municipalities(){
         ArrayList<Municipality> municipalities = new ArrayList<Municipality>();
-        Municipality testMunicipality = new Municipality(1L, "fi", "sv", true);;
-        Municipality testMunicipality2 = new Municipality(4L, "fi", "sv", true);;
-        Municipality testMunicipality3 = new Municipality(5L, "fi", "sv", true);;
+        Municipality testMunicipality = new Municipality(1L, "fi", "sv", true);
+        Municipality testMunicipality2 = new Municipality(4L, "fi", "sv", true);
+        Municipality testMunicipality3 = new Municipality(5L, "fi", "sv", true);
 
 
         municipalities.add(testMunicipality);

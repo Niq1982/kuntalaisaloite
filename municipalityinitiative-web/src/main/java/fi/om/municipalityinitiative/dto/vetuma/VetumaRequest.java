@@ -2,11 +2,11 @@ package fi.om.municipalityinitiative.dto.vetuma;
 
 public abstract class VetumaRequest extends VetumaBase {
 
-    public static enum Type {
+    public enum Type {
         LOGIN
     }
 
-    public static enum Action {
+    public enum Action {
         EXTAUTH
         , CONFIRM
         , SIGNATURE

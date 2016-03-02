@@ -114,7 +114,7 @@ public class JdbcInitiativeDaoTest {
         initiativeEdit.setProposal(INITIATIVE_PRPOSAL);
         initiativeEdit.setExtraInfo(EXTRA_INFO);
         initiativeEdit.setExternalParticipantCount(EXTERNAL_PARTICIPANT_COUNT);
-        initiativeEdit.setLocations(testHelper.LOCATIONS);
+        initiativeEdit.setLocations(TestHelper.LOCATIONS);
 
 
         initiativeDao.editInitiativeDraft(initiativeId, initiativeEdit);

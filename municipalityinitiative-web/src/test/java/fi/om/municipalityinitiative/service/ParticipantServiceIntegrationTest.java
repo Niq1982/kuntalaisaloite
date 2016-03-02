@@ -316,7 +316,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     }
 
     private Maybe<VerifiedUser> refreshVerifiedUser() {
-        return userDao.getVerifiedUser(((VerifiedUser) TestHelper.lastLoggedInVerifiedUserHolder.getVerifiedUser()).getHash());
+        return userDao.getVerifiedUser(TestHelper.lastLoggedInVerifiedUserHolder.getVerifiedUser().getHash());
     }
 
     @Test(expected = OperationNotAllowedException.class)

@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.dto.vetuma;
 
 public abstract class VetumaResponse extends VetumaBase {
 
-    public static enum Status {
+    public enum Status {
         SUCCESSFUL,
         CANCELLED,
         REJECTED,
