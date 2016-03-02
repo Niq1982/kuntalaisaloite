@@ -26,7 +26,6 @@ import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
-import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;

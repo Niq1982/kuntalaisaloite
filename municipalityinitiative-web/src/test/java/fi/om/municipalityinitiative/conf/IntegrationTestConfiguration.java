@@ -7,7 +7,6 @@ import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.util.ImageModifier;
 import org.aspectj.util.FileUtil;
 import org.flywaydb.core.Flyway;
-import org.flywaydb.core.api.MigrationInfo;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

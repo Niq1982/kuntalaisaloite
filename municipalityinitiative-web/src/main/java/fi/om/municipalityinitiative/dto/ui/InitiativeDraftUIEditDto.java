@@ -41,7 +41,7 @@ public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformati
     @Min(value = 0, groups = {VerifiedInitiative.class, NormalInitiative.class} )
     private int externalParticipantCount;
 
-    private List<Location> locations = new ArrayList<Location>();
+    private List<Location> locations = new ArrayList<>();
 
     private String videoUrl;
 

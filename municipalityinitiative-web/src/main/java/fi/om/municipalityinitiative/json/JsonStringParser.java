@@ -23,7 +23,7 @@ public class JsonStringParser {
                 .omitEmptyStrings()
                 .split(jsonData);
 
-        List<IndentedString> results = new ArrayList<IndentedString>();
+        List<IndentedString> results = new ArrayList<>();
 
         Map<Integer, String> parents = Maps.newHashMap();
 

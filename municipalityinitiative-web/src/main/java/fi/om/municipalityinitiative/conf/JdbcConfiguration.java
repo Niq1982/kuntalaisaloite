@@ -12,10 +12,7 @@ import com.mysema.query.types.Ops;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.util.*;
 import org.apache.commons.io.FileUtils;
-import org.aspectj.util.FileUtil;
 import org.flywaydb.core.Flyway;
-import org.flywaydb.core.internal.util.Location;
-import org.flywaydb.core.internal.util.scanner.classpath.ClassPathResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +30,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.Arrays;
 
 @Configuration
 public class JdbcConfiguration {

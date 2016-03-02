@@ -129,7 +129,7 @@ function randomSSN() {
     <br/><label><input type="checkbox" checked="checked" name="fi" value="1"/> Suomen kansalainen</label><br>
     <p>
         Kirjautumiskoodi:
-        <select name="STATUS"/>
+        <select name="STATUS">
             <option value="SUCCESSFUL">SUCCESSFUL</option>
             <option value="CANCELLED">CANCELLED</option>
             <option value="REJECTED">REJECTED</option>

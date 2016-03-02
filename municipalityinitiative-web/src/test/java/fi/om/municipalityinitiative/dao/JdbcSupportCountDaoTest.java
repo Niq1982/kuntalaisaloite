@@ -22,9 +22,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by liisasa on 21.5.2015.
- */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestConfiguration.class})
 @Transactional

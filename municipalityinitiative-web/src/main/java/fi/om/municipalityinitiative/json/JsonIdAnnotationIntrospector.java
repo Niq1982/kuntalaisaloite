@@ -1,14 +1,13 @@
 package fi.om.municipalityinitiative.json;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 
 public class JsonIdAnnotationIntrospector extends JacksonAnnotationIntrospector {
     

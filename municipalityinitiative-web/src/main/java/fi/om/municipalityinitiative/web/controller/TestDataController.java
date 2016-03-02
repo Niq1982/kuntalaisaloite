@@ -7,7 +7,6 @@ import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.YouthInitiativeWebServiceNotifier;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.TestDataTemplates;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.context.annotation.Profile;

@@ -13,7 +13,7 @@ public class MunicipalityDecisionDto {
 
 
 
-    private List<FileWithName> files = new ArrayList<FileWithName>();
+    private List<FileWithName> files = new ArrayList<>();
 
     private String locale;
 

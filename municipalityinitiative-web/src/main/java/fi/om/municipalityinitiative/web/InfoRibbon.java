@@ -6,8 +6,6 @@ import fi.om.municipalityinitiative.conf.ConfigurationFileLoader;
 import fi.om.municipalityinitiative.util.Locales;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.util.Locale;

@@ -60,7 +60,7 @@
 		    	<div class="step-icon-holder"><i class="icon-progress icon-${step.icon} " rel="tooltip" title="<#noescape>${step.label}</#noescape>"></i></div>
 		    	<span class="label"><#noescape>${step.label}</#noescape></span>
 				<#if active>
-                    <span class="arrow-up "/>
+                    <span class="arrow-up "></span>
 				</#if>
 
 		    </div>

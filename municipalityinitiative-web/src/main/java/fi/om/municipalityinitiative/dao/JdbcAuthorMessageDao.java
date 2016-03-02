@@ -10,6 +10,8 @@ import fi.om.municipalityinitiative.sql.QAuthorMessage;
 
 import javax.annotation.Resource;
 
+import static fi.om.municipalityinitiative.dao.Mappings.assertSingleAffection;
+
 @SQLExceptionTranslated
 public class JdbcAuthorMessageDao implements AuthorMessageDao {
 
@@ -31,14 +33,14 @@ public class JdbcAuthorMessageDao implements AuthorMessageDao {
     PostgresQueryFactory queryFactory;
 
     @Override
-    public Long put(AuthorMessage authorMessage) {
-        return queryFactory.insert(QAuthorMessage.authorMessage)
+    public void put(AuthorMessage authorMessage) {
+        assertSingleAffection(queryFactory.insert(QAuthorMessage.authorMessage)
                 .set(QAuthorMessage.authorMessage.contactor, authorMessage.getContactName())
                 .set(QAuthorMessage.authorMessage.contactorEmail, authorMessage.getContactEmail())
                 .set(QAuthorMessage.authorMessage.initiativeId, authorMessage.getInitiativeId())
                 .set(QAuthorMessage.authorMessage.message, authorMessage.getMessage())
                 .set(QAuthorMessage.authorMessage.confirmationCode, authorMessage.getConfirmationCode())
-                .execute();
+                .execute());
 
     }
 
@@ -52,7 +54,7 @@ public class JdbcAuthorMessageDao implements AuthorMessageDao {
             throw new NotFoundException("AuthorMessage", confirmationCode);
         }
 
-        JdbcInitiativeDao.assertSingleAffection(queryFactory.delete(QAuthorMessage.authorMessage)
+        assertSingleAffection(queryFactory.delete(QAuthorMessage.authorMessage)
                 .where(QAuthorMessage.authorMessage.confirmationCode.eq(confirmationCode))
                 .execute());
 

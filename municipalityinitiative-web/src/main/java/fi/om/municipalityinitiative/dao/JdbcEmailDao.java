@@ -14,7 +14,7 @@ import org.joda.time.DateTime;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
+import static fi.om.municipalityinitiative.dao.Mappings.assertSingleAffection;
 
 public class JdbcEmailDao implements EmailDao {
 

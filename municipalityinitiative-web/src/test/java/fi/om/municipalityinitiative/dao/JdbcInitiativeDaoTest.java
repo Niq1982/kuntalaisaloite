@@ -369,7 +369,7 @@ public class JdbcInitiativeDaoTest {
     public void finds_by_municipality_using_municipality_list() {
 
         Long municipalityId = testHelper.createTestMunicipality("Some municipality");
-        ArrayList<Long> municipalities = new ArrayList<Long>();
+        ArrayList<Long> municipalities = new ArrayList<>();
         municipalities.add(municipalityId);
         Long shouldBeFound = testHelper.createSingleSent(municipalityId);
         Long shouldNotBeFound = testHelper.createSingleSent(testMunicipality.getId());
@@ -388,7 +388,7 @@ public class JdbcInitiativeDaoTest {
         Long municipalityId = testHelper.createTestMunicipality("Some municipality");
         Long municipalityId2 = testHelper.createTestMunicipality("Some municipality 2");
 
-        ArrayList<Long> municipalities = new ArrayList<Long>();
+        ArrayList<Long> municipalities = new ArrayList<>();
         municipalities.add(municipalityId);
         municipalities.add(municipalityId2);
 
@@ -408,7 +408,7 @@ public class JdbcInitiativeDaoTest {
         Long municipalityId = testHelper.createTestMunicipality("Some municipality");
         Long municipalityId2 = testHelper.createTestMunicipality("Some municipality 2");
 
-        ArrayList<Long> municipalities = new ArrayList<Long>();
+        ArrayList<Long> municipalities = new ArrayList<>();
         municipalities.add(municipalityId);
         municipalities.add(municipalityId2);
 
@@ -434,7 +434,7 @@ public class JdbcInitiativeDaoTest {
         Long municipalityId = testHelper.createTestMunicipality("Some municipality");
         Long municipalityId2 = testHelper.createTestMunicipality("Some municipality 2");
 
-        ArrayList<Long> municipalities = new ArrayList<Long>();
+        ArrayList<Long> municipalities = new ArrayList<>();
         municipalities.add(municipalityId);
         municipalities.add(municipalityId2);
 
@@ -461,7 +461,7 @@ public class JdbcInitiativeDaoTest {
         Long shouldNotBeFound = testHelper.createSingleSent(municipalityId);
         Long shouldNotBeFound2 = testHelper.createSingleSent(municipalityId2);
 
-        ArrayList<Long> municipalities = new ArrayList<Long>();
+        ArrayList<Long> municipalities = new ArrayList<>();
         municipalities.add(testMunicipality.getId());
 
         InitiativeSearch search = initiativeSearch();
@@ -801,7 +801,7 @@ public class JdbcInitiativeDaoTest {
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE));
 
-        ArrayList<Long> municipalities = new ArrayList<Long>();
+        ArrayList<Long> municipalities = new ArrayList<>();
         municipalities.add(testMunicipality.getId());
         InitiativeCounts initiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.<List<Long>>of(municipalities), InitiativeSearch.Type.all);
 

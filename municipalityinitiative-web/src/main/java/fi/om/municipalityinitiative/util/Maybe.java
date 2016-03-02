@@ -17,11 +17,11 @@ public class Maybe<T> {
     }
 
     public static <T> Maybe<T> of(T object) {
-        return new Maybe<T>(Optional.of(object));
+        return new Maybe<>(Optional.of(object));
     }
 
     public static <T> Maybe<T> fromNullable(T object) {
-        return new Maybe<T>(Optional.fromNullable(object));
+        return new Maybe<>(Optional.fromNullable(object));
     }
 
     public T get() {
@@ -41,7 +41,7 @@ public class Maybe<T> {
     }
 
     public static <T> Maybe<T> absent() {
-        return new Maybe<T>(Optional.<T>absent());
+        return new Maybe<>(Optional.<T>absent());
     }
 
     public T orNull() {

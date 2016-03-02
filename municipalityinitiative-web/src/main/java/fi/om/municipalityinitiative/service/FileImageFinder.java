@@ -25,8 +25,8 @@ public class FileImageFinder implements ImageFinder{
     private static final String FILE_PATTERN = "^[_A-Za-z0-9-]+$";
     static final String FILE_TIMESTAMP_FORMAT = "yyyy-MM-dd_HH-mm-ss";
 
-    private String path;
-    private String baseUrl;
+    private final String path;
+    private final String baseUrl;
 
     public FileImageFinder(String path, String baseUrl) {
         this.path = path;
@@ -124,8 +124,8 @@ public class FileImageFinder implements ImageFinder{
     }
 
     public static class FileJson {
-        private String file;
-        private String url;
+        private final String file;
+        private final String url;
 
         public FileJson(String file, String url) {
             this.file = file;

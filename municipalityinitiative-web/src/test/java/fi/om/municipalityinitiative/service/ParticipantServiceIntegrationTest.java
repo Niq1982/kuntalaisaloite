@@ -13,7 +13,6 @@ import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
-import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.hamcrest.Matchers;
 import org.joda.time.DateTime;

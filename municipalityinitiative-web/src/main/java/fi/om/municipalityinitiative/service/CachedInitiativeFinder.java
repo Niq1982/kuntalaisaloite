@@ -41,7 +41,7 @@ public class CachedInitiativeFinder {
 
     @Cacheable("municipality")
     public Maybe<List<Municipality>> getMunicipalities(Maybe<List<Long>> municipalityIds) {
-        List<Municipality> municipalities = new ArrayList<Municipality>();
+        List<Municipality> municipalities = new ArrayList<>();
         if (municipalityIds.isNotPresent()) {
             return Maybe.absent();
         }

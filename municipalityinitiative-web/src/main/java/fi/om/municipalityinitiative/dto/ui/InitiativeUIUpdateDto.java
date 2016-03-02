@@ -25,7 +25,7 @@ public class InitiativeUIUpdateDto implements InitiativeWithLocationInformation 
     @Valid
     private ContactInfo contactInfo;
 
-    private List<Location> locations =  new ArrayList<Location>();
+    private List<Location> locations = new ArrayList<>();
 
 
     private String videoUrl;

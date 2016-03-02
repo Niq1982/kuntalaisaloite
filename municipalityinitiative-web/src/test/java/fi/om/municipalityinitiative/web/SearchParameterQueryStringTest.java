@@ -160,7 +160,7 @@ public class SearchParameterQueryStringTest {
     }
     @Test
     public void generatesAllFields_with_two_municipalities() {
-        ArrayList<Long> municipalities = new ArrayList<Long>();
+        ArrayList<Long> municipalities = new ArrayList<>();
         municipalities.add(1L);
         municipalities.add(4L);
         initiativeSearch.setMunicipalities(municipalities);
@@ -169,7 +169,7 @@ public class SearchParameterQueryStringTest {
     }
     @Test
     public void generatesAllFields_with_three_municipalities() {
-        ArrayList<Long> municipalities = new ArrayList<Long>();
+        ArrayList<Long> municipalities = new ArrayList<>();
         municipalities.add(1L);
         municipalities.add(4L);
         municipalities.add(5L);
@@ -180,7 +180,7 @@ public class SearchParameterQueryStringTest {
 
     @Test
     public void get_with_municipality_ids(){
-        ArrayList<Long> municipalities = new ArrayList<Long>();
+        ArrayList<Long> municipalities = new ArrayList<>();
         municipalities.add(1L);
         municipalities.add(4L);
         municipalities.add(5L);
@@ -192,7 +192,7 @@ public class SearchParameterQueryStringTest {
 
     @Test
     public void get_with_municipalities(){
-        ArrayList<Municipality> municipalities = new ArrayList<Municipality>();
+        ArrayList<Municipality> municipalities = new ArrayList<>();
         Municipality testMunicipality = new Municipality(1L, "fi", "sv", true);
         Municipality testMunicipality2 = new Municipality(4L, "fi", "sv", true);
         Municipality testMunicipality3 = new Municipality(5L, "fi", "sv", true);

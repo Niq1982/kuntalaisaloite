@@ -116,14 +116,6 @@ public class AttachmentService {
         }
     }
 
-    private static void assertContentType(String contentType) throws InvalidAttachmentException {
-        for (String type : AttachmentUtil.ImageProperties.CONTENT_TYPES) {
-            if (type.equalsIgnoreCase(contentType))
-                return;
-        }
-        throw new InvalidAttachmentException("Invalid content-type:" + contentType);
-    }
-
     @Transactional(readOnly = true)
     public AttachmentUtil.Attachments findAcceptedAttachments(Long initiativeId) {
         return new AttachmentUtil.Attachments(attachmentDao.findAcceptedAttachments(initiativeId));

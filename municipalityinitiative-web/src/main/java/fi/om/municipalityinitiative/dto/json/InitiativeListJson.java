@@ -11,7 +11,7 @@ import org.joda.time.LocalDate;
 
 public class InitiativeListJson {
 
-    private InitiativeListInfo initiative;
+    private final InitiativeListInfo initiative;
 
     public InitiativeListJson(InitiativeListInfo initiative) {
         this.initiative = initiative;

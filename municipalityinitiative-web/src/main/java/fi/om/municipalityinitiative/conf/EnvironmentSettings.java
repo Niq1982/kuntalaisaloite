@@ -15,7 +15,7 @@ public class EnvironmentSettings {
     private final String googleMapsApiKey;
     private final boolean googleMapsEnabled;
     private final boolean superSearchEnabled;
-    private String appEnvironment;
+    private final String appEnvironment;
     private final boolean videoEnabled;
     private final boolean followEnabled;
 

@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dao;
 
+import com.mysema.commons.lang.Assert;
 import com.mysema.query.Tuple;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.sql.QMunicipality;
@@ -41,5 +42,9 @@ public class Mappings {
             return Maybe.of(sentTime.toLocalDate());
         }
         return Maybe.absent();
+    }
+
+    public static void assertSingleAffection(long affectedRows) {
+        Assert.isTrue(affectedRows == 1, "Should have affected only one row. Affected: " + affectedRows);
     }
 }

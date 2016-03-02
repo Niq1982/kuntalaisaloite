@@ -883,7 +883,7 @@ public class TestHelper {
         public EmailReportType emailReportType;
         public DateTime emailReportDateTime;
         public String supporCountData;
-        public List<Location> locations = new ArrayList<Location>();
+        public List<Location> locations = new ArrayList<>();
         private Maybe<String> videoUrl = Maybe.absent();
         private Maybe<String> videoName = Maybe.absent();
         private Maybe<DateTime> decisionDate = Maybe.absent();
@@ -981,7 +981,7 @@ public class TestHelper {
             return this;
         }
         public InitiativeDraft withLocations(List<Location> locations) {
-            this.locations = new ArrayList<Location>(locations);
+            this.locations = new ArrayList<>(locations);
             return this;
         }
 

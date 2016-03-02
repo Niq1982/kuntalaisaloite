@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
+import static fi.om.municipalityinitiative.dao.Mappings.assertSingleAffection;
 
 @SQLExceptionTranslated
 public class JdbcAuthorDao implements AuthorDao {
@@ -109,7 +109,7 @@ public class JdbcAuthorDao implements AuthorDao {
     @Override
     public NormalAuthorId createAuthor(Long initiativeId, Long participantId, String managementHash) {
 
-        JdbcInitiativeDao.assertSingleAffection(queryFactory.insert(QAuthor.author)
+        assertSingleAffection(queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.managementHash, managementHash)
                 .set(QAuthor.author.participantId, participantId)
                 .set(QAuthor.author.initiativeId, initiativeId)
@@ -120,14 +120,14 @@ public class JdbcAuthorDao implements AuthorDao {
     @Override
     public void updateAuthorInformation(NormalAuthorId authorId, ContactInfo contactInfo) {
 
-        JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QParticipant.participant)
+        assertSingleAffection(queryFactory.update(QParticipant.participant)
                 .set(QParticipant.participant.showName, Boolean.TRUE.equals(contactInfo.isShowName()))
                 .set(QParticipant.participant.name, contactInfo.getName())
                 .set(QParticipant.participant.email, contactInfo.getEmail())
                 .where(QParticipant.participant.id.eq(authorId.toLong()))
                 .execute());
 
-        JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QAuthor.author)
+        assertSingleAffection(queryFactory.update(QAuthor.author)
                 .set(QAuthor.author.address, contactInfo.getAddress())
                 .set(QAuthor.author.phone, contactInfo.getPhone())
                 .where(QAuthor.author.participantId.eq(authorId.toLong()))
@@ -135,14 +135,14 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public Long addAuthorInvitation(AuthorInvitation authorInvitation) {
-        return queryFactory.insert(QAuthorInvitation.authorInvitation)
+    public void addAuthorInvitation(AuthorInvitation authorInvitation) {
+        assertSingleAffection(queryFactory.insert(QAuthorInvitation.authorInvitation)
                 .set(QAuthorInvitation.authorInvitation.confirmationCode, authorInvitation.getConfirmationCode())
                 .set(QAuthorInvitation.authorInvitation.email, authorInvitation.getEmail())
                 .set(QAuthorInvitation.authorInvitation.name, authorInvitation.getName())
                 .set(QAuthorInvitation.authorInvitation.invitationTime, authorInvitation.getInvitationTime())
                 .set(QAuthorInvitation.authorInvitation.initiativeId, authorInvitation.getInitiativeId())
-                .execute();
+                .execute());
     }
 
     @Override
@@ -159,7 +159,7 @@ public class JdbcAuthorDao implements AuthorDao {
 
     @Override
     public void rejectAuthorInvitation(Long initiativeId, String confirmationCode) {
-        JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QAuthorInvitation.authorInvitation)
+        assertSingleAffection(queryFactory.update(QAuthorInvitation.authorInvitation)
                 .set(QAuthorInvitation.authorInvitation.rejectTime, CURRENT_TIME)
                 .where(QAuthorInvitation.authorInvitation.initiativeId.eq(initiativeId))
                 .where(QAuthorInvitation.authorInvitation.confirmationCode.eq(confirmationCode))
@@ -341,7 +341,7 @@ public class JdbcAuthorDao implements AuthorDao {
 
     @Override
     public void updateManagementHash(NormalAuthorId authorId, String newManagementHash) {
-        JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QAuthor.author)
+        assertSingleAffection(queryFactory.update(QAuthor.author)
                 .set(QAuthor.author.managementHash, newManagementHash)
                 .where(QAuthor.author.participantId.eq(authorId.toLong()))
                 .execute());

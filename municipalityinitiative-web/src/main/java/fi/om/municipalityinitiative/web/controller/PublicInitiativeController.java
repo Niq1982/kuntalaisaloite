@@ -482,7 +482,7 @@ public class PublicInitiativeController extends BaseController {
         if (municipalityIds.isNotPresent()) {
             return Maybe.absent();
         }
-        ArrayList<Municipality> currentMunicipalities =  new ArrayList<Municipality>();
+        ArrayList<Municipality> currentMunicipalities = new ArrayList<>();
         for (Municipality municipality : municipalities) {
             if ((municipalityIds.get().contains(municipality.getId())))
                 currentMunicipalities.add(municipality);

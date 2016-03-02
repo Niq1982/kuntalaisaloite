@@ -1,7 +1,6 @@
 package fi.om.municipalityinitiative.dto.service;
 
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
 import fi.om.municipalityinitiative.util.InitiativeType;
 
 public class PrepareSafeInitiativeCreateDto {

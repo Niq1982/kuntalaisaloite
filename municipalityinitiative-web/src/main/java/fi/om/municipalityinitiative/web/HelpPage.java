@@ -10,8 +10,8 @@ public enum HelpPage {
     INITIATIVE_TYPES("kuntalaisaloitteen-muodot", "formen-av-ett-invanarinitiativ"),
     TERMS_OF_USE("palvelun-kayttoehdot", "anvandarvillkor");
 
-    private String uriFi;
-    private String uriSv;
+    private final String uriFi;
+    private final String uriSv;
 
     HelpPage(String uriFi, String uriSv) {
         this.uriFi = uriFi;

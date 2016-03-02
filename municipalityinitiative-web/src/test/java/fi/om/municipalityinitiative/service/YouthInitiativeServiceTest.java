@@ -12,7 +12,6 @@ import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
-import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
 import org.junit.Test;

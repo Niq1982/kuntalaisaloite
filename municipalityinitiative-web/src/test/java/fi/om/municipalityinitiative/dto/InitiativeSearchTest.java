@@ -42,7 +42,7 @@ public class InitiativeSearchTest {
         InitiativeSearch search = new InitiativeSearch();
         search.setMunicipalities(1L);
 
-        List<Long> municipalities = new ArrayList<Long>();
+        List<Long> municipalities = new ArrayList<>();
         municipalities.add(1L);
         assertThat(search.getMunicipalities(), is(municipalities));
     }

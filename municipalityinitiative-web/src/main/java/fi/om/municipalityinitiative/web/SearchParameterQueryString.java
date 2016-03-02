@@ -175,7 +175,7 @@ public class SearchParameterQueryString {
     }
 
     public String getWithMunicipalities(List<Municipality> municipalities) {
-        ArrayList<Long> municipalityIds = new ArrayList<Long>();
+        ArrayList<Long> municipalityIds = new ArrayList<>();
         for(Municipality m : municipalities) {
             municipalityIds.add(m.getId());
         }

@@ -121,9 +121,8 @@ public final class AttachmentUtil {
     }
 
     public static File createTempFile(MultipartFile file, String fileType) throws IOException, InvalidAttachmentException {
-        File tempFile = null;
         // Create temp-file for proper file handling
-        tempFile = File.createTempFile(RandomHashGenerator.shortHash(), "." + fileType);
+        File tempFile = File.createTempFile(RandomHashGenerator.shortHash(), "." + fileType);
 
         file.transferTo(tempFile);
 
@@ -131,7 +130,7 @@ public final class AttachmentUtil {
         return tempFile;
     }
 
-    public static void assertRealFileContent(File tempFile, String fileType) throws IOException, InvalidAttachmentException {
+    private static void assertRealFileContent(File tempFile, String fileType) throws IOException, InvalidAttachmentException {
         if ((fileType.equalsIgnoreCase("jpg") || fileType.equalsIgnoreCase("jpeg")) && isJPEG(tempFile)) {
             return;
         }
@@ -148,7 +147,7 @@ public final class AttachmentUtil {
 
 
 
-    public static byte[] getFileBytes(String filePath) throws IOException {
+    private static byte[] getFileBytes(String filePath) throws IOException {
         File file = new File(filePath);
         byte[] bytes = FileUtil.readAsByteArray(file);
         return Arrays.copyOf(bytes, bytes.length);
@@ -191,7 +190,7 @@ public final class AttachmentUtil {
         }
     }
 
-    public static <T extends Object> T notNull(T object, Class clazz, Long id) {
+    public static <T> T notNull(T object, Class clazz, Long id) {
         if (object == null) {
             throw new NotFoundException(clazz.toString(), id);
         }

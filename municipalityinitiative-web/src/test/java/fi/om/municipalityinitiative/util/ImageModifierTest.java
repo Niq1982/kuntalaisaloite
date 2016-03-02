@@ -4,7 +4,6 @@ import org.im4java.core.IM4JavaException;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;

@@ -30,7 +30,7 @@ public class InitiativeDraftUIEditDtoTest {
         originalInitiative.setVideoUrl("videourl");
         ContactInfo originalContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
 
-        List<Location> locations = new ArrayList<Location>();
+        List<Location> locations = new ArrayList<>();
         locations.add(ReflectionTestUtils.modifyAllFields(new Location()));
 
         InitiativeDraftUIEditDto dto = InitiativeDraftUIEditDto.parse(originalInitiative, originalContactInfo, locations);

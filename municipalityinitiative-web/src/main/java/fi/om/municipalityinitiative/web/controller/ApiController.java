@@ -103,7 +103,7 @@ public class ApiController extends BaseController {
     public @ResponseBody JsonpObject<InitiativeJson> initiativeGetJsonp(
             @PathVariable Long id,
             @RequestParam(JSONP_CALLBACK) String callback) {
-        return new JsonpObject<InitiativeJson>(callback, initiativeGet(id));
+        return new JsonpObject<>(callback, initiativeGet(id));
     }
 
     @RequestMapping(value=MUNICIPALITIES, method=GET, produces=JSON)
@@ -128,7 +128,7 @@ public class ApiController extends BaseController {
     public @ResponseBody
     JsonpObject<Municipality> municipalityGetJsonp(@PathVariable Long id,
                                                    @RequestParam(JSONP_CALLBACK) String callback) {
-        return new JsonpObject<Municipality>(callback, municipalityGet(id));
+        return new JsonpObject<>(callback, municipalityGet(id));
     }
 
 }

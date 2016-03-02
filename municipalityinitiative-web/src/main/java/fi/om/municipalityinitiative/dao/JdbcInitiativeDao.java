@@ -1,7 +1,6 @@
 package fi.om.municipalityinitiative.dao;
 
 import com.google.common.base.Strings;
-import com.mysema.commons.lang.Assert;
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.dml.SQLUpdateClause;
 import com.mysema.query.sql.postgres.PostgresQuery;
@@ -224,7 +223,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void markInitiativeReportSent(Long id, EmailReportType type, DateTime today) {
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
+        Mappings.assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.lastEmailReportTime, today)
                 .set(municipalityInitiative.lastEmailReportType, type)
                 .where(municipalityInitiative.id.eq(id))
@@ -243,7 +242,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
                 .count();
 
-        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+        Mappings.assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, (int) publicParticipants)
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
                 .execute());
@@ -257,7 +256,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
                 .count();
 
-        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+        Mappings.assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, (int) publicParticipants)
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
                 .execute());
@@ -386,8 +385,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public InitiativeCounts getPublicInitiativeCounts(Maybe<List<Long>> municipalities, InitiativeSearch.Type initiativeType) {
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(municipalityInitiative.sent.isNull())
-                .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
-                .otherwise(new ConstantImpl<String>(InitiativeSearch.Show.sent.name()));
+                .then(new ConstantImpl<>(InitiativeSearch.Show.collecting.name()))
+                .otherwise(new ConstantImpl<>(InitiativeSearch.Show.sent.name()));
 
         SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "showCategory");
 
@@ -474,7 +473,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .set(municipalityInitiative.extraInfo, editDto.getExtraInfo())
                 .set(municipalityInitiative.externalparticipantcount, editDto.getExternalParticipantCount());
 
-        assertSingleAffection(query
+        Mappings.assertSingleAffection(query
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
 
@@ -482,7 +481,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void updateInitiativeState(Long initiativeId, InitiativeState state) {
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
+        Mappings.assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.state, state)
                 .set(municipalityInitiative.stateTimestamp, CURRENT_TIME)
                 .where(municipalityInitiative.id.eq(initiativeId))
@@ -491,7 +490,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void updateInitiativeFixState(Long initiativeId, FixState fixState) {
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
+        Mappings.assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.fixState, fixState)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
@@ -499,7 +498,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void updateInitiativeType(Long initiativeId, InitiativeType initiativeType) {
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
+        Mappings.assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.type, initiativeType)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
@@ -507,7 +506,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void markInitiativeAsSent(Long initiativeId) {
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
+        Mappings.assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.sent, CURRENT_TIME)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .where(municipalityInitiative.sent.isNull())
@@ -516,7 +515,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void updateModeratorComment(Long initiativeId, String moderatorComment) {
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
+        Mappings.assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.moderatorComment, moderatorComment)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
@@ -524,7 +523,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void updateSentComment(Long initiativeId, String sentComment) {
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
+        Mappings.assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.sentComment, sentComment)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
@@ -532,7 +531,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void createInitiativeDecision(Long initiativeId, String decisionText) {
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
+        Mappings.assertSingleAffection(queryFactory.update(municipalityInitiative)
             .set(municipalityInitiative.municipalityDecision, decisionText)
             .set(municipalityInitiative.municipalityDecisionDate, DateTime.now())
             .where(municipalityInitiative.id.eq(initiativeId))
@@ -541,7 +540,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void updateInitiativeDecision(Long initiativeId, String decisionText) {
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
+        Mappings.assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.municipalityDecision, decisionText)
                 .set(municipalityInitiative.municipalityDecisionModifiedDate, DateTime.now())
                 .where(municipalityInitiative.id.eq(initiativeId))
@@ -550,7 +549,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void updateInitiativeDecisionModifiedDate(Long initiativeId) {
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
+        Mappings.assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.municipalityDecisionModifiedDate, DateTime.now())
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
@@ -559,7 +558,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     @Override
     public void updateExtraInfo(Long initiativeId, String extraInfo, Integer externalParticipantCount, String videoUrl) {
 
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
+        Mappings.assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.extraInfo, extraInfo)
                 .set(municipalityInitiative.externalparticipantcount, externalParticipantCount)
                 .set(municipalityInitiative.videoUrl, videoUrl)
@@ -623,15 +622,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute();
     }
-
-
-
-
-    public static void assertSingleAffection(long affectedRows) {
-        Assert.isTrue(affectedRows == 1, "Should have affected only one row. Affected: " + affectedRows);
-    }
-
-
 
 
 }

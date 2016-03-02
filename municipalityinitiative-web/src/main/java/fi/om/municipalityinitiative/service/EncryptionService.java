@@ -1,20 +1,18 @@
 package fi.om.municipalityinitiative.service;
 
+import com.google.common.base.Strings;
+import com.mysema.commons.lang.Assert;
+import fi.om.municipalityinitiative.util.VetumaMACStringBuilder;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Base64;
+import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.util.Formatter;
-
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.util.encoders.Base64;
-import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
-
-import com.google.common.base.Strings;
-import com.mysema.commons.lang.Assert;
-
-import fi.om.municipalityinitiative.util.VetumaMACStringBuilder;
 
 public class EncryptionService {
 
@@ -75,19 +73,7 @@ public class EncryptionService {
         aesEncryptor.setKeyObtentionIterations(DEFAULT_KEY_OBTENTION_ITERATIONS);
         aesEncryptor.setPoolSize(encryptorPoolSize);
     }
-    
-    public String initiativeSupportHash(Long initiativeId, String ssn) {
-        Assert.notNull(initiativeId, "initiativeId");
-        Assert.hasText(ssn, "ssn");
 
-        StringBuilder message = new StringBuilder(256)
-        .append(initiativeId).append(MAC_DELIM)
-        .append(ssn).append(MAC_DELIM)
-        .append(password);
-
-        return base64Encode(sha256(message.toString(), DEFAULT_ENCODING), DEFAULT_ENCODING);
-    }
-    
     public String encrypt(String message) {
         // Add encryptor id to encrypted message
         return new StringBuilder(message.length() * 2)

@@ -9,15 +9,13 @@ import com.mysema.query.types.expr.DateTimeExpression;
 import fi.om.municipalityinitiative.dto.InfoPageText;
 import fi.om.municipalityinitiative.dto.InfoTextFooterLink;
 import fi.om.municipalityinitiative.dto.InfoTextSubject;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.sql.QInfoText;
 import fi.om.municipalityinitiative.util.LanguageCode;
-import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import org.joda.time.DateTime;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 
 

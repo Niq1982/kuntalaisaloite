@@ -8,13 +8,11 @@ import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
 import fi.om.municipalityinitiative.sql.QMunicipality;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 
-import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
+import static fi.om.municipalityinitiative.dao.Mappings.assertSingleAffection;
 
 @SQLExceptionTranslated
 public class JdbcMunicipalityDao implements MunicipalityDao {

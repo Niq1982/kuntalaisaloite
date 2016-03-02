@@ -19,7 +19,7 @@ public class ErrorFilter implements Filter {
 
     private final Logger log = LoggerFactory.getLogger(ErrorFilter.class); 
     
-    private String feedbackEmail;
+    private final String feedbackEmail;
     
     public ErrorFilter(String feedbackEmail) {
         this.feedbackEmail = feedbackEmail;

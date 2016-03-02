@@ -138,7 +138,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         randomlyFilledInitiative.setVideoUrl(VALID_VIDEO_URL);
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
-        List<Location> locations = new ArrayList<Location>();
+        List<Location> locations = new ArrayList<>();
         locations.add(ReflectionTestUtils.modifyAllFields(new Location()));
         locations.add(ReflectionTestUtils.modifyAllFields(new Location()));
         locations.add(ReflectionTestUtils.modifyAllFields(new Location()));

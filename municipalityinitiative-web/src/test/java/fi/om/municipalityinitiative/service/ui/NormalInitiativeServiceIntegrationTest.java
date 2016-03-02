@@ -16,7 +16,6 @@ import fi.om.municipalityinitiative.sql.QAuthorMessage;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
-import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Test;

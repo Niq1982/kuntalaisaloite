@@ -1,7 +1,6 @@
 package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
-import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import org.hibernate.validator.constraints.NotEmpty;

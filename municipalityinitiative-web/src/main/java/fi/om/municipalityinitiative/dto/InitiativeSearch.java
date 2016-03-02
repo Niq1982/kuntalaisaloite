@@ -100,7 +100,7 @@ public class InitiativeSearch {
         accepted(true),
         omAll(true);
 
-        private boolean omOnly;
+        private final boolean omOnly;
 
         Show(boolean omOnly) {
             this.omOnly = omOnly;
@@ -161,7 +161,7 @@ public class InitiativeSearch {
         return result;
     }
 
-    private static <E extends Object> boolean equals(E o1, E o2) {
+    private static <E> boolean equals(E o1, E o2) {
         if (o1 == null && o2 == null)
             return true;
         else if (o1 == null || o2 == null)

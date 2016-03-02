@@ -464,7 +464,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     }
 
     private List<MunicipalityDecisionDto.FileWithName> getFileWithNames() throws IOException {
-        List<MunicipalityDecisionDto.FileWithName> files = new ArrayList<MunicipalityDecisionDto.FileWithName>();
+        List<MunicipalityDecisionDto.FileWithName> files = new ArrayList<>();
 
         MunicipalityDecisionDto.FileWithName fileWithName = new MunicipalityDecisionDto.FileWithName();
         fileWithName.setFile(createDefaultFile());

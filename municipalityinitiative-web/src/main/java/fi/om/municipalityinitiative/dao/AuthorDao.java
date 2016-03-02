@@ -16,7 +16,7 @@ public interface AuthorDao {
 
     void deleteAuthorInvitation(Long initiativeId, String confirmationCode);
 
-    Long addAuthorInvitation(AuthorInvitation authorInvitation);
+    void addAuthorInvitation(AuthorInvitation authorInvitation);
 
     AuthorInvitation getAuthorInvitation(Long initiativeId, String confirmationCode);
 

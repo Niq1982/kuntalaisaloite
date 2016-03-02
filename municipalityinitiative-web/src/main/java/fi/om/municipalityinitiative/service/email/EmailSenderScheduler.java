@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.Resource;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EmailSenderScheduler {
 

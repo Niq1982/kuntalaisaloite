@@ -11,7 +11,7 @@ import fi.om.municipalityinitiative.sql.QAttachment;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
+import static fi.om.municipalityinitiative.dao.Mappings.assertSingleAffection;
 
 @SQLExceptionTranslated
 public class JdbcAttachmentDao implements AttachmentDao{

@@ -1,18 +1,15 @@
 package fi.om.municipalityinitiative.dao;
 
 import com.mysema.query.Tuple;
-import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
-import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.SchemaVersion;
 import fi.om.municipalityinitiative.sql.QFlywaySchema;
 import fi.om.municipalityinitiative.sql.QSchemaVersion;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 
 @SQLExceptionTranslated

@@ -118,7 +118,7 @@ public class UserService {
         }
 
         if (user.get().isNotOmUser()) {
-            // FIXME: assertStillAuthor(user.get().getAuthorId(), request);
+            // NOTE: assertStillAuthor(user.get().getAuthorId(), request); -- would be nice.
             // Because management rights are stored in session, it's possible that author has management rights
             // as long as it's session is valid even that author is deleted.
         }
