@@ -100,6 +100,7 @@ public class TestHelper {
 
     @Transactional(readOnly = false)
     public void dbCleanupAllButMunicipalities() {
+        queryFactory.delete(QInitiativeSupportVoteDay.initiativeSupportVoteDay).execute();
         queryFactory.delete(QAuthorMessage.authorMessage).execute();
         queryFactory.delete(QReviewHistory.reviewHistory).execute();
         queryFactory.delete(QAttachment.attachment).execute();
