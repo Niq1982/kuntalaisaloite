@@ -1,4 +1,4 @@
-# WHAT AND WHY
+# What and why
 
 Kuntalaisaloite.fi / Invånarinitiativ.fi is a web service for launching municipal citizen's initiatives and gathering participants for these initiatives. The web service has been implemented by the Ministry of Justice Finland together with Solita Oy.
 
@@ -40,9 +40,11 @@ Apache License 2.0, see COPYING and LICENSE
  	  `property.key = ENC(Okbz86n6+NnffnKmAPhedp8DIi51zSVZa1Jx88ZthVI=)`
  	  properties will be decrypted runtime when needed via EncryptablePropertiesConfigurer
 
-# DEVELOPMENT
+# Development
 
-* Start application with your IDE with fi.om.municipalityinitiative.StartJetty#main
+* Create local database and flyway-user as told above. Encryptions are optional.
+
+* Start application with IDE: fi.om.municipalityinitiative.StartJetty#main
 
 * When DB schema is changed, 
 	* New sql-increments must be saved in `src/main/resources/db/migration`. If flyway information is set up correctly to app.properties, application will migrate itself on startup 
