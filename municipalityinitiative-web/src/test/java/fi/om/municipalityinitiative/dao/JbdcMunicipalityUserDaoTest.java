@@ -37,7 +37,6 @@ public class JbdcMunicipalityUserDaoTest {
     }
 
     @Test
-    @Transactional
     public void add_municipality_user(){
 
         municipalityUserDao.assignMunicipalityUser(initiativeId, MANAGEMENT_HASH);
