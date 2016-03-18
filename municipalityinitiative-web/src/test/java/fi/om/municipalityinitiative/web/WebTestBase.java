@@ -168,12 +168,14 @@ public abstract class WebTestBase {
     }
 
     public static void destroyDriver() {
-        driver.quit();
-        lastDriver = null;
-        try {
-            jettyServer.stop();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (driver != null) {
+            driver.quit();
+            lastDriver = null;
+            try {
+                jettyServer.stop();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 
 public class JsonIdAnnotationIntrospector extends JacksonAnnotationIntrospector {
     
@@ -17,11 +16,6 @@ public class JsonIdAnnotationIntrospector extends JacksonAnnotationIntrospector 
         this.baseUrl = baseUrl;
     }
 
-    @Override
-    public boolean isHandled(Annotation ann) {
-        Class<? extends Annotation> acls = ann.annotationType();
-        return acls.getAnnotation(JsonId.class) != null || super.isHandled(ann);
-    }
 
     @Override
     public Object findSerializer(Annotated a) {

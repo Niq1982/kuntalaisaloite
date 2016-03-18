@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.cfg.DatabindVersion;
+import com.fasterxml.jackson.databind.cfg.PackageVersion;
 import fi.om.municipalityinitiative.json.JsonIdAnnotationIntrospector;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
@@ -24,7 +24,7 @@ public class JsonConverterFactory {
 
             @Override
             public Version version() {
-                return DatabindVersion.instance.version();
+                return PackageVersion.VERSION;
             }
 
             @Override
