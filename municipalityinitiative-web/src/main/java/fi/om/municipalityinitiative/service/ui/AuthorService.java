@@ -244,12 +244,10 @@ public class AuthorService {
     }
 
     private static boolean hasAuthor(NormalAuthorId authorId, List<NormalAuthor> authors) {
-        for (NormalAuthor author : authors) {
-            if (author.getId().equals(authorId)) {
-                return true;
-            }
-        }
-        return false;
+
+        // Such lambdas! http://www.bafe.fi/meem/fiii.gif
+        return authors.stream().anyMatch(a -> a.getId().equals(authorId));
+
     }
 
 }
