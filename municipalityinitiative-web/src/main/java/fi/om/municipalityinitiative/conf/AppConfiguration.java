@@ -52,7 +52,7 @@ import java.util.concurrent.Executors;
 @Configuration
 @EnableTransactionManagement(proxyTargetClass=false)
 @EnableAspectJAutoProxy(proxyTargetClass=false)
-@Import({ProdPropertiesConfiguration.class, TestPropertiesConfigurer.class, JdbcConfiguration.class, AppDevConfiguration.class})
+@Import({ProdPropertiesConfiguration.class, TestPropertiesConfigurer.class, JdbcConfiguration.class, AppDevConfiguration.class, WebSecurityConfig.class})
 public class AppConfiguration {
 
     private static Logger logger = LoggerFactory.getLogger(AppConfiguration.class);
