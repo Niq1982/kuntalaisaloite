@@ -510,6 +510,12 @@ public class AppConfiguration {
         return new ImageModifier();
     }
 
+    @Bean(name = "kapaHashCreator")
+    public HashCreator kapaHashCreator() {
+        return new HashCreator(env.getProperty(PropertyNames.kapaSaltForHashing));
+    }
+
+
     @PostConstruct
     public void initUrls() {
         String baseUrl = env.getRequiredProperty(PropertyNames.baseURL);
