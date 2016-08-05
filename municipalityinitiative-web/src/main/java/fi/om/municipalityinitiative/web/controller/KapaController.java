@@ -3,8 +3,8 @@ package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.json.InitiativeListJson;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
-import fi.om.municipalityinitiative.service.CachedInitiativeFinder;
 import fi.om.municipalityinitiative.service.HashCreator;
+import fi.om.municipalityinitiative.service.KapaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -21,12 +21,12 @@ import static fi.om.municipalityinitiative.web.WebConstants.JSON;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
-public class KapaController {
+public class KapaController{
 
     private final Logger log = LoggerFactory.getLogger(KapaController.class);
 
     @Resource
-    private CachedInitiativeFinder initiativeFinder;
+    private KapaService kapaService;
 
     @Resource(name = "kapaHashCreator")
     private HashCreator hashCreator;
@@ -38,7 +38,9 @@ public class KapaController {
         // TODO: Get real initiatives
 
         if (hashCreator.isHash(ssn, secure)) {
-            return initiativeFinder.frontPageInitiatives().stream()
+
+            return kapaService.findInitiativesForUser(ssn)
+                    .stream()
                     .map(InitiativeListJson::new)
                     .collect(Collectors.toList());
         }

@@ -515,6 +515,11 @@ public class AppConfiguration {
         return new HashCreator(env.getProperty(PropertyNames.kapaSaltForHashing));
     }
 
+    @Bean
+    public KapaService kapaService() {
+        return new KapaService();
+    }
+
 
     @PostConstruct
     public void initUrls() {
