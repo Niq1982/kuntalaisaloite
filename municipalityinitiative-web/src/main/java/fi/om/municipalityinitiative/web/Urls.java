@@ -789,6 +789,6 @@ public final class Urls {
         return getLocalizedPageUrl(EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_FI, EDIT_MUNICIPALITY_DECISION_ATTACHMENTS_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
     public String unsubscribe(long initiativeId, String hash ) {
-        return getBaseUrl() + "/" + UNSUBSCRIBE.replace(ID_PARAMETER, initiativeId+"/") + "?" + PARAM_CONFIRMATION_CODE + "="+ hash;
+        return getBaseUrl() + UNSUBSCRIBE.replace(ID_PARAMETER, initiativeId+"/") + "?" + PARAM_CONFIRMATION_CODE + "="+ hash;
     }
 }
