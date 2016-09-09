@@ -1,6 +1,7 @@
-package fi.om.municipalityinitiative.conf;
+package fi.om.municipalityinitiative.conf.saml;
 
 import com.google.common.collect.Maps;
+import fi.om.municipalityinitiative.conf.FileTemplateMetadataProvider;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.protocol.Protocol;
@@ -26,7 +27,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.saml.*;
 import org.springframework.security.saml.context.SAMLContextProviderImpl;
 import org.springframework.security.saml.context.SAMLContextProviderLB;
@@ -42,13 +42,12 @@ import org.springframework.security.saml.processor.SAMLBinding;
 import org.springframework.security.saml.processor.SAMLProcessorImpl;
 import org.springframework.security.saml.trust.httpclient.TLSProtocolConfigurer;
 import org.springframework.security.saml.trust.httpclient.TLSProtocolSocketFactory;
-import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.security.saml.util.VelocityFactory;
 import org.springframework.security.saml.websso.*;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -73,14 +72,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Inject
     Environment environment;
-
-    private SAMLUserDetailsService samlUserDetailsService = new SAMLUserDetailsService() {
-
-        @Override
-        public Object loadUserBySAML(SAMLCredential samlCredential) throws UsernameNotFoundException {
-            return null;
-        }
-    };
 
     // Initialization of the velocity engine
     @Bean
@@ -120,7 +111,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public SAMLAuthenticationProvider samlAuthenticationProvider() {
         SAMLAuthenticationProvider samlAuthenticationProvider = new SAMLAuthenticationProvider();
-        samlAuthenticationProvider.setUserDetails(samlUserDetailsService);
+        samlAuthenticationProvider.setUserDetails(new SamlUserLoader());
         samlAuthenticationProvider.setForcePrincipalAsString(false);
         return samlAuthenticationProvider;
     }
@@ -354,11 +345,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // Handler deciding where to redirect user after successful login
     @Bean
-    public SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler() {
-        SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler =
-                new SavedRequestAwareAuthenticationSuccessHandler();
-        successRedirectHandler.setDefaultTargetUrl(appURI("/landing"));
-        return successRedirectHandler;
+    public AuthenticationSuccessHandler successRedirectHandler() {
+        return new SessionStoringAuthenticationSuccessHandler(appURI(""));
     }
 
     // Handler deciding where to redirect user after failed login
@@ -371,15 +359,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return failureHandler;
     }
 
-//    @Bean
-//    public SAMLWebSSOHoKProcessingFilter samlWebSSOHoKProcessingFilter() throws Exception {
-//        SAMLWebSSOHoKProcessingFilter samlWebSSOHoKProcessingFilter = new SAMLWebSSOHoKProcessingFilter();
-//        samlWebSSOHoKProcessingFilter.setAuthenticationSuccessHandler(successRedirectHandler());
-//        samlWebSSOHoKProcessingFilter.setAuthenticationManager(authenticationManager());
-//        samlWebSSOHoKProcessingFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
-//        return samlWebSSOHoKProcessingFilter;
-//    }
-//
     // Processing filter for WebSSO profile messages
     @Bean
     public SAMLProcessingFilter samlWebSSOProcessingFilter() throws Exception {
@@ -502,8 +481,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 metadataDisplayFilter()));
         chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSO/**"),
                 samlWebSSOProcessingFilter()));
-//        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSOHoK/**"),
-//                samlWebSSOHoKProcessingFilter()));
         chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SingleLogout/**"),
                 samlLogoutProcessingFilter()));
         return new FilterChainProxy(chains);

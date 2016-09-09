@@ -7,6 +7,7 @@ import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.conf.AppConfiguration.AppDevConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.ProdPropertiesConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.TestPropertiesConfigurer;
+import fi.om.municipalityinitiative.conf.saml.WebSecurityConfig;
 import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
