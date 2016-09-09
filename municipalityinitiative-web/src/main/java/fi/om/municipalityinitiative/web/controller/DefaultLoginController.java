@@ -21,7 +21,7 @@ import static fi.om.municipalityinitiative.web.Views.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
-public class DefaultLoginController extends BaseLoginController {
+public abstract class DefaultLoginController extends BaseLoginController {
 
     protected static final String TARGET_SESSION_PARAM = DefaultLoginController.class.getName() + ".target";
 

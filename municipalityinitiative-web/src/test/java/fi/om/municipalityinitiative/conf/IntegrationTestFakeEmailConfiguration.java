@@ -40,7 +40,8 @@ public class IntegrationTestFakeEmailConfiguration {
                 superSearchEnabled,
                 videoEnabled,
                 followEnabled,
-                "prod");
+                "prod",
+                false);
     }
 
     @Bean

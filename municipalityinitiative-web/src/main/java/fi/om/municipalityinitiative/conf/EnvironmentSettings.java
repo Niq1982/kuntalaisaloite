@@ -18,6 +18,7 @@ public class EnvironmentSettings {
     private final String appEnvironment;
     private final boolean videoEnabled;
     private final boolean followEnabled;
+    private final boolean samlEnabled;
 
 
     public EnvironmentSettings(String defaultReplyTo,
@@ -33,7 +34,8 @@ public class EnvironmentSettings {
                                boolean superSearchEnabled,
                                boolean videoEnabled,
                                boolean followEnabled,
-                               String appEnvironment
+                               String appEnvironment,
+                               boolean samlEnabled
                                ) {
         this.defaultReplyTo = defaultReplyTo;
         this.testSendTo = testSendTo;
@@ -49,6 +51,7 @@ public class EnvironmentSettings {
         this.appEnvironment = appEnvironment;
         this.videoEnabled = videoEnabled;
         this.followEnabled = followEnabled;
+        this.samlEnabled = samlEnabled;
     }
 
     public String getDefaultReplyTo() {
@@ -115,5 +118,9 @@ public class EnvironmentSettings {
 
     public String getAppEnvironment() {
         return appEnvironment;
+    }
+
+    public boolean isSamlEnabled() {
+        return samlEnabled;
     }
 }

@@ -36,8 +36,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static fi.om.municipalityinitiative.web.Urls.VETUMA_FI;
-import static fi.om.municipalityinitiative.web.Urls.VETUMA_SV;
+import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.VETUMA_LOGIN_VIEW;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -63,6 +62,18 @@ public class VetumaLoginController extends DefaultLoginController {
     public VetumaLoginController(String baseUrl, boolean optimizeResources, String resourcesVersion, String vetumaURL) {
         super(baseUrl, optimizeResources, resourcesVersion);
         this.vetumaURL = vetumaURL;
+    }
+
+    @RequestMapping(value={SAML_FI, SAML_SV}, method=GET)
+    public ModelAndView samlLoginGet(@RequestParam(required = false) String target, HttpServletRequest request, HttpSession session, Locale locale, Model model) {
+
+        User user = userService.getUser(request);
+        if (user.isLoggedIn() && user.isVerifiedUser()) {
+            return new ModelAndView(redirect(target));
+        } else {
+            userService.prepareForLogin(request);
+            return new ModelAndView(redirect(Urls.get(locale).getBaseUrl() + "/saml/login?target=" + Urls.urlEncode(target)));
+        }
     }
 
     /*

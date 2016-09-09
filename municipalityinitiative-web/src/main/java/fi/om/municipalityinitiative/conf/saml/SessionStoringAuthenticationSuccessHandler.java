@@ -29,7 +29,6 @@ public class SessionStoringAuthenticationSuccessHandler implements Authenticatio
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
         SamlUser user = (SamlUser) authentication.getPrincipal();
         userService.login(
                 encryptionService.registeredUserHash(user.getSsn()),
@@ -37,6 +36,6 @@ public class SessionStoringAuthenticationSuccessHandler implements Authenticatio
         );
 
         new DefaultRedirectStrategy()
-                .sendRedirect(request, response, baseUri);
+                .sendRedirect(request, response, baseUri + TargetStoringFilter.popTarget(request));
     }
 }

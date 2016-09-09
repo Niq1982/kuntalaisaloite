@@ -66,6 +66,10 @@ public final class Urls {
 
     public static final String VETUMA_SV =        "/sv/vetuma";
 
+    public static final String SAML_FI =        "/fi/saml";
+
+    public static final String SAML_SV =        "/sv/saml";
+
     public static final String MODERATOR_LOGIN = "/om-login";
 
     public static final String LOGOUT_FI =       "/fi/logout";
@@ -643,6 +647,10 @@ public final class Urls {
         return vetumaLogin() + "?"+ TARGET +"=" + urlEncode(Strings.isNullOrEmpty(target) ? baseUrl : target);
     }
 
+    public String samlLogin(String target) {
+        return getLocalizedPageUrl(SAML_FI, SAML_SV) + "?"+ TARGET +"=" + urlEncode(Strings.isNullOrEmpty(target) ? baseUrl : target);
+    }
+
     public String moderatorLogin() {
         return getLocalizedPageUrl(MODERATOR_LOGIN, MODERATOR_LOGIN);
     }
@@ -709,7 +717,7 @@ public final class Urls {
         }
     }
 
-    private static String urlEncode(String s) {
+    public static String urlEncode(String s) {
         if (s == null) {
             return "";
         } else {

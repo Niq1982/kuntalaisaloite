@@ -25,7 +25,7 @@
 
         <p><@u.message "authenticate.paragraph2" /></p>
             
-        <p><a href="${urls.vetumaLogin(target)}" class="small-button"><span class="small-icon next"><@u.message "common.continueToAuthenticate" /></span></a></p>
+        <p><a href="<#if samlEnabled>${urls.samlLogin(target)}<#else>${urls.vetumaLogin(target)}</#if>" class="small-button"><span class="small-icon next"><@u.message "common.continueToAuthenticate" /></span></a></p>
     </div>
 
 </@l.main>

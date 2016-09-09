@@ -437,7 +437,8 @@ public class AppConfiguration {
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.superSearchEnabled)),
                 Boolean.valueOf(env.getProperty(PropertyNames.videoEnabled)),
                 Boolean.valueOf(env.getProperty(PropertyNames.followEnabled)),
-                env.getRequiredProperty(PropertyNames.appEnvironment));
+                env.getRequiredProperty(PropertyNames.appEnvironment),
+                Boolean.valueOf(env.getRequiredProperty("saml.enabled")));
     }
 
     @Bean
