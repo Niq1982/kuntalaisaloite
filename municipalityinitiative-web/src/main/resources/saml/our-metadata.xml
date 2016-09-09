@@ -1,4 +1,4 @@
-<md:EntityDescriptor xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="https://kalastus.mallikunta.fi/SAML2SP">
+<md:EntityDescriptor xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="%(BASE_URL)/">
     <md:Extensions>
         <mdattr:EntityAttributes xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
             <saml:Attribute xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" Name="FinnishAuthMethod" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">

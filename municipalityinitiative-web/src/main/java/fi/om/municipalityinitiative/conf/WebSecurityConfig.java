@@ -6,9 +6,11 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.velocity.app.VelocityEngine;
-import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
+import org.opensaml.saml2.metadata.provider.ResourceBackedMetadataProvider;
+import org.opensaml.util.resource.ClasspathResource;
+import org.opensaml.util.resource.ResourceException;
 import org.opensaml.xml.parse.StaticBasicParserPool;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
@@ -27,6 +29,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.saml.*;
 import org.springframework.security.saml.context.SAMLContextProviderImpl;
+import org.springframework.security.saml.context.SAMLContextProviderLB;
+import org.springframework.security.saml.key.EmptyKeyManager;
 import org.springframework.security.saml.key.JKSKeyManager;
 import org.springframework.security.saml.key.KeyManager;
 import org.springframework.security.saml.log.SAMLDefaultLogger;
@@ -52,6 +56,9 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.inject.Inject;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.KeyStore;
 import java.util.*;
 
 /**
@@ -120,8 +127,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // Provider of default SAML Context
     @Bean
-    public SAMLContextProviderImpl contextProvider() {
-        return new SAMLContextProviderImpl();
+    public SAMLContextProviderImpl contextProvider() throws MalformedURLException {
+        SAMLContextProviderLB samlContextProviderLB = new SAMLContextProviderLB();
+
+        // This is here because apparently spring saml expects ../saml/SSO request to use http if server is answering from http
+        URL url = new URL(environment.getProperty("app.baseURL"));
+
+        samlContextProviderLB.setScheme(url.getProtocol());
+        samlContextProviderLB.setServerName(url.getHost());
+        samlContextProviderLB.setContextPath(url.getPath());
+        return samlContextProviderLB;
     }
 
     // Initialization of OpenSAML library
@@ -175,17 +190,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public KeyManager keyManager() {
 
-//        DefaultResourceLoader loader = new DefaultResourceLoader();
-//        Resource storeFile = loader
-//                .getResource("classpath:/saml/samlKeystore.jks");
-        Resource storeFile = new FileSystemResourceLoader().getResource(environment.getProperty("keystore.location"));
+        try {
+            Resource storeFile = new FileSystemResourceLoader().getResource(environment.getProperty("keystore.location"));
 
-        String storePass = environment.getProperty("keystore.password");
 
-        Map<String, String> passwords = new HashMap<String, String>();
-        passwords.put(environment.getProperty("keystore.key"), environment.getProperty("keystore.password"));
-        String defaultKey = environment.getProperty("keystore.key");
-        return new JKSKeyManager(storeFile, storePass, passwords, defaultKey);
+//            if (Arrays.stream(environment.getActiveProfiles()).anyMatch("saml"::equals)) {
+            if (Boolean.valueOf(environment.getProperty("saml.enabled"))) {
+                String keystoreKey = environment.getProperty("keystore.key");
+                String storePass = environment.getProperty("keystore.password");
+
+                Map<String, String> passwords = new HashMap<>();
+
+                passwords.put(keystoreKey, environment.getProperty("keystore.key.password"));
+
+                KeyStore jceks = KeyStore.getInstance("JCEKS");
+
+                jceks.load(storeFile.getInputStream(), storePass.toCharArray());
+                return new JKSKeyManager(storeFile, storePass, passwords, keystoreKey);
+            } else {
+                return new EmptyKeyManager();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     // Setup TLS Socket Factory
@@ -248,21 +276,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        return idpDiscovery;
 //    }
 
+//    @Bean
+//    @Qualifier("testshib")
+//    public ExtendedMetadataDelegate ssoCircleExtendedMetadataProvider()
+//            throws MetadataProviderException {
+//        String idpSSOCircleMetadataURL = "http://www.testshib.org/metadata/testshib-providers.xml";
+//        Timer backgroundTaskTimer = new Timer(true);
+//        HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(
+//                backgroundTaskTimer, httpClient(), idpSSOCircleMetadataURL);
+//        httpMetadataProvider.setParserPool(parserPool());
+//        ExtendedMetadataDelegate extendedMetadataDelegate =
+//                new ExtendedMetadataDelegate(httpMetadataProvider, extendedMetadata());
+//        extendedMetadataDelegate.setMetadataTrustCheck(true);
+//        extendedMetadataDelegate.setMetadataRequireSignature(false);
+//        return extendedMetadataDelegate;
+//    }
+
     @Bean
-    @Qualifier("testshib")
-    public ExtendedMetadataDelegate ssoCircleExtendedMetadataProvider()
-            throws MetadataProviderException {
-        String idpSSOCircleMetadataURL = "http://www.testshib.org/metadata/testshib-providers.xml";
-        Timer backgroundTaskTimer = new Timer(true);
-        HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(
-                backgroundTaskTimer, httpClient(), idpSSOCircleMetadataURL);
-        httpMetadataProvider.setParserPool(parserPool());
+    public ExtendedMetadataDelegate kapaExtendedMetadataProvider() throws MetadataProviderException, ResourceException {
+
+        ResourceBackedMetadataProvider metadataProvider = new ResourceBackedMetadataProvider(new Timer(), new ClasspathResource("/saml/testi.apro.idp.xml"));
+
+        metadataProvider.setFailFastInitialization(false);
+        metadataProvider.setParserPool(parserPool());
+
         ExtendedMetadataDelegate extendedMetadataDelegate =
-                new ExtendedMetadataDelegate(httpMetadataProvider, extendedMetadata());
-        extendedMetadataDelegate.setMetadataTrustCheck(true);
+                new ExtendedMetadataDelegate(metadataProvider, extendedMetadata());
+        extendedMetadataDelegate.setMetadataTrustCheck(false);
         extendedMetadataDelegate.setMetadataRequireSignature(false);
         return extendedMetadataDelegate;
-//
     }
 
 
@@ -274,7 +316,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Qualifier("metadata")
     public CachingMetadataManager metadata() throws Exception {
         List<MetadataProvider> providers = new ArrayList<MetadataProvider>();
-        providers.add(ssoCircleExtendedMetadataProvider());
+        providers.add(kapaExtendedMetadataProvider());
 
 
         ExtendedMetadata defaultMetadata = new ExtendedMetadata();
@@ -298,6 +340,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         metadataGenerator.setExtendedMetadata(extendedMetadata());
         metadataGenerator.setIncludeDiscoveryExtension(false);
         metadataGenerator.setKeyManager(keyManager());
+        metadataGenerator.setEntityBaseURL(environment.getProperty("app.baseURL"));
 
         return metadataGenerator;
     }
@@ -314,7 +357,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler() {
         SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler =
                 new SavedRequestAwareAuthenticationSuccessHandler();
-        successRedirectHandler.setDefaultTargetUrl("/landing");
+        successRedirectHandler.setDefaultTargetUrl(appURI("/landing"));
         return successRedirectHandler;
     }
 
@@ -324,7 +367,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         SimpleUrlAuthenticationFailureHandler failureHandler =
                 new SimpleUrlAuthenticationFailureHandler();
         failureHandler.setUseForward(true);
-        failureHandler.setDefaultFailureUrl("/error");
+        failureHandler.setDefaultFailureUrl(appURI("/error"));
         return failureHandler;
     }
 
@@ -356,8 +399,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public SimpleUrlLogoutSuccessHandler successLogoutHandler() {
         SimpleUrlLogoutSuccessHandler successLogoutHandler = new SimpleUrlLogoutSuccessHandler();
-        successLogoutHandler.setDefaultTargetUrl("/");
+        successLogoutHandler.setDefaultTargetUrl(appURI("/logout"));
         return successLogoutHandler;
+    }
+
+    private String appURI(String s) {
+        return environment.getProperty("app.baseURL") + s;
     }
 
     // Logout handler terminating local session
@@ -474,35 +521,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
-//    /**
-//     * Defines the web based security configuration.
-//     *
-//     * @param   http It allows configuring web based security for specific http requests.
-//     * @throws  Exception
-//     */
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .httpBasic()
-//                .authenticationEntryPoint(samlEntryPoint());
-//        http
-//                .csrf()
-//                .disable();
-//        http
-//                .addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
-//                .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class);
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/").permitAll()
-//                .antMatchers("/error").permitAll()
-//                .antMatchers("/saml/**").permitAll()
-//                .anyRequest().authenticated();
-//        http
-//                .logout()
-//                .logoutSuccessUrl("/");
-//
-//    }
 
     /**
      * Sets a custom authentication provider.

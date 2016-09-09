@@ -7,8 +7,6 @@ import org.eclipse.jetty.server.Server;
 
 public class StartJetty {
 
-
-
     public static Server startService(int port, String springProfile) {
         try {
             return JettyServer.start(new JettyServer.JettyProperties(
@@ -26,7 +24,7 @@ public class StartJetty {
 
     public static void main(String[] args) throws Throwable {
         System.setProperty(PropertyNames.optimizeResources, "false");
-        startService(8080, "dev,disableSecureCookie").join();
+         startService(8080, "dev,disableSecureCookie").join();
 
     }
 }
