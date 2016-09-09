@@ -2,10 +2,6 @@ package fi.om.municipalityinitiative.conf.saml;
 
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.conf.FileTemplateMetadataProvider;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.velocity.app.VelocityEngine;
 import org.opensaml.saml2.metadata.provider.MetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
@@ -14,7 +10,6 @@ import org.opensaml.util.resource.ClasspathResource;
 import org.opensaml.util.resource.ResourceException;
 import org.opensaml.xml.parse.StaticBasicParserPool;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
@@ -40,8 +35,6 @@ import org.springframework.security.saml.processor.HTTPPostBinding;
 import org.springframework.security.saml.processor.HTTPRedirectDeflateBinding;
 import org.springframework.security.saml.processor.SAMLBinding;
 import org.springframework.security.saml.processor.SAMLProcessorImpl;
-import org.springframework.security.saml.trust.httpclient.TLSProtocolConfigurer;
-import org.springframework.security.saml.trust.httpclient.TLSProtocolSocketFactory;
 import org.springframework.security.saml.util.VelocityFactory;
 import org.springframework.security.saml.websso.*;
 import org.springframework.security.web.DefaultSecurityFilterChain;
@@ -92,17 +85,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean(name = "parserPoolHolder")
     public ParserPoolHolder parserPoolHolder() {
         return new ParserPoolHolder();
-    }
-
-    // Bindings, encoders and decoders used for creating and parsing messages
-    @Bean
-    public MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager() {
-        return new MultiThreadedHttpConnectionManager();
-    }
-
-    @Bean
-    public HttpClient httpClient() {
-        return new HttpClient(multiThreadedHttpConnectionManager());
     }
 
     // SAML Authentication Provider responsible for validating of received SAML
@@ -183,8 +165,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         try {
             Resource storeFile = new FileSystemResourceLoader().getResource(environment.getProperty("keystore.location"));
 
-
-//            if (Arrays.stream(environment.getActiveProfiles()).anyMatch("saml"::equals)) {
             if (Boolean.valueOf(environment.getProperty("saml.enabled"))) {
                 String keystoreKey = environment.getProperty("keystore.key");
                 String storePass = environment.getProperty("keystore.password");
@@ -204,32 +184,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             throw new RuntimeException(e);
         }
 
-    }
-
-    // Setup TLS Socket Factory
-    @Bean
-    public TLSProtocolConfigurer tlsProtocolConfigurer() {
-        return new TLSProtocolConfigurer();
-    }
-
-    @Bean
-    public ProtocolSocketFactory socketFactory() {
-        return new TLSProtocolSocketFactory(keyManager(), null, "default");
-    }
-
-    @Bean
-    public Protocol socketFactoryProtocol() {
-        return new Protocol("https", socketFactory(), 443);
-    }
-
-    @Bean
-    public MethodInvokingFactoryBean socketFactoryInitialization() {
-        MethodInvokingFactoryBean methodInvokingFactoryBean = new MethodInvokingFactoryBean();
-        methodInvokingFactoryBean.setTargetClass(Protocol.class);
-        methodInvokingFactoryBean.setTargetMethod("registerProtocol");
-        Object[] args = {"https", socketFactoryProtocol()};
-        methodInvokingFactoryBean.setArguments(args);
-        return methodInvokingFactoryBean;
     }
 
     @Bean
@@ -258,30 +212,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return extendedMetadata;
     }
 
-    // IDP Discovery Service
-//    @Bean
-//    public SAMLDiscovery samlIDPDiscovery() {
-//        SAMLDiscovery idpDiscovery = new SAMLDiscovery();
-//        idpDiscovery.setIdpSelectionPath("/saml/idpSelection");
-//        return idpDiscovery;
-//    }
-
-//    @Bean
-//    @Qualifier("testshib")
-//    public ExtendedMetadataDelegate ssoCircleExtendedMetadataProvider()
-//            throws MetadataProviderException {
-//        String idpSSOCircleMetadataURL = "http://www.testshib.org/metadata/testshib-providers.xml";
-//        Timer backgroundTaskTimer = new Timer(true);
-//        HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(
-//                backgroundTaskTimer, httpClient(), idpSSOCircleMetadataURL);
-//        httpMetadataProvider.setParserPool(parserPool());
-//        ExtendedMetadataDelegate extendedMetadataDelegate =
-//                new ExtendedMetadataDelegate(httpMetadataProvider, extendedMetadata());
-//        extendedMetadataDelegate.setMetadataTrustCheck(true);
-//        extendedMetadataDelegate.setMetadataRequireSignature(false);
-//        return extendedMetadataDelegate;
-//    }
-
     @Bean
     public ExtendedMetadataDelegate kapaExtendedMetadataProvider() throws MetadataProviderException, ResourceException {
 
@@ -296,8 +226,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         extendedMetadataDelegate.setMetadataRequireSignature(false);
         return extendedMetadataDelegate;
     }
-
-
 
     // IDP Metadata configuration - paths to metadata of IDPs in circle of trust
     // is here
@@ -410,24 +338,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 new LogoutHandler[] { logoutHandler() });
     }
 
-    // Bindings
-//    private ArtifactResolutionProfile artifactResolutionProfile() {
-//        final ArtifactResolutionProfileImpl artifactResolutionProfile =
-//                new ArtifactResolutionProfileImpl(httpClient());
-//        artifactResolutionProfile.setProcessor(new SAMLProcessorImpl(soapBinding()));
-//        return artifactResolutionProfile;
-//    }
-
-//    @Bean
-//    public HTTPArtifactBinding artifactBinding(ParserPool parserPool, VelocityEngine velocityEngine) {
-//        return new HTTPArtifactBinding(parserPool, velocityEngine, artifactResolutionProfile());
-//    }
-
-//    @Bean
-//    public HTTPSOAP11Binding soapBinding() {
-//        return new HTTPSOAP11Binding(parserPool());
-//    }
-
     @Bean
     public HTTPPostBinding httpPostBinding() {
         return new HTTPPostBinding(parserPool(), velocityEngine());
@@ -438,25 +348,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new HTTPRedirectDeflateBinding(parserPool());
     }
 
-//    @Bean
-//    public HTTPSOAP11Binding httpSOAP11Binding() {
-//        return new HTTPSOAP11Binding(parserPool());
-//    }
-//
-//    @Bean
-//    public HTTPPAOS11Binding httpPAOS11Binding() {
-//        return new HTTPPAOS11Binding(parserPool());
-//    }
-
     // Processor
     @Bean
     public SAMLProcessorImpl processor() {
         Collection<SAMLBinding> bindings = new ArrayList<SAMLBinding>();
         bindings.add(httpRedirectDeflateBinding());
         bindings.add(httpPostBinding());
-//        bindings.add(artifactBinding(parserPool(), velocityEngine()));
-//        bindings.add(httpSOAP11Binding());
-//        bindings.add(httpPAOS11Binding());
         return new SAMLProcessorImpl(bindings);
     }
 
