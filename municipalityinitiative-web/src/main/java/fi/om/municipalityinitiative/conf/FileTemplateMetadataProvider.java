@@ -13,6 +13,7 @@ import java.util.Map;
 
 public class FileTemplateMetadataProvider extends AbstractReloadingMetadataProvider {
 
+    private final String baseUrl;
     private Resource resource;
     private Map<String, String> values;
 
@@ -22,12 +23,13 @@ public class FileTemplateMetadataProvider extends AbstractReloadingMetadataProvi
         values = Maps.newHashMap();
         values.put("PUBLIC_CERT", publicCert);
         values.put("BASE_URL", baseUrl);
+        this.baseUrl = baseUrl;
 
     }
 
     @Override
     protected String getMetadataIdentifier() {
-        return null;
+        return baseUrl;
     }
 
     @Override
