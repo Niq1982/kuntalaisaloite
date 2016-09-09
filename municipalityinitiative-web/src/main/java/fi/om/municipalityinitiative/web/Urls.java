@@ -651,6 +651,10 @@ public final class Urls {
         return getLocalizedPageUrl(SAML_FI, SAML_SV) + "?"+ TARGET +"=" + urlEncode(Strings.isNullOrEmpty(target) ? baseUrl : target);
     }
 
+    public String samlLogout(String target) {
+        return baseUrl +"/saml/logout?"+ TARGET +"=" + urlEncode(Strings.isNullOrEmpty(target) ? "" : target);
+    }
+
     public String moderatorLogin() {
         return getLocalizedPageUrl(MODERATOR_LOGIN, MODERATOR_LOGIN);
     }

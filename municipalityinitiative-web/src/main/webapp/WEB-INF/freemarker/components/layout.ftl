@@ -250,7 +250,7 @@
 	                            <a href="#" class="header-tool-link user-name dropdown-toggle" title="${userName}"><span class="user-name">${userName}</span><span class="icon-small arrow-down-black"></span></a>
 	                            <ul id="user-menu" class="dropdown-menu user-menu">
 	                                <li><a href="${urls.ownInitiatives()}"><@u.message "page.ownInitiatives" /></a></li>
-	                                <li><a href="${urls.logout()}" id="logout"><@u.message "common.logout"/></a></li>
+	                                <li><a href="<#if samlEnabled>${urls.samlLogout(currentRequestUri)}<#else>${urls.logout()}</#if>" id="logout"><@u.message "common.logout"/></a></li>
 	                            </ul>
 	                        </div>
 	                    </#if>

@@ -51,7 +51,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.inject.Inject;
@@ -374,12 +373,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new MetadataGeneratorFilter(metadataGenerator());
     }
 
-    // Handler for successful logout
     @Bean
-    public SimpleUrlLogoutSuccessHandler successLogoutHandler() {
-        SimpleUrlLogoutSuccessHandler successLogoutHandler = new SimpleUrlLogoutSuccessHandler();
-        successLogoutHandler.setDefaultTargetUrl(appURI("/logout"));
-        return successLogoutHandler;
+    public SessionDestroyingSuccessLogoutHandler successLogoutHandler() {
+        return new SessionDestroyingSuccessLogoutHandler(appURI(""));
     }
 
     private String appURI(String s) {
@@ -391,7 +387,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityContextLogoutHandler logoutHandler() {
         SecurityContextLogoutHandler logoutHandler =
                 new SecurityContextLogoutHandler();
-        logoutHandler.setInvalidateHttpSession(true);
+        logoutHandler.setInvalidateHttpSession(false); // Invalidate it in SessionDestroyingSuccessLogoutHandler
         logoutHandler.setClearAuthentication(true);
         return logoutHandler;
     }
@@ -477,6 +473,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 new TargetStoringFilter(),
                 samlEntryPoint()));
         chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/logout/**"),
+                new TargetStoringFilter(),
                 samlLogoutFilter()));
         chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/metadata/**"),
                 metadataDisplayFilter()));
