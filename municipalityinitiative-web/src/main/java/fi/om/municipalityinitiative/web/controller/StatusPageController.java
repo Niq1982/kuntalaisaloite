@@ -5,13 +5,14 @@ import fi.om.municipalityinitiative.service.StatusService;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.InfoRibbon;
 import fi.om.municipalityinitiative.web.Urls;
+import org.opensaml.saml2.metadata.provider.AbstractReloadingMetadataProvider;
+import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 
 import static fi.om.municipalityinitiative.web.Urls.STATUS;
@@ -26,12 +27,15 @@ public class StatusPageController extends BaseController {
     @Resource
     StatusService statusService;
 
+    @Resource
+    AbstractReloadingMetadataProvider idpMetadataProvider;
+
     public StatusPageController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
 
     @RequestMapping(value=STATUS, method=GET)
-    public String statusGet(Model model, @RequestParam(value="ribbon", required=false) String ribbon, @RequestParam(value = "emails", required = false) Long emailOffset) {
+    public String statusGet(Model model, @RequestParam(value="ribbon", required=false) String ribbon, @RequestParam(value = "emails", required = false) Long emailOffset) throws MetadataProviderException {
 
         model.addAttribute("applicationInfoRows", statusService.getApplicationInfo());
         model.addAttribute("schemaVersionInfoRows", statusService.getSchemaVersionInfo());
@@ -52,6 +56,7 @@ public class StatusPageController extends BaseController {
 
         if ("refresh".equals(ribbon)) {
             InfoRibbon.refreshInfoRibbonTexts();
+            idpMetadataProvider.refresh();
             model.addAttribute("infoRibbon", InfoRibbon.getInfoRibbonText(Locales.LOCALE_FI));
         }
 

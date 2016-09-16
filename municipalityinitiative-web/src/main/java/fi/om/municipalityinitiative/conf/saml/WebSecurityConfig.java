@@ -17,7 +17,6 @@ import org.opensaml.util.resource.ResourceException;
 import org.opensaml.xml.parse.StaticBasicParserPool;
 import org.opensaml.xml.schema.XSAny;
 import org.opensaml.xml.schema.impl.XSAnyBuilder;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
@@ -253,28 +252,34 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public ExtendedMetadataDelegate kapaExtendedMetadataProvider() throws MetadataProviderException, ResourceException {
+    public ExtendedMetadataDelegate idpMetaDataDelegate() throws MetadataProviderException, ResourceException {
 
-        ResourceBackedMetadataProvider metadataProvider = new ResourceBackedMetadataProvider(new Timer(), new FilesystemResource("config/testi.apro.idp.xml"));
-
-        metadataProvider.setFailFastInitialization(false);
-        metadataProvider.setParserPool(parserPool());
+        ResourceBackedMetadataProvider metadataProvider = idpMetadataProvider();
 
         ExtendedMetadataDelegate extendedMetadataDelegate =
                 new ExtendedMetadataDelegate(metadataProvider, extendedMetadata());
         extendedMetadataDelegate.setMetadataTrustCheck(false);
         extendedMetadataDelegate.setMetadataRequireSignature(false);
+
         return extendedMetadataDelegate;
+    }
+
+    @Bean
+    public ResourceBackedMetadataProvider idpMetadataProvider() throws MetadataProviderException, ResourceException {
+        ResourceBackedMetadataProvider metadataProvider = new ResourceBackedMetadataProvider(new Timer(), new FilesystemResource("config/testi.apro.idp.xml"));
+
+        metadataProvider.setFailFastInitialization(false);
+        metadataProvider.setParserPool(parserPool());
+        return metadataProvider;
     }
 
     // IDP Metadata configuration - paths to metadata of IDPs in circle of trust
     // is here
     // Do no forget to call iniitalize method on providers
     @Bean
-    @Qualifier("metadata")
     public CachingMetadataManager metadata() throws Exception {
         List<MetadataProvider> providers = new ArrayList<MetadataProvider>();
-        providers.add(kapaExtendedMetadataProvider());
+        providers.add(idpMetaDataDelegate());
 
 
         ExtendedMetadata defaultMetadata = new ExtendedMetadata();
