@@ -3,12 +3,20 @@ package fi.om.municipalityinitiative.conf.saml;
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.conf.FileTemplateMetadataProvider;
 import org.apache.velocity.app.VelocityEngine;
+import org.opensaml.common.SAMLException;
+import org.opensaml.saml2.common.Extensions;
+import org.opensaml.saml2.common.impl.ExtensionsBuilder;
+import org.opensaml.saml2.core.AuthnRequest;
+import org.opensaml.saml2.metadata.AssertionConsumerService;
+import org.opensaml.saml2.metadata.SingleSignOnService;
 import org.opensaml.saml2.metadata.provider.MetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.saml2.metadata.provider.ResourceBackedMetadataProvider;
 import org.opensaml.util.resource.ClasspathResource;
 import org.opensaml.util.resource.ResourceException;
 import org.opensaml.xml.parse.StaticBasicParserPool;
+import org.opensaml.xml.schema.XSAny;
+import org.opensaml.xml.schema.impl.XSAnyBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +33,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.saml.*;
 import org.springframework.security.saml.context.SAMLContextProviderImpl;
 import org.springframework.security.saml.context.SAMLContextProviderLB;
+import org.springframework.security.saml.context.SAMLMessageContext;
 import org.springframework.security.saml.key.EmptyKeyManager;
 import org.springframework.security.saml.key.JKSKeyManager;
 import org.springframework.security.saml.key.KeyManager;
@@ -47,6 +56,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.inject.Inject;
+import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyStore;
@@ -138,8 +148,38 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // SAML 2.0 Web SSO profile
     @Bean
     public WebSSOProfile webSSOprofile() {
-        return new WebSSOProfileImpl();
+        return new WebSSOProfileImpl() {
+
+            @Override
+            protected AuthnRequest getAuthnRequest(SAMLMessageContext context, WebSSOProfileOptions options, AssertionConsumerService assertionConsumer, SingleSignOnService bindingService) throws SAMLException, MetadataProviderException {
+                AuthnRequest authnRequest = super.getAuthnRequest(context, options, assertionConsumer, bindingService);
+                authnRequest.setExtensions(buildExtensions());
+                return authnRequest;
+            }
+
+            /**
+             * Language extension to AuthnRequest:
+             *
+             *  <samlp:Extensions>
+                    <vetuma xmlns="urn:vetuma:SAML:2.0:extensions">
+                        <LG>[fi|sv]</LG>
+                    </vetuma>
+                </samlp:Extensions>
+             */
+            private Extensions buildExtensions() {
+                Extensions extensions = new ExtensionsBuilder()
+                        .buildObject("urn:oasis:names:tc:SAML:2.0:protocol", "Extensions", "saml2p");
+                XSAny vetuma = new XSAnyBuilder().buildObject(new QName("urn:vetuma:SAML:2.0:extensions", "vetuma"));
+                XSAny language = new XSAnyBuilder().buildObject(new QName("urn:vetuma:SAML:2.0:extensions", "LG"));
+                language.setTextContent("fi"); // TODO: Get from somewhere.
+                extensions.getUnknownXMLObjects().add(vetuma);
+                vetuma.getUnknownXMLObjects().add(language);
+                return extensions;
+            }
+        };
     }
+
+
 
     // SAML 2.0 Holder-of-Key Web SSO profile
     @Bean
