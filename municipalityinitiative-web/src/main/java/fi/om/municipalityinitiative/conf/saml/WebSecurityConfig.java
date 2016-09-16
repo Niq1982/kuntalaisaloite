@@ -12,7 +12,7 @@ import org.opensaml.saml2.metadata.SingleSignOnService;
 import org.opensaml.saml2.metadata.provider.MetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.saml2.metadata.provider.ResourceBackedMetadataProvider;
-import org.opensaml.util.resource.ClasspathResource;
+import org.opensaml.util.resource.FilesystemResource;
 import org.opensaml.util.resource.ResourceException;
 import org.opensaml.xml.parse.StaticBasicParserPool;
 import org.opensaml.xml.schema.XSAny;
@@ -255,7 +255,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public ExtendedMetadataDelegate kapaExtendedMetadataProvider() throws MetadataProviderException, ResourceException {
 
-        ResourceBackedMetadataProvider metadataProvider = new ResourceBackedMetadataProvider(new Timer(), new ClasspathResource("/saml/testi.apro.idp.xml"));
+        ResourceBackedMetadataProvider metadataProvider = new ResourceBackedMetadataProvider(new Timer(), new FilesystemResource("config/testi.apro.idp.xml"));
 
         metadataProvider.setFailFastInitialization(false);
         metadataProvider.setParserPool(parserPool());
