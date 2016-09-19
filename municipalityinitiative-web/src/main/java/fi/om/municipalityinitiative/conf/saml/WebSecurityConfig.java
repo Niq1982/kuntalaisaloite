@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.conf.saml;
 
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.conf.FileTemplateMetadataProvider;
+import fi.om.municipalityinitiative.web.Urls;
 import org.apache.velocity.app.VelocityEngine;
 import org.opensaml.common.SAMLException;
 import org.opensaml.saml2.common.Extensions;
@@ -53,6 +54,8 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.inject.Inject;
 import javax.xml.namespace.QName;
@@ -170,7 +173,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .buildObject("urn:oasis:names:tc:SAML:2.0:protocol", "Extensions", "saml2p");
                 XSAny vetuma = new XSAnyBuilder().buildObject(new QName("urn:vetuma:SAML:2.0:extensions", "vetuma"));
                 XSAny language = new XSAnyBuilder().buildObject(new QName("urn:vetuma:SAML:2.0:extensions", "LG"));
-                language.setTextContent("fi"); // TODO: Get from somewhere.
+
+                String sessionTarget = TargetStoringFilter.peekTarget(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest());
+                language.setTextContent(sessionTarget != null && sessionTarget.startsWith(Urls.FRONT_SV) ? "sv" : "fi");
                 extensions.getUnknownXMLObjects().add(vetuma);
                 vetuma.getUnknownXMLObjects().add(language);
                 return extensions;

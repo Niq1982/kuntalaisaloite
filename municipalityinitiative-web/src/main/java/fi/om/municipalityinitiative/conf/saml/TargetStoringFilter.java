@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.conf.saml;
 
+import fi.om.municipalityinitiative.web.Urls;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -32,20 +34,23 @@ class TargetStoringFilter implements Filter {
     }
 
     public static String popTarget(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Object attribute = session.getAttribute(SESSION_PARAM_NAME);
 
-        if (attribute == null) {
-            return "";
-        }
-        else {
-            session.removeAttribute(SESSION_PARAM_NAME);
-            return (String) attribute;
-        }
+        String attribute = peekTarget(request);
+        request.getSession(false).removeAttribute(SESSION_PARAM_NAME);
+        return attribute;
     }
 
     @Override
     public void destroy() {
 
+    }
+
+    public static String peekTarget(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Object attribute = session.getAttribute(SESSION_PARAM_NAME);
+        if (attribute == null) {
+            return Urls.FRONT_FI;
+        }
+        return (String) attribute;
     }
 }
