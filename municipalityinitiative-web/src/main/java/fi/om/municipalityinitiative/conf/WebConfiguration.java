@@ -56,6 +56,11 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         }
 
         @Bean
+        KapaController kapaController() {
+            return new KapaController();
+        }
+
+        @Bean
         public VetumaMockController vetumaMockController() {
             return new VetumaMockController(optimizeResources(env), resourcesVersion(env));
         }

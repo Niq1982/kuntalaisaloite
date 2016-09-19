@@ -4,14 +4,16 @@ public final class PropertyNames {
 
     public static final String isTestEmailSender = "test.mail.sender";
 
+    public static final String kapaSaltForHashing = "salt.for.hashing.kapa";
+
     private PropertyNames() {}
 
     public static final String omImageDirection = "om.image.directory";
 
     public static final String omUserSalt = "om.user.salt";
 
-    public static final String baseURL = "app.baseURL"; 
-    
+    public static final String baseURL = "app.baseURL";
+
     public static final String registeredUserSecret = "security.registeredUserSecret";
 
     public static final String googleMapsApiKey = "googlemaps.apikey";
@@ -19,13 +21,13 @@ public final class PropertyNames {
     public static final String googleMapsEnabled = "googlemaps.enabled";
 
     public static final String superSearchEnabled = "supersearch.enabled";
-    
+
     public static final String jdbcDriver = "jdbc.driver";
-    
+
     public static final String jdbcURL = "jdbc.url";
-    
+
     public static final String jdbcUser = "jdbc.user";
-    
+
     public static final String jdbcPassword = "jdbc.password";
 
     public static final String flywayPassword = "flyway.password";
@@ -35,9 +37,9 @@ public final class PropertyNames {
     public static final String enableVerifiedInitiatives = "enable.verified.initiatives";
 
     public static final String vetumaURL = "vetuma.url";
-    
+
     public static final String vetumaSharedSecret = "vetuma.sharedSecret";
-    
+
     public static final String vetumaRCVID = "vetuma.rcvid";
 
     public static final String vetumaSO = "vetuma.so";
@@ -49,21 +51,21 @@ public final class PropertyNames {
     public static final String vetumaAPPNAME = "vetuma.appname";
 
     public static final String vetumaAPPID = "vetuma.appid";
-    
-    
+
+
     public static final String emailSmtpServer = "email.smtp.server";
 
     public static final String emailSmtpServerPort = "email.smtp.server.port";
-    
+
     public static final String emailDefaultReplyTo = "email.default.reply-to";
-    
+
     public static final String emailSendToOM = "email.send-to.om";
-    
+
     public static final String errorFeedbackEmail = "error.feedbackEmail";
 
-    
+
     public static final String testEmailSendTo = "test.email.send-to";
-    
+
     public static final String testEmailConsoleOutput = "test.email.consoleOutput";
 
     public static final String testEmailMunicipalityEmailsToAuthor = "test.email.municipality.emails.to.author";
