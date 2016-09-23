@@ -40,8 +40,13 @@
             <div class="container">
                 <#if (appEnvironment == "test")>
 
-                    T&auml;m&auml; on kuntalaisaloitepalvelun testiversio. Palvelu l&auml;hett&auml;&auml; sinulle s&auml;hk&ouml;posteja, joten annathan toimivan s&auml;hk&ouml;postiosoitteesi. Testipalvelussa tehdyt aloitteet ja muut tiedot poistetaan s&auml;&auml;nn&ouml;llisesti ilman erillist&auml; ilmoitusta, eiv&auml;tk&auml; aloitteet v&auml;lity kunnalle.<br/>
-                    Anna palautetta testipalvelusta <a href="mailto:kuntalaisaloite.om@om.fi">kuntalaisaloite.om@om.fi</a>
+                    <#if locale == "sv">
+                        Det här är en testversion av tjänsten invånarinitiativ.fi. För att få e-postmeddelandena som skickas från tjänsten ska du ge din aktuella e-postadress. Initiativen som skapas i tjänsten och andra uppgifter som matas in raderas regelbundet utan någon särskild anmälning. Initiativen skickas inte till kommunerna.
+                        Skicka dina kommentarer om testversionen till <a href="mailto:kuntalaisaloite.om@om.fi">kuntalaisaloite.om@om.fi</a>
+                    <#else>
+                        T&auml;m&auml; on kuntalaisaloitepalvelun testiversio. Palvelu l&auml;hett&auml;&auml; sinulle s&auml;hk&ouml;posteja, joten annathan toimivan s&auml;hk&ouml;postiosoitteesi. Testipalvelussa tehdyt aloitteet ja muut tiedot poistetaan s&auml;&auml;nn&ouml;llisesti ilman erillist&auml; ilmoitusta, eiv&auml;tk&auml; aloitteet v&auml;lity kunnalle.<br/>
+                        Anna palautetta testipalvelusta <a href="mailto:kuntalaisaloite.om@om.fi">kuntalaisaloite.om@om.fi</a>
+                    </#if>
 
                 <#else>
                     T&auml;m&auml; on oikeusministeri&ouml;n kuntalaisaloiteverkkopalvelun kehitysversio.
