@@ -30,13 +30,19 @@ class TargetStoringFilter implements Filter {
     }
 
     private static void storeTarget(HttpServletRequest request, String target) {
-        request.getSession(false).setAttribute(SESSION_PARAM_NAME, target);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.setAttribute(SESSION_PARAM_NAME, target);
+        }
     }
 
     public static String popTarget(HttpServletRequest request) {
 
         String attribute = peekTarget(request);
-        request.getSession(false).removeAttribute(SESSION_PARAM_NAME);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.removeAttribute(SESSION_PARAM_NAME);
+        }
         return attribute;
     }
 
@@ -47,6 +53,9 @@ class TargetStoringFilter implements Filter {
 
     public static String peekTarget(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
+        if (session == null) {
+            return Urls.FRONT_FI;
+        }
         Object attribute = session.getAttribute(SESSION_PARAM_NAME);
         if (attribute == null) {
             return Urls.FRONT_FI;

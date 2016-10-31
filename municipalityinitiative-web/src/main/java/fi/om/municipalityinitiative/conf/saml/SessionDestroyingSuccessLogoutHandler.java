@@ -7,6 +7,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class SessionDestroyingSuccessLogoutHandler implements LogoutSuccessHandler {
@@ -25,7 +26,10 @@ public class SessionDestroyingSuccessLogoutHandler implements LogoutSuccessHandl
         }
 
         String targetUri = TargetStoringFilter.popTarget(request);
-        request.getSession(false).invalidate();
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
         new DefaultRedirectStrategy()
                 .sendRedirect(request, response, baseUri + targetUri);
     }
