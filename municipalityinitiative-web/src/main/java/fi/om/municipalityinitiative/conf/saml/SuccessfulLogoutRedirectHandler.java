@@ -10,27 +10,24 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class SessionDestroyingSuccessLogoutHandler implements LogoutSuccessHandler {
+public class SuccessfulLogoutRedirectHandler implements LogoutSuccessHandler {
 
     private String baseUri;
 
-    public SessionDestroyingSuccessLogoutHandler(String baseUri) {
+    public SuccessfulLogoutRedirectHandler(String baseUri) {
         this.baseUri = baseUri;
     }
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
-        if (response.isCommitted()) {
-            return;
-        }
-
         String targetUri = TargetStoringFilter.popTarget(request);
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
+
         new DefaultRedirectStrategy()
                 .sendRedirect(request, response, baseUri + targetUri);
+
     }
 }

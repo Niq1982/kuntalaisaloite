@@ -52,7 +52,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -352,22 +351,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public SessionDestroyingSuccessLogoutHandler successLogoutHandler() {
-        return new SessionDestroyingSuccessLogoutHandler(appURI(""));
+    public SessionDestroyingLogoutHandler logoutHandler() {
+        return new SessionDestroyingLogoutHandler();
+    }
+
+    @Bean
+    public SuccessfulLogoutRedirectHandler successfulLogoutRedirectHandler() {
+        return new SuccessfulLogoutRedirectHandler(appURI(""));
     }
 
     private String appURI(String s) {
         return environment.getProperty("app.baseURL") + s;
-    }
-
-    // Logout handler terminating local session
-    @Bean
-    public SecurityContextLogoutHandler logoutHandler() {
-        SecurityContextLogoutHandler logoutHandler =
-                new SecurityContextLogoutHandler();
-        logoutHandler.setInvalidateHttpSession(false); // Invalidate it in SessionDestroyingSuccessLogoutHandler
-        logoutHandler.setClearAuthentication(true);
-        return logoutHandler;
     }
 
     // Filter processing incoming logout messages
@@ -375,15 +369,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // global logout
     @Bean
     public SAMLLogoutProcessingFilter samlLogoutProcessingFilter() {
-        return new SAMLLogoutProcessingFilter(successLogoutHandler(),
-                logoutHandler());
+        return new SAMLLogoutProcessingFilter(
+                successfulLogoutRedirectHandler(),
+                logoutHandler()
+        );
     }
 
     // Overrides default logout processing filter with the one processing SAML
     // messages
     @Bean
     public SAMLLogoutFilter samlLogoutFilter() {
-        return new SAMLLogoutFilter(successLogoutHandler(),
+        return new SAMLLogoutFilter(successfulLogoutRedirectHandler(),
                 new LogoutHandler[] { logoutHandler() },
                 new LogoutHandler[] { logoutHandler() });
     }
