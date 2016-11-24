@@ -50,7 +50,6 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -327,12 +326,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // Handler deciding where to redirect user after failed login
     @Bean
-    public SimpleUrlAuthenticationFailureHandler authenticationFailureHandler() {
-        SimpleUrlAuthenticationFailureHandler failureHandler =
-                new SimpleUrlAuthenticationFailureHandler();
-        failureHandler.setUseForward(true);
-        failureHandler.setDefaultFailureUrl(appURI("/error"));
-        return failureHandler;
+    public RedirectingAuthenticationFailureHandler authenticationFailureHandler() {
+        return new RedirectingAuthenticationFailureHandler(appURI(""));
     }
 
     // Processing filter for WebSSO profile messages
