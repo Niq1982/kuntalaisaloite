@@ -20,7 +20,7 @@ public class SuccessfulLogoutRedirectHandler implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String targetUri = TargetStoringFilter.popTarget(request);
+        String targetUri = TargetStoringFilter.popTarget(request, response);
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
