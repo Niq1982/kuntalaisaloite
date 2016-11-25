@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.conf.saml;
 
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import javax.servlet.ServletException;
@@ -23,8 +24,8 @@ public class RedirectingAuthenticationFailureHandler implements AuthenticationFa
 
         String targetUri = TargetStoringFilter.popTarget(request, response);
 
-        System.out.println(targetUri);
-
+        new DefaultRedirectStrategy()
+                .sendRedirect(request, response, baseUrl + targetUri);
 
     }
 }
