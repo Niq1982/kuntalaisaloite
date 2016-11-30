@@ -204,10 +204,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public KeyManager keyManager() {
 
-        try {
-            Resource storeFile = new FileSystemResourceLoader().getResource(environment.getProperty("keystore.location"));
+        if (Boolean.valueOf(environment.getProperty("keystore.location"))) {
+            try {
+                Resource storeFile = new FileSystemResourceLoader().getResource(environment.getProperty("keystore.location"));
 
-            if (Boolean.valueOf(environment.getProperty("saml.enabled"))) {
                 String keystoreKey = environment.getProperty("keystore.key");
                 String storePass = environment.getProperty("keystore.password");
 
@@ -219,11 +219,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 jceks.load(storeFile.getInputStream(), storePass.toCharArray());
                 return new JKSKeyManager(storeFile, storePass, passwords, keystoreKey);
-            } else {
-                return new EmptyKeyManager();
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } else {
+            return new EmptyKeyManager();
         }
 
     }
