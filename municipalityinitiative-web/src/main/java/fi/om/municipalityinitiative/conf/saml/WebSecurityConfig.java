@@ -269,8 +269,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public ResourceBackedMetadataProvider idpMetadataProvider() throws MetadataProviderException, ResourceException {
-        ResourceBackedMetadataProvider metadataProvider = new ResourceBackedMetadataProvider(new Timer(), new FilesystemResource("config/testi.apro.idp.xml"));
-
+        ResourceBackedMetadataProvider metadataProvider = new ResourceBackedMetadataProvider(new Timer(), new FilesystemResource(environment.getProperty("saml.idp.metadata.location")));
         metadataProvider.setFailFastInitialization(false);
         metadataProvider.setParserPool(parserPool());
         return metadataProvider;
