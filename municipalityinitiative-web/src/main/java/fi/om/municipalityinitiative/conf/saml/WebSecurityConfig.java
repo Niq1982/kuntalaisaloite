@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.conf.saml;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.conf.FileTemplateMetadataProvider;
 import fi.om.municipalityinitiative.web.Urls;
@@ -204,7 +205,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public KeyManager keyManager() {
 
-        if (Boolean.valueOf(environment.getProperty("keystore.location"))) {
+        if (!Strings.isNullOrEmpty(environment.getProperty("keystore.location"))) {
             try {
                 Resource storeFile = new FileSystemResourceLoader().getResource(environment.getProperty("keystore.location"));
 
