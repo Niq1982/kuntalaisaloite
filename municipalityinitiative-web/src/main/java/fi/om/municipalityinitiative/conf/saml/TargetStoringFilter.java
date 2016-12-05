@@ -51,7 +51,7 @@ class TargetStoringFilter implements Filter {
     public static String popTarget(HttpServletRequest request, HttpServletResponse response) {
         Optional<String> optionalTarget = optionalTarget(request);
         optionalTarget.ifPresent((__) -> response.addCookie(deleteCookie()));
-        return optionalTarget.get();
+        return optionalTarget.orElse(Urls.FRONT_FI);
     }
 
     @Override
