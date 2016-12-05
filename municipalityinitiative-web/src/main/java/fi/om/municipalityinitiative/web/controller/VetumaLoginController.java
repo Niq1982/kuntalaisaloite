@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.web.controller;
 
-import com.mysema.commons.lang.Assert;
 import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.User;
@@ -13,12 +12,12 @@ import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.SsnValidator;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Seconds;
-import org.joda.time.Years;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -33,8 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.VETUMA_LOGIN_VIEW;
@@ -147,7 +144,7 @@ public class VetumaLoginController extends DefaultLoginController {
 
             String ssn = vetumaResponse.getSsn();
 
-            if (!isAdult(ssn)) {
+            if (!SsnValidator.isAdult(LocalDate.now(), ssn)) {
                 return redirect(urls.notAdultError());
             }
 
@@ -201,38 +198,5 @@ public class VetumaLoginController extends DefaultLoginController {
         return diff.getSeconds();
     }
 
-    public static final String SSN_REGEX = "(\\d{2})(\\d{2})(\\d{2})([+-A])\\d{3}[0-9A-Z]";
 
-    public static final Pattern SSN_PATTERN = Pattern.compile(SSN_REGEX);
-
-    private static final int LEGAL_AGE = 18;
-
-    private static boolean isAdult(String ssn) {
-        Assert.notNull(ssn, "ssn");
-
-        Matcher m = SSN_PATTERN.matcher(ssn);
-        if (m.matches()) {
-            int dd = Integer.parseInt(m.group(1));
-            int mm = Integer.parseInt(m.group(2));
-            int yy = Integer.parseInt(m.group(3));
-            int yyyy;
-            char c = ssn.charAt(6);
-            switch (c) {
-                case '+':
-                    yyyy = 1800 + yy;
-                    break;
-                case '-':
-                    yyyy = 1900 + yy;
-                    break;
-                case 'A':
-                    yyyy = 2000 + yy;
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid SSN");
-            }
-            return Years.yearsBetween(new LocalDate(yyyy, mm, dd), LocalDate.now()).getYears() >= LEGAL_AGE;
-        } else {
-            throw new IllegalStateException("Invalid SSN");
-        }
-    }
 }

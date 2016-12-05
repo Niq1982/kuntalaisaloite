@@ -2,6 +2,10 @@ package fi.om.municipalityinitiative.conf.saml;
 
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.service.UserService;
+import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.SsnValidator;
+import fi.om.municipalityinitiative.web.Urls;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -30,12 +34,18 @@ public class SessionStoringAuthenticationSuccessHandler implements Authenticatio
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         SamlUser user = (SamlUser) authentication.getPrincipal();
-        userService.login(
-                encryptionService.registeredUserHash(user.getSsn()),
-                user.getFullName(), user.getAddress(), user.getMunicipality(), request
-        );
 
-        new DefaultRedirectStrategy()
-                .sendRedirect(request, response, baseUri + TargetStoringFilter.popTarget(request, response));
+        if (SsnValidator.isAdult(LocalDate.now(), user.getSsn())) {
+            userService.login(
+                    encryptionService.registeredUserHash(user.getSsn()),
+                    user.getFullName(), user.getAddress(), user.getMunicipality(), request
+            );
+            new DefaultRedirectStrategy()
+                    .sendRedirect(request, response, baseUri + TargetStoringFilter.popTarget(request, response));
+        } else {
+            new DefaultRedirectStrategy()
+                    .sendRedirect(request, response, Urls.get(Locales.LOCALE_FI).notAdultError());
+        }
+
     }
 }
