@@ -33,15 +33,19 @@ public class SamlUserLoader implements SAMLUserDetailsService {
         String postOffice = credential.getAttributeAsString("urn:oid:1.2.246.517.2002.2.7");
         String municipalityNumber = credential.getAttributeAsString("urn:oid:1.2.246.517.2002.2.18");
         String municipalityName = credential.getAttributeAsString("urn:oid:1.2.246.517.2002.2.19");
+        String municipalityNameSv = credential.getAttributeAsString("urn:oid:1.2.246.517.2002.2.20");
         String firstName = credential.getAttributeAsString("urn:oid:2.5.4.42");
         String lastName = credential.getAttributeAsString("urn:oid:2.5.4.4");
+
+        // TODO: What if not finnish citizen?
+        String finnishCitizen = credential.getAttributeAsString("urn:oid:1.2.246.517.2002.2.26");
 
         String ssn = credential.getAttributeAsString("urn:oid:1.2.246.21");
         String address = streetAddress + " " + postalCode + " " + postOffice;
         String fullName = firstName + " " + lastName;
 
         Maybe<Municipality> municipality = municipalityNumber != null
-                ? Maybe.of(new Municipality(Long.valueOf(municipalityNumber), municipalityName, municipalityName, true))
+                ? Maybe.of(new Municipality(Long.valueOf(municipalityNumber), municipalityName, municipalityNameSv, true))
                 : Maybe.absent();
 
         return new SamlUser(fullName, ssn, address, municipality);
