@@ -23,9 +23,12 @@ class TargetStoringFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        Arrays.stream(request.getParameterMap().get("target"))
-                .findFirst()
-                .ifPresent(target -> ((HttpServletResponse) response).addCookie(targetCookie(target)));
+        String[] targets = request.getParameterMap().get("target");
+        if (targets != null) {
+            Arrays.stream(targets)
+                    .findFirst()
+                    .ifPresent(target -> ((HttpServletResponse) response).addCookie(targetCookie(target)));
+        }
 
         chain.doFilter(request, response);
 
