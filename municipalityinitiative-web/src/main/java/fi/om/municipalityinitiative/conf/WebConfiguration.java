@@ -56,11 +56,6 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         }
 
         @Bean
-        KapaController kapaController() {
-            return new KapaController();
-        }
-
-        @Bean
         public VetumaMockController vetumaMockController() {
             return new VetumaMockController(optimizeResources(env), resourcesVersion(env));
         }
@@ -118,6 +113,11 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     @Bean
     public YouthInitiativeController youthInitiativeController() {
         return new YouthInitiativeController();
+    }
+
+    @Bean
+    public KapaController kapaController() {
+        return new KapaController();
     }
 
     @Bean
@@ -206,8 +206,7 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
         String baseUrl = env.getRequiredProperty(PropertyNames.baseURL);
         String apiBaseUrl = env.getProperty(PropertyNames.apiBaseUrl, baseUrl);
-
-        return JsonConverterFactory.JacksonHttpConverterWithModules(apiBaseUrl);
+        return JsonConverterFactory.JacksonHttpConverterWithModules(apiBaseUrl, baseUrl);
     }
 
     @Bean
