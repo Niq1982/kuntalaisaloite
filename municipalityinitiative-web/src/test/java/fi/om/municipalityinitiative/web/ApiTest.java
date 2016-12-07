@@ -49,7 +49,9 @@ public class ApiTest extends WebTestBase {
                 "\"id\":\"http://localhost:8090/api/api/v1/municipalities/" + HELSINKI_ID + "\"," +
                 "\"nameFi\":\"Helsinki\",\"nameSv\":\"Helsinki sv\"}," +
                 "\"name\":\"Aloite helsingista\",\"participantCount\":0," +
-                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE_CITIZEN\"}]"));
+                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE_CITIZEN\"," +
+                "\"url\":{\"fi\":\"http://localhost:8090/fi/aloite/"+id+"\",\"sv\":\"http://localhost:8090/sv/initiativ/"+id+"\"}"+
+                "}]"));
 
     }
     @Test
@@ -77,7 +79,9 @@ public class ApiTest extends WebTestBase {
                 "\"id\":\"http://localhost:8090/api/api/v1/municipalities/" + HELSINKI_ID + "\"," +
                 "\"nameFi\":\"Helsinki\",\"nameSv\":\"Helsinki sv\"}," +
                 "\"name\":\"Aloite helsingista\",\"participantCount\":0," +
-                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE_CITIZEN\"}]"));
+                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE_CITIZEN\"," +
+                "\"url\":{\"fi\":\"http://localhost:8090/fi/aloite/"+id+"\",\"sv\":\"http://localhost:8090/sv/initiativ/"+id+"\"}"+
+                "}]"));
 
     }
 
@@ -124,6 +128,8 @@ public class ApiTest extends WebTestBase {
                 "\"privateNames\":0," +
                 "\"publicNames\":0,\"total\":0}," +
                 "\"proposal\":\"Proposal\"," +
-                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE_CITIZEN\"}"));
+                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE_CITIZEN\"," +
+                "\"url\":{\"fi\":\"http://localhost:8090/fi/aloite/"+id+"\",\"sv\":\"http://localhost:8090/sv/initiativ/"+id+"\"}"+
+                "}"));
     }
 }

@@ -21,7 +21,7 @@ public class Municipality {
         this.active = active;
     }
 
-    @JsonId(path= Urls.MUNICIPALITY)
+    @JsonId(path= Urls.MUNICIPALITY, useApiUrl = true)
     public Long getId() {
         return id;
     }

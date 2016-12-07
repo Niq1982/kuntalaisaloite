@@ -17,9 +17,13 @@ public class InitiativeListJson {
         this.initiative = initiative;
     }
 
-    @JsonId(path= Urls.INITIATIVE)
+    @JsonId(path= Urls.INITIATIVE, useApiUrl = true)
     public Long getId() {
         return initiative.getId();
+    }
+
+    public ViewUrlJson getUrl() {
+        return new ViewUrlJson(initiative.getId());
     }
 
     public String getName() {

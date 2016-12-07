@@ -20,9 +20,10 @@ import static org.hamcrest.Matchers.is;
  */
 public class JsonTest {
 
-    public static final String HTTP_BASE_URL = "http://baseUrl";
+    public static final String API_BASE_URL = "http://api.baseUrl";
+    public static final String BASE_URL = "http://baseUrl";
 
-    private MappingJackson2HttpMessageConverter jsonConverter = JsonConverterFactory.JacksonHttpConverterWithModules(HTTP_BASE_URL);
+    private MappingJackson2HttpMessageConverter jsonConverter = JsonConverterFactory.JacksonHttpConverterWithModules(API_BASE_URL, BASE_URL);
     private ApiController apiController = new ApiController(false, "");
     private ExtendedModelMap model;
 
@@ -45,7 +46,7 @@ public class JsonTest {
                 "{\n" +
                 "\"municipality\":{\n" +
                 "\"active\":false,\n" +
-                "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
+                "\"id\":\"http://api.baseUrl/api/v1/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "},\n" +
@@ -55,10 +56,10 @@ public class JsonTest {
                 "\"publicNames\":1\n" +
                 "},\n" +
                 "\"collaborative\":true,\n" +
-                "\"id\":\"http://baseUrl/api/v1/initiatives/1\",\n" +
+                "\"id\":\"http://api.baseUrl/api/v1/initiatives/1\",\n" +
                 "\"municipality\":{\n" +
                 "\"active\":false,\n" +
-                "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
+                "\"id\":\"http://api.baseUrl/api/v1/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "},\n" +
@@ -72,7 +73,8 @@ public class JsonTest {
                 "\"proposal\":\"Tämä on esimerkkialoitteen sisältö\",\n" +
                 "\"publishDate\":\"2010-01-01\",\n" +
                 "\"sentTime\":null,\n" +
-                "\"type\":\"COLLABORATIVE\"\n"+
+                "\"type\":\"COLLABORATIVE\",\n"+
+                "\"url\":{\n\"fi\":\"http://baseUrl/fi/aloite/1\",\n\"sv\":\"http://baseUrl/sv/initiativ/1\"\n}\n"+
                 "}"));
     }
 
@@ -84,10 +86,10 @@ public class JsonTest {
         assertThat(join, is("[\n" +
                 "{\n" +
                 "\"collaborative\":true,\n" +
-                "\"id\":\"http://baseUrl/api/v1/initiatives/1\",\n" +
+                "\"id\":\"http://api.baseUrl/api/v1/initiatives/1\",\n" +
                 "\"municipality\":{\n" +
                 "\"active\":false,\n" +
-                "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
+                "\"id\":\"http://api.baseUrl/api/v1/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "},\n" +
@@ -95,7 +97,8 @@ public class JsonTest {
                 "\"participantCount\":2,\n" +
                 "\"publishDate\":\"2012-12-01\",\n" +
                 "\"sentTime\":\"2012-12-24\",\n" +
-                "\"type\":\"COLLABORATIVE_CITIZEN\"\n"+
+                "\"type\":\"COLLABORATIVE_CITIZEN\",\n"+
+                "\"url\":{\n\"fi\":\"http://baseUrl/fi/aloite/1\",\n\"sv\":\"http://baseUrl/sv/initiativ/1\"\n}\n"+
                 "}]"));
     }
 
@@ -107,7 +110,7 @@ public class JsonTest {
         assertThat(join, is("[\n" +
                 "{\n" +
                 "\"active\":false,\n" +
-                "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
+                "\"id\":\"http://api.baseUrl/api/v1/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "}]"));

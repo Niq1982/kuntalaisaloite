@@ -35,8 +35,6 @@ public class KapaController{
     public @ResponseBody List<InitiativeListJson> getInitiatives(@PathVariable("ssn") String ssn,
                                             @RequestHeader(value="secure", required = true) String secure) {
 
-        // TODO: Get real initiatives
-
         if (hashCreator.isHash(ssn, secure)) {
 
             return kapaService.findInitiativesForUser(ssn)

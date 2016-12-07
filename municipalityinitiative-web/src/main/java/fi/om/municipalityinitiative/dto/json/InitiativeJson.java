@@ -23,13 +23,17 @@ public class InitiativeJson {
         this.authors = new PublicAuthorsJson(authors);
     }
 
-    @JsonId(path= Urls.INITIATIVE)
+    @JsonId(path= Urls.INITIATIVE, useApiUrl = true)
     public Long getId() {
         return initiative.getId();
     }
 
     public String getName() {
         return initiative.getName();
+    }
+
+    public ViewUrlJson getUrl() {
+        return new ViewUrlJson(initiative.getId());
     }
 
     public String getProposal() {

@@ -10,9 +10,11 @@ import java.io.IOException;
 
 public class JsonIdAnnotationIntrospector extends JacksonAnnotationIntrospector {
     
-    private final String baseUrl; 
+    private final String apiBaseUrl;
+    private final String baseUrl;
 
-    public JsonIdAnnotationIntrospector(String baseUrl) {
+    public JsonIdAnnotationIntrospector(String apiBaseUrl, String baseUrl) {
+        this.apiBaseUrl = apiBaseUrl;
         this.baseUrl = baseUrl;
     }
 
@@ -22,11 +24,11 @@ public class JsonIdAnnotationIntrospector extends JacksonAnnotationIntrospector 
         final JsonId ann = a.getAnnotation(JsonId.class);
         if (ann != null) {
             return new JsonSerializer<Long>() {
-    
+
                 @Override
                 public void serialize(Long value, JsonGenerator jgen,
                         SerializerProvider provider) throws IOException {
-                    jgen.writeString(baseUrl + ann.path().replace("{id}", value.toString()));
+                    jgen.writeString((ann.useApiUrl() ? apiBaseUrl : baseUrl) + ann.path().replace("{id}", value.toString()));
                 }
             };
         } else {
