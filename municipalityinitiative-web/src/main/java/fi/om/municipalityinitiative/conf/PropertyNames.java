@@ -102,4 +102,6 @@ public final class PropertyNames {
 
     public static final String followEnabled = "follow.enabled";
 
+    public static final String samlLoginEnabled = "saml.login.enabled";
+
 }

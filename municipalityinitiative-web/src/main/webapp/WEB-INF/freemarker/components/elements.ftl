@@ -461,7 +461,7 @@
                         <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
                     </#if>
                 <#else>
-                    <a class="small-button" href="${urls.vetumaLogin(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
+                    <a class="small-button" href="${urls.login(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
                 </#if>
             <#else>
                 <#if !user.hasParticipatedToInitiative(initiative.id)>

@@ -438,7 +438,7 @@ public class AppConfiguration {
                 Boolean.valueOf(env.getProperty(PropertyNames.videoEnabled)),
                 Boolean.valueOf(env.getProperty(PropertyNames.followEnabled)),
                 env.getRequiredProperty(PropertyNames.appEnvironment),
-                Boolean.valueOf(env.getRequiredProperty("saml.login.enabled")));
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.samlLoginEnabled)));
     }
 
     @Bean
@@ -530,7 +530,8 @@ public class AppConfiguration {
                 env.getProperty(PropertyNames.iframeBaseUrl, baseUrl),
                 env.getProperty(PropertyNames.apiBaseUrl, baseUrl),
                 env.getRequiredProperty(PropertyNames.youthInitiativeBaseUrl),
-                env.getRequiredProperty(PropertyNames.superSearchBaseUrl));
+                env.getRequiredProperty(PropertyNames.superSearchBaseUrl),
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.samlLoginEnabled)));
     }
 
     @PostConstruct

@@ -83,7 +83,7 @@ public class SecurityFilter implements Filter {
     }
 
     private void verifiedLoginRequired(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.sendRedirect(Urls.FI.vetumaLogin(urlPathHelper.getOriginalRequestUriWithQueryString(request)));
+        response.sendRedirect(Urls.FI.login(urlPathHelper.getOriginalRequestUriWithQueryString(request)));
     }
 
     private void authenticationRequired(AuthenticationRequiredException e, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

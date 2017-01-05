@@ -375,20 +375,22 @@ public final class Urls {
     private final String youthInitiativeBaseUrl;
 
     private final String superSearchBaseUrl;
+    private Boolean samlEnabled;
 
 
-    public static void initUrls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, String youthInitiativeUrl, String superSearchBaseUrl) {
-        FI = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_FI, youthInitiativeUrl, superSearchBaseUrl);
-        SV = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_SV, youthInitiativeUrl, superSearchBaseUrl);
+    public static void initUrls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, String youthInitiativeUrl, String superSearchBaseUrl, Boolean samlEnabled) {
+        FI = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_FI, youthInitiativeUrl, superSearchBaseUrl, samlEnabled);
+        SV = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_SV, youthInitiativeUrl, superSearchBaseUrl, samlEnabled);
     }
 
-    private Urls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, Locale locale, String youthInitiativeBaseUrl, String superSearchBaseUrl) {
+    private Urls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, Locale locale, String youthInitiativeBaseUrl, String superSearchBaseUrl, Boolean samlEnabled) {
         this.baseUrl = baseUrl;
         this.iframeBaseUrl = iframeBaseUrl;
         this.apiBaseUrl = apiBaseUrl;
         this.locale = locale;
         this.youthInitiativeBaseUrl = youthInitiativeBaseUrl;
         this.superSearchBaseUrl =  superSearchBaseUrl;
+        this.samlEnabled = samlEnabled;
     }
 
     public boolean isShortlyPage(String localizedPageName) {
@@ -572,6 +574,15 @@ public final class Urls {
 
     public String vetumaLogin() {
         return getLocalizedPageUrl(VETUMA_FI, VETUMA_SV);
+    }
+
+    public String login() {
+        return samlEnabled ? samlLogin("") : vetumaLogin();
+    }
+
+    public String login(String target) {
+        return samlEnabled ? samlLogin(target) : vetumaLogin(target);
+
     }
 
     public String loginAuthor(String managementHash) {
@@ -778,7 +789,7 @@ public final class Urls {
     }
 
     public String loginToManagement(Long initiativeId) {
-        return vetumaLogin((this.equals(FI) ? MANAGEMENT_FI : MANAGEMENT_SV).replace(ID_PARAMETER, initiativeId.toString()));
+        return login((this.equals(FI) ? MANAGEMENT_FI : MANAGEMENT_SV).replace(ID_PARAMETER, initiativeId.toString()));
     }
 
     public String notAdultError() {
