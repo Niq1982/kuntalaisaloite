@@ -27,7 +27,6 @@ import java.util.Set;
 public class UserService {
 
     static final String LOGIN_USER_PARAMETER = "loginUser";
-    static final String VETUMA_PREPARED_INITIATIVE = "vetumaPreparedInitiative";
 
     @Resource
     private UserDao userDao;
@@ -203,20 +202,6 @@ public class UserService {
         }
 
         storeLoggedInUserSession(request, User.verifiedUser(verifiedUserId, hash, contactInfo, initiativesWithManagementRight, initiativesWithParticipation, municipality));
-    }
-
-    public void putPrepareDataForVetuma(PrepareInitiativeUICreateDto initiative, HttpServletRequest request) {
-        request.getSession().setAttribute(VETUMA_PREPARED_INITIATIVE, initiative);
-    }
-
-    public Maybe<PrepareInitiativeUICreateDto> popPrepareDataForVetuma(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        PrepareInitiativeUICreateDto preparedInitiative = (PrepareInitiativeUICreateDto) session.getAttribute(VETUMA_PREPARED_INITIATIVE);
-        if (preparedInitiative == null) {
-            return Maybe.absent();
-        }
-        session.removeAttribute(VETUMA_PREPARED_INITIATIVE);
-        return Maybe.of(preparedInitiative);
     }
 
     /**

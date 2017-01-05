@@ -426,7 +426,7 @@ public final class Urls {
         return getLocalizedPageUrl(HELP_FI, HELP_SV).replace(HELP_PAGE_PARAMETER, getLocalizedParameter(HELP_SHORTLY_FI, HELP_SHORTLY_SV));
     }
 
-    private String getLocalizedParameter(String parameterFi, String parameterSv) {
+    public String getLocalizedParameter(String parameterFi, String parameterSv) {
         if (this.equals(FI)) {
             return parameterFi;
         } else {

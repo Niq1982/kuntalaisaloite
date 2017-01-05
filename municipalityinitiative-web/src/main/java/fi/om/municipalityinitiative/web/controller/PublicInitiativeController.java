@@ -169,8 +169,11 @@ public class PublicInitiativeController extends BaseController {
                 return contextRelativeRedirect(urls.management(initiativeId));
             }
             else {
-                userService.putPrepareDataForVetuma(initiative, request);
-                return contextRelativeRedirect(urls.login());
+                return contextRelativeRedirect(urls.login(
+                        urls.getLocalizedParameter(Urls.PREPARE_FI, Urls.PREPARE_SV)
+                                + "?" + Urls.SINGLE_MUNICIPALITY + "=" + initiative.getMunicipality()
+
+                ));
             }
         }
         else {

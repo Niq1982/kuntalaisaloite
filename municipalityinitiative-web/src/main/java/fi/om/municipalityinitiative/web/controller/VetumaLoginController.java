@@ -154,18 +154,6 @@ public class VetumaLoginController extends DefaultLoginController {
                     vtjData.getMunicipality(),
                     request);
 
-            Maybe<PrepareInitiativeUICreateDto> prepareDataForVetuma = userService.popPrepareDataForVetuma(request);
-            if (prepareDataForVetuma.isPresent()) { // User has been redirected to vetuma after starting to create initiative
-                long initiativeId;
-                try {
-                     initiativeId = verifiedInitiativeService.prepareVerifiedInitiative(userService.getRequiredLoginUserHolder(request), PrepareSafeInitiativeUICreateDto.parse(prepareDataForVetuma.get()));
-                } catch (InvalidHomeMunicipalityException e) {
-                    return redirectWithMessageToTarget(urls.prepare(), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
-                }
-                userService.refreshUserData(request);
-                return redirect(urls.management(initiativeId));
-            }
-
             return redirectToTarget(session);
         } else {
             if (VetumaResponse.Status.CANCELLED.equals(status)) { // Usually errors are REJECTED or FAILURE. Failure often has "Cannot use VTJ" and errorcode 8001
