@@ -375,22 +375,27 @@ public final class Urls {
     private final String youthInitiativeBaseUrl;
 
     private final String superSearchBaseUrl;
-    private Boolean samlEnabled;
+
+    private static Boolean samlEnabled;
 
 
-    public static void initUrls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, String youthInitiativeUrl, String superSearchBaseUrl, Boolean samlEnabled) {
-        FI = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_FI, youthInitiativeUrl, superSearchBaseUrl, samlEnabled);
-        SV = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_SV, youthInitiativeUrl, superSearchBaseUrl, samlEnabled);
+    public static void initUrls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, String youthInitiativeUrl, String superSearchBaseUrl, boolean samlEnabled) {
+        FI = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_FI, youthInitiativeUrl, superSearchBaseUrl);
+        SV = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_SV, youthInitiativeUrl, superSearchBaseUrl);
+        enableSaml(samlEnabled);
     }
 
-    private Urls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, Locale locale, String youthInitiativeBaseUrl, String superSearchBaseUrl, Boolean samlEnabled) {
+    public static void enableSaml(boolean enabled) {
+        Urls.samlEnabled = enabled;
+    }
+
+    private Urls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, Locale locale, String youthInitiativeBaseUrl, String superSearchBaseUrl) {
         this.baseUrl = baseUrl;
         this.iframeBaseUrl = iframeBaseUrl;
         this.apiBaseUrl = apiBaseUrl;
         this.locale = locale;
         this.youthInitiativeBaseUrl = youthInitiativeBaseUrl;
         this.superSearchBaseUrl =  superSearchBaseUrl;
-        this.samlEnabled = samlEnabled;
     }
 
     public boolean isShortlyPage(String localizedPageName) {

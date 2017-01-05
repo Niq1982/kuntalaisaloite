@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.conf;
 
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.web.Urls;
 
 public class EnvironmentSettings {
 
@@ -18,7 +19,7 @@ public class EnvironmentSettings {
     private final String appEnvironment;
     private final boolean videoEnabled;
     private final boolean followEnabled;
-    private final boolean samlEnabled;
+    private boolean samlEnabled;
 
 
     public EnvironmentSettings(String defaultReplyTo,
@@ -122,5 +123,10 @@ public class EnvironmentSettings {
 
     public boolean isSamlEnabled() {
         return samlEnabled;
+    }
+
+    public void enableSaml(boolean enabled) {
+        this.samlEnabled = enabled;
+        Urls.enableSaml(enabled);
     }
 }
