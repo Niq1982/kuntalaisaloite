@@ -244,17 +244,22 @@
                                 </#if>
                                 <li><a href="${urls.logout()}" id="logout"><@u.message "common.logout"/></a></li>
                             </ul>
-	                    </#if>
-	                    <#if user.isVerifiedUser()>
+	                    <#elseif user.isVerifiedUser()>
 	                        <div class="header-dropdown">
 	                        	<#assign userName>${user.contactInfo.name}<#if user.homeMunicipality.present>, ${user.homeMunicipality.value.getName(locale)}</#if></#assign>
 
 	                            <a href="#" class="header-tool-link user-name dropdown-toggle" title="${userName}"><span class="user-name">${userName}</span><span class="icon-small arrow-down-black"></span></a>
 	                            <ul id="user-menu" class="dropdown-menu user-menu">
 	                                <li><a href="${urls.ownInitiatives()}"><@u.message "page.ownInitiatives" /></a></li>
-	                                <li><a href="<#if samlEnabled>${urls.samlLogout(currentRequestUri)}<#else>${urls.logout()}</#if>" id="logout"><@u.message "common.logout"/></a></li>
+	                                <li><a href="${urls.logout(currentRequestUri)}" id="logout"><@u.message "common.logout"/></a></li>
 	                            </ul>
 	                        </div>
+
+                        <#else>
+                            <div class="header-dropdown">
+                                <a href="${urls.logout()}" class="header-tool-link user-name" id="logout"><span class="user-name"><@u.message "common.logout"/></span></a>
+                            </div>
+
 	                    </#if>
 
 	                <#elseif enableVerifiedInitiatives>

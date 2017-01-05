@@ -667,10 +667,6 @@ public final class Urls {
         return getLocalizedPageUrl(SAML_FI, SAML_SV) + "?"+ TARGET +"=" + urlEncode(Strings.isNullOrEmpty(target) ? "/"+locale.toLanguageTag() : target);
     }
 
-    public String samlLogout(String target) {
-        return baseUrl +"/saml/logout?"+ TARGET +"=" + urlEncode(Strings.isNullOrEmpty(target) ? "" : target);
-    }
-
     public String moderatorLogin() {
         return getLocalizedPageUrl(MODERATOR_LOGIN, MODERATOR_LOGIN);
     }
@@ -702,7 +698,11 @@ public final class Urls {
     }
 
     public String logout() {
-        return getLocalizedPageUrl(LOGOUT_FI, LOGOUT_SV);
+        return baseUrl +"/saml/logout?"+ TARGET +"=" + urlEncode(getLocalizedParameter(FRONT_FI, FRONT_SV));
+    }
+
+    public String logout(String target) {
+        return baseUrl +"/saml/logout?"+ TARGET +"=" + urlEncode(Strings.isNullOrEmpty(target) ? "" : target);
     }
 
     public Locale getLocale() {
