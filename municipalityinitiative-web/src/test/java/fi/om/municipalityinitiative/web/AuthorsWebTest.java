@@ -335,7 +335,7 @@ public class AuthorsWebTest extends WebTestBase {
 
     @Test
     public void login_when_under_aged_gives_error_and_does_not_log_user_in() {
-        vetumaLogin("010199-0000", "Helsinki");
+        vetumaLogin("010110A0000", "Helsinki");
 
         assertTitle("Tunnistautuminen epäonnistui - Kuntalaisaloitepalvelu");
         assertThat(getElement(By.tagName("h1")).getText(), containsString("olet alaikäinen"));
