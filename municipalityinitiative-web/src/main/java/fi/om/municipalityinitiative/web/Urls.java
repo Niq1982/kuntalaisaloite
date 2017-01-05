@@ -659,7 +659,7 @@ public final class Urls {
     }
 
     public String samlLogin(String target) {
-        return getLocalizedPageUrl(SAML_FI, SAML_SV) + "?"+ TARGET +"=" + urlEncode(Strings.isNullOrEmpty(target) ? baseUrl : target);
+        return getLocalizedPageUrl(SAML_FI, SAML_SV) + "?"+ TARGET +"=" + urlEncode(Strings.isNullOrEmpty(target) ? "/"+locale.toLanguageTag() : target);
     }
 
     public String samlLogout(String target) {
