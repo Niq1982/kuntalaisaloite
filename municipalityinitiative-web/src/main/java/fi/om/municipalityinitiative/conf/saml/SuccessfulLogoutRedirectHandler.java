@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.conf.saml;
 
+import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -21,8 +22,16 @@ public class SuccessfulLogoutRedirectHandler implements LogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String targetUri = TargetStoringFilter.popTarget(request, response);
 
+        // The first idea was to redirect the user to the previous page after logout.
+        // But the problem are pages that are not visible for unauthenticated users. The user would end up to 403 page after logout.
+        // Best solution would be just be to redirect user to frontpage if the default target page would give 403,
+        // but unfortunately there is no time for that now so let's just get the user to localized frontpage after logout.
+
+        String localizedFrontPageUri =
+                targetUri.startsWith(Urls.FRONT_SV) ? Urls.FRONT_SV : Urls.FRONT_FI;
+
         new DefaultRedirectStrategy()
-                .sendRedirect(request, response, baseUri + targetUri);
+                .sendRedirect(request, response, baseUri + localizedFrontPageUri);
 
     }
 }
