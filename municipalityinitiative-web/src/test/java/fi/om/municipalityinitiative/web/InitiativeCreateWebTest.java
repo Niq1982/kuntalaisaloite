@@ -84,7 +84,8 @@ public class InitiativeCreateWebTest extends WebTestBase {
         // Get redirected to vetuma
         enterVetumaLoginInformationAndSubmit(USER_SSN, MUNICIPALITY_2);
 
-        assertPreparePageWithInvalidMunicipalityWarning();
+        assertPreparePageTitle();
+        assertWarningMessage("Et ole asukas kunnassa, jota aloite koskee, joten et voi tehdä aloitetta vahvan tunnistautumisen avulla");
     }
 
     @Test
@@ -99,10 +100,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
     }
 
-    private void assertPreparePageWithInvalidMunicipalityWarning() {
-        assertPreparePageTitle();
-        assertWarningMessage("Väestötietojärjestelmän mukaan kotikuntasi ei ole kunta, jolle aloite on osoitettu. Et voi tehdä aloitetta valitsemaasi kuntaan.");
-    }
 
     @Test
     public void editing_normal_initiative_shows_success_message() {
