@@ -20,7 +20,7 @@ public class SuccessfulLogoutRedirectHandler implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String targetUri = TargetStoringFilter.popTarget(request, response);
+        String targetUri = TargetStoringFilter.popCookieTarget(request, response);
 
         // The first idea was to redirect the user to the previous page after logout.
         // But the problem are pages that are not visible for unauthenticated users. The user would end up to 403 page after logout.

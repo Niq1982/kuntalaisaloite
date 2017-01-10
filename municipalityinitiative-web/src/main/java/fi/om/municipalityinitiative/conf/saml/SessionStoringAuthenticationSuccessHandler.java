@@ -41,7 +41,7 @@ public class SessionStoringAuthenticationSuccessHandler implements Authenticatio
                     user.getFullName(), user.getAddress(), user.getMunicipality(), request
             );
             new DefaultRedirectStrategy()
-                    .sendRedirect(request, response, baseUri + TargetStoringFilter.popTarget(request, response));
+                    .sendRedirect(request, response, baseUri + TargetStoringFilter.popCookieTarget(request, response));
         } else {
             new DefaultRedirectStrategy()
                     .sendRedirect(request, response, Urls.get(Locales.LOCALE_FI).notAdultError());

@@ -30,7 +30,7 @@ public class RedirectingAuthenticationFailureHandler implements AuthenticationFa
 
         log.warn("Login failed / cancelled", exception);
 
-        String targetUri = TargetStoringFilter.popTarget(request, response);
+        String targetUri = TargetStoringFilter.popCookieTarget(request, response);
 
         new DefaultRedirectStrategy()
                 .sendRedirect(request, response, baseUrl + targetUri);
