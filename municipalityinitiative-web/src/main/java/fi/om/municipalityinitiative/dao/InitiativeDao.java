@@ -78,4 +78,5 @@ public interface InitiativeDao {
 
     void addVideoUrl(String url, Long initiativeId);
 
+    List<InitiativeListInfo> findInitiativesByParticipation(VerifiedUserId authorId);
 }

@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dao;
 
 import com.google.common.base.Strings;
 import com.mysema.query.Tuple;
+import com.mysema.query.sql.SQLSubQuery;
 import com.mysema.query.sql.dml.SQLUpdateClause;
 import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
@@ -15,6 +16,7 @@ import com.mysema.query.types.expr.CaseBuilder;
 import com.mysema.query.types.expr.DateTimeExpression;
 import com.mysema.query.types.expr.SimpleExpression;
 import com.mysema.query.types.path.StringPath;
+import com.mysema.query.types.query.ListSubQuery;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Initiative;
@@ -185,8 +187,25 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .where(QVerifiedUser.verifiedUser.id.eq(verifiedUserId.toLong()))
-                .where(QMunicipalityInitiative.municipalityInitiative.name.isNotEmpty())
                 .orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc())
+                .list(initiativeListInfoMapping);
+    }
+
+    @Override
+    public List<InitiativeListInfo> findInitiativesByParticipation(VerifiedUserId authorId) {
+        ListSubQuery<Long> verifiedInitiatives = queryFactory.subQuery().from(QVerifiedParticipant.verifiedParticipant)
+                .where(QVerifiedParticipant.verifiedParticipant.verifiedUserId.eq(authorId.toLong()))
+                .list(QVerifiedParticipant.verifiedParticipant.initiativeId);
+
+        ListSubQuery<Long> verifiedNormalInitiatives = queryFactory.subQuery().from(QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives)
+                .where(QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives.verifiedUser.eq(authorId.toLong()))
+                .innerJoin(QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives.verifiedUserNormalInitiativesParticipantId, QParticipant.participant)
+                .list(QParticipant.participant.municipalityInitiativeId);
+
+        return queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .where(QMunicipalityInitiative.municipalityInitiative.id.in(verifiedInitiatives)
+                        .or(QMunicipalityInitiative.municipalityInitiative.id.in(verifiedNormalInitiatives)))
                 .list(initiativeListInfoMapping);
     }
 

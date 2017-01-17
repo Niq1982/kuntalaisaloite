@@ -1,12 +1,10 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import org.junit.Test;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -24,43 +22,68 @@ public class KapaServiceTest extends ServiceIntegrationTestBase{
         testMunicipality = testHelper.createTestMunicipality("Some municipality");
     }
 
+
     @Test
-    public void returns_authors_initiatives_by_ssn() {
+    public void findInitiativesForUser_returns_authors_initiatives_by_ssn() {
 
-        String firstSsn = "010101-0000";
-        String firstName = "Some name";
-        String secondSsn = "020202-0000";
-        String secondName = "Another name";
+        // Create 1 initiative, no supports
 
-        testHelper.createVerifiedInitiative(
-                new TestHelper.InitiativeDraft(testMunicipality)
-                        .withState(InitiativeState.DRAFT)
-                        .withName(firstName)
-                        .applyAuthor(firstSsn).toInitiativeDraft());
+        String authorSSN = "020202-0000";
+        String initiativeName = "Name";
 
         testHelper.createVerifiedInitiative(
                 new TestHelper.InitiativeDraft(testMunicipality)
                         .withState(InitiativeState.DRAFT)
-                        .withName(secondName)
-                        .applyAuthor(secondSsn).toInitiativeDraft());
+                        .withName(initiativeName)
+                        .applyAuthor(authorSSN).toInitiativeDraft());
 
-        List<InitiativeListInfo> firstUser = kapaService.findInitiativesForUser(firstSsn);
-
-        assertThat(firstUser, hasSize(1));
-        assertThat(firstUser.get(0).getMunicipality().getId(), is(testMunicipality));
-        assertThat(firstUser.get(0).getName(), is(firstName));
-
-
-        List<InitiativeListInfo> secondUser = kapaService.findInitiativesForUser(secondSsn);
-        assertThat(secondUser, hasSize(1));
-        assertThat(secondUser.get(0).getMunicipality().getId(), is(testMunicipality));
-        assertThat(secondUser.get(0).getName(), is(secondName));
+        KapaService.KapaInitiativeResult secondUser = kapaService.findInitiativesForUser(authorSSN);
+        assertThat(secondUser.initiatives, hasSize(1));
+        assertThat(secondUser.initiatives.get(0).getMunicipality().getId(), is(testMunicipality));
+        assertThat(secondUser.initiatives.get(0).getName(), is(initiativeName));
+        assertThat(secondUser.supports, hasSize(0));
 
     }
 
     @Test
-    public void returns_empty_list_if_no_initiatives_for_user() {
+    public void findInitiativesForUser_returns_authors_initiatives_and_participations() {
 
-        assertThat(kapaService.findInitiativesForUser("999999-999"), hasSize(0));
+        // Create 1 initiative and 1 support for another initiative
+
+        String authorSSN = "010101-0000";
+        String authorInitiativeName = "Some name";
+
+        testHelper.createVerifiedInitiative(
+                new TestHelper.InitiativeDraft(testMunicipality)
+                        .withState(InitiativeState.DRAFT)
+                        .withName(authorInitiativeName)
+                        .applyAuthor(authorSSN).toInitiativeDraft());
+        Long firstUserId = testHelper.getLastVerifiedUserId();
+
+        String participationInitiativeName = "support initiative name";
+        Long participatInitiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality)
+                .withName(participationInitiativeName));
+
+        testHelper.createVerifiedParticipantWithVerifiedUserId(new TestHelper.AuthorDraft(participatInitiative, testMunicipality)
+                .withVerifiedUserId(firstUserId));
+
+        KapaService.KapaInitiativeResult firstUser = kapaService.findInitiativesForUser(authorSSN);
+
+        assertThat(firstUser.initiatives, hasSize(1));
+        assertThat(firstUser.initiatives.get(0).getMunicipality().getId(), is(testMunicipality));
+        assertThat(firstUser.initiatives.get(0).getName(), is(authorInitiativeName));
+
+        assertThat(firstUser.supports, hasSize(1));
+        assertThat(firstUser.supports.get(0).getMunicipality().getId(), is(testMunicipality));
+        assertThat(firstUser.supports.get(0).getName(), is(participationInitiativeName));
+
+    }
+
+    @Test
+    public void findInitiativesForUser_returns_empty_list_if_no_initiatives_for_user() {
+
+        KapaService.KapaInitiativeResult initiativesForUser = kapaService.findInitiativesForUser("999999-999");
+        assertThat(initiativesForUser.supports, hasSize(0));
+        assertThat(initiativesForUser.initiatives, hasSize(0));
     }
 }
