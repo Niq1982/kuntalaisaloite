@@ -204,4 +204,18 @@ public class ModerationService {
             emailService.sendSingleToMunicipality(initiativeId, locale);
         }
     }
+
+    // TODO: Store to db and cache to controller
+
+    private NotificationDto notificationDto = new NotificationDto();
+
+    public NotificationDto getNotificationStatus(OmLoginUserHolder omLoginUserHolder) {
+        omLoginUserHolder.assertOmUser();
+        return notificationDto;
+    }
+
+    public void saveNotificationStatus(OmLoginUserHolder omLoginUserHolder, NotificationDto notificationDto) {
+        omLoginUserHolder.assertOmUser();
+        this.notificationDto = notificationDto;
+    }
 }

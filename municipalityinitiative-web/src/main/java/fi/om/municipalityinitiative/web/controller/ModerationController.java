@@ -9,18 +9,17 @@ import fi.om.municipalityinitiative.service.LocationService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.ModerationService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
+import fi.om.municipalityinitiative.service.ui.NotificationDto;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReviewHistoryDiff;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
+import org.apache.xpath.operations.Mod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -158,6 +157,20 @@ public class ModerationController extends BaseController{
                 editDto
         ).view(model, Urls.get(Locales.LOCALE_FI).municipalityModeration());
 
+    }
+
+    @RequestMapping(value = NOTIFICATION_MODERATION, method = GET)
+    public String notificationModeration(Model model, HttpServletRequest request) {
+
+        return ViewGenerator.notificationModerationView(moderationService.getNotificationStatus(userService.getRequiredOmLoginUserHolder(request)))
+                .view(model, Urls.get(Locales.LOCALE_FI).notificationModeration());
+    }
+
+    @RequestMapping(value = NOTIFICATION_MODERATION, method = POST)
+    public String notificationModerationSave(HttpServletRequest request,
+                                             NotificationDto notificationDto) {
+        moderationService.saveNotificationStatus(userService.getRequiredOmLoginUserHolder(request), notificationDto);
+        return redirectWithMessage(Urls.get(Locales.LOCALE_FI).notificationModeration(), RequestMessage.INFORMATION_SAVED, request);
     }
 
 
