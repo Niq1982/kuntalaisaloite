@@ -522,6 +522,10 @@ public class AppConfiguration {
         return new KapaService();
     }
 
+    @Bean
+    public NotificationDao notificationDao() {
+        return new NotificationDao();
+    }
 
     @PostConstruct
     public void initUrls() {

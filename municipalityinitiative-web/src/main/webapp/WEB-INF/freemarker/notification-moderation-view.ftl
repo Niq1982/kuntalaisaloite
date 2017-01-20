@@ -11,11 +11,15 @@
 -->
     <@l.main "page.notification.moderation" >
 
+    <div id="preview">
+        <#include "components/notification.ftl"/>
+    </div>
+
     <h1><@u.message "page.notification.moderation" /></h1>
 
     <div class="msg-block">
         <p>Tältä sivulta voit muokata tiedotetekstiä, mikä näkyy jokaiselle käyttäjälle palvelun yläreunassa.</p>
-        <p>Esikatselu päivittyy automaattisesti kun muokkaat tekstikenttää. Muutokset tallentuvat käyttäjille vasta painaessasi tallenna.</p>
+        <p>Paina "Esikatsele", kun haluat nähdä tuloksia.</p>
     </div>
 
     <form action="${springMacroRequestContext.requestUri}" method="POST" >
@@ -44,7 +48,7 @@
         <br/>
         <label for="notificationEnabled">
             Tiedote näkyvissä
-            <input id="notificationEnabled" type="checkbox" checked="${notificationStatus.enabled?string("checked", "")}" name="enabled"/>
+            <input id="notificationEnabled" type="checkbox" ${notificationStatus.enabled?string('checked="checked"', "")}" name="enabled"/>
         </label>
 
         <br/>
@@ -64,14 +68,15 @@
 
     $(document).ready(function() {
 
-        $("#wrapper").prepend(
-                    <#noescape>'<div class="debug-ribbon top fixed ribbon-red" style="position: fixed;"><div class="container"><div class="container"><span id="esikatselu_teksti"></span>&nbsp;<a id="esikatselu_url" href="#" target="_blank"></a></div></div></div>'</#noescape>);
-
         var setPreview = function (text, url, linkText) {
-            $("#esikatselu_teksti").html($("<div>").text(text).html());
-            $("#esikatselu_url")
-                    .html($("<div>").text(linkText).html())
-                    .attr("href", $("<div>").text(url).html());
+
+            $.ajax("/generate-notification?text=" + text + "&link=" + url + "&linkText=" + linkText,
+                    {
+                        success: function (data) {
+                            console.log(data);
+                            $("#preview").html(data);
+                        }
+                    });
         };
 
 

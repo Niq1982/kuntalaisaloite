@@ -50,6 +50,9 @@ public class ModerationService {
     @Resource
     MunicipalityUserDao municipalityUserDao;
 
+    @Resource
+    NotificationDao notificationDao;
+
     @Transactional(readOnly = false)
     public void accept(OmLoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment, Locale locale) {
         loginUserHolder.assertOmUser();
@@ -205,17 +208,13 @@ public class ModerationService {
         }
     }
 
-    // TODO: Store to db and cache to controller
-
-    private NotificationDto notificationDto = new NotificationDto();
-
-    public NotificationDto getNotificationStatus(OmLoginUserHolder omLoginUserHolder) {
+    public NotificationEditDto getNotificationStatus(OmLoginUserHolder omLoginUserHolder) {
         omLoginUserHolder.assertOmUser();
-        return notificationDto;
+        return notificationDao.getNotificationForEdit();
     }
 
-    public void saveNotificationStatus(OmLoginUserHolder omLoginUserHolder, NotificationDto notificationDto) {
+    public void saveNotificationStatus(OmLoginUserHolder omLoginUserHolder, NotificationEditDto notificationEditDto) {
         omLoginUserHolder.assertOmUser();
-        this.notificationDto = notificationDto;
+        notificationDao.save(notificationEditDto);
     }
 }

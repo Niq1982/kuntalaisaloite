@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.service.MunicipalityDecisionService;
+import fi.om.municipalityinitiative.service.NotificationHolder;
 import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
@@ -54,6 +55,9 @@ public class BaseController {
     private final Maybe<Integer> omPiwicId;
 
     private UrlHelper urlHelper = new UrlHelper();
+
+    @Resource
+    private NotificationHolder notificationHolder;
 
     @Resource
     protected MunicipalityDecisionService municipalityDecisionService;
@@ -169,6 +173,7 @@ public class BaseController {
         model.addAttribute("superSearchEnabled", environmentSettings.isSuperSearchEnabled());
         model.addAttribute("videoEnabled", environmentSettings.getVideoEnabled());
         model.addAttribute("followEnabled", environmentSettings.isFollowEnabled());
+        model.addAttribute("notification", notificationHolder.getNotification(locale));
 
         try {
             model.addAttribute("UrlConstants", freemarkerObjectWrapper.getStaticModels().get(Urls.class.getName()));

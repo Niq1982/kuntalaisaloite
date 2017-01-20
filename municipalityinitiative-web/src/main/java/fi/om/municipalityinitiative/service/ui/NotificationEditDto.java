@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.service.ui;
 
-public class NotificationDto {
+public class NotificationEditDto {
     private String fi;
     private String urlFi;
     private String urlFiText;

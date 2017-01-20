@@ -7,7 +7,7 @@ import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.service.AttachmentUtil;
 import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
-import fi.om.municipalityinitiative.service.ui.NotificationDto;
+import fi.om.municipalityinitiative.service.ui.NotificationEditDto;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReviewHistoryDiff;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
@@ -294,7 +294,7 @@ public final class ViewGenerator {
         );
     }
 
-    public static ViewGenerator notificationModerationView(NotificationDto notificationStatus) {
+    public static ViewGenerator notificationModerationView(NotificationEditDto notificationStatus) {
         return new ViewGenerator(Views.NOTIFICATION_MODERATION,
                 new AttributeBuilder()
                         .add("notificationStatus", notificationStatus)

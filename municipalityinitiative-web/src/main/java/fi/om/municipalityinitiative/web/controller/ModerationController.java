@@ -9,13 +9,13 @@ import fi.om.municipalityinitiative.service.LocationService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.ModerationService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
-import fi.om.municipalityinitiative.service.ui.NotificationDto;
+import fi.om.municipalityinitiative.service.ui.Notification;
+import fi.om.municipalityinitiative.service.ui.NotificationEditDto;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReviewHistoryDiff;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
-import org.apache.xpath.operations.Mod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -159,21 +159,30 @@ public class ModerationController extends BaseController{
 
     }
 
-    @RequestMapping(value = NOTIFICATION_MODERATION, method = GET)
+    @RequestMapping(value = {NOTIFICATION_MODERATION_FI, NOTIFICATION_MODERATION_SV}, method = GET)
     public String notificationModeration(Model model, HttpServletRequest request) {
 
         return ViewGenerator.notificationModerationView(moderationService.getNotificationStatus(userService.getRequiredOmLoginUserHolder(request)))
                 .view(model, Urls.get(Locales.LOCALE_FI).notificationModeration());
     }
 
-    @RequestMapping(value = NOTIFICATION_MODERATION, method = POST)
+    @RequestMapping(value = {NOTIFICATION_MODERATION_FI, NOTIFICATION_MODERATION_SV}, method = POST)
     public String notificationModerationSave(HttpServletRequest request,
-                                             NotificationDto notificationDto) {
-        moderationService.saveNotificationStatus(userService.getRequiredOmLoginUserHolder(request), notificationDto);
+                                             NotificationEditDto notificationEditDto) {
+        moderationService.saveNotificationStatus(userService.getRequiredOmLoginUserHolder(request), notificationEditDto);
         return redirectWithMessage(Urls.get(Locales.LOCALE_FI).notificationModeration(), RequestMessage.INFORMATION_SAVED, request);
     }
 
+    @RequestMapping(value = {"/generate-notification"}, method = GET)
+    public String generateNotification(@ModelAttribute("notificationEdit") Notification notification, HttpServletRequest request) {
+        userService.getRequiredOmLoginUserHolder(request);
+        return "components/notification";
+    }
 
-
+    @RequestMapping(value = {"/notification"}, method = GET)
+    public String checkNotification(HttpServletRequest request) {
+        userService.getRequiredOmLoginUserHolder(request);
+        return "components/notification";
+    }
 
 }

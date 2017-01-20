@@ -270,7 +270,9 @@ public final class Urls {
 
     public static final String MUNICIPALITY_MODERATION = "/fi/kuntahallinta";
 
-    public static final String NOTIFICATION_MODERATION = "/fi/notifikaatiohallinta";
+    public static final String NOTIFICATION_MODERATION_FI = "/fi/notifikaatiohallinta";
+
+    public static final String NOTIFICATION_MODERATION_SV = "/sv/notifikaatiohallinta";
 
     public static final String MUNICIPALITY_DECISION_FI_BASE_URL = "/fi/kunnanvastaus" + "/";
 
@@ -774,7 +776,7 @@ public final class Urls {
     }
 
     public String notificationModeration() {
-        return getLocalizedPageUrl(NOTIFICATION_MODERATION, NOTIFICATION_MODERATION);
+        return getLocalizedPageUrl(NOTIFICATION_MODERATION_FI, NOTIFICATION_MODERATION_FI);
     }
 
 
