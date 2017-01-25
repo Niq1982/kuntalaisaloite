@@ -9,7 +9,7 @@ public class NotificationEditDto {
     private String urlSv;
     private String urlSvText;
 
-    private boolean enabled;
+    private boolean enabled = false;
 
     public String getFi() {
         return fi;

@@ -173,7 +173,7 @@ public class BaseController {
         model.addAttribute("superSearchEnabled", environmentSettings.isSuperSearchEnabled());
         model.addAttribute("videoEnabled", environmentSettings.getVideoEnabled());
         model.addAttribute("followEnabled", environmentSettings.isFollowEnabled());
-        model.addAttribute("notification", notificationHolder.getNotification(locale));
+        model.addAttribute("notification", notificationHolder.getCachedNotification(locale).orElse(null));
 
         try {
             model.addAttribute("UrlConstants", freemarkerObjectWrapper.getStaticModels().get(Urls.class.getName()));

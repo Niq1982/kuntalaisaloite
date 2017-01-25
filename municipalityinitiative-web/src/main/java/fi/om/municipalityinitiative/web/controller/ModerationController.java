@@ -179,9 +179,8 @@ public class ModerationController extends BaseController{
         return "components/notification";
     }
 
-    @RequestMapping(value = {"/notification"}, method = GET)
+    @RequestMapping(value = {"/fi/notification", "/sv/notification"}, method = GET)
     public String checkNotification(HttpServletRequest request) {
-        userService.getRequiredOmLoginUserHolder(request);
         return "components/notification";
     }
 

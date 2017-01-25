@@ -36,7 +36,9 @@ import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import javax.annotation.PostConstruct;
@@ -523,8 +525,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public NotificationDao notificationDao() {
-        return new NotificationDao();
+    public JdbcNotificationDao notificationDao() {
+        return new JdbcNotificationDao();
     }
 
     @PostConstruct
@@ -554,7 +556,12 @@ public class AppConfiguration {
     }
 
     @PostConstruct
-    public void refreshInfoRibbon() {
+    public void refreshNotifications() throws IOException {
         InfoRibbon.refreshInfoRibbonTexts();
+
+        TransactionStatus transaction = jdbcConfiguration.transactionManager().getTransaction(new DefaultTransactionDefinition());
+        notificationDao().refreshCache();
+        jdbcConfiguration.transactionManager().rollback(transaction);
+
     }
 }

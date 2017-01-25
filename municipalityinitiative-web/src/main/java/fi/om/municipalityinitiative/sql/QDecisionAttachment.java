@@ -55,7 +55,7 @@ public class QDecisionAttachment extends com.mysema.query.sql.RelationalPathBase
     public void addMetadata() {
         addMetadata(added, ColumnMetadata.named("added").ofType(93).withSize(29).withDigits(6));
         addMetadata(contentType, ColumnMetadata.named("content_type").ofType(12).withSize(20).notNull());
-        addMetadata(description, ColumnMetadata.named("description").ofType(12).withSize(100).notNull());
+        addMetadata(description, ColumnMetadata.named("description").ofType(12).withSize(200).notNull());
         addMetadata(fileType, ColumnMetadata.named("file_type").ofType(12).withSize(4).notNull());
         addMetadata(id, ColumnMetadata.named("id").ofType(-5).withSize(19).notNull());
         addMetadata(initiativeId, ColumnMetadata.named("initiative_id").ofType(-5).withSize(19).notNull());

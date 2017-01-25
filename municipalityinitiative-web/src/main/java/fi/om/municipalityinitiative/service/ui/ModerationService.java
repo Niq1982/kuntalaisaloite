@@ -51,7 +51,7 @@ public class ModerationService {
     MunicipalityUserDao municipalityUserDao;
 
     @Resource
-    NotificationDao notificationDao;
+    JdbcNotificationDao notificationDao;
 
     @Transactional(readOnly = false)
     public void accept(OmLoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment, Locale locale) {
@@ -208,11 +208,13 @@ public class ModerationService {
         }
     }
 
+    @Transactional(readOnly = true)
     public NotificationEditDto getNotificationStatus(OmLoginUserHolder omLoginUserHolder) {
         omLoginUserHolder.assertOmUser();
         return notificationDao.getNotificationForEdit();
     }
 
+    @Transactional(readOnly = false)
     public void saveNotificationStatus(OmLoginUserHolder omLoginUserHolder, NotificationEditDto notificationEditDto) {
         omLoginUserHolder.assertOmUser();
         notificationDao.save(notificationEditDto);
