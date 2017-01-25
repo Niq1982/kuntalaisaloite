@@ -85,12 +85,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // XML parser pool needed for OpenSAML parsing
     @Bean(initMethod = "initialize")
     public StaticBasicParserPool parserPool() {
-        StaticBasicParserPool staticBasicParserPool = new StaticBasicParserPool();
-
-        HashMap<String, Boolean> newFeatures = Maps.newHashMap();
-        newFeatures.put("http://apache.org/xml/features/dom/defer-node-expansion", false);
-        staticBasicParserPool.setBuilderFeatures(newFeatures);
-        return staticBasicParserPool;
+        return new StaticBasicParserPool();
     }
 
     @Bean(name = "parserPoolHolder")
