@@ -21,6 +21,8 @@ public class QNotification extends com.mysema.query.sql.RelationalPathBase<QNoti
 
     public static final QNotification notification = new QNotification("notification");
 
+    public final DateTimePath<org.joda.time.DateTime> createtime = createDateTime("createtime", org.joda.time.DateTime.class);
+
     public final BooleanPath enabled = createBoolean("enabled");
 
     public final StringPath fi = createString("fi");
@@ -53,6 +55,7 @@ public class QNotification extends com.mysema.query.sql.RelationalPathBase<QNoti
     }
 
     public void addMetadata() {
+        addMetadata(createtime, ColumnMetadata.named("createtime").ofType(93).withSize(29).withDigits(6).notNull());
         addMetadata(enabled, ColumnMetadata.named("enabled").ofType(-7).withSize(1).notNull());
         addMetadata(fi, ColumnMetadata.named("fi").ofType(12).withSize(10000));
         addMetadata(lock, ColumnMetadata.named("lock").ofType(-7).withSize(1));

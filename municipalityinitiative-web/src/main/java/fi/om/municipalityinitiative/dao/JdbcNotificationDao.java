@@ -8,8 +8,10 @@ import fi.om.municipalityinitiative.service.ui.Notification;
 import fi.om.municipalityinitiative.service.ui.NotificationEditDto;
 import fi.om.municipalityinitiative.sql.QNotification;
 import fi.om.municipalityinitiative.util.Locales;
+import org.joda.time.DateTime;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -32,6 +34,7 @@ public class JdbcNotificationDao implements NotificationHolder {
                 .set(QNotification.notification.urlfitext, notificationEditDto.getUrlFiText())
                 .set(QNotification.notification.urlsvtext, notificationEditDto.getUrlSvText())
                 .set(QNotification.notification.enabled, notificationEditDto.isEnabled())
+                .set(QNotification.notification.createtime, DateTime.now())
                 .execute();
         refreshCache();
     }
@@ -51,7 +54,9 @@ public class JdbcNotificationDao implements NotificationHolder {
                         r.setUrlSv(row.get(QNotification.notification.urlsv));
                         r.setUrlSvText(row.get(QNotification.notification.urlsvtext));
                         r.setEnabled(row.get(QNotification.notification.enabled));
+                        r.setCreateTime(row.get(QNotification.notification.createtime).getMillis());
                         return r;
+
                     }
                 })).orElse(new NotificationEditDto());
 

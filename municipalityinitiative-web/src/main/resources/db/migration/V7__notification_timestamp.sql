@@ -1,0 +1,1 @@
+ALTER TABLE notification add COLUMN createtime timestamp not null default current_timestamp;

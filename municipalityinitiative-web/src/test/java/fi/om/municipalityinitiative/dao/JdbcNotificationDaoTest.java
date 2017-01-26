@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,13 +39,13 @@ public class JdbcNotificationDaoTest {
         notificationDao.save(notificationEditDto);
         NotificationEditDto notificationForEdit = notificationDao.getNotificationForEdit();
 
-
         assertThat(notificationForEdit.getFi(), is("fi"));
         assertThat(notificationForEdit.getUrlFi(), is("urlfi"));
         assertThat(notificationForEdit.getUrlFiText(), is("urlfitext"));
         assertThat(notificationForEdit.getSv(), is("sv"));
         assertThat(notificationForEdit.getUrlSv(), is("urlsv"));
         assertThat(notificationForEdit.getUrlSvText(), is("urlsvtext"));
+        assertThat(notificationForEdit.getCreateTime(), is(notNullValue()));
     }
 
     @Test
@@ -66,6 +64,18 @@ public class JdbcNotificationDaoTest {
 
 
         assertThat(notificationDao.getNotificationForEdit().isEnabled(), is(true));
+    }
+
+    @Test
+    public void create_time_is_updated() throws InterruptedException {
+
+        notificationDao.save(new NotificationEditDto());
+        Long firstCreateTime = notificationDao.getNotificationForEdit().getCreateTime();
+
+        notificationDao.save(new NotificationEditDto());
+        Long secondCreateTime = notificationDao.getNotificationForEdit().getCreateTime();
+        assertThat(firstCreateTime, is(not(secondCreateTime)));
+
     }
 
     @Test

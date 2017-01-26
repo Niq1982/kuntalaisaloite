@@ -8,6 +8,7 @@ public class NotificationEditDto {
     private String sv;
     private String urlSv;
     private String urlSvText;
+    private Long createTime;
 
     private boolean enabled = false;
 
@@ -65,5 +66,13 @@ public class NotificationEditDto {
 
     public void setUrlSvText(String urlSvText) {
         this.urlSvText = urlSvText;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
     }
 }
