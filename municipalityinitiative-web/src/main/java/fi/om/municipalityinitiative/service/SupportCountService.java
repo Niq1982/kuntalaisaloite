@@ -77,8 +77,6 @@ public class SupportCountService {
     }
 
     private void addSupportVoteDay(Map<LocalDate, Long> realSupportVotes, LocalDate localDate, Long supportCount) {
-
-        System.out.println(localDate);
         if (!realSupportVotes.containsKey(localDate)) {
             realSupportVotes.put(localDate, 0l);
         }

@@ -291,13 +291,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         metadataProvider.setFailFastInitialization(false);
         metadataProvider.setParserPool(parserPool());
 
-
-        StaticBasicParserPool staticBasicParserPool = parserPool();
-        for (Map.Entry<String, Boolean> stringBooleanEntry : staticBasicParserPool.getBuilderFeatures().entrySet()) {
-            System.out.println(stringBooleanEntry.getKey());
-            System.out.println(stringBooleanEntry.getValue());
-        }
-
         return metadataProvider;
     }
 
