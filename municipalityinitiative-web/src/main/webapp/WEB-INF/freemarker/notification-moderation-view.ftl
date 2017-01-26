@@ -68,6 +68,9 @@
 
     $(document).ready(function() {
 
+
+        $("#header").prepend('<div id="preview"/>');
+
         var setPreview = function (text, url, linkText) {
 
             $.ajax("/generate-notification?text=" + text + "&link=" + url + "&linkText=" + linkText,

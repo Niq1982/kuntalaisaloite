@@ -224,6 +224,7 @@
 
     <div id="header">
     	<#if page == "page.frontpage"><div class="header-wrap-front"></#if>
+        <#include "notification.ftl"/>
         <div class="header-content">
 
             <a id="logo" href="${urls.baseUrl}/${locale}" accesskey="1" title="<@u.message "siteName" />">

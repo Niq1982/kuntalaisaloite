@@ -228,6 +228,48 @@
              }
 
          }
+
+    .notification-container {
+        position: relative;
+        width: 960px;
+        margin: 0 auto;
+        margin-bottom: 14px;
+        background: @bodyBackground url(../../img/help-page-link-icons.png) no-repeat 0;
+        background-position: -590px center;
+
+
+        @media @mobile, @tablet {
+            width: auto;
+            margin: 0;
+        }
+
+        @media @desktop {
+            width: 75%;
+            margin-bottom: 12px;
+        }
+        @media @desktop-xl{
+            width: 960px;
+            margin: 0 auto;
+            margin-bottom: 12px;
+        }
+
+        .notification-wrapper {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            padding-left: 40px;
+
+            .notification {
+                display: inline-block;
+            }
+
+            .close {
+                display: inline-block;
+            }
+
+        }
+
+    }
+
  //   }
 }
 .front #header {
