@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.service.MunicipalityDecisionService;
 import fi.om.municipalityinitiative.service.NotificationHolder;
 import fi.om.municipalityinitiative.service.UserService;
+import fi.om.municipalityinitiative.service.ui.Notification;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -173,7 +175,7 @@ public class BaseController {
         model.addAttribute("superSearchEnabled", environmentSettings.isSuperSearchEnabled());
         model.addAttribute("videoEnabled", environmentSettings.getVideoEnabled());
         model.addAttribute("followEnabled", environmentSettings.isFollowEnabled());
-        model.addAttribute("notification", notificationHolder.getCachedNotification(locale).orElse(null));
+        model.addAttribute("notification", getNotification(locale, request));
 
         try {
             model.addAttribute("UrlConstants", freemarkerObjectWrapper.getStaticModels().get(Urls.class.getName()));
@@ -188,5 +190,20 @@ public class BaseController {
         addEnum(InitiativeType.class, model);
         addEnum(InitiativeState.class, model);
         addEnum(FixState.class, model);
+    }
+
+    private Notification getNotification(Locale locale, HttpServletRequest request) {
+        return notificationHolder.getCachedNotification(locale)
+                .filter(notification -> !notificationClosedByUser(request, notification.getCreateTime()))
+                .orElse(null);
+
+    }
+
+    private boolean notificationClosedByUser(HttpServletRequest request, Long createTime) {
+        return request.getCookies() != null
+                && Arrays.stream(request.getCookies())
+                .filter(c -> c.getName().equals("notificationClosed"))
+                .filter(c -> c.getValue().equals(createTime.toString()))
+                .count() != 0;
     }
 }

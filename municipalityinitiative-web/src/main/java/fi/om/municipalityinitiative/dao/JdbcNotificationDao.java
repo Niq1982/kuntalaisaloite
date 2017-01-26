@@ -70,11 +70,11 @@ public class JdbcNotificationDao implements NotificationHolder {
         if (notification.isEnabled()) {
             localeNotificationHashMap.put(
                     Locales.LOCALE_FI,
-                    new Notification(notification.getFi(), notification.getUrlFi(), notification.getUrlFiText())
+                    new Notification(notification.getFi(), notification.getUrlFi(), notification.getUrlFiText(), notification.getCreateTime())
             );
             localeNotificationHashMap.put(
                     Locales.LOCALE_SV,
-                    new Notification(notification.getSv(), notification.getUrlSv(), notification.getUrlSvText())
+                    new Notification(notification.getSv(), notification.getUrlSv(), notification.getUrlSvText(), notification.getCreateTime())
             );
         }
 

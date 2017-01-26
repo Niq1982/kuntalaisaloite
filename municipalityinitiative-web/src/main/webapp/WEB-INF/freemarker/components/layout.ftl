@@ -374,6 +374,13 @@
         isVerifiedInitiative:function(){ <#if initiative?? && initiative.isVerifiable??>return ${initiative.isVerifiable()?string}</#if> }
     };
 
+    <#if notification??>
+        $("#notification-close-button").click(function(e) {
+            document.cookie = "notificationClosed=${notification.createTime};path=/";
+            $(".notification-container").hide();
+    });
+    </#if>
+
     /*]]>*/
     </script>
 

@@ -7,14 +7,15 @@ public class Notification {
     private String text;
     private String link;
     private String linkText;
+    private Long createTime;
 
-    public Notification() {
-    }
+    public Notification() {}
 
-    public Notification(String text, String link, String linkText) {
+    public Notification(String text, String link, String linkText, Long createTime) {
         this.text = text;
         this.link = link;
         this.linkText = linkText;
+        this.createTime = createTime;
     }
 
     public String getText() {
@@ -46,5 +47,9 @@ public class Notification {
 
     public void setLinkText(String linkText) {
         this.linkText = linkText;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
     }
 }
