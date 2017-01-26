@@ -57,6 +57,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.inject.Inject;
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -85,7 +86,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // XML parser pool needed for OpenSAML parsing
     @Bean(initMethod = "initialize")
     public StaticBasicParserPool parserPool() {
-        return new StaticBasicParserPool();
+        StaticBasicParserPool staticBasicParserPool = new StaticBasicParserPool();
+
+        // https://github.com/spring-projects/spring-security-saml/commit/925c8925fa0d0645d7b177b6e65cfb920fc6782f
+        // org.opensaml.xml.encryption.Decrypter.buildParserPool()
+        // Even though most of these are default, let's just define them so
+        // there's a little smaller change of screwing things up if any new features are introduced later.
+
+        Map<String, Boolean> features = new HashMap<>();
+
+        staticBasicParserPool.setNamespaceAware(true);
+        features.put("http://apache.org/xml/features/dom/defer-node-expansion", Boolean.FALSE);
+        staticBasicParserPool.setExpandEntityReferences(false);
+        features.put(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        features.put("http://apache.org/xml/features/disallow-doctype-decl", true);
+
+        staticBasicParserPool.setBuilderFeatures(features);
+        return staticBasicParserPool;
     }
 
     @Bean(name = "parserPoolHolder")
@@ -273,6 +290,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         ResourceBackedMetadataProvider metadataProvider = new ResourceBackedMetadataProvider(new Timer(), new FilesystemResource(environment.getProperty("saml.idp.metadata.location")));
         metadataProvider.setFailFastInitialization(false);
         metadataProvider.setParserPool(parserPool());
+
+
+        StaticBasicParserPool staticBasicParserPool = parserPool();
+        for (Map.Entry<String, Boolean> stringBooleanEntry : staticBasicParserPool.getBuilderFeatures().entrySet()) {
+            System.out.println(stringBooleanEntry.getKey());
+            System.out.println(stringBooleanEntry.getValue());
+        }
+
         return metadataProvider;
     }
 
