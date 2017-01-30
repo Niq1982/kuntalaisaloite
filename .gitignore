@@ -2,6 +2,7 @@
 *.orig
 .idea/*
 /municipalityinitiative-loadtests/*.log
+/municipalityinitiative-web/node_modules
 /municipalityinitiative-web/logs/
 /municipalityinitiative-loadtests/*.pyc
 /municipalityinitiative-loadtests/results/*.jtl
