@@ -232,40 +232,69 @@
     .notification-container {
         position: relative;
         width: 960px;
-        margin: 0 auto;
-        margin-bottom: 14px;
-        background: @bodyBackground url(../../img/help-page-link-icons.png) no-repeat 0;
-        background-position: -590px center;
-
+        margin: 0 auto 12px auto;
+        background: @bodyBackground url(../../img/icons-notification.png) no-repeat 16px 16px;
 
         @media @mobile, @tablet {
             width: auto;
             margin: 0;
+            margin-top: -18px; //header padding negated
+            margin-bottom: 12px;
+            background: @bodyBackground url(../../img/icons-notification-small.png) no-repeat 16px 16px;
         }
 
         @media @desktop {
             width: 75%;
-            margin-bottom: 12px;
         }
         @media @desktop-xl{
             width: 960px;
-            margin: 0 auto;
-            margin-bottom: 12px;
         }
 
         .notification-wrapper {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            padding-left: 40px;
+            padding: 1.85em 16px 1.6em 16px;
+            padding-left: 74px; //2*16px + 42px icon
+
+            @media @mobile, @tablet {
+                padding: 1.6em 16px 1.6em 16px;
+                padding-left: 64px; //16px + 8px + 42px icon
+                padding-right: 48px;
+            }
 
             .notification {
                 display: inline-block;
             }
 
-            .close {
-                display: inline-block;
+        }
+
+        .notification-close-button {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            color: @mainColor;
+            font-weight: bold;
+            font-family: 'PT Sans', "Trebuchet MS", Helvetica, sans-serif;
+            font-size: 0.9em;
+            background-color: transparent;
+            border: none;
+
+            @media @mobile, @tablet {
+                top: 1.6em; //same as wrapper text top padding
+                right: 8px;
             }
 
+            .button-text {
+                display: inline-block;
+                vertical-align: middle;
+                @media @mobile, @tablet {
+                    display: none;
+                }
+            }
+
+            .button-marker {
+                display: inline-block;
+                vertical-align: middle;
+                margin: 0 4px;
+            }
         }
 
     }

@@ -6,8 +6,11 @@
             <div class="notification">
                 <span>${notificationData.text!""}</span>&nbsp;<#if notificationData.link??><a href="${notificationData.link}" target="_blank">${notificationData.linkText}</a></#if>
             </div>
-            <button class="close" id="notification-close-button">SULJE X</button>
         </div>
+        <button id="notification-close-button" class="notification-close-button">
+          <span class="button-text">SULJE</span>
+          <span class="button-marker">X</span>
+        </button>
     </div>
     </#macro>
 
