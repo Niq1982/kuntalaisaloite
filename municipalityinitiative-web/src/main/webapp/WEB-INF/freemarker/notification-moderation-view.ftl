@@ -11,9 +11,7 @@
 -->
     <@l.main "page.notification.moderation" >
 
-    <div id="preview">
-        <#include "components/notification.ftl"/>
-    </div>
+
 
     <h1><@u.message "page.notification.moderation" /></h1>
 
