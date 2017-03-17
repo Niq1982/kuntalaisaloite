@@ -240,7 +240,7 @@
 
                             <ul id="user-menu" class="dropdown-menu user-menu">
                                 <li><a href="${urls.municipalityModeration()}"><@u.message "om.municipality.moderation" /></a></li>
-                                <#--<li><a href="${urls.notificationModeration()}"><@u.message "om.notification.moderation" /></a></li>-->
+                                <li><a href="${urls.notificationModeration()}"><@u.message "om.notification.moderation" /></a></li>
                                 <#if initiative??>
                                     <#if initiative.id??><li><a href="${urls.moderation(initiative.id)}"><@u.message "om.initiative.moderation" /></a></li></#if>
                                 </#if>
