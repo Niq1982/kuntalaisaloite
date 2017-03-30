@@ -52,7 +52,7 @@ public class JdbcParticipantDao implements ParticipantDao {
     };
     static final Expression<NormalParticipant> normalParticipantMapping =
             new MappingProjection<NormalParticipant>(NormalParticipant.class,
-                    participant.all(), QMunicipality.municipality.all()) {
+                    participant.all(), QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives.all(), QMunicipality.municipality.all()) {
                 @Override
                 protected NormalParticipant map(Tuple row) {
                     NormalParticipant par = new NormalParticipant();
@@ -60,6 +60,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                     par.setName(row.get(participant.name));
                     par.setEmail(row.get(participant.email));
                     par.setMembership(row.get(participant.membershipType));
+                    par.setVerified(Boolean.TRUE.equals(row.get(QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives.verified)));
                     if (row.get(QMunicipality.municipality.id) != null) {
                         par.setHomeMunicipality(Maybe.of(Mappings.parseMunicipality(row)));
                     }
@@ -131,9 +132,10 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public void verifiedUserParticipatesNormalInitiative(Long participantId, VerifiedUserId userId) {
+    public void verifiedUserParticipatesNormalInitiative(Long participantId, VerifiedUserId userId, boolean verified) {
         assertSingleAffection(queryFactory.insert(verifiedUserNormalInitiatives)
                 .set(verifiedUserNormalInitiatives.participant, participantId)
+                .set(verifiedUserNormalInitiatives.verified, verified)
                 .set(verifiedUserNormalInitiatives.verifiedUser, userId.toLong()).execute());
     }
 
@@ -179,6 +181,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
+                .leftJoin(participant._verifiedUserNormalInitiativesParticipantId, QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives)
                 .where(participant.showName.eq(true))
                 .where(participant.confirmationCode.isNull())
                 .orderBy(participant.id.desc())
@@ -191,6 +194,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
+                .leftJoin(participant._verifiedUserNormalInitiativesParticipantId, QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives)
                 .where(participant.showName.eq(true))
                 .where(participant.confirmationCode.isNull())
                 .orderBy(participant.id.desc())
@@ -206,6 +210,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .where(participant.confirmationCode.isNull())
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
+                .leftJoin(participant._verifiedUserNormalInitiativesParticipantId, QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives)
                 .orderBy(participant.id.desc())
                 .limit(limit)
                 .offset(offset)

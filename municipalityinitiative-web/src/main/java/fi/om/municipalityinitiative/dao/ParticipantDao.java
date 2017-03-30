@@ -18,7 +18,7 @@ public interface ParticipantDao {
 
     void confirmParticipation(Long participantId, String confirmationCode);
 
-    void verifiedUserParticipatesNormalInitiative(Long participantId, VerifiedUserId userId);
+    void verifiedUserParticipatesNormalInitiative(Long participantId, VerifiedUserId userId, boolean verified);
 
     Collection<Long> getNormalInitiativesVerifiedUserHasParticipated(VerifiedUserId userId);
 

@@ -843,7 +843,7 @@ public class JdbcInitiativeDaoTest {
         Long defaultInitiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
         Long defaultParticipant = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(defaultInitiative, testMunicipality.getId()));
 
-        participantDao.verifiedUserParticipatesNormalInitiative(defaultParticipant, new VerifiedUserId(lastVerifiedUserId));
+        participantDao.verifiedUserParticipatesNormalInitiative(defaultParticipant, new VerifiedUserId(lastVerifiedUserId), true);
 
         List<InitiativeListInfo> bothInitiativesThatSupported = initiativeDao.findInitiativesByParticipation(new VerifiedUserId(lastVerifiedUserId));
 

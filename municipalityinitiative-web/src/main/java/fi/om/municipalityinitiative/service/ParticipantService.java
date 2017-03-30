@@ -178,7 +178,7 @@ public class ParticipantService {
 
         VerifiedUserId verifiedUserId = verifiedInitiativeService.getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
 
-        participantDao.verifiedUserParticipatesNormalInitiative(participantId, verifiedUserId);
+        participantDao.verifiedUserParticipatesNormalInitiative(participantId, verifiedUserId, verifiedUser.getHomeMunicipality().isPresent());
 
         return participantId;
     }

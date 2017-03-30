@@ -125,7 +125,7 @@ public class JdbcUserDaoTest {
 
         // Verified user participates to normal initiative
         Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
-        participantDao.verifiedUserParticipatesNormalInitiative(participantId, new VerifiedUserId(verifiedUserId));
+        participantDao.verifiedUserParticipatesNormalInitiative(participantId, new VerifiedUserId(verifiedUserId), true);
 
         VerifiedUser user = userDao.getVerifiedUser(HASH).getValue();
 

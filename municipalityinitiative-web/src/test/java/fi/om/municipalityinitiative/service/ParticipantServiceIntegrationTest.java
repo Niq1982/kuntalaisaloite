@@ -1,11 +1,15 @@
 package fi.om.municipalityinitiative.service;
 
+import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
@@ -278,6 +282,19 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, TestHelper.lastLoggedInVerifiedUserHolder);
 
         assertThat(getSingleInitiativeInfo().getParticipantCount(), Matchers.is(originalParticipantCount + 1));
+    }
+
+    @Test
+    public void adding_confirmed_participant_sets_verified_flag() throws MessagingException, InterruptedException {
+        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testHelper.createVerifiedUser(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId));
+
+        Long verified = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, TestHelper.lastLoggedInVerifiedUserHolder);
+
+        List<ParticipantListInfo> publicParticipants = participantService.findPublicParticipants(0, initiativeId);
+
+        assertThat(publicParticipants.get(0).getParticipant().isVerified(), is(true)); // Confirmed
+        assertThat(publicParticipants.get(1).getParticipant().isVerified(), is(false)); // The "original" author, non-confirmed
     }
 
     @Transactional

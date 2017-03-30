@@ -21,13 +21,13 @@ public class QVerifiedUserNormalInitiatives extends com.mysema.query.sql.Relatio
 
     public static final QVerifiedUserNormalInitiatives verifiedUserNormalInitiatives = new QVerifiedUserNormalInitiatives("verified_user_normal_initiatives");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
-
     public final NumberPath<Long> participant = createNumber("participant", Long.class);
+
+    public final BooleanPath verified = createBoolean("verified");
 
     public final NumberPath<Long> verifiedUser = createNumber("verifiedUser", Long.class);
 
-    public final com.mysema.query.sql.PrimaryKey<QVerifiedUserNormalInitiatives> verifiedUserNormalInitiativesInitiativePk = createPrimaryKey(id);
+    public final com.mysema.query.sql.PrimaryKey<QVerifiedUserNormalInitiatives> verifiedUserNormalInitiativesInitiativePk = createPrimaryKey(participant);
 
     public final com.mysema.query.sql.ForeignKey<QVerifiedUser> verifiedUserNormalInitiativesVerifiedUserId = createForeignKey(verifiedUser, "id");
 
@@ -49,8 +49,8 @@ public class QVerifiedUserNormalInitiatives extends com.mysema.query.sql.Relatio
     }
 
     public void addMetadata() {
-        addMetadata(id, ColumnMetadata.named("id").ofType(-5).withSize(19).notNull());
         addMetadata(participant, ColumnMetadata.named("participant").ofType(-5).withSize(19).notNull());
+        addMetadata(verified, ColumnMetadata.named("verified").ofType(-7).withSize(1));
         addMetadata(verifiedUser, ColumnMetadata.named("verified_user").ofType(-5).withSize(19).notNull());
     }
 
