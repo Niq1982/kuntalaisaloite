@@ -12,9 +12,12 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
@@ -75,16 +78,10 @@ public class NormalInitiativeService {
         return ManagementSettings.of(initiativeDao.get(initiativeId));
     }
 
-
-
     @Transactional(readOnly = false)
     public Long prepareInitiative(PrepareInitiativeUICreateDto createDto, Locale locale) {
 
-        Long municipality = createDto.getMunicipality();
-        if (!municipalityDao.getMunicipality(municipality).isActive()) {
-            throw new AccessDeniedException("Municipality is not active for initiatives: " + municipality);
-        }
-
+        assertMunicipalityActive(createDto.getMunicipality());
 
         Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality());
         Long participantId = participantDao.prepareConfirmedParticipant(
@@ -99,6 +96,12 @@ public class NormalInitiativeService {
         emailService.sendPrepareCreatedEmail(initiativeId, authorId, managementHash, locale);
 
         return initiativeId;
+    }
+
+    private void assertMunicipalityActive(Long municipality) {
+        if (!municipalityDao.getMunicipality(municipality).isActive()) {
+            throw new AccessDeniedException("Municipality is not active for initiatives: " + municipality);
+        }
     }
 
     @Transactional(readOnly = false)

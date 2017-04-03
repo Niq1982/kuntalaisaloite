@@ -3,13 +3,13 @@
 <#import "forms.ftl" as f />
 <#import "elements.ftl" as e />
 
-<#escape x as x?html> 
+<#escape x as x?html>
 
 <#--
  * blockHeader
  *
  * Block header for management-view.
- * 
+ *
  * @param key is for example "initiative.basicDetails.title"
  * @param step is the number of current block
  -->
@@ -23,7 +23,7 @@
  * buttons
  *
  * Save and cancel buttons used in block-edit-mode.
- * 
+ *
  * @param type is the type of the button: next, save-and-send, save
  * @param nextStep is the number of the following block
  -->
@@ -45,8 +45,8 @@
  *
  * @param step is the number of current block
  -->
-<#macro municipalityBlock municipality="">      
-    
+<#macro municipalityBlock municipality="">
+
     <div class="input-block-extra">
         <div class="input-block-extra-content">
             <@f.helpText "help.municipality" />
@@ -58,8 +58,8 @@
         <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
         <@u.systemMessage path="initiative.municipality.description" type="info" args=[href] />
     </div>
-    
-    <div class="input-block-content">       
+
+    <div class="input-block-content">
         <@f.municipalitySelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality onlyActive=true multiple=false/>
     </div>
     <div class="input-block-content">
@@ -72,12 +72,12 @@
         </#if>
     </div>
     <br class="clear" />
-    
+
     <noscript>
         <div class="input-block-content no-top-margin">
             <div class="system-msg msg-info">
                 <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
-                
+
                 <#if !user.isVerifiedUser()>
                     <@u.messageHTML key="initiative.municipality.different" args=[href] />
                 <#else>
@@ -86,33 +86,36 @@
             </div>
         </div>
     </noscript>
-    
+
     <div id="municipalMembership" class="municipality-not-equal js-hide">
-        <#if !user.isVerifiedUser()>
+
             <div class="input-block-content hidden">
                 <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
                 <@u.systemMessage path="initiative.municipality.notEqual" type="info" args=[href] />
             </div>
             <div class="input-block-content">
                 <@f.radiobutton path="initiative.municipalMembership" required="required" options={
-                    "community":"initiative.municipalMembership.community",
-                    "company":"initiative.municipalMembership.company",
-                    "property":"initiative.municipalMembership.property"
-    
+                "community":"initiative.municipalMembership.community",
+                "company":"initiative.municipalMembership.company",
+                "property":"initiative.municipalMembership.property"
+
                 } attributes="" />
                 <br/>
                 <@f.radiobutton path="initiative.municipalMembership" required="required" options={
-                    "none":"initiative.municipalMembership.none"
+                "none":"initiative.municipalMembership.none"
                 } attributes="" header=false/>
-    
+
             </div>
-            
+
             <div class="input-block-content is-not-member no-top-margin js-hide hidden">
                 <@u.systemMessage path="warning.initiative.notMember" type="warning" />
             </div>
-        <#else>
+
+
+        <#-- This will be shown when user first selects verified initiative, then goes to vetuma and then when notice that the municipality mismatches. -->
+        <#if user.isVerifiedUser()>
             <div class="input-block-content no-top-margin hidden">
-            	<#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
+                <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
                 <@u.systemMessage path="warning.verifiedAuthor.notInhabitant" type="warning" args=[href] />
             </div>
         </#if>
@@ -137,12 +140,12 @@
             <span class="instruction-text"><@u.messageHTML key="initiative.initiativeType.optional" args=[href] /></span>
         </div>
     </div>
-    
+
     <div class="initiative-types cf">
-        <@spring.bind "initiative.initiativeType" /> 
+        <@spring.bind "initiative.initiativeType" />
         <@f.showError />
-        
-        <@initiativeTypeBlock type=InitiativeType.UNDEFINED enabled=!user.isVerifiedUser() />
+
+        <@initiativeTypeBlock type=InitiativeType.UNDEFINED enabled=true/>
         <@initiativeTypeBlock type=InitiativeType.COLLABORATIVE_COUNCIL enabled=enableVerifiedInitiatives />
         <@initiativeTypeBlock type=InitiativeType.COLLABORATIVE_CITIZEN enabled=enableVerifiedInitiatives />
     </div>
@@ -154,7 +157,7 @@
  * Generates a selection for initiative type
  *
  * NOTE that initiative type UNDEFINED refers to types SINGLE and COLLABORATIVE.
- * But since we cannot determine the type yet in this phase, we use type UNDEFINED. 
+ * But since we cannot determine the type yet in this phase, we use type UNDEFINED.
  *
  * @param type is the type of the initiative
  * @param enabled enables/disables this selection
@@ -196,7 +199,7 @@
                     </#if>
                 </span>
             </span>
-            
+
         <#else>
             <span class="action blocked">
                 <span class="checkbox disabled"></span>
@@ -220,23 +223,23 @@
             <@f.helpText "help.participantEmail" />
         </div>
     </div>
-    
+
     <div class="input-block-content">
-        
+
         <noscript>
         	<#if locale == "fi">
 	            <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/" />
 	        <#else>
 	            <#assign vetumaUrl = "http://www.suomi.fi/suomifi/arbetsrum/allmant/sprakversionen_fattas/index.html" />
 	        </#if>
-        
+
             <#if enableVerifiedInitiatives>
                 <@u.systemMessage path="initiative.participantEmail.description.noscript"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=[vetumaUrl] />
             <#else>
                 <@u.systemMessage path="initiative.participantEmail.description.noscript.NOVETUMA" type="info" args=[vetumaUrl] />
             </#if>
         </noscript>
-        
+
         <div class="hidden">
             <@u.systemMessage path="initiative.participantEmail.description" type="info" />
         </div>
@@ -269,11 +272,11 @@
             <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
             <@u.systemMessage path="initiative.proposal.description" type="info" args=[href] />
         </div>
-        
+
         <div class="input-block-content">
             <@f.textField path=path+".name" key="initiative.name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
         </div>
-        
+
         <div class="input-block-content no-top-margin">
             <@f.textarea path=path+".proposal" key="initiative.proposal" required="required" optional=false cssClass="textarea-tall" maxLength=InitiativeConstants.INITIATIVE_PROPOSAL_MAX?string("#") />
         </div>
@@ -355,13 +358,13 @@
         </div>
 
         <div class="input-block-content">
-            <@u.systemMessage path="contactInfo.ownDetails.description" type="info" />  
+            <@u.systemMessage path="contactInfo.ownDetails.description" type="info" />
         </div>
-        
+
         <div class="input-block-content">
             <div class="column col-2of3">
                 <@f.textField path=path+".contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
-                
+
             </div>
             <div class="column col-1of3 last">
                 <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
@@ -379,7 +382,7 @@
             <div class="input-header">
                 <@u.message "contactInfo.title" />
             </div>
-            
+
             <@f.contactInfo path=path+".contactInfo" mode="full" />
         </div>
     </div>
@@ -544,11 +547,11 @@
         function sessionExpired() {
             generateModal(modalData.sessionHasEnded(), 'minimal');
         }
-        
+
         setTimeout("sessionExpired()", sessionLength);
     </script>
 </#macro>
 
 
-</#escape> 
+</#escape>
 

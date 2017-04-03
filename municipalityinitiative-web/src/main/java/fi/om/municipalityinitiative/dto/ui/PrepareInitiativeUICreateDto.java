@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
+import fi.om.municipalityinitiative.validation.VerifiedInitiativeNormal;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
@@ -12,13 +13,13 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-@ValidMunicipalMembership(groups = NormalInitiative.class)
+@ValidMunicipalMembership(groups = {NormalInitiative.class, VerifiedInitiativeNormal.class})
 public class PrepareInitiativeUICreateDto extends ParticipantUICreateBase implements Serializable {
 
-    @NotNull(groups = {NormalInitiative.class, VerifiedInitiative.class})
+    @NotNull(groups = {NormalInitiative.class, VerifiedInitiative.class, VerifiedInitiativeNormal.class})
     private InitiativeType initiativeType;
 
-    @NotNull(groups = {NormalInitiative.class, VerifiedInitiative.class})
+    @NotNull(groups = {NormalInitiative.class, VerifiedInitiative.class, VerifiedInitiativeNormal.class})
     Long municipality;
 
     @NotEmpty(groups = NormalInitiative.class)

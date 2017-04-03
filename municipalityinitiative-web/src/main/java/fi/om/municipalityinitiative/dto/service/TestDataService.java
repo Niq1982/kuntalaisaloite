@@ -96,7 +96,7 @@ public class TestDataService {
     }
 
     private Long createVerifiableInitiative(TestDataTemplates.InitiativeTemplate template, VerifiedUser currentVerifiedUser) {
-        Long initiativeId = initiativeDao.prepareVerifiedInitiative(template.getInitiative().getMunicipality().getId(), template.getInitiative().getType());
+        Long initiativeId = initiativeDao.prepareInitiative(template.getInitiative().getMunicipality().getId(), template.getInitiative().getType());
         Maybe<VerifiedUser> userMaybe = userDao.getVerifiedUser(currentVerifiedUser.getHash());
         if (userMaybe.isNotPresent()) {
             ContactInfo contactInfo = currentVerifiedUser.getContactInfo();

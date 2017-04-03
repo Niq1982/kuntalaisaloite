@@ -43,7 +43,7 @@
                 <@edit.municipalityBlock municipality=currentMunicipality/>
             </div>
         </div>
-        
+
         <div class="form-block-container toggle-disable">
             <div class="input-block no-sidebar cf">
                 <@edit.chooseInitiativeType />
@@ -52,7 +52,7 @@
 
         <div id="prepare-form-email" class="form-block-container toggle-disable js-hide">
             <div class="input-block cf">
-            
+
             	<#if user.isVerifiedUser()>
             		<div class="input-block-content">
 	                    <#if locale == "fi">
@@ -62,26 +62,26 @@
 	                    </#if>
 	                    <@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=[vetumaUrl] />
 	                </div>
-                
+
                 	<div class="input-block-content">
 	                    <@edit.buttons type="verify" />
 	                </div>
                 <#else>
                 	<@edit.authorEmailBlock />
-                
+
 	                <div class="input-block-content no-top-margin">
 	                    <@edit.buttons type="save" /><#-- <span class="fill-in-all push hidden"><@u.message "initiative.fillInAllFields" /></span>-->
 	                </div>
                 </#if>
-                
+
             </div>
         </div>
 
         <#if enableVerifiedInitiatives>
         <div id="prepare-form-vetuma" class="form-block-container toggle-disable js-hide hidden">
-            
+
             <div class="input-block cf">
-    
+
                 <div class="input-block-content">
                     <#if locale == "fi">
                         <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/" />
@@ -94,13 +94,13 @@
                 <div class="input-block-content">
                     <@edit.buttons type="verify" />
                 </div>
-                
+
             </div>
-            
-            
+
+
         </div>
         </#if>
-        
+
     </form>
 
 <#--

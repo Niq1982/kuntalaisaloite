@@ -28,7 +28,7 @@ public interface InitiativeDao {
 
     Long prepareInitiative(Long municipalityId);
 
-    Long prepareVerifiedInitiative(Long municipalityId, InitiativeType initiativeType);
+    Long prepareInitiative(Long municipalityId, InitiativeType initiativeType);
 
     void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
 

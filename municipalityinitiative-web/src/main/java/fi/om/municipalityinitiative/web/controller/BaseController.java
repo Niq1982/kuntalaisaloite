@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.MunicipalityDecisionService;
 import fi.om.municipalityinitiative.service.NotificationHolder;
 import fi.om.municipalityinitiative.service.UserService;
@@ -12,6 +13,7 @@ import fi.om.municipalityinitiative.service.ui.Notification;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
+import fi.om.municipalityinitiative.validation.VerifiedInitiativeNormal;
 import fi.om.municipalityinitiative.web.*;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateModelException;
@@ -99,8 +101,19 @@ public class BaseController {
         list.add(value);
     }
 
-    protected static Object solveValidationGroup(InitiativeType initiativeType) {
-        return InitiativeType.isVerifiable(initiativeType) ? VerifiedInitiative.class : NormalInitiative.class;
+    protected static Object solveValidationGroup(InitiativeType initiativeType, User user) {
+
+        if (InitiativeType.isVerifiable(initiativeType)) {
+            return VerifiedInitiative.class;
+        }
+        else {
+            if (user.isVerifiedUser()) {
+                return VerifiedInitiativeNormal.class;
+            }
+            else {
+                return NormalInitiative.class;
+            }
+        }
     }
 
     protected static Object solveValidationGroup(InitiativeViewInfo initiative) {

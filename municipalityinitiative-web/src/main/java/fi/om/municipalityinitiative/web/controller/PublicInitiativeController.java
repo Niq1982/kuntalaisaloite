@@ -150,14 +150,16 @@ public class PublicInitiativeController extends BaseController {
                               Locale locale,
                               HttpServletRequest request) {
         Urls urls = Urls.get(locale);
-
-        if (validationService.validationErrors(initiative, bindingResult, model, solveValidationGroup(initiative.getInitiativeType()))) {
+        LoginUserHolder loginUserHolder = userService.getLoginUserHolder(request);
+        if (validationService.validationErrors(initiative, bindingResult, model, solveValidationGroup(initiative.getInitiativeType(), loginUserHolder.getUser()))) {
             return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale))
                     .view(model, urls.alt().prepare());
         }
 
+        // TODO: New initiative creation:
+
         if (InitiativeType.isVerifiable(initiative.getInitiativeType())) {
-            LoginUserHolder loginUserHolder = userService.getLoginUserHolder(request);
+
             if (loginUserHolder.isVerifiedUser()) {
                 long initiativeId;
                 try {
