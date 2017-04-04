@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +41,31 @@ public class MunicipalityDecisionController extends BaseController{
     public MunicipalityDecisionController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
+
+    @RequestMapping(value = {MUNICIPALITY_LOGIN_FI, MUNICIPALITY_LOGIN_SV}, method = RequestMethod.GET, params = {PARAM_MANAGEMENT_CODE})
+    public RedirectView municipalityLoginLinkCreation(@RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+                                                      Model model, Locale locale, HttpServletRequest request) {
+
+        municipalityDecisionService.createAndSendMunicipalityLoginLink(managementHash);
+
+        return new RedirectView(Urls.get(locale).municipalityLoginSent(), false, true, false);
+
+    }
+
+    @RequestMapping(value = {MUNICIPALITY_LOGIN_SENT_FI, MUNICIPALITY_LOGIN_SENT_SV})
+    public String municipalityLoginSent() {
+        return "municipality-login-sent";
+    }
+
+    @RequestMapping(value = {MUNICIPALITY_LOGIN_FI, MUNICIPALITY_LOGIN_SV}, method = RequestMethod.GET, params = {PARAM_MANAGEMENT_CODE, PARAM_MANAGEMENT_LOGIN_CODE})
+    public RedirectView municipalityLoginPost(@RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+                                              @RequestParam(PARAM_MANAGEMENT_LOGIN_CODE) String managementLoginHash,
+                                              Model model, Locale locale, HttpServletRequest request) {
+        Long initiativeId = userService.municipalityUserLogin(managementHash, managementLoginHash, request);
+        return new RedirectView(Urls.get(locale).getMunicipalityDecisionView(initiativeId), false, true, false);
+    }
+
+
 
     @RequestMapping(value = {MUNICIPALITY_DECISION_FI, MUNICIPALITY_DECISION_SV}, method = GET)
     public String municipalityModerationView(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {

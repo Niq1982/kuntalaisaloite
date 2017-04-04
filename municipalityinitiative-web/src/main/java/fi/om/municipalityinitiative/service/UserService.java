@@ -237,12 +237,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Long municipalityUserLogin(String managementHash, HttpServletRequest request) {
-        Long initiativeId = municipalityUserDao.getInitiativeId(managementHash);
+    public Long municipalityUserLogin(String managementHash, String managementLoginHash, HttpServletRequest request) {
+        Long initiativeId = municipalityUserDao.getInitiativeId(managementHash, managementLoginHash);
         if (initiativeId == null) {
             throw new InvalidLoginException("Invalid login credentials");
         }
         storeLoggedInUserSession(request, User.municipalityLoginUser(initiativeId));
         return initiativeId;
     }
+
 }

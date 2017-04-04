@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.MunicipalityLoginDetails;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,7 +85,7 @@ public class EmailServiceDataProvider {
         return locationDao.getLocations(initiativeId).size() > 0;
     }
 
-    public String getMunicipalityDecisionHash(Long initiativeId) {
+    public MunicipalityLoginDetails getMunicipalityDecisionHash(Long initiativeId) {
         return municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(initiativeId);
     }
 

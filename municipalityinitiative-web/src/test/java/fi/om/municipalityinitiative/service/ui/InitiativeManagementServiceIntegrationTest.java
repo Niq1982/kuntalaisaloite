@@ -462,10 +462,10 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     }
 
-    private void assertMunicipalityUserHash(Long accepted) {
-        String hash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(accepted);
+    private void assertMunicipalityUserHash(Long initiativeId) {
+        String hash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(initiativeId).managementHash;
         assertThat(hash, notNullValue());
-        assertThat(accepted.equals(municipalityUserDao.getInitiativeId(hash)), is(true));
+        assertThat(initiativeId.equals(municipalityUserDao.getInitiativeId(hash)), is(true));
     }
 
     @Test
@@ -510,7 +510,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         service.sendToMunicipality(collaborativeAccepted, TestHelper.unknownLoginUserHolder, "", null);
 
-        String hash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(collaborativeAccepted);
+        String hash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(collaborativeAccepted).managementHash;
         assertThat(hash, notNullValue());
     }
 

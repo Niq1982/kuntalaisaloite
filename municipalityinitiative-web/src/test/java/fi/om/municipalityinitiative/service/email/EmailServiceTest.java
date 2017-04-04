@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.apache.commons.io.FileUtils;
 import org.aspectj.util.FileUtil;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -19,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -30,7 +33,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     private static final String MANAGEMENT_HASH = "managementHash";
     public static final String FOLLOWEREMAIL = "test@test.fi";
-    public static final String MUNICIPALITY_LOGIN_HASH = "hashahs";
+    public static final String MUNICIPALITY_MANAGEMENT_HASH = "hashahs";
 
     private Urls urls;
 
@@ -135,7 +138,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
 
 
-        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_MANAGEMENT_HASH);
 
         emailService.sendSingleToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
@@ -156,7 +159,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
         assertThat(email.getBodyHtml(), containsString("1 liite"));
 
-        assertThat(email.getBodyHtml(), containsString(urls.loginMunicipality(MUNICIPALITY_LOGIN_HASH)));
+        assertThat(email.getBodyHtml(), containsString(urls.loginMunicipality(MUNICIPALITY_MANAGEMENT_HASH)));
 
         assertThat(email.getBodyHtml(), not(containsString("video")));
 
@@ -166,7 +169,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         testHelper.addVideo(initiativeId(), "randomString", "randomString");
 
-        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_MANAGEMENT_HASH);
 
         emailService.sendSingleToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
@@ -275,7 +278,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         testHelper.addAttachment(initiativeId(), "accepted", true, "jpg");
         testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
 
-        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_MANAGEMENT_HASH);
 
         emailService.sendCollaborativeToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
@@ -293,7 +296,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
         assertThat(email.getBodyHtml(), containsString("1 liite"));
 
-        assertThat(email.getBodyHtml(), containsString(urls.loginMunicipality(MUNICIPALITY_LOGIN_HASH)));
+        assertThat(email.getBodyHtml(), containsString(urls.loginMunicipality(MUNICIPALITY_MANAGEMENT_HASH)));
 
         assertThat(email.getBodyHtml(), not(containsString("video")));
     }
@@ -303,7 +306,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         testHelper.addVideo(initiativeId(), "randomString", "randomString");
 
-        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_MANAGEMENT_HASH);
 
         emailService.sendCollaborativeToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
@@ -319,7 +322,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         testHelper.addAttachment(initiativeId(), "accepted", true, "jpg");
         testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
 
-        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_LOGIN_HASH);
+        municipalityUserDao.assignMunicipalityUser(initiativeId(), MUNICIPALITY_MANAGEMENT_HASH);
 
         emailService.sendCollaborativeToAuthors(initiativeId());
 
@@ -338,7 +341,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString("1 liite"));
 
 
-        assertThat(email.getBodyHtml(), not(containsString(urls.loginMunicipality(MUNICIPALITY_LOGIN_HASH))));
+        assertThat(email.getBodyHtml(), not(containsString(urls.loginMunicipality(MUNICIPALITY_MANAGEMENT_HASH))));
     }
 
     @Test
@@ -450,6 +453,41 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getSubject(), is("Aloiteluonnoksesi on tallennettu Kuntalaisaloite.fi-palveluun"));
         assertThat(email.getBodyHtml(), containsString(Urls.get(Locales.LOCALE_FI).loginToManagement(initiativeId())));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
+
+    }
+
+    @Test
+    public void sends_municipality_login_email() {
+
+
+        String managementHash = randomAlphabetic(40);
+        String loginHash = randomAlphabetic(40);
+
+        municipalityUserDao.assignMunicipalityUser(initiativeId(), managementHash);
+        municipalityUserDao.assignMunicipalityUserLoginHash(
+                initiativeId(),
+                managementHash,
+                loginHash,
+                DateTime.now()
+        );
+
+        emailService.sendLoginLinkToMunicipality(initiativeId());
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getRecipientsAsString(), is(MUNICIPALITY_EMAIL));
+        assertThat(email.getSubject(), is("Kuntalaisaloitteeseen vastaaminen / SV Kuntalaisaloitteeseen vastaaminen"));
+        assertThat(email.getBodyHtml(), containsString(
+                Urls.get(Locales.LOCALE_FI).municipalityLogin(managementHash, loginHash)
+                .replace("&", "&amp;")
+        ));
+
+        assertThat(email.getBodyHtml(), containsString(
+                Urls.get(Locales.LOCALE_SV).municipalityLogin(managementHash, loginHash)
+                        .replace("&", "&amp;")
+        ));
+
+
 
     }
 

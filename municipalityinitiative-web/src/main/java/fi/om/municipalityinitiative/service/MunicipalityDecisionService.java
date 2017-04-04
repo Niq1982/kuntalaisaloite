@@ -6,6 +6,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.DecisionAttachmentDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
+import fi.om.municipalityinitiative.dao.MunicipalityUserDao;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
 import fi.om.municipalityinitiative.dto.service.Initiative;
@@ -16,10 +17,13 @@ import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.util.ImageModifier;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +59,9 @@ public class MunicipalityDecisionService {
 
     @Resource
     private EmailService emailService;
+
+    @Resource
+    private MunicipalityUserDao municipalityUserDao;
 
     public MunicipalityDecisionService(String attachmentDir) {
         this.attachmentDir = attachmentDir;
@@ -239,4 +246,26 @@ public class MunicipalityDecisionService {
     }
 
 
+    @Transactional
+    public Long createAndSendMunicipalityLoginLink(String managementHash) {
+
+        Long initiativeId = municipalityUserDao.getInitiativeId(managementHash);
+
+        if (initiativeId == null) {
+            throw new NotFoundException("Municipality user", managementHash);
+        }
+
+        String loginHash = RandomHashGenerator.longHash();
+
+        municipalityUserDao.assignMunicipalityUserLoginHash(
+                initiativeId,
+                managementHash,
+                loginHash,
+                DateTime.now()
+        );
+
+        emailService.sendLoginLinkToMunicipality(initiativeId);
+        return initiativeId;
+
+    }
 }
