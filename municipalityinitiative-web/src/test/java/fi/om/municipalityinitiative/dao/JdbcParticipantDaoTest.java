@@ -62,9 +62,9 @@ public class JdbcParticipantDaoTest {
 
     @Test
     public void adds_new_participants() {
-        precondition(testHelper.countAll(QParticipant.participant), is(2L));
+        precondition(testHelper.countAll(QParticipant.participant), is(1L));
         participantDao.confirmParticipation(participantDao.create(participantCreateDto(), CONFIRMATION_CODE), CONFIRMATION_CODE);
-        assertThat(testHelper.countAll(QParticipant.participant), is(3L));
+        assertThat(testHelper.countAll(QParticipant.participant), is(2L));
     }
 
 

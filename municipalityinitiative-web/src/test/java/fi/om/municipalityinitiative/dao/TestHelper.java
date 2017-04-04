@@ -185,7 +185,14 @@ public class TestHelper {
         if (type == InitiativeType.SINGLE && state == InitiativeState.PUBLISHED) {
             initiativeDraft.withSent(DateTime.now());
         }
-        return createDefaultInitiative(initiativeDraft);
+
+        if (type.isVerifiable()) {
+            return createVerifiedInitiative(initiativeDraft);
+        }
+        else {
+            return createDefaultInitiative(initiativeDraft);
+        }
+
     }
 
     @Transactional
@@ -239,6 +246,13 @@ public class TestHelper {
         insert.set(municipalityInitiative.externalparticipantcount, initiativeDraft.externalParticipantCount);
 
         insert.set(municipalityInitiative.state, initiativeDraft.state);
+
+        if (initiativeDraft.type.isVerifiable() && !verified) {
+            throw new RuntimeException("TestHelper init failure - trying to create verified initiative type with non-verified function call");
+        }
+        if (initiativeDraft.type != InitiativeType.UNDEFINED && initiativeDraft.type.isNotVerifiable() && verified) {
+            throw new RuntimeException("TestHelper init failure - trying to create non-verified initiative type with verified function call");
+        }
 
         if (initiativeDraft.type.isNotVerifiable() && verified) {
             insert.set(municipalityInitiative.type, InitiativeType.COLLABORATIVE_COUNCIL);

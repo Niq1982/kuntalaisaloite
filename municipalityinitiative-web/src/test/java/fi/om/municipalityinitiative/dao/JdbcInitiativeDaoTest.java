@@ -141,7 +141,7 @@ public class JdbcInitiativeDaoTest {
     public void get_returns_all_information() {
         Long authorsMunicipalityId = testHelper.createTestMunicipality("Authors Municipality");
 
-        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withSent(new DateTime(2010, 1, 1, 0, 0))
                 .witEmailReportSent(EmailReportType.IN_ACCEPTED, new DateTime())
@@ -321,13 +321,13 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void find_orders_by_counts_non_collaboratives_as_zero() {
 
-        Long mostParticipants = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
+        Long mostParticipants = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(10));
-        Long leastParticipants = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
+        Long leastParticipants = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(1));
-        Long someParticipants = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
+        Long someParticipants = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(5));
 
@@ -497,7 +497,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void counts_participants_to_listView() {
 
-        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(17)
                 .withExternalParticipantCount(10));
@@ -548,7 +548,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void finds_by_sent_finds_published_if_sent() {
-        Long collaborativeSent = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long collaborativeSent = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
                 .withSent(new DateTime(2010, 1, 1, 0, 0)));
@@ -560,7 +560,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void finds_by_sent_does_not_find_published_if_not_sent() {
-        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
                 .withSent(null));

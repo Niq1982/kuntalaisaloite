@@ -286,7 +286,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     private Long createVerifiedCollaborative() {
         return testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
-                .withType(InitiativeType.COLLABORATIVE)
+                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED));
     }
 

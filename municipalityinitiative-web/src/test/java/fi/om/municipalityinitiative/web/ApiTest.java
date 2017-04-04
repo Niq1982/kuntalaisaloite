@@ -37,7 +37,7 @@ public class ApiTest extends WebTestBase {
 
         String collaborativeCitizenInitiativeNameHelsinki = "Aloite helsingista";
         Long id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
-                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withType(InitiativeType.COLLABORATIVE)
                 .withState(InitiativeState.PUBLISHED)
                 .withStateTime(new DateTime("2015-07-14"))
                 .withName(collaborativeCitizenInitiativeNameHelsinki));
@@ -49,7 +49,7 @@ public class ApiTest extends WebTestBase {
                 "\"id\":\"http://localhost:8090/api/api/v1/municipalities/" + HELSINKI_ID + "\"," +
                 "\"nameFi\":\"Helsinki\",\"nameSv\":\"Helsinki sv\"}," +
                 "\"name\":\"Aloite helsingista\",\"participantCount\":0," +
-                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE_CITIZEN\"," +
+                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE\"," +
                 "\"url\":{\"fi\":\"http://localhost:8090/fi/aloite/"+id+"\",\"sv\":\"http://localhost:8090/sv/initiativ/"+id+"\"}"+
                 "}]"));
 
@@ -59,14 +59,14 @@ public class ApiTest extends WebTestBase {
 
         String collaborativeCitizenInitiativeNameHelsinki = "Aloite helsingista";
         Long id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
-                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withType(InitiativeType.COLLABORATIVE)
                 .withState(InitiativeState.PUBLISHED)
                 .withStateTime(new DateTime("2015-07-14"))
                 .withName(collaborativeCitizenInitiativeNameHelsinki));
 
         String collaborativeCitizenInitiativeNameHyvinkaa = "Aloite hyvinkäältä";
         testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HYVINKAA_ID)
-                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withType(InitiativeType.COLLABORATIVE)
                 .withState(InitiativeState.PUBLISHED)
                 .withStateTime(new DateTime("2015-07-14"))
                 .withName(collaborativeCitizenInitiativeNameHyvinkaa));
@@ -79,7 +79,7 @@ public class ApiTest extends WebTestBase {
                 "\"id\":\"http://localhost:8090/api/api/v1/municipalities/" + HELSINKI_ID + "\"," +
                 "\"nameFi\":\"Helsinki\",\"nameSv\":\"Helsinki sv\"}," +
                 "\"name\":\"Aloite helsingista\",\"participantCount\":0," +
-                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE_CITIZEN\"," +
+                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE\"," +
                 "\"url\":{\"fi\":\"http://localhost:8090/fi/aloite/"+id+"\",\"sv\":\"http://localhost:8090/sv/initiativ/"+id+"\"}"+
                 "}]"));
 
@@ -110,7 +110,7 @@ public class ApiTest extends WebTestBase {
     public void api_single_initiative(){
         String collaborativeCitizenInitiativeNameHelsinki = "Aloite helsingista";
         Long id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
-                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withType(InitiativeType.COLLABORATIVE)
                 .withState(InitiativeState.PUBLISHED)
                 .withStateTime(new DateTime("2015-07-14"))
                 .withName(collaborativeCitizenInitiativeNameHelsinki));
@@ -128,7 +128,7 @@ public class ApiTest extends WebTestBase {
                 "\"privateNames\":0," +
                 "\"publicNames\":0,\"total\":0}," +
                 "\"proposal\":\"Proposal\"," +
-                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE_CITIZEN\"," +
+                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE\"," +
                 "\"url\":{\"fi\":\"http://localhost:8090/fi/aloite/"+id+"\",\"sv\":\"http://localhost:8090/sv/initiativ/"+id+"\"}"+
                 "}"));
     }

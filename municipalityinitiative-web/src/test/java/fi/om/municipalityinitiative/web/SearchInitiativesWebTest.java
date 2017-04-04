@@ -46,12 +46,12 @@ public class SearchInitiativesWebTest extends WebTestBase {
         String collaborativeCitizenInitiativeNameVantaa = "Collaborative Citizen Vantaa";
 
 
-        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
                 .withName(collaborativeCitizenInitiativeNameHelsinki));
 
-        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(VANTAA_ID)
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(VANTAA_ID)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
                 .withName(collaborativeCitizenInitiativeNameVantaa));
@@ -79,12 +79,12 @@ public class SearchInitiativesWebTest extends WebTestBase {
         String collaborativeCitizenInitiativeNameVantaa = "Collaborative Citizen Vantaa";
 
 
-        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
                 .withName(collaborativeCitizenInitiativeNameHelsinki));
 
-        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(VANTAA_ID)
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(VANTAA_ID)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
                 .withName(collaborativeCitizenInitiativeNameVantaa));
@@ -126,7 +126,7 @@ public class SearchInitiativesWebTest extends WebTestBase {
         String collaborativeCitizenInitiativeName = "Collaborative Citizen";
         String singleSent = "Single sent to municipality";
 
-        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
                 .withName(collaborativeCitizenInitiativeName));
