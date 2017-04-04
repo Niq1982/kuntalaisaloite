@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.AttachmentFileBase;
 import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
+import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
 import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
@@ -17,6 +18,8 @@ import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
+import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.apache.commons.io.FileUtils;
 import org.aspectj.util.FileUtil;
 import org.joda.time.DateTime;
@@ -33,12 +36,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrationTestBase  {
 
 
+    public static final String MUNICIPALITY_NAME = "Some municipality";
+    public static final String MUNICIPALITY_EMAIL = TestHelper.toEmail(MUNICIPALITY_NAME);
 
     @Resource
     protected MunicipalityDecisionService municipalityDecisionService;
@@ -69,9 +75,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
     @Override
     protected void childSetup()  {
-
-        testMunicipalityId = testHelper.createTestMunicipality("Some municipality");
-
+        testMunicipalityId = testHelper.createTestMunicipality(MUNICIPALITY_NAME);
     }
 
     @Test
@@ -451,6 +455,25 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
         Assert.assertThat(attachmentFile, notNullValue());
         Assert.assertThat(attachmentFile.getFileName(), is(attachment.getFileName()));
+
+    }
+
+    @Test
+    @Transactional
+    public void creates_a_working_municipality_login_hash_and_sends_it_via_emaiL() {
+
+        Long initiativeId = createSentVerifiedInitiativeWithAuthor();
+        String managementHash = randomAlphabetic(40);
+        municipalityUserDao.assignMunicipalityUser(initiativeId, managementHash);
+
+        municipalityDecisionService.createAndSendMunicipalityLoginLink(managementHash);
+        String newLoginHash = PreviousHashGetter.get();
+
+        assertThat(municipalityUserDao.getInitiativeId(managementHash, newLoginHash), is(initiativeId));
+
+        EmailDto singleQueuedEmail = testHelper.getSingleQueuedEmail();
+        assertThat(singleQueuedEmail.getSubject(), is("Kuntalaisaloitteeseen vastaaminen / SV Kuntalaisaloitteeseen vastaaminen"));
+        assertThat(singleQueuedEmail.getRecipientsAsString(), is(MUNICIPALITY_EMAIL));
 
     }
 

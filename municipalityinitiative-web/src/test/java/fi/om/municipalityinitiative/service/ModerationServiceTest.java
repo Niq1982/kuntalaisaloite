@@ -87,7 +87,7 @@ public class ModerationServiceTest extends ServiceIntegrationTestBase {
 
         moderationService.renewMunicipalityManagementHash(omLoginUserHolder, initiativeId, new Locale("fi"));
 
-        String newHash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(initiativeId);
+        String newHash = municipalityUserDao.getMunicipalityUserHashAttachedToInitiative(initiativeId).managementHash;
 
         assertThat(oldHash, not(newHash));
     }

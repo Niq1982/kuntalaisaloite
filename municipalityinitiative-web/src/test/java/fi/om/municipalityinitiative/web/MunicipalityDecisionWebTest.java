@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.web;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -36,7 +37,12 @@ public class MunicipalityDecisionWebTest  extends WebTestBase {
     @Test
     public void municipality_can_answer_to_initiative() {
         testHelper.sendToMunicipality(verifiedInitiativeId);
+
         openMunicipalityDecisionViewForLastSentInitiative();
+
+        assertTotalEmailsInQueue(1);
+        testHelper.clearSentEmails();
+
         open(urls.getMunicipalityDecisionView(verifiedInitiativeId));
         inputTextByCSS("#description", DECISIONTEXT);
         clickButton(PUBLISH);
@@ -52,11 +58,16 @@ public class MunicipalityDecisionWebTest  extends WebTestBase {
     @Test
     public void municipality_description_text_and_attachment_cant_both_be_empty() {
         testHelper.sendToMunicipality(verifiedInitiativeId);
+
         openMunicipalityDecisionViewForLastSentInitiative();
+
+        assertTotalEmailsInQueue(1);
+        testHelper.clearSentEmails();
+
         open(urls.getMunicipalityDecisionView(verifiedInitiativeId));
         clickButton(PUBLISH);
 
-        this.assertPageHasValidationErrors();
+        assertPageHasValidationErrors();
         open(urls.view(verifiedInitiativeId));
         WebElement element = getElement(By.tagName("h2"));
         assertThat(element.getText(), not(MUNICIPALITY_ANSWER));
@@ -66,7 +77,9 @@ public class MunicipalityDecisionWebTest  extends WebTestBase {
     }
 
     private void openMunicipalityDecisionViewForLastSentInitiative() {
-        open(urls.loginMunicipality(testHelper.getPreviousMunicipalityHash()));
+        String managementHash = testHelper.getPreviousMunicipalityHash();
+        open(urls.loginMunicipality(managementHash));
+        open(urls.municipalityLogin(managementHash, PreviousHashGetter.get()));
 
     }
 }

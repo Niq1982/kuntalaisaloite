@@ -20,7 +20,7 @@
     <@b.mainContentBlock title>
         <@b.initiativeDetails type=type showProposal=true showDate=true showExtraInfo=true />
     </@b.mainContentBlock>
-    
+
     <@u.spacer "15" />
     
     <@b.contentBlock type>

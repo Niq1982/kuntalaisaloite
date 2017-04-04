@@ -147,6 +147,8 @@ public final class Urls {
     public static final String PARAM_SENT_COMMENT = "comment";
 
     public static final String PARAM_MANAGEMENT_CODE = "management";
+
+    public static final String PARAM_MANAGEMENT_LOGIN_CODE = "managementLogin";
     
     public static final String PARAM_AUTHOR_ID = "authorId";
 
@@ -293,6 +295,10 @@ public final class Urls {
     public static final String MUNICIPALITY_LOGIN_FI = "/fi/municipality-login";
 
     public static final String MUNICIPALITY_LOGIN_SV = "/sv/municipality-login";
+
+    public static final String MUNICIPALITY_LOGIN_SENT_FI = "/fi/municipality-login-sent";
+
+    public static final String MUNICIPALITY_LOGIN_SENT_SV = "/sv/municipality-login-sent";
 
     public static final String EDIT_FI = "/fi/muokkaa" + "/" + ID_PARAMETER;
 
@@ -441,6 +447,10 @@ public final class Urls {
         } else {
             return parameterSv;
         }
+    }
+
+    public String municipalityLoginSent() {
+        return getLocalizedPageUrl(MUNICIPALITY_LOGIN_SENT_FI, MUNICIPALITY_LOGIN_SENT_SV);
     }
 
     public String infoIndex() {
@@ -765,6 +775,13 @@ public final class Urls {
 
         //TODO: add other chars or find some existing converter ...
         return ret;
+    }
+
+    public String municipalityLogin(String managementHash, String loginHash) {
+        return getLocalizedPageUrl(MUNICIPALITY_LOGIN_FI, MUNICIPALITY_LOGIN_SV)
+                + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash
+                + "&" + PARAM_MANAGEMENT_LOGIN_CODE + "=" + loginHash;
+
     }
 
     public boolean isVetumaLoginPage(String target) {
