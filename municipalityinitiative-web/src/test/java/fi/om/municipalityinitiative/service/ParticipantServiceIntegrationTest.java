@@ -1,15 +1,11 @@
 package fi.om.municipalityinitiative.service;
 
-import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
-import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
@@ -293,8 +289,8 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
 
         List<ParticipantListInfo> publicParticipants = participantService.findPublicParticipants(0, initiativeId);
 
-        assertThat(publicParticipants.get(0).getParticipant().isVerified(), is(true)); // Confirmed
-        assertThat(publicParticipants.get(1).getParticipant().isVerified(), is(false)); // The "original" author, non-confirmed
+        assertThat(publicParticipants.get(0).getParticipant().isMunicipalityVerified(), is(true)); // Confirmed
+        assertThat(publicParticipants.get(1).getParticipant().isMunicipalityVerified(), is(false)); // The "original" author, non-confirmed
     }
 
     @Transactional

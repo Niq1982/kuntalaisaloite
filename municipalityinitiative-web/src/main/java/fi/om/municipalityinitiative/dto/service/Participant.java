@@ -8,14 +8,14 @@ public abstract class Participant<E extends Id> {
     private LocalDate participateDate;
     private String email;
     private E id;
-    private boolean verified;
+    private boolean isMunicipalityVerified;
 
-    public boolean isVerified() {
-        return verified;
+    public boolean isMunicipalityVerified() {
+        return isMunicipalityVerified;
     }
 
-    public void setVerified(boolean verified) {
-        this.verified = verified;
+    public void setMunicipalityVerified(boolean municipalityVerified) {
+        this.isMunicipalityVerified = municipalityVerified;
     }
 
     public Participant() {

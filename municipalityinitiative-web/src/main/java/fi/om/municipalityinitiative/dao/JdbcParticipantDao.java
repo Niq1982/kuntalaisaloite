@@ -42,7 +42,7 @@ public class JdbcParticipantDao implements ParticipantDao {
             VerifiedParticipant participant = new VerifiedParticipant();
 
             participant.setEmail(row.get(QVerifiedUser.verifiedUser.email));
-            participant.setVerified(row.get(QVerifiedParticipant.verifiedParticipant.verified));
+            participant.setMunicipalityVerified(row.get(QVerifiedParticipant.verifiedParticipant.verified));
             participant.setParticipateDate(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
             participant.setName(row.get(QVerifiedUser.verifiedUser.name));
             participant.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
@@ -60,7 +60,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                     par.setName(row.get(participant.name));
                     par.setEmail(row.get(participant.email));
                     par.setMembership(row.get(participant.membershipType));
-                    par.setVerified(Boolean.TRUE.equals(row.get(QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives.verified)));
+                    par.setMunicipalityVerified(Boolean.TRUE.equals(row.get(QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives.verified)));
                     if (row.get(QMunicipality.municipality.id) != null) {
                         par.setHomeMunicipality(Maybe.of(Mappings.parseMunicipality(row)));
                     }

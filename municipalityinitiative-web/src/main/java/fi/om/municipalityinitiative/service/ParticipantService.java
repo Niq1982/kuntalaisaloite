@@ -43,9 +43,6 @@ public class ParticipantService {
     private AuthorDao authorDao;
 
     @Resource
-    private UserDao userDao;
-
-    @Resource
     private InitiativeDao initiativeDao;
 
     @Resource

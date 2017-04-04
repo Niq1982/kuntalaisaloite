@@ -219,7 +219,7 @@ public class ParticipantToPdfExporter {
                 table.addCell(createCell(String.valueOf(count), false));
                 table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
                 table.addCell(createCell(participant.getName(), false));
-                table.addCell(createCell(participant.isVerified() ? "" : "X", false));
+                table.addCell(createCell(participant.isMunicipalityVerified() ? "" : "X", false));
             }
         }
 

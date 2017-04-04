@@ -92,6 +92,7 @@ public class JdbcConfiguration {
         configuration.register("municipality_initiative", "state", new EnumAsObjectType<>(InitiativeState.class));
         configuration.register("municipality_initiative", "last_email_report_type", new EnumAsObjectType<>(EmailReportType.class));
         configuration.register("participant", "membership_type", new EnumAsObjectType<>(Membership.class));
+        configuration.register("verified_participant", "membership_type", new EnumAsObjectType<>(Membership.class));
         configuration.register("municipality_initiative", "fix_state", new EnumAsObjectType<>(FixState.class));
         configuration.register("info_text", "category", new EnumAsObjectType<>(InfoTextCategory.class));
         configuration.register("info_text", "languagecode", new EnumAsObjectType<>(LanguageCode.class));

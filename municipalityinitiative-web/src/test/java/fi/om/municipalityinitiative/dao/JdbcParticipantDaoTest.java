@@ -128,7 +128,7 @@ public class JdbcParticipantDaoTest {
 
         assertThat(participant.getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
         assertThat(participant.getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
-        assertThat(participant.isVerified(), is(true));
+        assertThat(participant.isMunicipalityVerified(), is(true));
         assertThat(participant.getParticipateDate(), is(LocalDate.now()));
 
     }
@@ -146,7 +146,7 @@ public class JdbcParticipantDaoTest {
 
         assertThat(participant.getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
         assertThat(participant.getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
-        assertThat(participant.isVerified(), is(true));
+        assertThat(participant.isMunicipalityVerified(), is(true));
         assertThat(participant.getParticipateDate(), is(LocalDate.now()));
 
     }

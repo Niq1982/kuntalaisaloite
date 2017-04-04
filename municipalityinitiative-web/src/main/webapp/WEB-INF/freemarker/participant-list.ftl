@@ -34,7 +34,7 @@
         <#if initiative.verifiable && hasManagementRightForInitiative>
             <#assign secureCount = 0/>
             <#list participants as participant>
-                <#if !participant.participant.verified>
+                <#if !participant.participant.municipalityVerified>
                     <#assign secureCount = secureCount+1/>
                 </#if>
             </#list>
