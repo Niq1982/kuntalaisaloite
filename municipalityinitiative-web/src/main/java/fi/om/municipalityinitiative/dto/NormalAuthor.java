@@ -4,14 +4,9 @@ import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 
 public class NormalAuthor extends Author<NormalAuthorId> {
 
-    private NormalAuthorId id;
-
     @Override
-    public NormalAuthorId getId() {
-        return id;
-    }
-
-    public void setId(NormalAuthorId id) {
-        this.id = id;
+    public boolean isVerified() {
+        return false;
     }
 }
+

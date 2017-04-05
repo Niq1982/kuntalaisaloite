@@ -4,14 +4,9 @@ import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 
 public class VerifiedAuthor extends Author<VerifiedUserId> {
 
-    private VerifiedUserId id;
-
     @Override
-    public VerifiedUserId getId() {
-        return id;
+    public boolean isVerified() {
+        return true;
     }
 
-    public void setId(VerifiedUserId verifiedUserId) {
-        this.id = verifiedUserId;
-    }
 }

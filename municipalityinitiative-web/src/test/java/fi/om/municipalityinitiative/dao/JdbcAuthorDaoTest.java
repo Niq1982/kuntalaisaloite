@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Municipality;
@@ -23,6 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -89,6 +91,21 @@ public class JdbcAuthorDaoTest {
         VerifiedAuthor verifiedAuthor = authorDao.findVerifiedAuthors(initiativeId).get(0);
         assertThat(verifiedAuthor.getMunicipality(), isPresent());
         assertThat(verifiedAuthor.getMunicipality().get().getId(), is(testMunicipality));
+    }
+
+    @Test
+    public void find_all_authors_returns_verified_and_normal_authors() {
+
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor()
+                .withParticipantName("Normal").toInitiativeDraft());
+        testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality)
+                .withParticipantName("Verified"));
+
+        List<Author> allAuthors = authorDao.findAllAuthors(initiativeId);
+        assertThat(allAuthors.stream().filter(a -> a.getContactInfo().getName().equals("Normal")).findAny().get().isVerified(), is(false));
+        assertThat(allAuthors.stream().filter(a -> a.getContactInfo().getName().equals("Verified")).findAny().get().isVerified(), is(true));
+        assertThat(allAuthors, hasSize(2));
+
     }
 
     @Test

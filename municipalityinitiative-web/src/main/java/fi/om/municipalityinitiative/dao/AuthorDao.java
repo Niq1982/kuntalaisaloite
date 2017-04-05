@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dao;
 
+import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
@@ -25,6 +26,8 @@ public interface AuthorDao {
     List<AuthorInvitation> findInvitations(Long initiativeId);
 
     List<NormalAuthor> findNormalAuthors(Long initiativeId);
+
+    List<Author> findAllAuthors(Long initiativeId);
 
     NormalAuthorId createAuthor(Long initiativeId, Long participantId, String managementHash);
 

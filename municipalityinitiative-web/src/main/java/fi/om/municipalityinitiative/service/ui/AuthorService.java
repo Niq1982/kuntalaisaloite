@@ -194,12 +194,7 @@ public class AuthorService {
     }
 
     private List<? extends Author> findAuthors(Long initiativeId) {
-        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
-            return authorDao.findVerifiedAuthors(initiativeId);
-        }
-        else {
-            return authorDao.findNormalAuthors(initiativeId);
-        }
+        return authorDao.findAllAuthors(initiativeId);
     }
 
     public static class AuthorInvitationConfirmViewData {

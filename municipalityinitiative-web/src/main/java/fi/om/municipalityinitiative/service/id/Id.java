@@ -15,15 +15,13 @@ public abstract class Id implements Serializable {
     }
 
     @Override
-    public final boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (this.getClass() != obj.getClass()) {
-            throw new RuntimeException("Trying to compare classes: " + this.getClass() + " and " + obj.getClass());
-        }
-        Id that = (Id) obj;
-        return this.id == that.id;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Id id1 = (Id) o;
+
+        return id == id1.id;
     }
 
     @Override

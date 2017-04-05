@@ -11,8 +11,17 @@ public abstract class Author<E extends Id> {
     private Maybe<Municipality> municipality;
     private ContactInfo contactInfo;
     private LocalDate createTime;
+    private E id;
 
-    public abstract E getId();
+    public E getId() {
+        return id;
+    }
+
+    public void setId(E id) {
+        this.id = id;
+    }
+
+    public abstract boolean isVerified();
 
     public Maybe<Municipality> getMunicipality() {
         return municipality;
