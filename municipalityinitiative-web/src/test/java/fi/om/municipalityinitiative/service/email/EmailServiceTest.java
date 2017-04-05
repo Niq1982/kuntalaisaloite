@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service.email;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
+import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.EmailDto;
@@ -21,10 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.function.Consumer;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 
@@ -53,14 +57,19 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @After
     public void printEmail() {
-        EmailDto singleQueuedEmail = testHelper.getSingleQueuedEmail();
 
-        File file = new File(EMAIL_TEMP_DIR
-                + singleQueuedEmail.getEmailId()
-                + "_"
-                + singleQueuedEmail.getSubject().replace("/", " - ")
-                + ".html");
-        FileUtil.writeAsString(file, singleQueuedEmail.getBodyHtml());
+        testHelper.findQueuedEmails().forEach(email -> {
+
+            File file = new File(EMAIL_TEMP_DIR
+                    + email.getEmailId()
+                    + "_"
+                    + email.getSubject().replace("/", " - ")
+                    + ".html");
+            FileUtil.writeAsString(file, email.getBodyHtml());
+
+        });
+
+
     }
 
 
@@ -179,6 +188,29 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     }
 
+
+    @Test
+    public void status_emails_with_corrects_links_are_sent_to_verified_and_normal_authors() {
+
+        Long initiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(getMunicipalityId()).applyAuthor()
+                .withParticipantEmail("normal@example.com").toInitiativeDraft());
+
+        testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, getMunicipalityId())
+                .withParticipantEmail("verified@example.com"));
+
+        emailService.sendStatusEmail(initiative, EmailMessageType.SENT_TO_MUNICIPALITY);
+
+        List<EmailDto> queuedEmails = testHelper.findQueuedEmails();
+
+        assertThat(queuedEmails, hasSize(2));
+
+        EmailDto verified = queuedEmails.stream().filter(e -> e.getRecipientsAsString().equals("verified@example.com")).findAny().get();
+        EmailDto normal = queuedEmails.stream().filter(e -> e.getRecipientsAsString().equals("normal@example.com")).findAny().get();
+
+        assertThat(normal.getBodyHtml(), containsString(Urls.get(Locales.LOCALE_FI).loginAuthor(testHelper.getPreviousTestManagementHash())));
+        assertThat(verified.getBodyHtml(), containsString(Urls.get(Locales.LOCALE_FI).loginToManagement(initiative)));
+
+    }
 
     @Test
     public void author_has_been_deleted_email_to_everyone_contains_all_information() throws Exception {

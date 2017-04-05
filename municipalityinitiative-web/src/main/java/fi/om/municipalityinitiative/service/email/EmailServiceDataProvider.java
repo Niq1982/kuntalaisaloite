@@ -45,18 +45,11 @@ public class EmailServiceDataProvider {
     }
 
     public List<? extends Author> findAuthors(Long id) {
-        if (initiativeDao.isVerifiableInitiative(id)) {
-            return authorDao.findVerifiedAuthors(id);
-        }
-        return authorDao.findNormalAuthors(id);
+        return authorDao.findAllAuthors(id);
     }
 
     public List<String> getAuthorEmails(Long initiativeId) {
-
-        List<String> verifiedAuthorEmails = authorDao.findVerifiedAuthorEmails(initiativeId);
-        verifiedAuthorEmails.addAll(authorDao.findNormalAuthorEmails(initiativeId));
-
-        return verifiedAuthorEmails;
+        return authorDao.findAuthorEmails(initiativeId);
     }
 
     public String getMunicipalityEmail(Long id) {
@@ -68,14 +61,13 @@ public class EmailServiceDataProvider {
     }
 
     public Map<String, String> getManagementLinksByAuthorEmails(Long initiativeId) {
-        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
-            HashMap<String, String> authorEmails = Maps.newHashMap();
-            for (String email : authorDao.findVerifiedAuthorEmails(initiativeId)) {
-                authorEmails.put(email, null);
-            }
-            return authorEmails;
-        }
-        return authorDao.getManagementLinksByAuthorEmails(initiativeId);
+
+        Map<String, String> managementLinks = authorDao.getManagementLinksByAuthorEmails(initiativeId);
+
+        authorDao.findVerifiedAuthors(initiativeId)
+                .forEach(a -> managementLinks.put(a.getContactInfo().getEmail(), null));
+
+        return managementLinks;
     }
 
     public int getAcceptedAttachmentCount(Long initiativeId) {

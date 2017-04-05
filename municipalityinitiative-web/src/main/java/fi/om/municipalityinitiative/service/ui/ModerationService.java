@@ -132,12 +132,7 @@ public class ModerationService {
     @Transactional(readOnly = true)
     public List<? extends Author> findAuthors(LoginUserHolder loginUserHolder, Long initiativeId) {
         loginUserHolder.assertOmUser();
-        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
-            return authorDao.findVerifiedAuthors(initiativeId);
-        }
-        else {
-            return authorDao.findNormalAuthors(initiativeId);
-        }
+        return authorDao.findAllAuthors(initiativeId);
     }
 
     @Transactional(readOnly = true)

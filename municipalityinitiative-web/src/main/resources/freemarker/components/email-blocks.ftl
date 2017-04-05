@@ -338,7 +338,7 @@
  *
  -->
 <#macro adminViewLink type="" verified=false>
-    <#if verified>
+    <#if !managementHash??>
         <#if type == "html">
             <h4 style="${h4!""}"><@u.message "email.management.title" /></h4>
             <p style="${pBottomMargin!""}"><@u.message "email.management.description" /></p>

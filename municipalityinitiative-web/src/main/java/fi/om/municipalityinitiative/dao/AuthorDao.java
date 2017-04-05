@@ -33,7 +33,7 @@ public interface AuthorDao {
 
     void updateAuthorInformation(NormalAuthorId authorId, ContactInfo contactInfo);
 
-    List<String> findNormalAuthorEmails(Long initiativeId);
+    List<String> findAuthorEmails(Long initiativeId);
 
     Set<Long> getAuthorsInitiatives(String managementHash);
 
@@ -52,8 +52,6 @@ public interface AuthorDao {
     void addVerifiedAuthor(Long initiativeId, VerifiedUserId userId);
 
     List<VerifiedAuthor> findVerifiedAuthors(Long initiativeId);
-
-    List<String> findVerifiedAuthorEmails(Long initiativeId);
 
     void deleteAuthorAndParticipant(Long initiativeId, VerifiedUserId authorToDelete);
 }
