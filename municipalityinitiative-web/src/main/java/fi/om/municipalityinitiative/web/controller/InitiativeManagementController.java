@@ -7,10 +7,13 @@ import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
+import fi.om.municipalityinitiative.exceptions.InvalidVideoUrlException;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
+import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SecurityFilter;
 import fi.om.municipalityinitiative.web.Urls;
@@ -30,6 +33,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Locale;
 
@@ -175,7 +179,7 @@ public class InitiativeManagementController extends BaseController {
         InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
         validateVideoUrl(editDto.getVideoUrl(), bindingResult);
-        validationService.validationErrors(editDto, bindingResult, model, solveValidationGroup(initiative));
+        validationService.validationErrors(editDto, bindingResult, model, loginUserHolder.isVerifiedUser() ? VerifiedInitiative.class : NormalInitiative.class);
 
         if ((bindingResult.hasErrors())) {
             return ViewGenerator.editView(
@@ -189,8 +193,8 @@ public class InitiativeManagementController extends BaseController {
 
         try {
             initiativeManagementService.editInitiativeDraft(initiativeId, loginUserHolder, editDto, locale);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (MalformedURLException | InvalidVideoUrlException e) {
+            log.error("Editing initiative draft failed", e);
             return redirectWithMessage(urls.management(initiativeId), RequestMessage.VIDEO_FAILURE, request);
         }
         userService.refreshUserData(request);
@@ -241,7 +245,7 @@ public class InitiativeManagementController extends BaseController {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         validateVideoUrl(updateDto.getVideoUrl(), bindingResult);
-        validationService.validationErrors(updateDto, bindingResult, model, solveValidationGroup(normalInitiativeService.getInitiative(initiativeId, loginUserHolder)));
+        validationService.validationErrors(updateDto, bindingResult, model, loginUserHolder.isVerifiedUser() ? VerifiedInitiative.class : NormalInitiative.class);
 
         if (bindingResult.hasErrors()) {
 

@@ -52,10 +52,11 @@ public class EmailServiceDataProvider {
     }
 
     public List<String> getAuthorEmails(Long initiativeId) {
-        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
-            return authorDao.findVerifiedAuthorEmails(initiativeId);
-        }
-        return authorDao.findNormalAuthorEmails(initiativeId);
+
+        List<String> verifiedAuthorEmails = authorDao.findVerifiedAuthorEmails(initiativeId);
+        verifiedAuthorEmails.addAll(authorDao.findNormalAuthorEmails(initiativeId));
+
+        return verifiedAuthorEmails;
     }
 
     public String getMunicipalityEmail(Long id) {

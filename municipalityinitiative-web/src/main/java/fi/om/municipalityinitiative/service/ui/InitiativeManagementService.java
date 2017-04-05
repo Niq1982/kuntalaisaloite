@@ -70,13 +70,11 @@ public class InitiativeManagementService {
 
         ContactInfo contactInfo;
 
-        if (initiative.getType().isNotVerifiable()) {
-            contactInfo = authorDao.getNormalAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
+        if (loginUserHolder.isVerifiedUser()) {
+            contactInfo = authorDao.getVerifiedAuthor(initiativeId, loginUserHolder.getVerifiedUser().getAuthorId()).getContactInfo();
         }
         else {
-            VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
-            VerifiedAuthor verifiedAuthor = authorDao.getVerifiedAuthor(initiativeId, verifiedUser.getAuthorId());
-            contactInfo = verifiedAuthor.getContactInfo();
+            contactInfo = authorDao.getNormalAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
         }
 
         return InitiativeDraftUIEditDto.parse(initiative,contactInfo,locationDao.getLocations(initiativeId));
@@ -94,21 +92,27 @@ public class InitiativeManagementService {
 
         locationDao.removeLocations(initiativeId);
         locationDao.setLocations(initiativeId, editDto.getLocations());
-        if (initiative.getType().isNotVerifiable()) {
-            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), editDto.getContactInfo());
-            initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
-        }
-        else {
+
+        if (loginUserHolder.isVerifiedUser()) {
             String hash = loginUserHolder.getVerifiedUser().getHash();
             userDao.updateUserInformation(hash, editDto.getContactInfo());
             participantDao.updateVerifiedParticipantShowName(initiativeId, hash, editDto.getContactInfo().isShowName());
             initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
 
+            // This is a little strange :)
+            // When verified user starts creating a initiative, we'll send the first email after he/she updates
+            // the initiative for the first time. But it's better to send it here rather than immediately when he
+            // starts creating it from prepare-page.
             if (Strings.isNullOrEmpty(initiative.getName())) {
                 emailService.sendVeritiedInitiativeManagementLink(initiativeId, locale);
             }
 
         }
+        else {
+            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), editDto.getContactInfo());
+            initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
+        }
+
 
     }
 
@@ -144,7 +148,7 @@ public class InitiativeManagementService {
     public Author getAuthorInformation(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
-        if (initiative.getType().isNotVerifiable()) {
+        if (!loginUserHolder.isVerifiedUser()) {
             for (NormalAuthor author : authorDao.findNormalAuthors(initiativeId)) {
                 if (author.getId().equals(loginUserHolder.getNormalLoginUser().getAuthorId())) {
                     return author;

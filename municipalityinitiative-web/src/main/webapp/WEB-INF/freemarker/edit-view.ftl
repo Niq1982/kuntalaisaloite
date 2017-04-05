@@ -53,7 +53,7 @@
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.currentAuthor.title" step=3 />
-            <#if initiative.isVerifiable()>
+            <#if user.isVerifiedUser()>
                 <@edit.currentVerifiedAuthorBlock "updateData" />
             <#else>
                 <@edit.currentAuthorBlock "updateData" />
