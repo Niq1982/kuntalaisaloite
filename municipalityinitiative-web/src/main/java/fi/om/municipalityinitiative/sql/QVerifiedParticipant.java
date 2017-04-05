@@ -41,6 +41,8 @@ public class QVerifiedParticipant extends com.mysema.query.sql.RelationalPathBas
 
     public final com.mysema.query.sql.ForeignKey<QMunicipalityInitiative> verifiedParticipantInitiativeFk = createForeignKey(initiativeId, "id");
 
+    public final com.mysema.query.sql.ForeignKey<QMunicipality> verifiedParticipantMunicipalityIdFk = createForeignKey(municipalityId, "id");
+
     public QVerifiedParticipant(String variable) {
         super(QVerifiedParticipant.class,  forVariable(variable), "municipalityinitiative", "verified_participant");
         addMetadata();
@@ -59,7 +61,7 @@ public class QVerifiedParticipant extends com.mysema.query.sql.RelationalPathBas
     public void addMetadata() {
         addMetadata(initiativeId, ColumnMetadata.named("initiative_id").ofType(-5).withSize(19).notNull());
         addMetadata(membershipType, ColumnMetadata.named("membership_type").ofType(1111).withSize(2147483647).notNull());
-        addMetadata(municipalityId, ColumnMetadata.named("municipality_id").ofType(-5).withSize(19).notNull());
+        addMetadata(municipalityId, ColumnMetadata.named("municipality_id").ofType(-5).withSize(19));
         addMetadata(participateTime, ColumnMetadata.named("participate_time").ofType(91).withSize(13));
         addMetadata(showName, ColumnMetadata.named("show_name").ofType(-7).withSize(1).notNull());
         addMetadata(verified, ColumnMetadata.named("verified").ofType(-7).withSize(1).notNull());

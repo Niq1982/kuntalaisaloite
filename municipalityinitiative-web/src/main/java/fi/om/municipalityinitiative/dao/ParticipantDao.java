@@ -40,6 +40,5 @@ public interface ParticipantDao {
 
     void updateVerifiedParticipantShowName(Long initiativeId, String hash, boolean showName);
 
-    void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName, boolean verifiedMunicipality);
-
+    void addVerifiedParticipant(Long initiativeId, VerifiedUserId verifiedUserId, boolean showName, boolean present, Long aLong, Membership municipalMembership);
 }

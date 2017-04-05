@@ -6,10 +6,8 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.ui.AuthorUIMessage;
-import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
-import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
@@ -17,6 +15,7 @@ import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
@@ -79,7 +78,7 @@ public class NormalInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public Long prepareInitiative(PrepareInitiativeUICreateDto createDto, Locale locale) {
+    public Long prepareInitiativeWithEmail(PrepareInitiativeUICreateDto createDto, Locale locale) {
 
         assertMunicipalityActive(createDto.getMunicipality());
 

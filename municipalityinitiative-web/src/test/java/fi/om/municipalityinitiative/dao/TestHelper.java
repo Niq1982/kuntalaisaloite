@@ -343,10 +343,20 @@ public class TestHelper {
                 .set(QVerifiedUser.verifiedUser.email, authorDraft.participantEmail)
                 .set(QVerifiedUser.verifiedUser.name, authorDraft.participantName);
 
-        if (authorDraft.participantMunicipality == null) {
-            insertVerifiedUser.setNull(QVerifiedUser.verifiedUser.municipalityId);
-        } else {
+        if (authorDraft.verifiedAuthorMunicipality != null) {
+            if (authorDraft.verifiedAuthorMunicipality.isPresent()) {
+                insertVerifiedUser.set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.verifiedAuthorMunicipality.getValue());
+            }
+            else {
+                insertVerifiedUser.setNull(QVerifiedUser.verifiedUser.municipalityId);
+            }
+
+        }
+        else if (authorDraft.participantMunicipality != null) {
             insertVerifiedUser.set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.participantMunicipality);
+
+        } else {
+            insertVerifiedUser.setNull(QVerifiedUser.verifiedUser.municipalityId);
         }
 
         Long verifiedUserId = insertVerifiedUser.executeWithKey(QVerifiedUser.verifiedUser.id);
@@ -360,6 +370,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
+                .set(QVerifiedParticipant.verifiedParticipant.municipalityId, authorDraft.participantMunicipality)
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
                 .execute();
 
@@ -415,6 +426,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
+                .set(QVerifiedParticipant.verifiedParticipant.municipalityId, authorDraft.participantMunicipality)
                 .execute();
 
         increaseParticipantCount(authorDraft);
@@ -813,6 +825,7 @@ public class TestHelper {
         public String authorPhone = DEFAULT_AUTHOR_PHONE;
         public Maybe<String> userSsn = Maybe.absent();
         public Maybe<Long> verifiedUserId = Maybe.absent();
+        public Maybe<Long> verifiedAuthorMunicipality;
 
         public AuthorDraft(Long initiativeId, Long participantMunicipality) {
             this.initiativeId = initiativeId;
@@ -874,6 +887,10 @@ public class TestHelper {
             return this;
         }
 
+        public AuthorDraft withVerifiedAuthorMunicipality(Long municipalityId) {
+            this.verifiedAuthorMunicipality = Maybe.fromNullable(municipalityId);
+            return this;
+        }
     }
     public static class InitiativeDraft {
 

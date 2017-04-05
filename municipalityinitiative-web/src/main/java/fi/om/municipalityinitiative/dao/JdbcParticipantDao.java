@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.dao;
 
 import com.mysema.query.Tuple;
+import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.dml.SQLUpdateClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
@@ -33,9 +34,15 @@ public class JdbcParticipantDao implements ParticipantDao {
             VerifiedParticipant.class,
             QVerifiedParticipant.verifiedParticipant.participateTime,
             QVerifiedParticipant.verifiedParticipant.verified,
+            QVerifiedParticipant.verifiedParticipant.membershipType,
+            QVerifiedParticipant.verifiedParticipant.municipalityId,
             QVerifiedUser.verifiedUser.name,
             QVerifiedUser.verifiedUser.email,
-            QVerifiedUser.verifiedUser.id
+            QVerifiedUser.verifiedUser.id,
+            QMunicipality.municipality.id,
+            QMunicipality.municipality.name,
+            QMunicipality.municipality.nameSv,
+            QMunicipality.municipality.active
     ) {
         @Override
         protected VerifiedParticipant map(Tuple row) {
@@ -46,7 +53,12 @@ public class JdbcParticipantDao implements ParticipantDao {
             participant.setParticipateDate(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
             participant.setName(row.get(QVerifiedUser.verifiedUser.name));
             participant.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
-
+            participant.setMembership(row.get(QVerifiedParticipant.verifiedParticipant.membershipType));
+            participant.setHomeMunicipality(
+                    row.get(QMunicipality.municipality.id) != null
+                            ? Mappings.parseMaybeMunicipality(row)
+                            : Maybe.absent()
+            );
             return participant;
         }
     };
@@ -223,6 +235,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantVerifiedUserFk, QVerifiedUser.verifiedUser)
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
                 .where(QVerifiedParticipant.verifiedParticipant.showName.eq(true))
+                .leftJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantMunicipalityIdFk, QMunicipality.municipality)
                 .orderBy(QVerifiedParticipant.verifiedParticipant.participateTime.desc(), QVerifiedUser.verifiedUser.id.desc())
                 .limit(limit)
                 .offset(offset)
@@ -234,7 +247,7 @@ public class JdbcParticipantDao implements ParticipantDao {
         return queryFactory.from(QVerifiedParticipant.verifiedParticipant)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantVerifiedUserFk, QVerifiedUser.verifiedUser)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
-                .leftJoin(QMunicipalityInitiative.municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .leftJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantMunicipalityIdFk, QMunicipality.municipality)
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
                 .orderBy(QVerifiedParticipant.verifiedParticipant.participateTime.desc(), QVerifiedUser.verifiedUser.id.desc())
                 .limit(limit)
@@ -273,13 +286,17 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .execute());
     }
 
+
     @Override
-    public void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName, boolean verifiedMunicipality) {
+    public void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName, boolean verifiedMunicipality, Long homeMunicipalityId, Membership municipalMembership) {
+
         assertSingleAffection(queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, userId.toLong())
                 .set(QVerifiedParticipant.verifiedParticipant.showName, showName)
                 .set(QVerifiedParticipant.verifiedParticipant.verified, verifiedMunicipality)
+                .set(QVerifiedParticipant.verifiedParticipant.municipalityId, homeMunicipalityId)
+                .set(QVerifiedParticipant.verifiedParticipant.membershipType, municipalMembership == null ? Membership.none : municipalMembership)
                 .execute());
 
         if (showName) {

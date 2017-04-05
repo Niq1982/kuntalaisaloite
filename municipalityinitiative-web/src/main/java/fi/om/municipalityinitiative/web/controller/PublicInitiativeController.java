@@ -180,10 +180,18 @@ public class PublicInitiativeController extends BaseController {
         }
         else {
 
-            Long initiativeId = normalInitiativeService.prepareInitiative(initiative, locale);
+            if (loginUserHolder.isVerifiedUser()) {
+                Long initiativeId = verifiedInitiativeService.prepareNormalInitiative(loginUserHolder, initiative);
+                userService.refreshUserData(request);
+                return contextRelativeRedirect(urls.management(initiativeId));
+            }
 
-            addRequestAttribute(initiative.getParticipantEmail(), request); // To be shown at confirmation page
-            return redirectWithMessage(urls.pendingConfirmation(initiativeId), RequestMessage.PREPARE, request);
+            else {
+                Long initiativeId = normalInitiativeService.prepareInitiativeWithEmail(initiative, locale);
+
+                addRequestAttribute(initiative.getParticipantEmail(), request); // To be shown at confirmation page
+                return redirectWithMessage(urls.pendingConfirmation(initiativeId), RequestMessage.PREPARE, request);
+            }
         }
 
     }

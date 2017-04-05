@@ -8,6 +8,8 @@ import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.ui.AuthorUIMessage;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
@@ -49,6 +51,8 @@ public class NormalInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         municipalityName = "Participant municipality";
         participantMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
 
+        LoginUserHolder loginUserHolder = new LoginUserHolder(User.anonym());
+
     }
 
     @Test
@@ -77,7 +81,7 @@ public class NormalInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         prepareInitiativeUICreateDto.setMunicipality(testMunicipality.getId());
         prepareInitiativeUICreateDto.setHomeMunicipality(participantMunicipality.getId());
         prepareInitiativeUICreateDto.setParticipantEmail("authorEmail@example.com");
-        Long initiativeId = service.prepareInitiative(prepareInitiativeUICreateDto, Locales.LOCALE_FI);
+        Long initiativeId = service.prepareInitiativeWithEmail(prepareInitiativeUICreateDto, Locales.LOCALE_FI);
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
     }
@@ -91,12 +95,12 @@ public class NormalInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         PrepareInitiativeUICreateDto createDto = new PrepareInitiativeUICreateDto();
         createDto.setMunicipality(unactiveMunicipality);
 
-        service.prepareInitiative(createDto, null);
+        service.prepareInitiativeWithEmail(createDto, null);
     }
 
     @Test
     public void preparing_initiative_sets_municipality() {
-        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
+        Long initiativeId = service.prepareInitiativeWithEmail(prepareDto(), Locales.LOCALE_FI);
         Initiative initiative = testHelper.getInitiative(initiativeId);
 
         assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
@@ -104,13 +108,13 @@ public class NormalInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Test
     public void preparing_initiative_sends_email() throws MessagingException, InterruptedException {
-        service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
+        service.prepareInitiativeWithEmail(prepareDto(), Locales.LOCALE_FI);
         assertUniqueSentEmail(prepareDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PREPARE_CREATE_SUBJECT);
     }
 
     @Test
     public void preparing_initiative_sets_participant_information() {
-        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
+        Long initiativeId = service.prepareInitiativeWithEmail(prepareDto(), Locales.LOCALE_FI);
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
 
@@ -121,7 +125,7 @@ public class NormalInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Test
     public void preparing_initiative_saved_email_and_municipality_and_membership() {
-        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
+        Long initiativeId = service.prepareInitiativeWithEmail(prepareDto(), Locales.LOCALE_FI);
 
         NormalParticipant createdParticipant = testHelper.getUniqueNormalParticipant(initiativeId);
 
@@ -169,7 +173,7 @@ public class NormalInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         PrepareInitiativeUICreateDto createDto = new PrepareInitiativeUICreateDto();
         createDto.setMunicipality(testMunicipality.getId());
         try {
-            service.prepareInitiative(createDto, Locales.LOCALE_FI);
+            service.prepareInitiativeWithEmail(createDto, Locales.LOCALE_FI);
             fail("Should have thrown exception");
         } catch (Throwable t) {
             precondition(t, instanceOf(DataIntegrityViolationException.class)); // Creating participant should throw this after the initiative has been created

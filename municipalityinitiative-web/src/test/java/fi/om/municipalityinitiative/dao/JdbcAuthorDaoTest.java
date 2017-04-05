@@ -193,7 +193,7 @@ public class JdbcAuthorDaoTest {
     public void get_verified_author_with_absent_municipality() {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality)
                 .applyAuthor()
-                .withParticipantMunicipality(null)
+                .withVerifiedAuthorMunicipality(null)
                 .toInitiativeDraft());
 
         VerifiedAuthor verifiedAuthor = authorDao.getVerifiedAuthor(initiativeId, new VerifiedUserId(testHelper.getLastVerifiedUserId()));

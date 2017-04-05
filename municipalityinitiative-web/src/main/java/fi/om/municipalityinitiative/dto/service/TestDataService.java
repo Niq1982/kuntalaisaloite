@@ -105,7 +105,11 @@ public class TestDataService {
         }
 
         VerifiedUserId verifiedUserId = userDao.getVerifiedUserId(currentVerifiedUser.getHash()).get();
-        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, template.getAuthor().getContactInfo().isShowName(), true);
+        participantDao.addVerifiedParticipant(initiativeId,
+                verifiedUserId,
+                template.getAuthor().getContactInfo().isShowName(), true,
+                template.getInitiative().getMunicipality().getId(),
+                Membership.none);
         authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
@@ -153,7 +157,14 @@ public class TestDataService {
         contactInfo.setEmail(participantUICreateDto.getParticipantEmail());
         contactInfo.setName(participantUICreateDto.getParticipantName());
         VerifiedUserId verifiedUserId = userDao.addVerifiedUser(RandomHashGenerator.randomString(30), contactInfo, Maybe.<Municipality>absent());
-        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, participantUICreateDto.getShowName(), participantUICreateDto.getShowName() && (randomizer.nextInt() % 5 == 0));
+
+        participantDao.addVerifiedParticipant(initiativeId,
+                verifiedUserId,
+                participantUICreateDto.getShowName(),
+                participantUICreateDto.getShowName() && (randomizer.nextInt() % 5 == 0),
+                initiativeDao.get(initiativeId).getMunicipality().getId(),
+                Membership.none
+                );
     }
 
 }

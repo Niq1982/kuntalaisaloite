@@ -58,7 +58,41 @@ public class VerifiedInitiativeService {
         VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
 
         boolean showName = true;
-        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, showName, verifiedUser.getHomeMunicipality().isPresent());
+        participantDao.addVerifiedParticipant(
+                initiativeId,
+                verifiedUserId,
+                showName,
+                verifiedUser.getHomeMunicipality().isPresent(),
+                uiCreateDto.getMunicipality(),
+                Membership.none);
+        authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
+
+        return initiativeId;
+
+    }
+
+    @Transactional(readOnly = false)
+    public Long prepareNormalInitiative(LoginUserHolder loginUserHolder, PrepareInitiativeUICreateDto uiCreateDto) {
+        VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
+
+        // TODO Make this accept municipalMembership if everything ok
+//        if (municipalityMismatch(uiCreateDto.getMunicipality(), uiCreateDto.getHomeMunicipality(), verifiedUser.getHomeMunicipality())) {
+//            return municipalityException(uiCreateDto.getMunicipality());
+//        }
+
+        assertMunicipalityIsActive(uiCreateDto.getMunicipality());
+
+        Long initiativeId = initiativeDao.prepareInitiative(uiCreateDto.getMunicipality(), InitiativeType.UNDEFINED);
+        VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
+
+        boolean showName = true;
+        participantDao.addVerifiedParticipant(initiativeId,
+                verifiedUserId,
+                showName,
+                verifiedUser.getHomeMunicipality().isPresent(),
+                verifiedUser.getHomeMunicipality().isPresent() ? verifiedUser.getHomeMunicipality().get().getId() : uiCreateDto.getHomeMunicipality(),
+                uiCreateDto.getMunicipalMembership());
+
         authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
 
         return initiativeId;
@@ -90,7 +124,14 @@ public class VerifiedInitiativeService {
 
                 // TODO: Improve
                 if (!userDao.getVerifiedUser(verifiedUser.getHash()).get().getInitiativesWithParticipation().contains(initiativeId)) {
-                    participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, confirmDto.getContactInfo().isShowName(), verifiedUser.getHomeMunicipality().isPresent());
+                    participantDao.addVerifiedParticipant(
+                            initiativeId,
+                            verifiedUserId,
+                            confirmDto.getContactInfo().isShowName(),
+                            verifiedUser.getHomeMunicipality().isPresent(),
+                            initiative.getMunicipality().getId(),
+                            Membership.none
+                            );
                 }
 
                 authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
@@ -115,7 +156,7 @@ public class VerifiedInitiativeService {
         assertAllowance("Participate to initiative", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipation());
 
         VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
-        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, createDto.getShowName(), verifiedUser.getHomeMunicipality().isPresent());
+        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, createDto.getShowName(), verifiedUser.getHomeMunicipality().isPresent(), createDto.getMunicipality(), Membership.none);
     }
 
     private static boolean municipalityMismatch(Long initiativeMunicipality, Long userGivenHomeMunicipality, Maybe<Municipality> vetumaMunicipality) {
@@ -148,4 +189,6 @@ public class VerifiedInitiativeService {
             throw new AccessDeniedException("Municipality is not active for initiatives: " + municipality);
         }
     }
+
+
 }
