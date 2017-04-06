@@ -125,11 +125,12 @@ public class InitiativeManagementService {
         assertAllowance("Update initiative", ManagementSettings.of(initiative).isAllowUpdate());
 
         ContactInfo contactInfo;
-        if (initiative.getType().isNotVerifiable()) {
-            contactInfo = authorDao.getNormalAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
+
+        if (loginUserHolder.isVerifiedUser()) {
+            contactInfo = authorDao.getVerifiedAuthor(initiativeId, loginUserHolder.getVerifiedUser().getAuthorId()).getContactInfo();
         }
         else {
-            contactInfo = authorDao.getVerifiedAuthor(initiativeId, loginUserHolder.getVerifiedUser().getAuthorId()).getContactInfo();
+            contactInfo = authorDao.getNormalAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
         }
 
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
@@ -177,16 +178,17 @@ public class InitiativeManagementService {
         locationDao.removeLocations(initiativeId);
         locationDao.setLocations(initiativeId, updateDto.getLocations());
 
-        if (initiative.getType().isNotVerifiable()) {
-            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), updateDto.getContactInfo());
-            initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
-        }
-        else {
+        if (loginUserHolder.isVerifiedUser()) {
             String hash = loginUserHolder.getVerifiedUser().getHash();
             userDao.updateUserInformation(hash, updateDto.getContactInfo());
             participantDao.updateVerifiedParticipantShowName(initiativeId, hash, updateDto.getContactInfo().isShowName());
             initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
         }
+        else {
+            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), updateDto.getContactInfo());
+            initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
+        }
+
     }
 
     @Transactional(readOnly = false)

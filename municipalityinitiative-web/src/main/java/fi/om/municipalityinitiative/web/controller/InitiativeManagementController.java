@@ -194,7 +194,7 @@ public class InitiativeManagementController extends BaseController {
         try {
             initiativeManagementService.editInitiativeDraft(initiativeId, loginUserHolder, editDto, locale);
         } catch (MalformedURLException | InvalidVideoUrlException e) {
-            log.error("Editing initiative draft failed", e);
+            log.warn("Editing initiative draft failed", e);
             return redirectWithMessage(urls.management(initiativeId), RequestMessage.VIDEO_FAILURE, request);
         }
         userService.refreshUserData(request);
@@ -260,8 +260,8 @@ public class InitiativeManagementController extends BaseController {
 
         try {
             initiativeManagementService.updateInitiative(initiativeId, loginUserHolder, updateDto);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (MalformedURLException | InvalidVideoUrlException e) {
+            log.warn("Editing initiative draft failed", e);
             return redirectWithMessage(urls.management(initiativeId), RequestMessage.VIDEO_FAILURE, request);
         }
         return redirectWithMessage(urls.management(initiativeId), RequestMessage.UPDATE_INITIATIVE, request);
