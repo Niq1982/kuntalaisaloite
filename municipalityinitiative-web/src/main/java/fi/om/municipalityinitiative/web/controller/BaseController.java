@@ -12,8 +12,8 @@ import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.service.ui.Notification;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.NormalInitiativeVerifiedUser;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
-import fi.om.municipalityinitiative.validation.VerifiedInitiativeNormal;
 import fi.om.municipalityinitiative.web.*;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateModelException;
@@ -108,7 +108,7 @@ public class BaseController {
         }
         else {
             if (user.isVerifiedUser()) {
-                return VerifiedInitiativeNormal.class;
+                return NormalInitiativeVerifiedUser.class;
             }
             else {
                 return NormalInitiative.class;

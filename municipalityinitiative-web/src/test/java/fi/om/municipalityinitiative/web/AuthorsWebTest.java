@@ -12,6 +12,7 @@ import org.openqa.selenium.WebElement;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import static fi.om.municipalityinitiative.web.MessageSourceKeys.SELECT_MUNICIPALITY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -64,7 +65,7 @@ public class AuthorsWebTest extends WebTestBase {
         
         inputText("authorName", CONTACT_NAME);
         inputText("authorEmail", CONTACT_EMAIL);
-        
+
         getElemContaining(getMessage(MSG_BTN_SEND), "button").click();
         
         assertSuccessMessage("Kutsu lähetetty");
@@ -137,10 +138,8 @@ public class AuthorsWebTest extends WebTestBase {
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
         acceptInvitationButton().get().click();
 
-        // NOTE: Only validation message now is generated from email-field.
-        // In this case the email field is empty by default, because user is new and has never entered his email.
-        // Should the email be filled from the created invitation instead?
-        // If yes, it will practically replace the original users email (if exists) everywhere.
+        // Clear email field so we get a validation error
+        getElementByLabel("Sähköpostiosoite", "input").clear();
         clickDialogButton("Hyväksy ja tallenna tiedot");
         assertPageHasValidationErrors();
     }
@@ -154,6 +153,86 @@ public class AuthorsWebTest extends WebTestBase {
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
         assertThat(acceptInvitationButton(), isPresent());
         assertThat(rejectInvitationButton(), isPresent());
+    }
+
+    @Test
+    public void accepting_invitation_to_normal_initiative_as_verified_author_with_valid_municipality() {
+
+        Long publishedInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+
+        vetumaLogin("111111-1111", HELSINKI);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+
+        acceptInvitationButton().get().click();
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+
+        assertInvitationPageIsGone(invitation);
+
+        assertTotalEmailsInQueue(1);
+
+    }
+
+    @Test
+    public void accepting_invitation_to_normal_initiative_as_verified_author_requires_membership_selection_if_municipality_mismatch() {
+
+        Long publishedInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+
+        vetumaLogin("111111-1111", VANTAA);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        acceptInvitationButton().get().click();
+
+        assertThat(getElemContaining("Ei mitään näistä", "span").isDisplayed(), is(true));
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+        assertPageHasValidationErrors();
+
+        getElemContaining("Nimenkirjoitusoikeus yhteisössä", "span").click();
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+
+        assertInvitationPageIsGone(invitation);
+        assertTotalEmailsInQueue(1);
+    }
+
+    @Test
+    public void accepting_invitation_to_normal_initiative_as_verified_author_requires_has_municipality_pre_selected() {
+
+        Long publishedInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+
+        vetumaLogin("111111-1111", null);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        acceptInvitationButton().get().click();
+
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+
+        assertInvitationPageIsGone(invitation);
+        assertTotalEmailsInQueue(1);
+
+    }
+
+    @Test
+    public void accepting_invitation_to_normal_initiative_as_verified_author_allows_change_of_municipality_if_not_received_from_vetuma_and_requires_membershipType_if_selected_municipality_mismatch() {
+
+        Long publishedInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+
+        vetumaLogin("111111-1111", null);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        acceptInvitationButton().get().click();
+
+        getElement(By.className("chzn-single")).click();
+        getElemContaining(VANTAA, "li").click();
+
+        assertThat(getElemContaining("Ei mitään näistä", "span").isDisplayed(), is(true));
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+        assertPageHasValidationErrors();
+
+        getElemContaining("Nimenkirjoitusoikeus yhteisössä", "span").click();
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+
+        assertInvitationPageIsGone(invitation);
+        assertTotalEmailsInQueue(1);
     }
 
     @Test
@@ -200,8 +279,8 @@ public class AuthorsWebTest extends WebTestBase {
         acceptInvitationButton().get().click();
 
         getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
-        getElementByLabel("Sähköpostiosoite", "input").sendKeys(CONTACT_EMAIL);
         getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
+        // Email should be prefilled
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
         assertSuccessMessage("Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
@@ -226,8 +305,8 @@ public class AuthorsWebTest extends WebTestBase {
         acceptInvitationButton().get().click();
 
         getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
-        getElementByLabel("Sähköpostiosoite", "input").sendKeys(CONTACT_EMAIL);
         getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
+        // Email should be prefilled
 
         assertThat(findElementWhenClickable(By.id("homeMunicipality_chzn")).getText(), is(HELSINKI));
 

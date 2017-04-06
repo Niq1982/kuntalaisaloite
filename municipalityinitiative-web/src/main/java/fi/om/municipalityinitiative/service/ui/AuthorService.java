@@ -161,7 +161,7 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = true)
-    public AuthorInvitationConfirmViewData getAuthorInvitationConfirmData(Long initiativeId, String confirmCode, LoginUserHolder unknownLoginUserHolder) {
+    public AuthorInvitationConfirmViewData getAuthorInvitationConfirmData(Long initiativeId, String confirmCode, LoginUserHolder loginUserHolder) {
 
         Initiative initiative = initiativeDao.get(initiativeId);
 
@@ -172,20 +172,16 @@ public class AuthorService {
         confirmDto.assignInitiativeMunicipality(initiative.getMunicipality().getId());
         confirmDto.setConfirmCode(authorInvitation.getConfirmationCode());
 
-        if (!initiative.getType().isVerifiable()) {
-            confirmDto.setContactInfo(new ContactInfo());
-            confirmDto.getContactInfo().setName(authorInvitation.getName());
-            confirmDto.getContactInfo().setEmail(authorInvitation.getEmail());
-
+        if (loginUserHolder.isVerifiedUser()) {
+            confirmDto.setContactInfo(loginUserHolder.getVerifiedUser().getContactInfo());
         }
         else {
-            if (unknownLoginUserHolder.isVerifiedUser()) {
-                confirmDto.setContactInfo(unknownLoginUserHolder.getVerifiedUser().getContactInfo());
-            }
-            else { // If user is not verified, acceptance dialog is hidden at UI and we do not need any user info
-                confirmDto.setContactInfo(new ContactInfo());
-            }
+            confirmDto.setContactInfo(new ContactInfo());
+            confirmDto.getContactInfo().setName(authorInvitation.getName());
         }
+
+        // No matter if we had the users email (in case verified user), prefill the email from the invitation
+        confirmDto.getContactInfo().setEmail(authorInvitation.getEmail());
 
         AuthorInvitationConfirmViewData data = new AuthorInvitationConfirmViewData();
         data.authorInvitationUIConfirmDto = confirmDto;

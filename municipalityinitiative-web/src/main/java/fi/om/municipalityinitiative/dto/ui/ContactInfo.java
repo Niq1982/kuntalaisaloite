@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.NormalInitiativeVerifiedUser;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -23,15 +24,15 @@ public class ContactInfo {
     @Size(max = InitiativeConstants.CONTACT_NAME_MAX, groups = NormalInitiative.class)
     private String name;
 
-    @NotEmpty(groups = {VerifiedInitiative.class, NormalInitiative.class})
-    @Pattern(regexp = EMAIL_PATTERN, groups = {VerifiedInitiative.class, NormalInitiative.class})
+    @NotEmpty(groups = {VerifiedInitiative.class, NormalInitiative.class, NormalInitiativeVerifiedUser.class})
+    @Pattern(regexp = EMAIL_PATTERN, groups = {VerifiedInitiative.class, NormalInitiative.class, NormalInitiativeVerifiedUser.class})
     @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX)
     private String email;
 
-    @Size(max = InitiativeConstants.CONTACT_PHONE_MAX, groups = {VerifiedInitiative.class, NormalInitiative.class})
+    @Size(max = InitiativeConstants.CONTACT_PHONE_MAX, groups = {VerifiedInitiative.class, NormalInitiative.class, NormalInitiativeVerifiedUser.class})
     private String phone;
 
-    @Size(max = InitiativeConstants.CONTACT_ADDRESS_MAX, groups = {VerifiedInitiative.class, NormalInitiative.class})
+    @Size(max = InitiativeConstants.CONTACT_ADDRESS_MAX, groups = {VerifiedInitiative.class, NormalInitiative.class, NormalInitiativeVerifiedUser.class})
     private String address;
 
     private boolean showName = true;

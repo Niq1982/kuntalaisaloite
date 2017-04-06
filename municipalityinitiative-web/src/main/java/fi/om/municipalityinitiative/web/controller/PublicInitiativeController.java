@@ -317,10 +317,16 @@ public class PublicInitiativeController extends BaseController {
                                    @ModelAttribute("authorInvitation") AuthorInvitationUIConfirmDto confirmDto,
                                    Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
 
-        InitiativeViewInfo initiativeInfo = authorService.getAuthorInvitationConfirmData(initiativeId, confirmDto.getConfirmCode(), userService.getLoginUserHolder(request)).initiativeViewInfo;
+        LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
+
+        InitiativeViewInfo initiativeInfo = authorService.getAuthorInvitationConfirmData(initiativeId, confirmDto.getConfirmCode(), loginUserHolder).initiativeViewInfo;
         confirmDto.assignInitiativeMunicipality(initiativeInfo.getMunicipality().getId());
 
-        if (validationService.validationErrors(confirmDto, bindingResult, model, solveValidationGroup(initiativeInfo))) {
+        if (loginUserHolder.isVerifiedUser() && loginUserHolder.getVerifiedUser().getHomeMunicipality().isPresent()) {
+            confirmDto.setHomeMunicipality(loginUserHolder.getVerifiedUser().getHomeMunicipality().get().getId());
+        }
+
+        if (validationService.validationErrors(confirmDto, bindingResult, model, solveValidationGroup(initiativeInfo.getType(), loginUserHolder.getUser()))) {
             return ViewGenerator.invitationView(initiativeInfo,
                     municipalityService.findAllMunicipalities(locale),
                     authorService.findPublicAuthors(initiativeId),
@@ -330,9 +336,9 @@ public class PublicInitiativeController extends BaseController {
 
         }
 
-        if (initiativeInfo.isVerifiable()) {
+        if (initiativeInfo.isVerifiable() || loginUserHolder.isVerifiedUser()) {
             try {
-                verifiedInitiativeService.confirmVerifiedAuthorInvitation(userService.getLoginUserHolder(request), initiativeId, confirmDto, locale);
+                verifiedInitiativeService.confirmVerifiedAuthorInvitation(loginUserHolder, initiativeId, confirmDto, locale);
                 userService.refreshUserData(request);
                 return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.CONFIRM_INVITATION_ACCEPTED, request);
             } catch (InvalidHomeMunicipalityException e) {

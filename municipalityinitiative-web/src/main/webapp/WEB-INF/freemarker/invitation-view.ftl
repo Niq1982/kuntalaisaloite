@@ -122,7 +122,7 @@
                     <@f.notTooFastField authorInvitation/>
 
                     <div class="column col-1of2">
-                        <#if initiative.verifiable>
+                        <#if user.isVerifiedUser()>
                             <div class="input-header"><@u.message "contactInfo.verified.name" /></div>
                             <div <#if !user.homeMunicipality.present>class="input-placeholder"</#if>>${user.contactInfo.name}</div>
                         <#else>
@@ -130,7 +130,7 @@
                         </#if>
                     </div>
                     <div class="column col-1of2 last">
-                        <#if initiative.verifiable && user.homeMunicipality.present>
+                        <#if user.isVerifiedUser() && user.homeMunicipality.present>
                             <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
                             <div><@u.solveMunicipality user.homeMunicipality/></div>
                         <#else>
@@ -233,7 +233,18 @@
         var modalData = {};
 
         <#-- Modal: Accept invitation -->
-        <#if invitationAcceptHtml??>    
+        <#if invitationAcceptHtml??>
+
+            var userMunicipalityVerifiedByVetuma = false;
+            var userMunicipalityMatchesInitiativeMunicipality = false;
+
+            <#if user.isVerifiedUser() && user.homeMunicipality?? && user.homeMunicipality.isPresent()>
+            userMunicipalityVerifiedByVetuma = true;
+                <#if user.homeMunicipality.value.id == initiative.municipality.id>
+                userMunicipalityMatchesInitiativeMunicipality = true;
+                </#if>
+            </#if>
+
             modalData.acceptInvitation = function() {
                 return [{
                     title:      '<@u.message "invitation.accept.confirm.title" />',

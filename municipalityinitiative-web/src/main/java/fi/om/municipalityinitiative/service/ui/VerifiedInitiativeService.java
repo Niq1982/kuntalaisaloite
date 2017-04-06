@@ -106,13 +106,13 @@ public class VerifiedInitiativeService {
     @Transactional(readOnly = false)
     public void confirmVerifiedAuthorInvitation(LoginUserHolder loginUserHolder, Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale) {
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
-        if (municipalityMismatch(confirmDto.getMunicipality(), confirmDto.getHomeMunicipality(), verifiedUser.getHomeMunicipality())) {
-            municipalityException(confirmDto.getMunicipality());
+        Initiative initiative = initiativeDao.get(initiativeId);
+
+        if (initiative.getType().isVerifiable()) {
+            requireCorrectHomeMunicipality(verifiedUser, confirmDto.getMunicipality(), confirmDto.getHomeMunicipality());
         }
 
-        Initiative initiative = initiativeDao.get(initiativeId);
         assertAllowance("Accept invitation", ManagementSettings.of(initiative).isAllowInviteAuthors());
-        assertAllowance("Accept verifiable invitation", InitiativeType.isVerifiable(initiative.getType()));
 
         for (AuthorInvitation invitation : authorDao.findInvitations(initiativeId)) {
 
@@ -129,7 +129,7 @@ public class VerifiedInitiativeService {
                             verifiedUserId,
                             confirmDto.getContactInfo().isShowName(),
                             verifiedUser.getHomeMunicipality().isPresent(),
-                            initiative.getMunicipality().getId(),
+                            loginUserHolder.getVerifiedUser().getHomeMunicipality().isPresent() ? loginUserHolder.getVerifiedUser().getHomeMunicipality().get().getId() : confirmDto.getHomeMunicipality(),
                             Membership.none
                             );
                 }
@@ -146,13 +146,17 @@ public class VerifiedInitiativeService {
 
     }
 
+    private static void requireCorrectHomeMunicipality(VerifiedUser verifiedUser, Long municipality, Long homeMunicipality) {
+        if (municipalityMismatch(municipality, homeMunicipality, verifiedUser.getHomeMunicipality())) {
+            municipalityException(municipality);
+        }
+    }
+
     @Transactional(readOnly = false)
     public void createParticipant(ParticipantUICreateDto createDto, Long initiativeId, LoginUserHolder loginUserHolder) {
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
 
-        if (municipalityMismatch(createDto.getMunicipality(), createDto.getHomeMunicipality(), verifiedUser.getHomeMunicipality())) {
-            municipalityException(createDto.getMunicipality());
-        }
+        requireCorrectHomeMunicipality(verifiedUser, createDto.getMunicipality(), createDto.getHomeMunicipality());
         assertAllowance("Participate to initiative", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipation());
 
         VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());

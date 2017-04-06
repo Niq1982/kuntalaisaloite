@@ -260,9 +260,16 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     @Test
     public void getting_prefilled_author_confirmation_returns_empty_userData_if_verified_initiative_and_user_not_vetumaVerified() {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality));
-        String invitationConfirmationCode = testHelper.createInvitation(initiativeId, "AnyName", "AnyEmail").getConfirmationCode();
+        String invitationEmail = "AnyEmail";
+        String invitationUserName = "AnyName";
+        String invitationConfirmationCode = testHelper.createInvitation(initiativeId, invitationUserName, invitationEmail).getConfirmationCode();
         AuthorInvitationConfirmViewData authorInvitationConfirmData = authorService.getAuthorInvitationConfirmData(initiativeId, invitationConfirmationCode, TestHelper.unknownLoginUserHolder);
-        ReflectionTestUtils.assertReflectionEquals(authorInvitationConfirmData.authorInvitationUIConfirmDto.getContactInfo(), new ContactInfo());
+
+        ContactInfo expectedContactInfo = new ContactInfo();
+        expectedContactInfo.setEmail(invitationEmail);
+        expectedContactInfo.setName(invitationUserName);
+
+        ReflectionTestUtils.assertReflectionEquals(authorInvitationConfirmData.authorInvitationUIConfirmDto.getContactInfo(), expectedContactInfo);
     }
 
     @Test
@@ -275,12 +282,21 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         String confirmCode = PreviousHashGetter.get();
         LoginUserHolder<VerifiedUser> verifiedLoginUserHolderFor = getVerifiedLoginUserHolderFor(initiativeId);
 
+        verifiedLoginUserHolderFor.getVerifiedUser().getContactInfo().setEmail("email that should not be prefilled in UI");
+
         AuthorInvitationConfirmViewData authorInvitationConfirmData = authorService.getAuthorInvitationConfirmData(initiativeId, confirmCode, verifiedLoginUserHolderFor);
 
         assertThat(authorInvitationConfirmData.authorInvitationUIConfirmDto.getConfirmCode(), is(confirmCode));
         assertThat(authorInvitationConfirmData.authorInvitationUIConfirmDto.getMunicipality(), is(testMunicipality));
+
+        ContactInfo expectedContactInfo = new ContactInfo();
+        expectedContactInfo.setEmail(authorInvitation().getAuthorEmail());
+        expectedContactInfo.setAddress(verifiedLoginUserHolderFor.getVerifiedUser().getContactInfo().getAddress());
+        expectedContactInfo.setName(verifiedLoginUserHolderFor.getVerifiedUser().getContactInfo().getName());
+        expectedContactInfo.setPhone(verifiedLoginUserHolderFor.getVerifiedUser().getContactInfo().getPhone());
+        expectedContactInfo.setShowName(true);
         ReflectionTestUtils.assertReflectionEquals(authorInvitationConfirmData.authorInvitationUIConfirmDto.getContactInfo(),
-                verifiedLoginUserHolderFor.getVerifiedUser().getContactInfo());
+                expectedContactInfo);
 
     }
 
