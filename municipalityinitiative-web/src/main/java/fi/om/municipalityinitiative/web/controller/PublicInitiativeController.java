@@ -205,34 +205,11 @@ public class PublicInitiativeController extends BaseController {
         InitiativePageInfo initiativePageInfo = publicInitiativeService.getInitiativePageInfo(initiativeId);
         participant.assignInitiativeMunicipality(initiativePageInfo.initiative.getMunicipality().getId());
 
-        if (initiativePageInfo.isVerifiable()) {
-            try {
-                verifiedInitiativeService.createParticipant(participant, initiativeId, loginUserHolder);
-                userService.refreshUserData(request);
-            } catch (InvalidHomeMunicipalityException e) {
-                return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
-            }
-            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE_VERIFIABLE, request);
+        if (loginUserHolder.isVerifiedUser() && loginUserHolder.getVerifiedUser().getHomeMunicipality().isPresent()) {
+            participant.setHomeMunicipality(loginUserHolder.getVerifiedUser().getHomeMunicipality().get().getId());
         }
-        else {
-            if (loginUserHolder.isVerifiedUser()) {
 
-                if (loginUserHolder.getVerifiedUser().getHomeMunicipality().isPresent()) {
-                    participant.setHomeMunicipality(loginUserHolder.getVerifiedUser().getHomeMunicipality().getValue().getId());
-                }
-
-                if ( (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiativeVerifiedUser.class))) {
-                    participantService.createConfirmedParticipant(participant, initiativeId, loginUserHolder);
-                    userService.refreshUserData(request);
-                    return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE_VERIFIABLE, request);
-                }
-
-            } else if (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiative.class)) {
-                participantService.createParticipant(participant, initiativeId, locale);
-                Urls urls = Urls.get(locale);
-                return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
-            }
-
+        if (validationService.validationErrors(participant, bindingResult, model, solveValidationGroup(initiativePageInfo.initiative.getType(), loginUserHolder.getUser()))) {
             return ViewGenerator.collaborativeView(initiativePageInfo,
                     municipalityService.findAllMunicipalities(locale),
                     participant,
@@ -242,6 +219,24 @@ public class PublicInitiativeController extends BaseController {
                     municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(initiativeId));
 
         }
+        else {
+            if (initiativePageInfo.isVerifiable() || loginUserHolder.isVerifiedUser()) {
+                try {
+                    verifiedInitiativeService.createParticipant(participant, initiativeId, loginUserHolder);
+                    userService.refreshUserData(request);
+                } catch (InvalidHomeMunicipalityException e) {
+                    return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
+                }
+                return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE_VERIFIABLE, request);
+            }
+            else {
+                participantService.createParticipant(participant, initiativeId, locale);
+                Urls urls = Urls.get(locale);
+                return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
+            }
+
+        }
+
     }
 
     @RequestMapping(value={PARTICIPANT_LIST_FI, PARTICIPANT_LIST_SV}, method=GET)
