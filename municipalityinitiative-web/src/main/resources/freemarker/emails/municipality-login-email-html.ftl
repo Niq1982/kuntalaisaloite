@@ -19,7 +19,7 @@
         </p>
 
         <p>
-            Jos linkki on vanhentunut, voit luoda uuden linkin&nbsp;<a href="${urls.get(locale).loginMunicipality(municipalityDecisionHash)}">tästä</a>.
+            Jos linkki on vanhentunut, voit tilata uuden linkin&nbsp;<a href="${urls.get(locale).loginMunicipality(municipalityDecisionHash)}">tästä</a>.
         </p>
 
         </@b.mainContentBlock>
