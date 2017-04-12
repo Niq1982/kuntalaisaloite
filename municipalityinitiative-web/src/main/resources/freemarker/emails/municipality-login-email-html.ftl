@@ -19,7 +19,7 @@
         </p>
 
         <p>
-            Jos linkki on vanhentunut, voit luoda uuden linkin <a href="${urls.get(locale).loginMunicipality(municipalityDecisionHash)}">tästä</a>
+            Jos linkki on vanhentunut, voit luoda uuden linkin&nbsp;<a href="${urls.get(locale).loginMunicipality(municipalityDecisionHash)}">tästä</a>.
         </p>
 
         </@b.mainContentBlock>
@@ -34,13 +34,17 @@
 
         <#global switchLocale = altLocale />
 
-        <#assign title><@u.message "email.municipality.answered" /></#assign>
+        <#assign title><@u.message "email.municipality.login.subject" /></#assign>
 
         <@b.mainContentBlock title>
             <@b.initiativeDetails type />
 
         <p>
-            <a href="${urls.alt().municipalityLogin(municipalityDecisionHash, municipalityDecisionLoginHash)}">Tästä linkistä</a>&nbsp;pääset lisäämään vastauksen. Linkki on voimassa yhden tunnin.
+            Via&nbsp;<a href="${urls.alt().municipalityLogin(municipalityDecisionHash, municipalityDecisionLoginHash)}">denna länk</a>&nbsp;kan du svara på initiativet. Länken är i kraft i en timme.
+        </p>
+
+        <p>
+            Om länken har gått ut, kan du skapa en ny länk&nbsp;<a href="${urls.alt().get(locale).loginMunicipality(municipalityDecisionHash)}">här</a>.
         </p>
 
         </@b.mainContentBlock>

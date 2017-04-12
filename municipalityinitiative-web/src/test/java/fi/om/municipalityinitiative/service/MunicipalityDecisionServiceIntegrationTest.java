@@ -472,7 +472,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
         assertThat(municipalityUserDao.getInitiativeId(managementHash, newLoginHash), is(initiativeId));
 
         EmailDto singleQueuedEmail = testHelper.getSingleQueuedEmail();
-        assertThat(singleQueuedEmail.getSubject(), is("Kuntalaisaloitteeseen vastaaminen / SV Kuntalaisaloitteeseen vastaaminen"));
+        assertThat(singleQueuedEmail.getSubject(), is("Kuntalaisaloitteeseen vastaaminen / Att svara på invånarinitiativet"));
         assertThat(singleQueuedEmail.getRecipientsAsString(), is(MUNICIPALITY_EMAIL));
 
     }
