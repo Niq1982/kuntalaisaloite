@@ -128,6 +128,35 @@
 
     <#assign participateFormHTML>
     <@compress single_line=true>
+
+
+    <#if !user.isVerifiedUser()>
+        <div class="input-block-content no-top-margin">
+            <@u.systemMessage path="authentication.selection.description" type="info" />
+        </div>
+    </#if>
+
+    <div class="authentication-selection">
+
+        <#assign formSelectionVisible=user.isVerifiedUser() || RequestParameters['formError']??/>
+
+        <#if !user.isVerifiedUser()>
+            <label id="vetuma-authentication-button" class="authentication verified <#if !formSelectionVisible>selected</#if>"><@u.message "authentication.selection.verified" /></label>
+            <label id="email-authentication-button" class="authentication email <#if formSelectionVisible>selected</#if>"><@u.message "authentication.selection.email"/></label>
+        </#if>
+
+        <div class="participation-vetuma-login-container" <#if formSelectionVisible>style="display:none"</#if>
+
+            <form class="sodirty dirtylisten js-validate">
+                <div class="input-block-content no-top-margin">
+                    <@u.systemMessage path="authentication.selection.verified.description" type="info" />
+                </div>
+            </form>
+
+            <a class="small-button" href="${urls.login(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
+        </div>
+
+        <div class="participation-authentication-container" <#if !formSelectionVisible>style="display:none"</#if>>
     
         <#-- Participate form errors summary -->    
         <@u.errorsSummary path="participant.*" prefix="participant."/>
@@ -220,8 +249,12 @@
 
                 <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
             </div>
-        
+
         </form>
+
+        </div>
+
+    </div>
     
     </@compress>
     </#assign>
@@ -262,7 +295,7 @@
          *  - when sent to municipality (initiative.sentTime.present)
         -->
             <#assign showParticipateForm = (RequestParameters['formError']?? && RequestParameters['formError'] == "participate")
-            || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true") />
+            || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true") || RequestParameters['show-participate']?? />
 
         <#--
          * Show participant counts and participate form
@@ -370,8 +403,7 @@
             </#if>
 
             <#-- Autoload modal if it has errors or returned from VETUMA and user is allowed to participate -->
-            <#if user.allowVerifiedParticipation(initiative.id, initiative.municipality) &&
-                 initiative.verifiable && RequestParameters['show-participate']?? ||
+            <#if RequestParameters['show-participate']?? ||
                  RequestParameters['formError']?? && RequestParameters['formError'] == "participate">
             modalData.participateFormAutoLoad = function() {
                 return [{

@@ -652,6 +652,8 @@ var municipalitySelection = (function() {
 
 		updateSelectedMunicipality();
 
+		authenticationSelectorOptions();
+
 		if (validationErrors){
 			toggleMembershipRadios(homeMunicipalitySelect);
 		}
@@ -670,6 +672,7 @@ var municipalitySelection = (function() {
 			showMembership(!equalMunicipalitys());
 		}
 
+
 		// In case of validation errors
 		initiativeType.disableVerifiable(!equalMunicipalitys());
 	};
@@ -681,6 +684,22 @@ var municipalitySelection = (function() {
 			selectedMunicipalityElem.text(selectedMunicipality);
 		}
 	};
+
+	function authenticationSelectorOptions() {
+        $(".authentication-selection #vetuma-authentication-button").click(function() {
+            $(".authentication-selection #vetuma-authentication-button").addClass("selected");
+            $(".authentication-selection #email-authentication-button").removeClass("selected");
+            $(".authentication-selection .participation-vetuma-login-container").show();
+            $(".authentication-selection .participation-authentication-container").hide();
+        });
+
+        $(".authentication-selection #email-authentication-button").click(function() {
+            $(".authentication-selection #email-authentication-button").addClass("selected");
+            $(".authentication-selection #vetuma-authentication-button").removeClass("selected");
+            $(".authentication-selection .participation-authentication-container").show();
+            $(".authentication-selection .participation-vetuma-login-container").hide();
+        });
+	}
 
 	// Update home municipality automatically
 	function updateHomeMunicipality(select){
@@ -1428,8 +1447,6 @@ $('.municipality-filter').change( function() {
       console.log(e);
     }
   });
-
-
 
 /**
  *

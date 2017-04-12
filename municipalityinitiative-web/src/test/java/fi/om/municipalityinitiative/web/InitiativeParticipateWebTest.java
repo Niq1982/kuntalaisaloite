@@ -61,6 +61,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         open(urls.view(normalInitiativeHelsinki));
 
         clickLink(getMessage(MSG_BTN_PARTICIPATE));
+        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
         getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
         assertPageHasValidationErrors();
     }
@@ -70,6 +71,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         open(urls.view(normalInitiativeHelsinki));
 
         clickLink(getMessage(MSG_BTN_PARTICIPATE));
+
+        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
 
         inputText("participantName", PARTICIPANT_NAME);
         inputText("participantEmail", PARTICIPANT_EMAIL);
@@ -197,6 +200,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         clickLink(getMessage(MSG_BTN_PARTICIPATE));
 
+        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
+
         inputText("participantName", PARTICIPANT_NAME);
         getElemContaining(getMessage(PARTICIPANT_SHOW_NAME), "span").click();
 
@@ -299,6 +304,25 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertWarningMessage("Olet jo osallistunut tähän aloitteeseen");
         assertThat(participateToInitiativeButton(), isNotPresent());
 
+
+    }
+
+    @Test
+    public void participate_to_normal_initiative_as_verified_user_by_clicking_authentication_link_on_participate_page() {
+        open(urls.view(normalInitiativeHelsinki));
+
+        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+
+        clickLink(getMessage(MSG_BTN_PARTICIPATE));
+        // This should be selected by default
+        // getElemContaining("Vahva tunnistautuminen", "label").click();
+        clickLink("Tunnistaudu ja osallistu");
+        enterVetumaLoginInformationAndSubmit(OTHER_USER_SSN, HELSINKI);
+        clickButton("Tallenna");
+        clickLink("Jatka kirjautuneena");
+
+        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+        assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
 
     }
 

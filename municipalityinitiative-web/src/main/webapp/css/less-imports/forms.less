@@ -19,6 +19,47 @@
     }
 }
 
+.authentication-selection {
+
+    border: 1px solid @borderGray;
+    display: inline-block;
+    width:100%;
+
+    .participation-authentication-container, .participation-vetuma-login-container {
+        display: inline-block;
+        padding-bottom: 1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    label.authentication {
+        text-align: center;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        display: inline-block;
+        width: 50%;
+        float:left;
+        padding-left: 1rem;
+        padding-right: 1rem;
+
+        &.selected {
+            background-color: white;
+            border-bottom: 0;
+        }
+        &:not(.selected) {
+            border: 1px solid @borderGray;
+            cursor: pointer;
+            .gradient (#fff, #f1f1f1);
+        }
+
+        .boxSizing(border-box);
+
+        .transition(opacity, 0.1s, ease-in);
+
+    }
+
+}
+
 // Input fields
 //
 // Styleguide 3.2
