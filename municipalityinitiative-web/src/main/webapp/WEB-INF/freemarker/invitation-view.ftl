@@ -8,8 +8,8 @@
 
 <#escape x as x?html> 
 
-<#assign verifiedUserMunicipalityOk = initiative.verifiable && user.isVerifiedUser()
-    && (!user.homeMunicipality.present || user.homeMunicipality.present && user.homeMunicipality.value.id == initiative.municipality.id) />
+<#assign verifiedUserMunicipalityOk = user.isVerifiedUser()
+    && (!initiative.verifiable || (initiative.verifiable && (!user.homeMunicipality.present || user.homeMunicipality.present && user.homeMunicipality.value.id == initiative.municipality.id))) />
 <#assign showInvitation = (!user.hasRightToInitiative(initiative.id) && verifiedUserMunicipalityOk && RequestParameters['show-invitation']??) />
 
 
@@ -112,74 +112,113 @@
                 <#-- Hide the whole acceptance dialog if initiative is verified and vetumalogin is needed -->
             <#else>
 
-                <@u.systemMessage path="invitation.accept.confirm.description" type="info" />
+            <#if !user.isVerifiedUser()>
+                <div class="input-block-content no-top-margin">
+                    <@u.systemMessage path="authentication.selection.description" type="info" />
+                </div>
+                </#if>
 
-                <@u.errorsSummary path="authorInvitation.*" prefix="initiative."/>
+                <div class="authentication-selection">
 
-                <form action="${springMacroRequestContext.requestUri}" method="POST" class="js-validate" novalidate>
-                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                    <input type="hidden" name="confirmCode" value="${authorInvitation.confirmCode!""}"/>
-                    <@f.notTooFastField authorInvitation/>
+                    <#assign formSelectionVisible=user.isVerifiedUser() || RequestParameters['formError']??/>
 
-                    <div class="column col-1of2">
-                        <#if user.isVerifiedUser()>
-                            <div class="input-header"><@u.message "contactInfo.verified.name" /></div>
-                            <div <#if !user.homeMunicipality.present>class="input-placeholder"</#if>>${user.contactInfo.name}</div>
-                        <#else>
-                            <@f.textField path="authorInvitation.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
-                        </#if>
-                    </div>
-                    <div class="column col-1of2 last">
-                        <#if user.isVerifiedUser() && user.homeMunicipality.present>
-                            <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
-                            <div><@u.solveMunicipality user.homeMunicipality/></div>
-                        <#else>
-                            <@f.municipalitySelect path="authorInvitation.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id key="initiative.homeMunicipality" multiple=false/>
-                        </#if>
-                    </div>
-                    <br class="clear" />
+                    <#if !user.isVerifiedUser()>
+                        <label id="vetuma-authentication-button" class="authentication verified <#if !formSelectionVisible>selected</#if>"><@u.message "authentication.selection.verified" /></label>
+                        <label id="email-authentication-button" class="authentication email <#if formSelectionVisible>selected</#if>"><@u.message "authentication.selection.email"/></label>
+                    </#if>
 
-                    <div id="municipalMembership" class="js-hide">
-                        <#if !initiative.verifiable>
-                            <div class="input-block-content hidden">
-                                <#assign href="#" />
-                                <@u.systemMessage path="initiative.municipality.notEqual" type="info" args=[href] />
-                            </div>
-                            <div class="input-block-content">
-                                <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
-                                    "community":"initiative.municipalMembership.community",
-                                    "company":"initiative.municipalMembership.company",
-                                    "property":"initiative.municipalMembership.property"
-                                } attributes="" key="initiative.municipalMembership" />
-                                <br/>
-                                <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
-                                    "none":"initiative.municipalMembership.none"
-                                } attributes="" key="initiative.municipalMembership" header=false/>
-                            </div>
-                        </#if>
+                        <div class="participation-vetuma-login-container" <#if formSelectionVisible>style="display:none"</#if>
 
-                        <div class="input-block-content <#if !initiative.verifiable>is-not-member no-top-margin js-hide</#if> hidden">
-                            <@u.systemMessage path="warning.normalAuthor.notMember" type="warning" />
+                    <form class="sodirty dirtylisten js-validate">
+                        <div class="input-block-content no-top-margin">
+                            <@u.systemMessage path="authentication.selection.verified.description" type="info" />
                         </div>
-                    </div>
+                    </form>
 
-                    <div class="input-block-content">
-                        <@f.formCheckbox path="authorInvitation.contactInfo.showName" checked=true key="contactInfo.showName" />
-                    </div>
+                    <a class="small-button" href="${urls.login(currentRequestUri+"&show-invitation")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
+                </div>
 
-                    <div class="input-block-content">
-                        <div class="input-header">
-                            <@u.message "contactInfo.title" />
+                <div class="participation-authentication-container" <#if !formSelectionVisible>style="display:none"</#if>>
+
+
+                    <@u.errorsSummary path="authorInvitation.*" prefix="initiative."/>
+
+                    <form action="${springMacroRequestContext.requestUri + '?formError'}" method="POST" class="js-validate" novalidate>
+
+                        <div class="input-block-content no-top-margin">
+                            <@u.systemMessage path="invitation.accept.confirm.description" type="info" />
                         </div>
 
-                        <@f.contactInfo path="authorInvitation.contactInfo" disableEmail=false mode="full" />
-                    </div>
+                        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                        <input type="hidden" name="confirmCode" value="${authorInvitation.confirmCode!""}"/>
+                        <@f.notTooFastField authorInvitation/>
 
-                    <div class="input-block-content">
-                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INVITATION}" id="modal-${UrlConstants.ACTION_ACCEPT_INVITATION}" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept.confirm" /></span></button>
-                        <a href="?invitation=${authorInvitation.confirmCode!""}" class="push close"><@u.message "action.cancel" /></a>
-                    </div>
-                </form>
+                        <div class="input-block-content">
+
+                            <div class="column col-1of2">
+
+                                <#if user.isVerifiedUser()>
+                                    <div class="input-header"><@u.message "contactInfo.verified.name" /></div>
+                                    <div class="input-placeholder">${user.contactInfo.name}</div>
+                                <#else>
+                                    <@f.textField path="authorInvitation.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
+                                </#if>
+                            </div>
+                            <div class="column col-1of2 last">
+                                <#if user.isVerifiedUser() && user.homeMunicipality.present>
+                                    <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
+                                    <div><@u.solveMunicipality user.homeMunicipality/></div>
+                                <#else>
+                                    <@f.municipalitySelect path="authorInvitation.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id key="initiative.homeMunicipality" multiple=false/>
+                                </#if>
+                            </div>
+
+                        </div>
+
+                        <br class="clear" />
+
+                        <div id="municipalMembership" class="js-hide">
+                            <#if !initiative.verifiable>
+                                <div class="input-block-content hidden">
+                                    <#assign href="#" />
+                                    <@u.systemMessage path="initiative.municipality.notEqual" type="info" args=[href] />
+                                </div>
+                                <div class="input-block-content">
+                                    <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
+                                        "community":"initiative.municipalMembership.community",
+                                        "company":"initiative.municipalMembership.company",
+                                        "property":"initiative.municipalMembership.property"
+                                    } attributes="" key="initiative.municipalMembership" />
+                                    <br/>
+                                    <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
+                                        "none":"initiative.municipalMembership.none"
+                                    } attributes="" key="initiative.municipalMembership" header=false/>
+                                </div>
+                            </#if>
+
+                            <div class="input-block-content <#if !initiative.verifiable>is-not-member no-top-margin js-hide</#if> hidden">
+                                <@u.systemMessage path="warning.normalAuthor.notMember" type="warning" />
+                            </div>
+                        </div>
+
+                        <div class="input-block-content">
+                            <@f.formCheckbox path="authorInvitation.contactInfo.showName" checked=true key="contactInfo.showName" />
+                        </div>
+
+                        <div class="input-block-content">
+                            <div class="input-header">
+                                <@u.message "contactInfo.title" />
+                            </div>
+
+                            <@f.contactInfo path="authorInvitation.contactInfo" disableEmail=false mode="full" />
+                        </div>
+
+                        <div class="input-block-content">
+                            <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INVITATION}" id="modal-${UrlConstants.ACTION_ACCEPT_INVITATION}" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept.confirm" /></span></button>
+                            <a href="?invitation=${authorInvitation.confirmCode!""}" class="push close"><@u.message "action.cancel" /></a>
+                        </div>
+                    </form>
+                </div>
             </#if>
         </@compress>
     </#assign>

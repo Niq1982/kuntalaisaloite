@@ -12,6 +12,7 @@ import org.openqa.selenium.WebElement;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import static fi.om.municipalityinitiative.web.InitiativeParticipateWebTest.OTHER_USER_SSN;
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.SELECT_MUNICIPALITY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -80,6 +81,8 @@ public class AuthorsWebTest extends WebTestBase {
 
         acceptInvitationButton().get().click();
 
+        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
+
         assertThat(getElementByLabel("Etu- ja sukunimi", "input").getAttribute("value"), containsString(CONTACT_NAME));
         assertThat(getElementByLabel("Sähköpostiosoite", "input").getAttribute("value"), containsString(CONTACT_EMAIL));
 
@@ -108,6 +111,8 @@ public class AuthorsWebTest extends WebTestBase {
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
 
         acceptInvitationButton().get().click();
+
+        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
 
         getElementByLabel("Etu- ja sukunimi", "input").clear();
         clickDialogButton("Hyväksy ja tallenna tiedot");
@@ -233,6 +238,25 @@ public class AuthorsWebTest extends WebTestBase {
 
         assertInvitationPageIsGone(invitation);
         assertTotalEmailsInQueue(1);
+    }
+
+    @Test
+    public void accepting_invitation_to_normal_initiative_redirects_to_authentication_and_back_if_user_wants_verified_authentication() {
+
+        Long publishedInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        acceptInvitationButton().get().click();
+
+        clickLink("Tunnistaudu ja osallistu");
+        enterVetumaLoginInformationAndSubmit(OTHER_USER_SSN, HELSINKI);
+        clickButton("Hyväksy ja tallenna tiedot");
+
+        assertInvitationPageIsGone(invitation);
+        assertTotalEmailsInQueue(1);
+
+
     }
 
     @Test
