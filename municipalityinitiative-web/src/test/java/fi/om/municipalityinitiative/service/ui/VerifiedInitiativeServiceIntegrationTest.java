@@ -68,17 +68,26 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    private Municipality anotherMunicipality;
+    private LoginUserHolder<VerifiedUser> anotherVerifiedLoginUserHolder;
 
     @Override
     protected void childSetup() {
         String municipalityName = "Test municipalitya";
         testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
+        String municipalityName2 = "Test MUN 2";
+        anotherMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName2), municipalityName2, municipalityName2, false);
 
         ContactInfo contactInfo = contactInfo();
 
         verifiedLoginUserHolder = new LoginUserHolder<>(
                 User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo, Collections.<Long>emptySet(), Collections.<Long>emptySet(), Maybe.of(testMunicipality))
         );
+
+        anotherVerifiedLoginUserHolder = new LoginUserHolder<>(
+                User.verifiedUser(new VerifiedUserId(-1L), HASH + "2", contactInfo, Collections.<Long>emptySet(), Collections.<Long>emptySet(), Maybe.of(anotherMunicipality))
+        );
+
 
     }
 
@@ -200,6 +209,30 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         assertThat(verifiedParticipants.get(0).getName(), is(VERIFIED_AUTHOR_NAME));
         assertThat(verifiedParticipants.get(0).getHomeMunicipality().get().getId(), is(testMunicipality.getId()));
         assertThat(verifiedParticipants.get(0).getMembership(), is(Membership.none));
+
+    }
+
+    @Test
+    @Transactional(readOnly = false)
+    public void participating_to_normal_initiative_as_verified_user_creates_participant() {
+
+        Long id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE)
+                .applyAuthor().toInitiativeDraft());
+
+        ParticipantUICreateDto createDto = participantCreateDto();
+        createDto.setMunicipalMembership(Membership.community);
+
+        service.createParticipant(createDto, id, anotherVerifiedLoginUserHolder);
+
+        List<VerifiedParticipant> verifiedParticipants = participantDao.findVerifiedAllParticipants(id, 0, 100);
+        assertThat(verifiedParticipants, hasSize(1));
+
+        assertThat(verifiedParticipants.get(0).getEmail(), is(EMAIL));
+        assertThat(verifiedParticipants.get(0).getName(), is(VERIFIED_AUTHOR_NAME));
+        assertThat(verifiedParticipants.get(0).getHomeMunicipality().get().getId(), is(anotherMunicipality.getId()));
+        assertThat(verifiedParticipants.get(0).getMembership(), is(Membership.community));
 
     }
 

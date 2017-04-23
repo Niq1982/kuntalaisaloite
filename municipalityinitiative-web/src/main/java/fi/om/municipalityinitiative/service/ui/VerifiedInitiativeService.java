@@ -63,7 +63,7 @@ public class VerifiedInitiativeService {
                 verifiedUserId,
                 showName,
                 verifiedUser.getHomeMunicipality().isPresent(),
-                uiCreateDto.getMunicipality(),
+                uiCreateDto.getMunicipality(), // TODO: Get municipality from verified user. Howabout membership - why always none?
                 Membership.none);
         authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
 
@@ -156,16 +156,16 @@ public class VerifiedInitiativeService {
     public void createParticipant(ParticipantUICreateDto createDto, Long initiativeId, LoginUserHolder loginUserHolder) {
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
 
-        Initiative initiative = initiativeDao.get(initiativeId);
+        Long homeMunicipalityId = verifiedUser.getHomeMunicipality().isPresent() ? verifiedUser.getHomeMunicipality().get().getId() : createDto.getHomeMunicipality();
 
         if (initiativeDao.get(initiativeId).getType().isVerifiable()) {
-            requireCorrectHomeMunicipality(verifiedUser, createDto.getMunicipality(), createDto.getHomeMunicipality());
+            requireCorrectHomeMunicipality(verifiedUser, createDto.getMunicipality(), homeMunicipalityId);
         }
 
         assertAllowance("Participate to initiative", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipation());
 
         VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
-        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, createDto.getShowName(), verifiedUser.getHomeMunicipality().isPresent(), createDto.getMunicipality(), createDto.getMunicipalMembership());
+        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, createDto.getShowName(), verifiedUser.getHomeMunicipality().isPresent(), homeMunicipalityId, createDto.getMunicipalMembership());
     }
 
     private static boolean municipalityMismatch(Long initiativeMunicipality, Long userGivenHomeMunicipality, Maybe<Municipality> vetumaMunicipality) {
