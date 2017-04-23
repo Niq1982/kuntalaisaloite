@@ -24,40 +24,45 @@ public class ParticipantToPdfExporterTest {
 
     public static void main(String[] moimoiii) throws FileNotFoundException {
 
+        Municipality municipality = new Municipality(1, "Helsinki", "Helsingfors", true);
+
         try (FileOutputStream outputStream = new FileOutputStream(NORMAL_FILE)) {
-            new ParticipantToPdfExporter(createInitiative(false), createNormalParticipants()).createPdf(outputStream);
+            new ParticipantToPdfExporter(createInitiative(municipality, false), createNormalParticipants(municipality)).createPdf(outputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         try (FileOutputStream outputStream = new FileOutputStream(VETUMA_FILE)) {
-            new ParticipantToPdfExporter(createInitiative(true), createVerifiedParticipants()).createPdf(outputStream);
+            new ParticipantToPdfExporter(createInitiative(municipality, true), createVerifiedParticipants(municipality)).createPdf(outputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static Initiative createInitiative(boolean verified) {
+    private static Initiative createInitiative(Municipality municipality, boolean verified) {
         Initiative initiative = new Initiative();
         initiative.setName("Koirat pois lähiöistä");
         initiative.setType(verified ? InitiativeType.COLLABORATIVE_CITIZEN : InitiativeType.COLLABORATIVE);
-        initiative.setMunicipality(new Municipality(1, "Helsinki", "Helsingfors", false));
+        initiative.setMunicipality(municipality);
         initiative.setSentTime(Maybe.of(new LocalDate()));
         return initiative;
     }
 
-    private static List<NormalParticipant> createNormalParticipants() {
+    private static List<NormalParticipant> createNormalParticipants(Municipality municipality) {
         List<NormalParticipant> participants = Lists.newArrayList();
+        Random random = new Random();
         for (int i = 0; i < 1000; ++i) {
-            Municipality municipality = new Municipality(new Random().nextLong(), RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10), false);
+            Municipality m =
+                    random.nextInt(5) != 0
+                            ? municipality
+                            : new Municipality(random.nextLong(), RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10), false);
             NormalParticipant participant = new NormalParticipant();
             participant.setParticipateDate(new LocalDate());
             participant.setName(RandomStringUtils.randomAlphabetic(20));
-            participant.setHomeMunicipality(Maybe.of(municipality));
+            participant.setHomeMunicipality(Maybe.of(m));
+            participant.setMunicipalityVerified(municipality == m);
 
-            Random rnd = new Random();
-
-            switch(rnd.nextInt(4)) {
+            switch( m == municipality ? 3 : random.nextInt(3)) {
                 case 0:
                     participant.setMembership(Membership.community);
                     break;
@@ -68,7 +73,7 @@ public class ParticipantToPdfExporterTest {
                     participant.setMembership(Membership.property);
                     break;
                 case 3:
-                    participant.setMembership(Membership.none); // This should never end up in the list. Added here just for testing.
+                    participant.setMembership(Membership.none); // Go here if municipality was the same
                     break;
             }
             participants.add(participant);
@@ -76,13 +81,14 @@ public class ParticipantToPdfExporterTest {
         return participants;
     }
 
-    private static List<VerifiedParticipant> createVerifiedParticipants() {
+    private static List<VerifiedParticipant> createVerifiedParticipants(Municipality municipality) {
         List<VerifiedParticipant> participants = Lists.newArrayList();
         for (int i = 0; i < 1000; ++i) {
             VerifiedParticipant participant = new VerifiedParticipant();
             participant.setParticipateDate(new LocalDate());
             participant.setName(RandomStringUtils.randomAlphabetic(20));
-            participant.setMunicipalityVerified(new Random().nextInt(100) % 5 == 0);
+            participant.setMunicipalityVerified(new Random().nextInt(100) % 10 == 0);
+            participant.setHomeMunicipality(Maybe.of(municipality));
             participants.add(participant);
         }
         return participants;

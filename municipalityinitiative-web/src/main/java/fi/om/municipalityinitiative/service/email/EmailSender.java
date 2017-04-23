@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dao.EmailDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
+import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
@@ -25,6 +26,7 @@ import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -108,10 +110,13 @@ public class EmailSender {
         return helper;
     }
 
-    private List<? extends Participant<? extends Id>> getParticipants(Initiative initiative) {
-        return initiative.getType().isVerifiable()
-                ? participantDao.findVerifiedAllParticipants(initiative.getId(), 0, Integer.MAX_VALUE)
-                : participantDao.findNormalAllParticipants(initiative.getId(), 0, Integer.MAX_VALUE);
+    private List<? extends Participant> getParticipants(Initiative initiative) {
+
+        return new ArrayList<Participant>() {{
+            addAll(participantDao.findVerifiedAllParticipants(initiative.getId(), 0, Integer.MAX_VALUE));
+            addAll(participantDao.findNormalAllParticipants(initiative.getId(), 0, Integer.MAX_VALUE));
+            sort((o1, o2) -> (int) (o1.getId().toLong() - o2.getId().toLong())); // These are ids from different tables...
+        }};
     }
 
     private static final String FILE_NAME = "Kuntalaisaloite_{0}_{1}_osallistujat.pdf";

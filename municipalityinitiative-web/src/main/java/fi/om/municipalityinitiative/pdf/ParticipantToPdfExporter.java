@@ -9,6 +9,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -89,14 +90,33 @@ public class ParticipantToPdfExporter {
         Paragraph preface = new Paragraph();
         
         addEmptyLine(preface, 1);
-        preface.add(new Paragraph("Osallistujat / Deltagar", new Font()));
+
+        List<Participant> withCorrectHomeMunicipality = Lists.newArrayList();
+        List<Participant> withSomeOtherHomeMunicipality = Lists.newArrayList();
+
+        for (Participant participant : participants) {
+            if (hasCorrectHomeMunicipality(participant)) {
+                withCorrectHomeMunicipality.add(participant);
+            }
+            else {
+                withSomeOtherHomeMunicipality.add(participant);
+            }
+        }
+
+        preface.add(new Paragraph("Osallistujat (Kunnan asukkaat " + withCorrectHomeMunicipality.size() + " kpl, muut " + withSomeOtherHomeMunicipality.size() + " kpl)", new Font()));
+        preface.add(new Paragraph("Deltagar", new Font()));
 
         addEmptyLine(preface, 1);
-        createTable(preface, participants);
+        createTable(preface, withCorrectHomeMunicipality);
         
         document.add(preface);
 
         if (initiative.getType().isNotVerifiable()) {
+
+            document.newPage();
+            preface = new Paragraph();
+            createTable(preface, withSomeOtherHomeMunicipality);
+            document.add(preface);
 
             document.newPage();
 
@@ -124,6 +144,11 @@ public class ParticipantToPdfExporter {
 
             document.add(lastPage);
         }
+    }
+
+    private boolean hasCorrectHomeMunicipality(Participant p) {
+        Maybe<Municipality> homeMunicipality = p.getHomeMunicipality();
+        return homeMunicipality.isPresent() && homeMunicipality.get().getId().equals(initiative.getMunicipality().getId());
     }
 
     // iText allows to add metadata to the PDF which can be viewed in your Adobe
@@ -168,7 +193,7 @@ public class ParticipantToPdfExporter {
 
     private void createTable(Paragraph subCatPart, List<? extends Participant> participants)
             throws DocumentException {
-        PdfPTable table = new PdfPTable(initiative.getType().isNotVerifiable() ? 5 : 4);
+        PdfPTable table = new PdfPTable(initiative.getType().isNotVerifiable() ? 6 : 4);
 
         table.setWidthPercentage(100);
         table.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -177,35 +202,36 @@ public class ParticipantToPdfExporter {
         table.addCell(createCell("Pvm\nDatum", true));
         table.addCell(createCell("Nimi\nNamn", true));
         if (initiative.getType().isNotVerifiable()) {
-            table.setWidths(new int[] {6, 10, 42, 18, 12});
+            table.setWidths(new int[] {6, 12, 42, 18, 12, 12});
             table.addCell(createCell("Kotikunta\nHemkommun", true));
             table.addCell(createCell("Jäsenyys\nMedlemskap", true));
         }
         else {
-            table.setWidths(new int[] {6, 10, 46, 12});
-            table.addCell(createCell("Turvakielto\nSpärrmarkering", true));
+            table.setWidths(new int[] {6, 12, 46, 12});
         }
+
+        table.addCell(createCell("Kotikunta vahvistettu\nHemkommun verifierad", true));
 
         table.setHeaderRows(1);
 
         int count = 0;
         for (Participant p : Lists.reverse(participants)) {
             if (initiative.getType().isNotVerifiable()) {
-                NormalParticipant participant = (NormalParticipant) p;
+
                 ++count;
                 table.addCell(createCell(String.valueOf(count), false));
-                table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
-                table.addCell(createCell(participant.getName(), false));
-                Municipality homeMunicipality = participant.getHomeMunicipality().get();
+                table.addCell(createCell(p.getParticipateDate().toString(DATE_FORMAT), false));
+                table.addCell(createCell(p.getName(), false));
+                Municipality homeMunicipality = (Municipality) p.getHomeMunicipality().get();
                 table.addCell(createCell(homeMunicipality.getNameFi() + "\n" + homeMunicipality.getNameSv() + "\n", false));
 
                 String membershipType = "";
 
-                if (participant.getMembership() == Membership.community) {
+                if (p.getMembership() == Membership.community) {
                     membershipType = COMMUNITY;
-                } else if (participant.getMembership() == Membership.company) {
+                } else if (p.getMembership() == Membership.company) {
                     membershipType = COMPANY;
-                } else if (participant.getMembership() == Membership.property) {
+                } else if (p.getMembership() == Membership.property) {
                     membershipType = PROPERTY;
                 } else {
                     membershipType = "";
@@ -219,8 +245,8 @@ public class ParticipantToPdfExporter {
                 table.addCell(createCell(String.valueOf(count), false));
                 table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
                 table.addCell(createCell(participant.getName(), false));
-                table.addCell(createCell(participant.isMunicipalityVerified() ? "" : "X", false));
             }
+            table.addCell(createCell(p.isMunicipalityVerified() ? "X" : "", false));
         }
 
         subCatPart.add(table);
