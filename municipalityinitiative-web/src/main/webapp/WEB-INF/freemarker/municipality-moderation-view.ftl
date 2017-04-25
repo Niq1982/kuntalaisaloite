@@ -40,6 +40,8 @@
                         class="js-edit-municipality"
                         data-id="${municipality.id}"
                         data-email="${municipality.email!""}"
+                        data-description="${municipality.description!""}"
+                        data-descriptionsv="${municipality.descriptionSv!""}"
                         data-active="${municipality.active?string}"
                     >${municipality.nameFi}</a></td>
                 <td>${municipality.nameSv}</td>
@@ -73,6 +75,14 @@
     
         <div class="input-block-content">
             <@f.textField path="updateData.municipalityEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+        </div>
+
+        <div class="input-block-content">
+            <@f.textField path="updateData.municipalityDescriptionFi" required="" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_DESCRIPTION_MAX />
+        </div>
+
+        <div class="input-block-content">
+            <@f.textField path="updateData.municipalityDescriptionSv" required="" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_DESCRIPTION_MAX />
         </div>
         
         <div class="input-block-content">

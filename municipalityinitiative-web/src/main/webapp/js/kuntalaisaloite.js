@@ -1665,10 +1665,11 @@ var editMunicipality = (function() {
 			} else {
 				selMunicipality.html(selMunicipality.data('empty'));
 			}
-
 			form.find('#id').attr('value',municipality.data('id'));
 			form.find('input[type=radio][name=active][value='+municipality.data('active')+']').attr('checked','checked');
 			form.find('#municipalityEmail').val(municipality.data('email'));
+			form.find('#municipalityDescriptionFi').val(municipality.data('description'));
+			form.find('#municipalityDescriptionSv').val(municipality.data('descriptionsv'));
 		}
 	};
 

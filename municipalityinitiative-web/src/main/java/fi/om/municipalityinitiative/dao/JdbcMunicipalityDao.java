@@ -38,6 +38,20 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
     }
 
     @Override
+    public String getMunicipalityDescription(Long municipalityId) {
+        return queryFactory.from(QMunicipality.municipality)
+                .where(QMunicipality.municipality.id.eq(municipalityId))
+                .uniqueResult(QMunicipality.municipality.description);
+    }
+
+    @Override
+    public String getMunicipalityDescriptionSv(Long municipalityId) {
+        return queryFactory.from(QMunicipality.municipality)
+                .where(QMunicipality.municipality.id.eq(municipalityId))
+                .uniqueResult(QMunicipality.municipality.descriptionSv);
+    }
+
+    @Override
     public Municipality getMunicipality(Long id) {
         return queryFactory.from(QMunicipality.municipality)
                 .where(QMunicipality.municipality.id.eq(id))
@@ -45,10 +59,12 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
     }
 
     @Override
-    public void updateMunicipality(Long municipalityId, String email, boolean active) {
+    public void updateMunicipality(Long municipalityId, String email, boolean active, String descriptionFi, String descriptionSv) {
         assertSingleAffection(queryFactory.update(QMunicipality.municipality)
                 .set(QMunicipality.municipality.email, email)
                 .set(QMunicipality.municipality.active, active)
+                .set(QMunicipality.municipality.description, descriptionFi)
+                .set(QMunicipality.municipality.descriptionSv, descriptionSv)
                 .where(QMunicipality.municipality.id.eq(municipalityId))
                 .execute());
 
@@ -87,7 +103,9 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
                             row.get(QMunicipality.municipality.name),
                             row.get(QMunicipality.municipality.nameSv),
                             row.get(QMunicipality.municipality.active),
-                            row.get(QMunicipality.municipality.email)
+                            row.get(QMunicipality.municipality.email),
+                            row.get(QMunicipality.municipality.description),
+                            row.get(QMunicipality.municipality.descriptionSv)
                     );
                     return dto;
                 }

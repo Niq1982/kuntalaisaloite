@@ -14,6 +14,10 @@ public class MunicipalityUIEditDto {
 
     private Boolean active;
 
+    private String municipalityDescriptionFi;
+
+    private String municipalityDescriptionSv;
+
     public Long getId() {
         return id;
     }
@@ -26,9 +30,19 @@ public class MunicipalityUIEditDto {
         return municipalityEmail;
     }
 
+    public String getMunicipalityDescriptionFi() {
+        return municipalityDescriptionFi;
+    }
+
+    public String getMunicipalityDescriptionSv() { return municipalityDescriptionSv; }
+
     public void setMunicipalityEmail(String email) {
         this.municipalityEmail = email;
     }
+
+    public void setMunicipalityDescriptionFi(String municipalityDescriptionFi) { this.municipalityDescriptionFi = municipalityDescriptionFi; }
+
+    public void setMunicipalityDescriptionSv(String municipalityDescriptionSv) { this.municipalityDescriptionSv = municipalityDescriptionSv; }
 
     public Boolean getActive() {
         return active;
