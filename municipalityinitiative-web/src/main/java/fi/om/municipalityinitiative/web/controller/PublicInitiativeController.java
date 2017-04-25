@@ -14,6 +14,7 @@ import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.*;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.NormalInitiativeVerifiedUser;
@@ -145,12 +146,23 @@ public class PublicInitiativeController extends BaseController {
     @RequestMapping(value={ PREPARE_FI, PREPARE_SV }, method=POST)
     // XXX: Cyclomatic complexity too high.
     public String preparePost(@ModelAttribute("initiative") PrepareInitiativeUICreateDto initiative,
+                              @RequestParam(value = "action-send-verify", required = false, defaultValue = "false") boolean verifiedSelected,
                               BindingResult bindingResult,
                               Model model,
                               Locale locale,
                               HttpServletRequest request) {
+
+        System.out.println("GOT: " + verifiedSelected);
+
         Urls urls = Urls.get(locale);
         LoginUserHolder loginUserHolder = userService.getLoginUserHolder(request);
+
+        if (verifiedSelected && !loginUserHolder.isVerifiedUser()) {
+            return contextRelativeRedirect(urls.login(
+                    (locale == Locales.LOCALE_FI ? PREPARE_FI : PREPARE_SV) + "?municipality=" + initiative.getMunicipality()
+            ));
+        }
+
         if (validationService.validationErrors(initiative, bindingResult, model, solveValidationGroup(initiative.getInitiativeType(), loginUserHolder.getUser()))) {
             return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale))
                     .view(model, urls.alt().prepare());

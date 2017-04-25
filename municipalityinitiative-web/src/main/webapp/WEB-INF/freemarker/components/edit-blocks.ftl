@@ -31,7 +31,7 @@
     <#if type == "next">
         <button type="submit" id="action-send-confirm" name="action-send-confirm" class="small-button" value="true" ><span class="small-icon next"><@u.message "action.prepare.next" /></span></button>
     <#elseif type == "verify">
-        <button value="true" class="small-button" name="action-send-confirm" id="action-send-confirm" type="submit"><span class="small-icon ${user.isVerifiedUser()?string("save-and-send","next")}"><@u.message "action.prepare."+user.isVerifiedUser()?string("create","authenticate") /></span></button>
+        <button value="true" class="small-button" name="action-send-verify" id="action-send-confirm" type="submit"><span class="small-icon ${user.isVerifiedUser()?string("save-and-send","next")}"><@u.message "action.prepare."+user.isVerifiedUser()?string("create","authenticate") /></span></button>
     <#elseif type == "save">
         <button type="submit" id="action-send-confirm" name="action-send-confirm" class="small-button" value="true" ><span class="small-icon save-and-send"><@u.message "action.prepare.send" /></span></button>
     </#if>
@@ -218,11 +218,11 @@
  *
  -->
 <#macro authorEmailBlock>
-    <div class="input-block-extra">
-        <div class="input-block-extra-content">
-            <@f.helpText "help.participantEmail" />
-        </div>
-    </div>
+    <#--<div class="input-block-extra">-->
+        <#--<div class="input-block-extra-content">-->
+            <#--<@f.helpText "help.participantEmail" />-->
+        <#--</div>-->
+    <#--</div>-->
 
     <div class="input-block-content">
 

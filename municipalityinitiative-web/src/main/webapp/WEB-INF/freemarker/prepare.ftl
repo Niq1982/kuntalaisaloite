@@ -50,56 +50,66 @@
             </div>
         </div>
 
-        <div id="prepare-form-email" class="form-block-container toggle-disable js-hide">
-            <div class="input-block cf">
-
-            	<#if user.isVerifiedUser()>
-            		<div class="input-block-content">
-	                    <#if locale == "fi">
-	                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/" />
-	                    <#else>
-	                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/arbetsrum/allmant/sprakversionen_fattas/index.html" />
-	                    </#if>
-	                    <@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=[vetumaUrl] />
-	                </div>
-
-                	<div class="input-block-content">
-	                    <@edit.buttons type="verify" />
-	                </div>
-                <#else>
-                	<@edit.authorEmailBlock />
-
-	                <div class="input-block-content no-top-margin">
-	                    <@edit.buttons type="save" /><#-- <span class="fill-in-all push hidden"><@u.message "initiative.fillInAllFields" /></span>-->
-	                </div>
-                </#if>
-
-            </div>
-        </div>
-
-        <#if enableVerifiedInitiatives>
-        <div id="prepare-form-vetuma" class="form-block-container toggle-disable js-hide hidden">
+        <div class="form-block-container">
 
             <div class="input-block cf">
 
-                <div class="input-block-content">
-                    <#if locale == "fi">
-                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/" />
-                    <#else>
-                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/arbetsrum/allmant/sprakversionen_fattas/index.html" />
-                    </#if>
-                    <@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=[vetumaUrl] />
+                <div class="input-block-extra">
+                    <div class="input-block-extra-content">
+                        <@f.helpText "help.participantEmail" />
+                    </div>
+
                 </div>
 
                 <div class="input-block-content">
-                    <@edit.buttons type="verify" />
+
+                    <div class="authentication-selection">
+
+                        <#assign formSelectionVisible=initiative.participantEmail?? && initiative.participantEmail?length != 0/>
+
+                        <#if !user.isVerifiedUser()>
+                            <label id="vetuma-authentication-button" class="authentication verified <#if !formSelectionVisible>selected</#if>"><@u.message "authentication.selection.verified" /></label>
+                            <label id="email-authentication-button" class="authentication email <#if formSelectionVisible>selected</#if>"><@u.message "authentication.selection.email"/></label>
+                        </#if>
+
+                            <div class="participation-vetuma-login-container" <#if formSelectionVisible>style="display:none"</#if>
+
+                        <form class="sodirty dirtylisten js-validate">
+                            <div class="input-block-content no-top-margin">
+                                <@u.systemMessage path="authentication.selection.verified.description" type="info" />
+                            </div>
+                        </form>
+
+                        <div class="input-block-content">
+                            <#if locale == "fi">
+                                <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/" />
+                            <#else>
+                                <#assign vetumaUrl = "http://www.suomi.fi/suomifi/arbetsrum/allmant/sprakversionen_fattas/index.html" />
+                            </#if>
+                            <#--<@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=[vetumaUrl] />-->
+
+                            <@edit.buttons type="verify" />
+                        </div>
+
+                    </div>
+
+
+                    <div class="participation-authentication-container" <#if !formSelectionVisible>style="display:none"</#if>>
+
+
+                        <@edit.authorEmailBlock />
+
+                        <div class="input-block-content no-top-margin">
+                            <@edit.buttons type="save" />
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
 
-
         </div>
-        </#if>
 
     </form>
 
