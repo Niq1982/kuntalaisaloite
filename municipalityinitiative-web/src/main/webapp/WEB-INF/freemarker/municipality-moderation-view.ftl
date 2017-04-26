@@ -78,11 +78,11 @@
         </div>
 
         <div class="input-block-content">
-            <@f.textField path="updateData.municipalityDescriptionFi" required="" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_DESCRIPTION_MAX />
+            <@f.textarea path="updateData.municipalityDescriptionFi" required="" optional=false cssClass="large" maxLength=InitiativeConstants.MUNICIPALATY_DESCRIPTION_MAX />
         </div>
 
         <div class="input-block-content">
-            <@f.textField path="updateData.municipalityDescriptionSv" required="" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_DESCRIPTION_MAX />
+            <@f.textarea path="updateData.municipalityDescriptionSv" required="" optional=false cssClass="large" maxLength=InitiativeConstants.MUNICIPALATY_DESCRIPTION_MAX />
         </div>
         
         <div class="input-block-content">
