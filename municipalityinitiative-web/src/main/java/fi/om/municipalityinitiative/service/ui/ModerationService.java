@@ -5,7 +5,7 @@ import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
-import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
+import fi.om.municipalityinitiative.dto.ui.MunicipalityInfoDto;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
@@ -136,7 +136,7 @@ public class ModerationService {
     }
 
     @Transactional(readOnly = true)
-    public List<MunicipalityEditDto> findMunicipalitiesForEdit(OmLoginUserHolder loginUserHolder) {
+    public List<MunicipalityInfoDto> findMunicipalitiesForEdit(OmLoginUserHolder loginUserHolder) {
         loginUserHolder.assertOmUser();
         return municipalityDao.findMunicipalitiesForEdit();
     }

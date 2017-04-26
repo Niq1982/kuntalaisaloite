@@ -53,7 +53,7 @@ public class EmailServiceDataProvider {
     }
 
     public String getMunicipalityEmail(Long id) {
-        return municipalityDao.getMunicipalityEmail(id);
+        return municipalityDao.getMunicipalityInfo(id).getEmail();
     }
 
     public Author getAuthor(NormalAuthorId authorId) {

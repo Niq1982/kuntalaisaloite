@@ -2,13 +2,13 @@ package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.service.Municipality;
 
-public class MunicipalityEditDto extends Municipality {
+public class MunicipalityInfoDto extends Municipality {
 
     private String email;
     private String description;
     private String descriptionSv;
 
-    public MunicipalityEditDto(long id, String finnishName, String swedishName, Boolean active, String email, String description, String descriptionSv) {
+    public MunicipalityInfoDto(long id, String finnishName, String swedishName, Boolean active, String email, String description, String descriptionSv) {
         super(id, finnishName, swedishName, active);
         this.email = email;
         this.description = description;

@@ -6,7 +6,7 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
+import fi.om.municipalityinitiative.dto.ui.MunicipalityInfoDto;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 
 import javax.annotation.Resource;
@@ -31,27 +31,6 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
     }
 
     @Override
-    public String getMunicipalityEmail(Long municipalityId) {
-        return queryFactory.from(QMunicipality.municipality)
-                .where(QMunicipality.municipality.id.eq(municipalityId))
-                .uniqueResult(QMunicipality.municipality.email);
-    }
-
-    @Override
-    public String getMunicipalityDescription(Long municipalityId) {
-        return queryFactory.from(QMunicipality.municipality)
-                .where(QMunicipality.municipality.id.eq(municipalityId))
-                .uniqueResult(QMunicipality.municipality.description);
-    }
-
-    @Override
-    public String getMunicipalityDescriptionSv(Long municipalityId) {
-        return queryFactory.from(QMunicipality.municipality)
-                .where(QMunicipality.municipality.id.eq(municipalityId))
-                .uniqueResult(QMunicipality.municipality.descriptionSv);
-    }
-
-    @Override
     public Municipality getMunicipality(Long id) {
         return queryFactory.from(QMunicipality.municipality)
                 .where(QMunicipality.municipality.id.eq(id))
@@ -70,11 +49,19 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
 
     }
 
+
     @Override
-    public List<MunicipalityEditDto> findMunicipalitiesForEdit() {
+    public MunicipalityInfoDto getMunicipalityInfo(Long municipality) {
+        return queryFactory.from(QMunicipality.municipality)
+                .where(QMunicipality.municipality.id.eq(municipality))
+                .uniqueResult(municipalityInfoWrapper);
+    }
+
+    @Override
+    public List<MunicipalityInfoDto> findMunicipalitiesForEdit() {
         return queryFactory.from(QMunicipality.municipality)
                 .orderBy(QMunicipality.municipality.name.asc())
-                .list(municipalityEditWrapper);
+                .list(municipalityInfoWrapper);
 
     }
 
@@ -93,12 +80,12 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
                 }
             };
 
-    private static Expression<MunicipalityEditDto> municipalityEditWrapper =
-            new MappingProjection<MunicipalityEditDto>(MunicipalityEditDto.class, QMunicipality.municipality.all()) {
+    private static Expression<MunicipalityInfoDto> municipalityInfoWrapper =
+            new MappingProjection<MunicipalityInfoDto>(MunicipalityInfoDto.class, QMunicipality.municipality.all()) {
 
                 @Override
-                protected MunicipalityEditDto map(Tuple row) {
-                    MunicipalityEditDto dto = new MunicipalityEditDto(
+                protected MunicipalityInfoDto map(Tuple row) {
+                    MunicipalityInfoDto dto = new MunicipalityInfoDto(
                             row.get(QMunicipality.municipality.id),
                             row.get(QMunicipality.municipality.name),
                             row.get(QMunicipality.municipality.nameSv),

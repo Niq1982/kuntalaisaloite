@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
+import fi.om.municipalityinitiative.dto.ui.MunicipalityInfoDto;
 
 import java.util.List;
 
@@ -9,15 +9,12 @@ public interface MunicipalityDao {
 
     List<Municipality> findMunicipalities(boolean orderByFinnishNames);
 
-    String getMunicipalityEmail(Long municipalityId);
-
-    String getMunicipalityDescription(Long municipalityId);
-
-    String getMunicipalityDescriptionSv(Long municipalityId);
+    MunicipalityInfoDto getMunicipalityInfo(Long municipality);
 
     Municipality getMunicipality(Long id);
 
     void updateMunicipality(Long municipalityId, String email, boolean active, String descriptionFi, String descriptionSv);
 
-    List<MunicipalityEditDto> findMunicipalitiesForEdit();
+    List<MunicipalityInfoDto> findMunicipalitiesForEdit();
+
 }

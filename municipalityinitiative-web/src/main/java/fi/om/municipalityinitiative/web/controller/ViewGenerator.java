@@ -278,7 +278,7 @@ public final class ViewGenerator {
         );
     }
 
-    public static ViewGenerator municipalityModarationView(List<MunicipalityEditDto> municipalitiesForEdit, MunicipalityUIEditDto municipalityUIEditDto) {
+    public static ViewGenerator municipalityModarationView(List<MunicipalityInfoDto> municipalitiesForEdit, MunicipalityUIEditDto municipalityUIEditDto) {
         return new ViewGenerator(Views.MUNICIPALITY_MODERATION,
                 new AttributeBuilder()
                         .add("municipalities", municipalitiesForEdit)

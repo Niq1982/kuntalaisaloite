@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
+import fi.om.municipalityinitiative.dto.ui.MunicipalityInfoDto;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,15 +67,15 @@ public class JdbcMunicipalityDaoTest {
     public void get_municipality_email() {
         Long municipalityId = testHelper.createTestMunicipality("tuusula");
 
-        String email = municipalityDao.getMunicipalityEmail(municipalityId);
+        String email = municipalityDao.getMunicipalityInfo(municipalityId).getEmail();
         assertThat(email, is("tuusula@example.com"));
     }
 
     @Test
     public void get_municipality_descriptions() {
         Long municipality = testHelper.createTestMunicipality("Tuusula", false, "Tuusula on hieno paikka", "Tuusula är en bra plats");
-        String description = municipalityDao.getMunicipalityDescription(municipality);
-        String descriptionSv = municipalityDao.getMunicipalityDescriptionSv(municipality);
+        String description = municipalityDao.getMunicipalityInfo(municipality).getDescription();
+        String descriptionSv = municipalityDao.getMunicipalityInfo(municipality).getDescriptionSv();
         assertThat(description, is("Tuusula on hieno paikka"));
         assertThat(descriptionSv, is("Tuusula är en bra plats"));
     }
@@ -100,10 +100,13 @@ public class JdbcMunicipalityDaoTest {
         String updatedDescriptionSv = "Tuusula är en elegant plats";
         municipalityDao.updateMunicipality(municipality, updatedEmail, true, updatedDescription, updatedDescriptionSv);
 
-        assertThat(municipalityDao.getMunicipality(municipality).isActive(), is(true));
-        assertThat(municipalityDao.getMunicipalityEmail(municipality), is(updatedEmail));
-        assertThat(municipalityDao.getMunicipalityDescription(municipality), is(updatedDescription));
-        assertThat(municipalityDao.getMunicipalityDescriptionSv(municipality), is(updatedDescriptionSv));
+
+        MunicipalityInfoDto dto = municipalityDao.getMunicipalityInfo(municipality);
+
+        assertThat(dto.isActive(), is(true));
+        assertThat(dto.getEmail(), is(updatedEmail));
+        assertThat(dto.getDescription(), is(updatedDescription));
+        assertThat(dto.getDescriptionSv(), is(updatedDescriptionSv));
     }
 
     @Test
@@ -113,7 +116,7 @@ public class JdbcMunicipalityDaoTest {
 
         municipalityDao.updateMunicipality(municipality, "updated@example.com", false, "Tuusula on hieno paikka", "Tuusula är en bra plats");
 
-        List<MunicipalityEditDto> forEdit = municipalityDao.findMunicipalitiesForEdit();
+        List<MunicipalityInfoDto> forEdit = municipalityDao.findMunicipalitiesForEdit();
 
         assertThat(forEdit, hasSize(1));
         assertThat(forEdit.get(0).getEmail(), is("updated@example.com"));
