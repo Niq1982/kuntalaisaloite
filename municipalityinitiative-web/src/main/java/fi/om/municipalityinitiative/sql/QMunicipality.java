@@ -23,6 +23,10 @@ public class QMunicipality extends com.mysema.query.sql.RelationalPathBase<QMuni
 
     public final BooleanPath active = createBoolean("active");
 
+    public final StringPath description = createString("description");
+
+    public final StringPath descriptionSv = createString("descriptionSv");
+
     public final StringPath email = createString("email");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
@@ -58,6 +62,8 @@ public class QMunicipality extends com.mysema.query.sql.RelationalPathBase<QMuni
 
     public void addMetadata() {
         addMetadata(active, ColumnMetadata.named("active").ofType(-7).withSize(1));
+        addMetadata(description, ColumnMetadata.named("description").ofType(12).withSize(10000));
+        addMetadata(descriptionSv, ColumnMetadata.named("description_sv").ofType(12).withSize(10000));
         addMetadata(email, ColumnMetadata.named("email").ofType(12).withSize(100));
         addMetadata(id, ColumnMetadata.named("id").ofType(-5).withSize(19).notNull());
         addMetadata(name, ColumnMetadata.named("name").ofType(12).withSize(30).notNull());

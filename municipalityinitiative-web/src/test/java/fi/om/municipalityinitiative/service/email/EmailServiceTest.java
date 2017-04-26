@@ -508,7 +508,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         EmailDto email = testHelper.getSingleQueuedEmail();
 
         assertThat(email.getRecipientsAsString(), is(MUNICIPALITY_EMAIL));
-        assertThat(email.getSubject(), is("Kuntalaisaloitteeseen vastaaminen / SV Kuntalaisaloitteeseen vastaaminen"));
+        assertThat(email.getSubject(), is("Kuntalaisaloitteeseen vastaaminen / Att svara på invånarinitiativet"));
         assertThat(email.getBodyHtml(), containsString(
                 Urls.get(Locales.LOCALE_FI).municipalityLogin(managementHash, loginHash)
                 .replace("&", "&amp;")

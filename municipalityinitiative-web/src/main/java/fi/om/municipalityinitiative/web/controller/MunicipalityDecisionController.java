@@ -53,7 +53,8 @@ public class MunicipalityDecisionController extends BaseController{
     }
 
     @RequestMapping(value = {MUNICIPALITY_LOGIN_SENT_FI, MUNICIPALITY_LOGIN_SENT_SV})
-    public String municipalityLoginSent() {
+    public String municipalityLoginSent(Model model, Locale locale) {
+        model.addAttribute(ALT_URI_ATTR, Urls.get(locale).alt().municipalityLoginSent());
         return "municipality-login-sent";
     }
 

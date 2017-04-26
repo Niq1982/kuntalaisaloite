@@ -144,7 +144,7 @@ public class ModerationService {
     @Transactional(readOnly = false)
     public void updateMunicipality(OmLoginUserHolder omLoginUserHolder, MunicipalityUIEditDto editDto) {
         omLoginUserHolder.assertOmUser();
-        municipalityDao.updateMunicipality(editDto.getId(), editDto.getMunicipalityEmail(), Boolean.TRUE.equals(editDto.getActive()));
+        municipalityDao.updateMunicipality(editDto.getId(), editDto.getMunicipalityEmail(), Boolean.TRUE.equals(editDto.getActive()), editDto.getMunicipalityDescriptionFi(), editDto.getMunicipalityDescriptionSv());
     }
 
     @Transactional(readOnly = false)

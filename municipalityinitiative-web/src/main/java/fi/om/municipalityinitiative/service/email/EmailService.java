@@ -157,7 +157,9 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(initiativeId, MUNICIPALITY_LOGIN_EMAIL)
                 .addRecipient(municipalityEmail)
-                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_LOGIN_SUBJECT, toArray(), Locales.LOCALE_FI))
+                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_LOGIN_SUBJECT, toArray(), Locales.LOCALE_FI)
+                        + " / " +
+                        messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_LOGIN_SUBJECT, toArray(), Locales.LOCALE_SV))
                 .withDataMap(dataMap)
                 .send();
 
@@ -413,8 +415,8 @@ public class EmailService {
                 .fromTemplate(initiativeId, MUNICIPALITY_DECISION)
                 .addRecipients(dataProvider.getAuthorEmails(initiativeId))
                 .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_ANSWERED_SUBJECT, toArray(), Locales.LOCALE_FI)
-                + " / "
-                + messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_ANSWERED_SUBJECT, toArray(), Locales.LOCALE_SV))
+                        + " / "
+                        + messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MUNICIPALITY_ANSWERED_SUBJECT, toArray(), Locales.LOCALE_SV))
                 .withDataMap(toDataMap(dataProvider.get(initiativeId), locale))
                 .send();
     }

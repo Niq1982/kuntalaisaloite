@@ -11,9 +11,13 @@ public interface MunicipalityDao {
 
     String getMunicipalityEmail(Long municipalityId);
 
+    String getMunicipalityDescription(Long municipalityId);
+
+    String getMunicipalityDescriptionSv(Long municipalityId);
+
     Municipality getMunicipality(Long id);
 
-    void updateMunicipality(Long municipalityId, String email, boolean active);
+    void updateMunicipality(Long municipalityId, String email, boolean active, String descriptionFi, String descriptionSv);
 
     List<MunicipalityEditDto> findMunicipalitiesForEdit();
 }

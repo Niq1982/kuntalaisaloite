@@ -129,16 +129,23 @@ public class TestHelper {
 
     @Transactional
     public Long createTestMunicipality(String name) {
-        return createTestMunicipality(name, true);
+        return createTestMunicipality(name, true, "", "");
     }
 
     @Transactional
     public Long createTestMunicipality(String name, boolean isActive) {
+        return createTestMunicipality(name, isActive, "", "");
+    }
+
+    @Transactional
+    public Long createTestMunicipality(String name, boolean isActive, String description, String descriptionSv) {
         return queryFactory.insert(QMunicipality.municipality)
                 .set(QMunicipality.municipality.name, name)
                 .set(QMunicipality.municipality.nameSv, name + " sv")
                 .set(QMunicipality.municipality.email, toEmail(name))
                 .set(QMunicipality.municipality.active, isActive)
+                .set(QMunicipality.municipality.description, description)
+                .set(QMunicipality.municipality.descriptionSv, descriptionSv)
                 .executeWithKey(QMunicipality.municipality.id);
     }
 
