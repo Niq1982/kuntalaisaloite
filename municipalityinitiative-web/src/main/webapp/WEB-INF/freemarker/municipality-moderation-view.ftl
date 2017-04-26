@@ -59,22 +59,22 @@
 
     <form action="${springMacroRequestContext.requestUri}" id="municipality-form" method="POST">
         <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-        
+
         <@spring.formHiddenInput "updateData.id" />
-        
+
         <h3 id="selected-municipality" data-empty="<i><@u.message "municipality.edit.noneSelected" /></i>">
             <#if spring.status.value??>${municipalities[spring.status.value?number-1].getName(locale)!""}</#if>
         </h3>
-        
+
         <div class="input-block-content">
             <@f.radiobutton path="updateData.active" required="" header=false options={
                     "true":"municipality.edit.active",
                     "false":"municipality.edit.notActive"
                 } attributes="" />
         </div>
-    
+
         <div class="input-block-content">
-            <@f.textField path="updateData.municipalityEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+            <@f.textField path="updateData.municipalityEmail" required="" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
         </div>
 
         <div class="input-block-content">
@@ -84,7 +84,7 @@
         <div class="input-block-content">
             <@f.textarea path="updateData.municipalityDescriptionSv" required="" optional=false cssClass="large" maxLength=InitiativeConstants.MUNICIPALATY_DESCRIPTION_MAX />
         </div>
-        
+
         <div class="input-block-content">
             <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
             <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
@@ -95,7 +95,7 @@
 
 <#--
      * Public VIEW modals
-     * 
+     *
      * Uses jsRender for templating.
      * Same content is generated for NOSCRIPT and for modals.
      *
@@ -108,10 +108,10 @@
     <#-- TODO: Check that what is needed here as there is nomore management -->
     <@u.modalTemplate />
     <@u.jsMessageTemplate />
-    
+
     <script type="text/javascript">
         var modalData = {};
-    
+
         <#-- Modal: Edit municipality details -->
         modalData.editMunicipalityDetails = function() {
             return [{
@@ -119,7 +119,7 @@
                 content:    '<#noescape>${editMunicipalityDetailsHTML!""}</#noescape>'
             }]
         };
-        
+
         <#-- Modal: Edit municipality details invalid form data -->
         <#if hasErrors?? && hasErrors>
         modalData.editMunicipalityDetailsInvalid = function() {
@@ -129,7 +129,7 @@
             }]
         };
         </#if>
-            
+
         var messageData = {};
 
         <#-- jsMessage: Warning if cookies are not enabled -->
