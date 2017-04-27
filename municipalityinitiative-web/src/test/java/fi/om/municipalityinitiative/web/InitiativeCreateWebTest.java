@@ -43,39 +43,42 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         openAndAssertPreparePage();
         select_municipality(false);
-        fill_in_preparation_form();
+        fill_in_preparation_email_form();
         assertTotalEmailsInQueue(1);
     }
 
     @Test
-    public void prepare_page_shows_validation_errors_no_matter_what_initiativeType_is_selected() {
+    public void prepare_page_shows_validation_errors_on_email_login_no_matter_what_initiativeType_is_selected() {
         overrideDriverToFirefox(true);
         openAndAssertPreparePage();
 
         getElemContaining("Kuntalaisaloite", "span").click();
+        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
         getElemContaining("Lähetä", "span").click();
-        assertPageHasValidationErrors();
-
-        getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
-        getElemContaining("Siirry tunnistautumaan", "span").click();
         assertPageHasValidationErrors();
 
     }
 
     @Test
-    public void filling_prepare_page_with_verified_initiative_redirects_to_vetuma_and_edit_page() {
+    public void filling_prepare_page_with_verified_initiative_redirects_to_vetuma_and_back_to_prepare_page_and_then_allows_creation() {
         overrideDriverToFirefox(true);
         openAndAssertPreparePage();
         select_municipality(false);
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
         getElemContaining("Siirry tunnistautumaan", "button").click();
+
         // Get redirected to vetuma
         enterVetumaLoginInformationAndSubmit(USER_SSN, MUNICIPALITY_1);
+
+        // User get's redirected back to prepare page and has to reselect all :(
+        getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
+
+        getElemContaining("Aloita aloitteen tekeminen", "button").click();
         assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
     }
 
     @Test
-    public void filling_prepare_page_with_verified_initiative_redirects_to_vetuma_but_back_to_prepare_page_with_error_if_wrong_homeMunicipality_from_vetuma() {
+    public void filling_prepare_page_with_verified_initiative_redirects_to_vetuma_but_back_to_prepare_page_with_membership_selection_if_homemunicipality_mismatch() {
         overrideDriverToFirefox(true);
         openAndAssertPreparePage();
         select_municipality(false);
@@ -85,7 +88,14 @@ public class InitiativeCreateWebTest extends WebTestBase {
         enterVetumaLoginInformationAndSubmit(USER_SSN, MUNICIPALITY_2);
 
         assertPreparePageTitle();
-        assertWarningMessage("Et ole asukas kunnassa, jota aloite koskee, joten et voi tehdä aloitetta vahvan tunnistautumisen avulla");
+        assertInfoMessageContainsText("Kotikuntasi ei ole kunta, jota aloite koskee. Voit silti tehdä aloitteen, jos olet jäsen kyseisessä kunnassa");
+
+        getElemContaining("Nimenkirjoitusoikeus yrityksessä, jonka kotipaikka on aloitetta koskevassa kunnassa", "span").click();
+        getElemContaining("Kuntalaisaloite", "span").click();
+        getElemContaining("Aloita aloitteen tekeminen", "button").click();
+        assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
+
+
     }
 
     @Test
@@ -287,7 +297,10 @@ public class InitiativeCreateWebTest extends WebTestBase {
         }
     }
 
-    public void fill_in_preparation_form() {
+    public void fill_in_preparation_email_form() {
+
+        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
+
         getElemContaining(getMessage(MSG_INITIATIVE_TYPE_NORMAL), "span").click();
         inputText("participantEmail", CONTACT_EMAIL);
         getElemContaining(getMessage(MSG_BTN_PREPARE_SEND), "button").click();

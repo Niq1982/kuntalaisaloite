@@ -110,15 +110,6 @@
             <div class="input-block-content is-not-member no-top-margin js-hide hidden">
                 <@u.systemMessage path="warning.initiative.notMember" type="warning" />
             </div>
-
-
-        <#-- This will be shown when user first selects verified initiative, then goes to vetuma and then when notice that the municipality mismatches. -->
-        <#if user.isVerifiedUser()>
-            <div class="input-block-content no-top-margin hidden">
-                <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
-                <@u.systemMessage path="warning.verifiedAuthor.notInhabitant" type="warning" args=[href] />
-            </div>
-        </#if>
     </div>
 </#macro>
 
