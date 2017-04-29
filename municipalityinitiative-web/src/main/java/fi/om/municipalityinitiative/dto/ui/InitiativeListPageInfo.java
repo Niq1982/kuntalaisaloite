@@ -8,9 +8,9 @@ import java.util.List;
 public class InitiativeListPageInfo {
     public final InitiativeListWithCount initiatives;
     public final InitiativeCounts initiativeCounts;
-    public final List<Municipality> municipalities;
+    public final List<MunicipalityInfoDto> municipalities;
 
-    public InitiativeListPageInfo(InitiativeListWithCount initiatives, InitiativeCounts initiativeCounts, List<Municipality> municipalities) {
+    public InitiativeListPageInfo(InitiativeListWithCount initiatives, InitiativeCounts initiativeCounts, List<MunicipalityInfoDto> municipalities) {
 
         this.initiatives = initiatives;
         this.initiativeCounts = initiativeCounts;

@@ -1,6 +1,9 @@
 package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.util.Locales;
+
+import java.util.Locale;
 
 public class MunicipalityInfoDto extends Municipality {
 
@@ -30,4 +33,12 @@ public class MunicipalityInfoDto extends Municipality {
     public String getDescriptionSv() { return descriptionSv; }
 
     public void setDescriptionSv(String descriptionSv) { this.descriptionSv = descriptionSv; }
+
+    public String getLocalizedDescription(String localeStr) {
+        Locale locale = Locale.forLanguageTag(localeStr);
+        String desc =  Locales.LOCALE_FI.equals(locale)
+                ? getDescription()
+                : getDescriptionSv();
+        return desc;
+    }
 }

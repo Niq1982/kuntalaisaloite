@@ -504,12 +504,12 @@ public class PublicInitiativeController extends BaseController {
         response.getOutputStream().write(file.getBytes());
     }
 
-    private static Maybe<ArrayList<Municipality>> solveMunicipalityFromListById(List<Municipality> municipalities, Maybe<List<Long>> municipalityIds){
+    private static Maybe<ArrayList<MunicipalityInfoDto>> solveMunicipalityFromListById(List<MunicipalityInfoDto> municipalities, Maybe<List<Long>> municipalityIds){
         if (municipalityIds.isNotPresent()) {
             return Maybe.absent();
         }
-        ArrayList<Municipality> currentMunicipalities = new ArrayList<>();
-        for (Municipality municipality : municipalities) {
+        ArrayList<MunicipalityInfoDto> currentMunicipalities = new ArrayList<>();
+        for (MunicipalityInfoDto municipality : municipalities) {
             if ((municipalityIds.get().contains(municipality.getId())))
                 currentMunicipalities.add(municipality);
         }

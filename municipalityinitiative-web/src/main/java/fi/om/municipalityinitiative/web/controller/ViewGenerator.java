@@ -67,7 +67,7 @@ public final class ViewGenerator {
     public static ViewGenerator searchView(InitiativeListPageInfo info,
                                            InitiativeSearch currentSearch,
                                            SearchParameterQueryString queryString,
-                                           Maybe<ArrayList<Municipality>> currentMunicipalities) {
+                                           Maybe<ArrayList<MunicipalityInfoDto>> currentMunicipalities) {
         return new ViewGenerator(SEARCH_VIEW,
                 new AttributeBuilder()
                         .add("initiatives", info.initiatives)

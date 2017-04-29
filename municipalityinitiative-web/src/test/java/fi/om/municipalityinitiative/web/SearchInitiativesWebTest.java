@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -144,6 +145,41 @@ public class SearchInitiativesWebTest extends WebTestBase {
         open(urls.search() + new SearchParameterQueryString(new InitiativeSearch()).getWithStateSent());
         assertTextContainedByClass("search-results", singleSent);
         assertTextNotContainedByClass("search-results", collaborativeCitizenInitiativeName);
+
+    }
+
+    @Test
+    public void show_info_for_single_municipality() {
+        long municipalityId = testHelper.createTestMunicipality("Akaa", true, "Akaa on hieno paikka", "Akaa är en bra plats");
+
+        overrideDriverToFirefox(true);
+
+        open(urls.search());
+
+        assertThat(this.elementExists(By.className("municipality-email")), is(false));
+
+        clickInput();
+
+        clickById("municipalities_chzn_o_1");
+
+        WebElement municipalityImgElement =  this.getElement(By.className("municipality-img"));
+        String imgSrc = "http://localhost:8090/img/vaakunat/" + municipalityId +".gif";
+        assertThat(municipalityImgElement.getAttribute("src").toString(), is(imgSrc));
+
+        String email = "Akaa@example.com";
+        String description = "Akaa on hieno paikka";
+        String descriptionSv = "Akaa är en bra plats";
+
+        assertThat(this.elementExists(By.className("municipality-email")), is(true));
+        assertTextContainedByClass("municipality-email", email);
+        assertTextContainedByClass("municipality-description", description);
+
+        clickElementByClass("language-selection");
+        assertTextContainedByClass("municipality-description", descriptionSv);
+
+        clickInput();
+        clickById("municipalities_chzn_o_2");
+        assertThat(this.elementExists(By.className("municipality-email")), is(false));
 
     }
 }

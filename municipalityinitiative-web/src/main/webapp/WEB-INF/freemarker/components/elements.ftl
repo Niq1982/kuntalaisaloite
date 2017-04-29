@@ -100,6 +100,18 @@
 
 </#macro>
 
+<#macro initiativeDescription currentMunicipality >
+    <div>
+        <img class="municipality-img" src="/img/vaakunat/${currentMunicipality.getId()}.gif" width="30px" height="30px"/>
+        <#if currentMunicipality.getEmail()??>
+            <div><p class="municipality-email">${currentMunicipality.getEmail()}</p></div>
+        </#if>
+        <#if currentMunicipality.getLocalizedDescription(locale)??>
+            <div><p class="municipality-description">${currentMunicipality.getLocalizedDescription(locale)}</p></div>
+        </#if>
+    </div>
+</#macro>
+
 <#macro map locations>
 
         <@u.jsGoogleMapsLib />

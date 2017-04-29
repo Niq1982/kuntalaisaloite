@@ -81,7 +81,7 @@ public class PublicInitiativeService {
         return new InitiativeListPageInfo(
                 normalInitiativeService.findMunicipalityInitiatives(search, loginUserHolder),
                 normalInitiativeService.getInitiativeCounts(search, loginUserHolder),
-                municipalityService.findAllMunicipalities(locale)
+                municipalityService.findAllMunicipalityInfos(locale)
                 );
     }
 

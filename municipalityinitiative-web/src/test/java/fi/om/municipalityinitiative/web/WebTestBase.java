@@ -390,6 +390,10 @@ public abstract class WebTestBase {
         }
     }
 
+    protected boolean elementExists(By by) {
+        return driver.findElements(by).size() != 0;
+    }
+
     protected WebElement getElementByLabel(String labelText, String elementTag) {
         return getElement(By.xpath("//label[contains(normalize-space(text()), '" + labelText + "')]/following-sibling::"+elementTag));
     }

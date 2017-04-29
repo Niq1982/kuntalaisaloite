@@ -33,7 +33,14 @@
 
 
 <div class="view-block search-options cf noprint">
+    <#--
+     * Municipality infos
+    -->
+    <#if currentMunicipalities.present && currentMunicipalities.value?size == 1>
+        <@e.initiativeDescription currentMunicipalities.value[0] />
+    </#if>
 
+    <div>
         <#--
          * Municipality filter
         -->
@@ -63,7 +70,6 @@
 
                 <@u.searchLink parameter="withTypeAll" cssClass=(currentSearch.type == "all")?string('active','') tooltip=false />
                 <@u.searchLink parameter="withTypeNormal" cssClass=(currentSearch.type == "normal")?string('active','') tooltip=false />
-                <@u.searchLink parameter="withTypeCouncil" cssClass=(currentSearch.type == "council")?string('active','')  tooltip=false />
                 <@u.searchLink parameter="withTypeCitizen" cssClass=(currentSearch.type == "citizen")?string('active','')  tooltip=false />
 
 
@@ -140,7 +146,7 @@
 
 
         <#--</#if>-->
-
+    </div>
 </div>
 
 
@@ -186,11 +192,11 @@
                         </#if>
                     </span>
                 </span>
-                
+
                 <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date."+initiative.state/>" ><@u.localDate initiative.stateTime!"" /></span>
                 <span class="title"><span class="name"><@u.limitStringLength initiative.name!"" 150 /></span></span>
                 <span class="info"><span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span> <span class="bull">&bull;</span>
-                
+
                     <#if !initiative.public>
                         <span class="state"><@u.message "searchResults.notPublic" /></span>
                     <#elseif !initiative.sentTime.present>
@@ -209,7 +215,7 @@
         </li>
         <#if !initiative_has_next></ul></#if>
     </#list>
-    
+
 <#-- Search results EMPTY -->
 <#else>
     <div class="msg-block">
