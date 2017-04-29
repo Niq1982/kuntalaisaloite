@@ -75,7 +75,7 @@
                             <div class="participation-vetuma-login-container" <#if formSelectionVisible>style="display:none"</#if>
 
                         <form class="sodirty dirtylisten js-validate">
-                            <div class="input-block-content no-top-margin">
+                            <div class="input-block-content">
                                 <@u.systemMessage path="authentication.selection.verified.description" type="info" />
                             </div>
                         </form>
