@@ -62,7 +62,13 @@
     <div class="input-block-content">
         <@f.municipalitySelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality onlyActive=true multiple=false/>
     </div>
-    <div class="input-block-content">
+
+    <div class="input-block-content hide" id="participation-criterion">
+        <input type="radio" name="participation-criterion" value="same-municipality" checked/><label><@u.message "initiative.sameMunicipality" /></label>
+        <input type="radio" name="participation-criterion" value="other-municipality" /><label><@u.message "initiative.otherMunicipality" /></label>
+    </div>
+
+    <div class="input-block-content hide" id="home-municipality-select">
         <#if user.isVerifiedUser() && user.homeMunicipality.present>
             <input type="hidden" name="homeMunicipality" value="${user.homeMunicipality.value.id}" />
             <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
