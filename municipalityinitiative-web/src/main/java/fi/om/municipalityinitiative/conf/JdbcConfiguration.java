@@ -2,11 +2,13 @@ package fi.om.municipalityinitiative.conf;
 
 import com.jolbox.bonecp.BoneCPConfig;
 import com.jolbox.bonecp.BoneCPDataSource;
+import com.mysema.query.sql.JavaTypeMapping;
 import com.mysema.query.sql.PostgresTemplates;
 import com.mysema.query.sql.SQLTemplates;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.sql.types.DateTimeType;
 import com.mysema.query.sql.types.EnumAsObjectType;
+import com.mysema.query.sql.types.EnumByNameType;
 import com.mysema.query.sql.types.LocalDateType;
 import com.mysema.query.types.Ops;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
@@ -29,6 +31,7 @@ import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Member;
 import java.sql.Connection;
 
 @Configuration
@@ -98,6 +101,8 @@ public class JdbcConfiguration {
         configuration.register("info_text", "languagecode", new EnumAsObjectType<>(LanguageCode.class));
         configuration.register("email", "attachment", new EnumAsObjectType<>(EmailAttachmentType.class));
         configuration.register("review_history", "type", new EnumAsObjectType<>(ReviewHistoryType.class));
+
+        configuration.register(new EnumByNameType<>(Membership.class));
         return configuration;
     }
 

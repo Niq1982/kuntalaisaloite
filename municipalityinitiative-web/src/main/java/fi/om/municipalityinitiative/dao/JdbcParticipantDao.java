@@ -1,25 +1,37 @@
 package fi.om.municipalityinitiative.dao;
 
+import com.google.common.collect.Lists;
+import com.mysema.query.SearchResults;
 import com.mysema.query.Tuple;
-import com.mysema.query.sql.dml.SQLInsertClause;
+import com.mysema.query.sql.SQLSubQuery;
 import com.mysema.query.sql.dml.SQLUpdateClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
+import com.mysema.query.support.CollectionAnyVisitor;
+import com.mysema.query.support.Expressions;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.expr.DslExpression;
+import com.mysema.query.types.expr.SimpleExpression;
+import com.mysema.query.types.expr.Wildcard;
+import com.mysema.query.types.query.ListSubQuery;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
+import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationException;
 import fi.om.municipalityinitiative.service.id.NormalParticipantId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
+import org.postgresql.core.v2.QueryExecutorImpl;
 
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static fi.om.municipalityinitiative.dao.Mappings.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
@@ -253,6 +265,93 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .limit(limit)
                 .offset(offset)
                 .list(verifiedParticipantMapping);
+    }
+
+    @Override
+    public List<ParticipantListInfo> findAsd(Long initiativeId) {
+
+        ListSubQuery verified = new SQLSubQuery()
+                .from(QVerifiedParticipant.verifiedParticipant)
+                .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantVerifiedUserFk, QVerifiedUser.verifiedUser)
+                .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
+                .leftJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantMunicipalityIdFk, QMunicipality.municipality)
+                .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
+                .list(QVerifiedUser.verifiedUser.id.as("id"),
+                        QVerifiedUser.verifiedUser.id.isNotNull().as("verified_user"),
+                        QVerifiedUser.verifiedUser.name.as("name"),
+                        QVerifiedParticipant.verifiedParticipant.showName.as("show_name"),
+                        QVerifiedParticipant.verifiedParticipant.verified.as("verified"),
+                        QVerifiedParticipant.verifiedParticipant.membershipType.as("membership_type"),
+                        QVerifiedParticipant.verifiedParticipant.participateTime.as("participate_date"),
+                        QMunicipality.municipality.id.as("municipality_id"),
+                        QMunicipality.municipality.name.as("municipality_name_fi"),
+                        QMunicipality.municipality.nameSv.as("municipality_name_sv"));
+
+        ListSubQuery normal = new SQLSubQuery().from(QVerifiedParticipant.verifiedParticipant)
+                .from(participant)
+                .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .where(participant.confirmationCode.isNull())
+                .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
+                .leftJoin(participant._verifiedUserNormalInitiativesParticipantId, QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives)
+                .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .list(participant.id.as("id"),
+                        participant.id.isNull().as("verified_user"),
+                        participant.name.as("name"),
+                        participant.showName.as("show_name"),
+                        participant.id.isNull().as("verified"),
+                        participant.membershipType.as("membership_type"),
+                        participant.participateTime.as("participate_date"),
+                        QMunicipality.municipality.id.as("municipality_id"),
+                        QMunicipality.municipality.name.as("municipality_name_fi"),
+                        QMunicipality.municipality.nameSv.as("municipality_name_sv"));
+
+        // new ConstantImpl(true);
+
+
+
+        System.out.println("-----");
+//        List list1 = queryFactory.query().union(normal, verified).list();
+//
+//        list1
+//                .stream().map(a -> {
+//
+//            System.out.println(a);
+//            return a;
+//
+//        })
+//                .collect(Collectors.toList());
+
+        System.out.println("-----");
+
+
+        Path innerUnion = Expressions.path(Void.class, "innernamequery");
+        DslExpression unionExpression = new SQLSubQuery().union(normal, verified).as(innerUnion);
+//
+        SQLSubQuery subQuery = new SQLSubQuery().from(unionExpression).limit(2);
+
+        //List<Long> list = queryFactory.from(unionExpression).limit(2).list(asdMapping());
+
+        // List<Tuple> list = queryFactory.from(unionExpression).list();
+
+        List<Object[]> wuut = queryFactory.from(unionExpression).list(Wildcard.all);
+
+        System.out.println(wuut.size());
+
+
+        return Lists.newArrayList();
+
+
+    }
+
+    private MappingProjection<Long> asdMapping() {
+        return new MappingProjection<Long>(Long.class, Wildcard.all) {
+            @Override
+            protected Long map(Tuple row) {
+                System.out.println("got " + row.getClass());
+                System.out.println(row);
+                return null;
+            }
+        };
     }
 
     @Override
