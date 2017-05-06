@@ -11,7 +11,7 @@ import fi.om.municipalityinitiative.service.NotificationHolder;
 import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.service.ui.Notification;
 import fi.om.municipalityinitiative.util.*;
-import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.NormalInitiativeEmailUser;
 import fi.om.municipalityinitiative.validation.NormalInitiativeVerifiedUser;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import fi.om.municipalityinitiative.web.*;
@@ -111,13 +111,13 @@ public class BaseController {
                 return NormalInitiativeVerifiedUser.class;
             }
             else {
-                return NormalInitiative.class;
+                return NormalInitiativeEmailUser.class;
             }
         }
     }
 
     protected static Object solveValidationGroup(InitiativeViewInfo initiative) {
-        return initiative.isVerifiable() ? VerifiedInitiative.class : NormalInitiative.class;
+        return initiative.isVerifiable() ? VerifiedInitiative.class : NormalInitiativeEmailUser.class;
     }
 
 

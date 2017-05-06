@@ -12,7 +12,7 @@ import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
-import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.NormalInitiativeEmailUser;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SecurityFilter;
@@ -179,7 +179,7 @@ public class InitiativeManagementController extends BaseController {
         InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
         validateVideoUrl(editDto.getVideoUrl(), bindingResult);
-        validationService.validationErrors(editDto, bindingResult, model, loginUserHolder.isVerifiedUser() ? VerifiedInitiative.class : NormalInitiative.class);
+        validationService.validationErrors(editDto, bindingResult, model, loginUserHolder.isVerifiedUser() ? VerifiedInitiative.class : NormalInitiativeEmailUser.class);
 
         if ((bindingResult.hasErrors())) {
             return ViewGenerator.editView(
@@ -245,7 +245,7 @@ public class InitiativeManagementController extends BaseController {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         validateVideoUrl(updateDto.getVideoUrl(), bindingResult);
-        validationService.validationErrors(updateDto, bindingResult, model, loginUserHolder.isVerifiedUser() ? VerifiedInitiative.class : NormalInitiative.class);
+        validationService.validationErrors(updateDto, bindingResult, model, loginUserHolder.isVerifiedUser() ? VerifiedInitiative.class : NormalInitiativeEmailUser.class);
 
         if (bindingResult.hasErrors()) {
 

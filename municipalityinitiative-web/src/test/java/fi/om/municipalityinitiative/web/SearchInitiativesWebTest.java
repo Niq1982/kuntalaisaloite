@@ -12,6 +12,7 @@ import org.openqa.selenium.WebElement;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.StringEndsWith.endsWith;
 
 public class SearchInitiativesWebTest extends WebTestBase {
 
@@ -65,7 +66,7 @@ public class SearchInitiativesWebTest extends WebTestBase {
         assertThat(municipalitiesRawText, containsString(HELSINKI));
         assertThat(municipalitiesRawText, containsString(VANTAA));
 
-        clickById("municipalities_chzn_o_1");
+        selectNthMunicipality(1);
 
         assertTextContainedByClass("search-results", collaborativeCitizenInitiativeNameHelsinki);
         assertTextNotContainedByClass("search-results", collaborativeCitizenInitiativeNameVantaa);
@@ -99,7 +100,7 @@ public class SearchInitiativesWebTest extends WebTestBase {
         assertThat(municipalitiesRawText, containsString(HYVINKAA));
         assertThat(municipalitiesRawText, containsString(VANTAA));
 
-        clickById("municipalities_chzn_o_1");
+        selectNthMunicipality(1);
 
         assertTextContainedByClass("search-results", collaborativeCitizenInitiativeNameHelsinki);
         assertTextNotContainedByClass("search-results", collaborativeCitizenInitiativeNameVantaa);
@@ -110,7 +111,7 @@ public class SearchInitiativesWebTest extends WebTestBase {
         assertThat(municipalitiesRawText, containsString(VANTAA));
         assertThat(municipalitiesRawText, containsString(HYVINKAA));
 
-        clickById("municipalities_chzn_o_3");
+        selectNthMunicipality(3);
 
         assertTextContainedByClass("search-results", collaborativeCitizenInitiativeNameHelsinki);
         assertTextContainedByClass("search-results", collaborativeCitizenInitiativeNameVantaa);
@@ -160,11 +161,10 @@ public class SearchInitiativesWebTest extends WebTestBase {
 
         clickInput();
 
-        clickById("municipalities_chzn_o_1");
+        selectNthMunicipality(1);
 
         WebElement municipalityImgElement =  this.getElement(By.className("municipality-img"));
-        String imgSrc = "http://localhost:8090/img/vaakunat/" + municipalityId +".gif";
-        assertThat(municipalityImgElement.getAttribute("src").toString(), is(imgSrc));
+        assertThat(municipalityImgElement.getAttribute("src"), endsWith(municipalityId +".gif"));
 
         String email = "Akaa@example.com";
         String description = "Akaa on hieno paikka";
@@ -178,8 +178,12 @@ public class SearchInitiativesWebTest extends WebTestBase {
         assertTextContainedByClass("municipality-description", descriptionSv);
 
         clickInput();
-        clickById("municipalities_chzn_o_2");
+        selectNthMunicipality(2);
         assertThat(this.elementExists(By.className("municipality-email")), is(false));
 
+    }
+
+    private void selectNthMunicipality(int i) {
+        clickById("municipalities_chzn_o_" + i);
     }
 }

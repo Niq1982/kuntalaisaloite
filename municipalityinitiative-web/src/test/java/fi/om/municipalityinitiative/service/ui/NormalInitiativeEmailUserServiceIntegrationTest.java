@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
 
 
-public class NormalInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase {
+public class NormalInitiativeEmailUserServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     @Resource
     private NormalInitiativeService service;

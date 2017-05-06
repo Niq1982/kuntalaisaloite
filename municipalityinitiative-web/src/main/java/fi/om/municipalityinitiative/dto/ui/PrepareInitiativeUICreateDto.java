@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.NormalInitiativeEmailUser;
 import fi.om.municipalityinitiative.validation.NormalInitiativeVerifiedUser;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
@@ -13,18 +13,18 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-@ValidMunicipalMembership(groups = {NormalInitiative.class, NormalInitiativeVerifiedUser.class})
+@ValidMunicipalMembership(groups = {NormalInitiativeEmailUser.class, NormalInitiativeVerifiedUser.class})
 public class PrepareInitiativeUICreateDto extends ParticipantUICreateBase implements Serializable {
 
-    @NotNull(groups = {NormalInitiative.class, VerifiedInitiative.class, NormalInitiativeVerifiedUser.class})
+    @NotNull(groups = {NormalInitiativeEmailUser.class, VerifiedInitiative.class, NormalInitiativeVerifiedUser.class})
     private InitiativeType initiativeType;
 
-    @NotNull(groups = {NormalInitiative.class, VerifiedInitiative.class, NormalInitiativeVerifiedUser.class})
+    @NotNull(groups = {NormalInitiativeEmailUser.class, VerifiedInitiative.class, NormalInitiativeVerifiedUser.class})
     Long municipality;
 
-    @NotEmpty(groups = NormalInitiative.class)
-    @Pattern(regexp = ContactInfo.EMAIL_PATTERN, groups = NormalInitiative.class)
-    @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX, groups = NormalInitiative.class)
+    @NotEmpty(groups = NormalInitiativeEmailUser.class)
+    @Pattern(regexp = ContactInfo.EMAIL_PATTERN, groups = NormalInitiativeEmailUser.class)
+    @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX, groups = NormalInitiativeEmailUser.class)
     private String participantEmail;
 
     public String getParticipantEmail() {

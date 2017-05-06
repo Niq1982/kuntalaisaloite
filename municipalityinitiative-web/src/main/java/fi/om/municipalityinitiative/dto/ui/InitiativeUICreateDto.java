@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.dto.ui;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.service.CreateDtoTimeValidation;
 import fi.om.municipalityinitiative.validation.InitiativeCreateValidMunicipalMembershipInfo;
-import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.NormalInitiativeEmailUser;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@ValidMunicipalMembership(groups = NormalInitiative.class)
+@ValidMunicipalMembership(groups = NormalInitiativeEmailUser.class)
 public class InitiativeUICreateDto
         extends CreateDtoTimeValidation
         implements InitiativeCreateValidMunicipalMembershipInfo {

@@ -5,7 +5,7 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.validation.InitiativeWithLocationInformation;
-import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.NormalInitiativeEmailUser;
 import fi.om.municipalityinitiative.validation.ValidLocation;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
-@ValidLocation(groups = {VerifiedInitiative.class, NormalInitiative.class})
+@ValidLocation(groups = {VerifiedInitiative.class, NormalInitiativeEmailUser.class})
 public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformation {
 
     // Not editable after set
@@ -24,21 +24,21 @@ public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformati
 
     // Editable by author via ui
 
-    @NotEmpty(groups = {VerifiedInitiative.class, NormalInitiative.class})
-    @Size(max = InitiativeConstants.INITIATIVE_NAME_MAX, groups = {VerifiedInitiative.class, NormalInitiative.class})
+    @NotEmpty(groups = {VerifiedInitiative.class, NormalInitiativeEmailUser.class})
+    @Size(max = InitiativeConstants.INITIATIVE_NAME_MAX, groups = {VerifiedInitiative.class, NormalInitiativeEmailUser.class})
     private String name;
 
-    @NotEmpty(groups = {VerifiedInitiative.class, NormalInitiative.class})
-    @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX, groups = {VerifiedInitiative.class, NormalInitiative.class})
+    @NotEmpty(groups = {VerifiedInitiative.class, NormalInitiativeEmailUser.class})
+    @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX, groups = {VerifiedInitiative.class, NormalInitiativeEmailUser.class})
     private String proposal;
 
-    @Size(max = InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX, groups = {VerifiedInitiative.class, NormalInitiative.class})
+    @Size(max = InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX, groups = {VerifiedInitiative.class, NormalInitiativeEmailUser.class})
     private String extraInfo;
 
     @Valid
     private ContactInfo contactInfo;
 
-    @Min(value = 0, groups = {VerifiedInitiative.class, NormalInitiative.class} )
+    @Min(value = 0, groups = {VerifiedInitiative.class, NormalInitiativeEmailUser.class} )
     private int externalParticipantCount;
 
     private List<Location> locations = new ArrayList<>();

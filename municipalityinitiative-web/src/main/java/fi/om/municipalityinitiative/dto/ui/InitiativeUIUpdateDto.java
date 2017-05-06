@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.dto.ui;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.validation.InitiativeWithLocationInformation;
-import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.NormalInitiativeEmailUser;
 import fi.om.municipalityinitiative.validation.ValidLocation;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 
@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
-@ValidLocation(groups = {VerifiedInitiative.class, NormalInitiative.class})
+@ValidLocation(groups = {VerifiedInitiative.class, NormalInitiativeEmailUser.class})
 public class InitiativeUIUpdateDto implements InitiativeWithLocationInformation {
 
     @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX)

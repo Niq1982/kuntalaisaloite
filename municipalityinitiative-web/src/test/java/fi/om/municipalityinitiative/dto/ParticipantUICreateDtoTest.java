@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.dto;
 
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.Membership;
-import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.NormalInitiativeEmailUser;
 import org.joda.time.DateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -71,7 +71,7 @@ public class ParticipantUICreateDtoTest {
     }
 
     private static Set<ConstraintViolation<ParticipantUICreateDto>> validate(ParticipantUICreateDto dto) {
-        return validator.validate(dto, NormalInitiative.class);
+        return validator.validate(dto, NormalInitiativeEmailUser.class);
     }
 
     private ParticipantUICreateDto validParticipant() {
