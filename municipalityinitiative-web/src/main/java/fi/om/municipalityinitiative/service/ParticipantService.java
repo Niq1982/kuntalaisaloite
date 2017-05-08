@@ -8,10 +8,7 @@ import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
-import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.service.NormalParticipant;
-import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
-import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
+import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
@@ -130,8 +127,13 @@ public class ParticipantService {
             throw new InvalidParticipationConfirmationException("No participant with id: " + participantId);
         }
 
-        assertAllowance("Confirm participation", ManagementSettings.of(initiativeDao.get(initiativeId.get())).isAllowParticipation());
-        participantDao.confirmParticipation(participantId, confirmationCode);
+        Initiative initiative = initiativeDao.get(initiativeId.get());
+        assertAllowance("Confirm participation", ManagementSettings.of(initiative).isAllowParticipation());
+        NormalParticipant normalParticipant = participantDao.confirmParticipation(participantId, confirmationCode);
+
+        participantDao.increaseParticipantCountFor(initiativeId.get(), normalParticipant.isShowName(),
+                normalParticipant.getHomeMunicipality().isPresent() && normalParticipant.getHomeMunicipality().get().getId().equals(initiative.getMunicipality().getId())
+                );
 
         return initiativeId.get();
     }

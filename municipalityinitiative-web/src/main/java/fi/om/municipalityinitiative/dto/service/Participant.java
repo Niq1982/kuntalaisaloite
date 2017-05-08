@@ -12,6 +12,7 @@ public abstract class Participant<E extends Id> {
     private E id;
     private boolean isMunicipalityVerified;
     private Membership membership;
+    private boolean showName;
     private Maybe<Municipality> homeMunicipality;
 
     public abstract boolean isVerified();
@@ -74,5 +75,13 @@ public abstract class Participant<E extends Id> {
 
     public void setId(E id) {
         this.id = id;
+    }
+
+    public boolean isShowName() {
+        return showName;
+    }
+
+    public void setShowName(boolean showName) {
+        this.showName = showName;
     }
 }

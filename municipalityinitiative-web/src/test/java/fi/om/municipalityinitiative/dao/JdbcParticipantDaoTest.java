@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.service.*;
-import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -26,7 +25,6 @@ import static fi.om.municipalityinitiative.util.Membership.community;
 import static fi.om.municipalityinitiative.util.Membership.none;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static fi.om.municipalityinitiative.web.Urls.MAX_PARTICIPANT_LIST_LIMIT;
-import static fi.om.municipalityinitiative.web.Urls.MUNICIPALITIES;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -90,7 +88,7 @@ public class JdbcParticipantDaoTest {
     @Test
     public void getNormalPublicParticipants_returns_public_names() {
 
-        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().withPublicName(false).toInitiativeDraft());
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().withShowName(false).toInitiativeDraft());
 
         createConfirmedParticipant(initiativeId, false, "no right no public");
         createConfirmedParticipant(initiativeId, false, "yes right no public");
@@ -129,21 +127,25 @@ public class JdbcParticipantDaoTest {
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, otherMunicipalityId)
                 .withMunicipalityMembership(Membership.community)
                 .withParticipantEmail("par1@example.com")
+                .withShowName(true)
                 .withParticipantName("2 Normal community"));
 
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
                 .withMunicipalityMembership(none)
+                .withShowName(false)
                 .withParticipantEmail("par2@example.com")
                 .withParticipantName("1 Normal inhabitant"));
 
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, otherMunicipalityId)
                 .withMunicipalityMembership(Membership.community)
                 .withParticipantEmail("ver1@example.com")
+                .withShowName(true)
                 .withVerifiedParticipantMunicipalityVerified(false)
                 .withParticipantName("4 Non-verified"));
 
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
                 .withParticipantEmail("ver2@example.com")
+                .withShowName(false)
                 .withVerifiedParticipantMunicipalityVerified(true)
                 .withParticipantName("3 Verified"));
 
@@ -165,10 +167,12 @@ public class JdbcParticipantDaoTest {
         assertThat(normalInhabitant.getMembership(), is(none));
         assertThat(normalInhabitant.getParticipateDate(), is(LocalDate.now()));
         assertThat(normalInhabitant.isMunicipalityVerified(), is(false));
+        assertThat(normalInhabitant.isShowName(), is(false));
         assertThat(((Municipality) normalInhabitant.getHomeMunicipality().get()).getId(), is(testMunicipalityId));
 
         assertThat(normalCommunity.getEmail(), is("par1@example.com"));
         assertThat(normalCommunity.isVerified(), is(false));
+        assertThat(normalCommunity.isShowName(), is(true));
         assertThat(normalCommunity.getName(), is("2 Normal community"));
         assertThat(normalCommunity.getMembership(), is(community));
         assertThat(normalCommunity.getParticipateDate(), is(LocalDate.now()));
@@ -177,6 +181,7 @@ public class JdbcParticipantDaoTest {
 
         assertThat(verified.getEmail(), is("ver2@example.com"));
         assertThat(verified.isVerified(), is(true));
+        assertThat(verified.isShowName(), is(false));
         assertThat(verified.getName(), is("3 Verified"));
         assertThat(verified.getMembership(), is(none));
         assertThat(verified.getParticipateDate(), is(LocalDate.now()));
@@ -185,6 +190,7 @@ public class JdbcParticipantDaoTest {
 
         assertThat(verifiedNonVerifiedMunicipality.getEmail(), is("ver1@example.com"));
         assertThat(verifiedNonVerifiedMunicipality.isVerified(), is(true));
+        assertThat(verifiedNonVerifiedMunicipality.isShowName(), is(true));
         assertThat(verifiedNonVerifiedMunicipality.getName(), is("4 Non-verified"));
         assertThat(verifiedNonVerifiedMunicipality.getMembership(), is(community));
         assertThat(verifiedNonVerifiedMunicipality.getParticipateDate(), is(LocalDate.now()));
@@ -232,12 +238,12 @@ public class JdbcParticipantDaoTest {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId)
                 .applyAuthor()
                 .withParticipantName("Private Participant")
-                .withPublicName(false)
+                .withShowName(false)
                 .toInitiativeDraft());
 
         testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
                 .withParticipantName("Public Participant")
-                .withPublicName(true));
+                .withShowName(true));
 
         List<VerifiedParticipant> participants = participantDao.findVerifiedPublicParticipants(initiativeId, 0, MAX_PARTICIPANT_LIST_LIMIT);
         assertThat(participants, hasSize(1));
@@ -262,12 +268,12 @@ public class JdbcParticipantDaoTest {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId)
                 .applyAuthor()
                 .withParticipantName("Private Participant")
-                .withPublicName(false)
+                .withShowName(false)
                 .toInitiativeDraft());
 
         testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
                 .withParticipantName("Public Participant")
-                .withPublicName(true));
+                .withShowName(true));
 
         List<? extends Participant> participants = participantDao.findVerifiedAllParticipants(initiativeId, 0, MAX_PARTICIPANT_LIST_LIMIT);
         assertThat(participants, hasSize(2));
@@ -277,7 +283,7 @@ public class JdbcParticipantDaoTest {
     public void find_all_verified_participants_limits_results() {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId));
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("1"));
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("2").withPublicName(false));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("2").withShowName(false));
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("3"));
         List<VerifiedParticipant> result = participantDao.findVerifiedAllParticipants(initiativeId, 1, 1);
         assertThat(result, hasSize(1));
@@ -288,7 +294,7 @@ public class JdbcParticipantDaoTest {
     public void find_all_normal_participants_limits_results() {
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId));
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("1"));
-        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("2").withPublicName(false));
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("2").withShowName(false));
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("3"));
         List<NormalParticipant> result = participantDao.findNormalAllParticipants(initiativeId, 1, 1);
         assertThat(result, hasSize(1));
@@ -377,39 +383,19 @@ public class JdbcParticipantDaoTest {
     @Test
     public void confirming_participant_makes_participation_public() {
 
+
+        int originalParticipantCount = participantDao.findAllParticipants(testInitiativeId, false).size();
+
         String participantConfirmationCode = "someConfirmationCode";
         ParticipantCreateDto createDto = participantCreateDto();
         createDto.setShowName(true);
         Long participantId = participantDao.create(createDto, participantConfirmationCode);
-        participantDao.create(participantCreateDto(), CONFIRMATION_CODE); // Some other unconfirmed participant
-
-        int originalParticipants = testHelper.getInitiative(testInitiativeId).getParticipantCount();
-        int originalParticipantsPublic = testHelper.getInitiative(testInitiativeId).getParticipantCountPublic();
-
-        participantDao.confirmParticipation(participantId, participantConfirmationCode);
-
-        assertThat(testHelper.getInitiative(testInitiativeId).getParticipantCount(), is(originalParticipants+1));
-        assertThat(testHelper.getInitiative(testInitiativeId).getParticipantCountPublic(), is(originalParticipantsPublic+1));
-    }
-
-    @Test
-    public void confirming_participant_with_hidden_name_increases_participantCount_but_not_publicCount() {
-
-        String participantConfirmationCode = "someConfirmationCode";
-        ParticipantCreateDto createDto = participantCreateDto();
-        createDto.setShowName(false);
-        Long participantId = participantDao.create(createDto, participantConfirmationCode);
 
         participantDao.create(participantCreateDto(), CONFIRMATION_CODE); // Some other unconfirmed participant
-
-        int originalParticipants = testHelper.getInitiative(testInitiativeId).getParticipantCount();
-        int originalParticipantsPublic = testHelper.getInitiative(testInitiativeId).getParticipantCountPublic();
+        assertThat(participantDao.findAllParticipants(testInitiativeId, false), hasSize(originalParticipantCount));
 
         participantDao.confirmParticipation(participantId, participantConfirmationCode);
-
-        assertThat(testHelper.getInitiative(testInitiativeId).getParticipantCount(), is(originalParticipants+1));
-        assertThat(testHelper.getInitiative(testInitiativeId).getParticipantCountPublic(), is(originalParticipantsPublic));
-
+        assertThat(participantDao.findAllParticipants(testInitiativeId, false), hasSize(originalParticipantCount + 1));
     }
 
     @Test

@@ -854,9 +854,9 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void update_denormalized_participant_count() {
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
-        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true));
-        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true));
-        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(false));
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true));
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true));
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(false));
 
         initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
 
@@ -868,9 +868,9 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void update_denormalized_participant_count_for_verified_initiative() {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true));
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true));
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(false));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(false));
 
         initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
 

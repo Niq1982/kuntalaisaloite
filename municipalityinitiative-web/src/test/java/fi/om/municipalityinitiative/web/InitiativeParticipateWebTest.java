@@ -234,7 +234,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
                         .withType(InitiativeType.COLLABORATIVE)
                         .withParticipantCount(0)
                         .applyAuthor()
-                        .withPublicName(false)
+                        .withShowName(false)
                         .toInitiativeDraft()
         );
 
@@ -270,7 +270,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
                         .withParticipantCount(0)
                         .withSent(yesterday)
                         .applyAuthor()
-                        .withPublicName(false)
+                        .withShowName(false)
                         .toInitiativeDraft()
         );
 

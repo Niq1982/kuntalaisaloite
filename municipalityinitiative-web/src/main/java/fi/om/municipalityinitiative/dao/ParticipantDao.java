@@ -17,7 +17,9 @@ public interface ParticipantDao {
 
     Long create(ParticipantCreateDto createDto, String confirmationCode);
 
-    void confirmParticipation(Long participantId, String confirmationCode);
+    NormalParticipant confirmParticipation(Long participantId, String confirmationCode);
+
+    void increaseParticipantCountFor(Long initiativeId, boolean showName, boolean citizen);
 
     void verifiedUserParticipatesNormalInitiative(Long participantId, VerifiedUserId userId, boolean verified);
 

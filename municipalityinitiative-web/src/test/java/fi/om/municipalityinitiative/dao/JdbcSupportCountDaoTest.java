@@ -122,17 +122,17 @@ public class JdbcSupportCountDaoTest {
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED));
 
 
-        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), twoDaysAgo);
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), twoDaysAgo);
 
-        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), twoDaysAgo);
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), twoDaysAgo);
 
-        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), twoDaysAgo);
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), twoDaysAgo);
 
-        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), yesterday);
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), yesterday);
 
-        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), yesterday);
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), yesterday);
 
-        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), today);
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), today);
 
         Map<LocalDate, Long> supportVoteCountByDate =  initiativeDao.getSupportVoteCountByDateUntil(initiativeId, yesterday);
         assertThat(supportVoteCountByDate.size(), is(2));
@@ -193,9 +193,9 @@ public class JdbcSupportCountDaoTest {
     public void create_verifiable_inititative(){
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withType(InitiativeType.COLLABORATIVE_COUNCIL));
 
-        testHelper.createVerifiedParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), twoDaysAgo);
+        testHelper.createVerifiedParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), twoDaysAgo);
 
-        testHelper.createVerifiedParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), twoDaysAgo);
+        testHelper.createVerifiedParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), twoDaysAgo);
 
         Map<LocalDate, Long> supportVoteCountByDate =  initiativeDao.getSupportVoteCountByDateUntil(initiativeId, yesterday);
 

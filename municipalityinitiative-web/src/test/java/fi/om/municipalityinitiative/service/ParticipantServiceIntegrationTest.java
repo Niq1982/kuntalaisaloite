@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
@@ -101,7 +102,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     @Test
     public void findPublicParticipants_for_normal_initiative_sets_author_flag_true_if_author() {
         Long initiativeId = createNormalInitiativeWithAuthor();
-        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
 
         List<ParticipantListInfo> publicParticipants = participantService.findPublicParticipants(0, initiativeId);
         precondition(publicParticipants, hasSize(2));
@@ -113,7 +114,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     @Test
     public void findPublicParticipants_for_verified_initiative_sets_author_flag_true_if_author() {
         Long initiativeId = createVerifiedInitiativeWithAuthor();
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
 
         List<ParticipantListInfo> publicParticipants = participantService.findPublicParticipants(0, initiativeId);
         precondition(publicParticipants, hasSize(2));
@@ -128,10 +129,10 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
                 new TestHelper.InitiativeDraft(testMunicipalityId)
                         .withState(InitiativeState.PUBLISHED)
                         .withType(InitiativeType.COLLABORATIVE)
-                        .applyAuthor().withPublicName(false)
+                        .applyAuthor().withShowName(false)
                         .toInitiativeDraft()
         );
-        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
+        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
         precondition(initiative.getParticipantCountPublic(), is(1));
@@ -156,11 +157,11 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
                 new TestHelper.InitiativeDraft(testMunicipalityId)
                         .withState(InitiativeState.PUBLISHED)
                         .withType(InitiativeType.COLLABORATIVE_CITIZEN)
-                        .applyAuthor().withPublicName(false)
+                        .applyAuthor().withShowName(false)
                         .toInitiativeDraft()
         );
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
         precondition(initiative.getParticipantCountPublic(), is(2));
@@ -180,11 +181,11 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
                 new TestHelper.InitiativeDraft(testMunicipalityId)
                         .withState(InitiativeState.PUBLISHED)
                         .withType(InitiativeType.COLLABORATIVE_CITIZEN)
-                        .applyAuthor().withPublicName(false)
+                        .applyAuthor().withShowName(false)
                         .toInitiativeDraft()
         );
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(false));
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(false));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(false));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(false));
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
         precondition(initiative.getParticipantCountPublic(), is(0));
@@ -206,10 +207,10 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
                 new TestHelper.InitiativeDraft(testMunicipalityId)
                         .withState(InitiativeState.PUBLISHED)
                         .withType(InitiativeType.COLLABORATIVE_COUNCIL)
-                        .applyAuthor().withPublicName(false)
+                        .applyAuthor().withShowName(false)
                         .toInitiativeDraft()
         );
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
         precondition(initiative.getParticipantCountPublic(), is(1));
@@ -229,10 +230,10 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         Long initiativeId = testHelper.createDefaultInitiative(
                 new TestHelper.InitiativeDraft(testMunicipalityId)
                         .withSent(new DateTime())
-                        .applyAuthor().withPublicName(false)
+                        .applyAuthor().withShowName(false)
                         .toInitiativeDraft()
         );
-        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
+        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
         precondition(initiative.getParticipantCountPublic(), is(1));
@@ -262,15 +263,37 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     public void adding_participant_does_not_increase_denormalized_participantCount_but_accepting_does() throws MessagingException, InterruptedException {
         Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
+        int originalParticipantCountPublic = testHelper.getInitiative(initiativeId).getParticipantCount();
 
         Long participantId = participantService.createParticipant(participantUICreateDto(), initiativeId, null);
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), Matchers.is(originalParticipantCount));
 
         participantService.confirmParticipation(participantId, PreviousHashGetter.get());
-        assertThat(getSingleInitiativeInfo().getParticipantCount(), Matchers.is(originalParticipantCount + 1));
+        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount + 1));
+        assertThat(getSingleInitiativeInfo().getParticipantCountPublic(), is(originalParticipantCountPublic + 1));
 
         assertUniqueSentEmail(participantUICreateDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PARTICIPATION_CONFIRMATION_SUBJECT);
     }
+
+    @Test
+    public void confirming_participation_does_not_increase_public_names_if_showName_is_false() {
+
+        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
+        int originalParticipantCountPublic = testHelper.getInitiative(initiativeId).getParticipantCount();
+
+        ParticipantUICreateDto participant = participantUICreateDto();
+        participant.setShowName(false);
+
+        Long participantId = participantService.createParticipant(participant, initiativeId, null);
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(originalParticipantCount));
+
+        participantService.confirmParticipation(participantId, PreviousHashGetter.get());
+        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount + 1));
+        assertThat(getSingleInitiativeInfo().getParticipantCountPublic(), is(originalParticipantCountPublic));
+
+    }
+
     @Test
     public void adding_confirmed_participant_increases_denormalized_participantCount() throws MessagingException, InterruptedException {
         Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);

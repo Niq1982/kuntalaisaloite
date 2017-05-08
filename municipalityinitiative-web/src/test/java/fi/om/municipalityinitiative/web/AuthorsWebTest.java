@@ -13,7 +13,6 @@ import org.openqa.selenium.WebElement;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.web.InitiativeParticipateWebTest.OTHER_USER_SSN;
-import static fi.om.municipalityinitiative.web.MessageSourceKeys.SELECT_MUNICIPALITY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -399,7 +398,7 @@ public class AuthorsWebTest extends WebTestBase {
     public void author_removes_verified_participant() throws InterruptedException {
         Long publishedInitiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID).withState(InitiativeState.PUBLISHED).applyAuthor(USER_SSN).toInitiativeDraft());
 
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(publishedInitiativeId, HELSINKI_ID).withPublicName(false));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(publishedInitiativeId, HELSINKI_ID).withShowName(false));
 
         vetumaLogin(USER_SSN, HELSINKI);
 

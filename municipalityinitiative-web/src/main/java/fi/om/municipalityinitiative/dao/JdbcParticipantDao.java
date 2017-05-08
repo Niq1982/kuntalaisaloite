@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.dao;
 
-import com.google.common.collect.Lists;
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.SQLSubQuery;
 import com.mysema.query.sql.dml.SQLUpdateClause;
@@ -10,7 +9,6 @@ import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.Path;
 import com.mysema.query.types.expr.DslExpression;
-import com.mysema.query.types.expr.StringExpression;
 import com.mysema.query.types.path.*;
 import com.mysema.query.types.query.ListSubQuery;
 import fi.om.municipalityinitiative.dto.service.*;
@@ -23,7 +21,6 @@ import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.LocalDate;
 
 import javax.annotation.Resource;
-import java.lang.reflect.Member;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,6 +37,7 @@ public class JdbcParticipantDao implements ParticipantDao {
             VerifiedParticipant.class,
             QVerifiedParticipant.verifiedParticipant.participateTime,
             QVerifiedParticipant.verifiedParticipant.verified,
+            QVerifiedParticipant.verifiedParticipant.showName,
             QVerifiedParticipant.verifiedParticipant.membershipType,
             QVerifiedParticipant.verifiedParticipant.municipalityId,
             QVerifiedUser.verifiedUser.name,
@@ -56,6 +54,7 @@ public class JdbcParticipantDao implements ParticipantDao {
 
             participant.setEmail(row.get(QVerifiedUser.verifiedUser.email));
             participant.setMunicipalityVerified(row.get(QVerifiedParticipant.verifiedParticipant.verified));
+            participant.setShowName(row.get(QVerifiedParticipant.verifiedParticipant.showName));
             participant.setParticipateDate(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
             participant.setName(row.get(QVerifiedUser.verifiedUser.name));
             participant.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
@@ -79,6 +78,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                     par.setEmail(row.get(participant.email));
                     par.setMembership(row.get(participant.membershipType));
                     par.setMunicipalityVerified(Boolean.TRUE.equals(row.get(QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives.verified)));
+                    par.setShowName(row.get(participant.showName));
                     if (row.get(QMunicipality.municipality.id) != null) {
                         par.setHomeMunicipality(Maybe.of(Mappings.parseMunicipality(row)));
                     }
@@ -112,19 +112,18 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public void confirmParticipation(Long participantId, String confirmationCode) {
+    public NormalParticipant confirmParticipation(Long participantId, String confirmationCode) {
 
-        Tuple columns = queryFactory.from(QParticipant.participant)
+         NormalParticipant participant = queryFactory.from(QParticipant.participant)
                 .where(QParticipant.participant.id.eq(participantId))
                 .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
-                .singleResult(QParticipant.participant.showName, QParticipant.participant.municipalityInitiativeId);
+                 .leftJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
+                 .leftJoin(QParticipant.participant._verifiedUserNormalInitiativesParticipantId, QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives)
+                .singleResult(normalParticipantMapping);
 
-        if (columns == null || columns.size() == 0) {
+        if (participant == null) {
             throw new InvalidParticipationConfirmationException("Participant:" + participantId + ", code:" + confirmationCode);
         }
-
-        Boolean showName = columns.get(QParticipant.participant.showName);
-        long initiativeIdByParticipant = columns.get(QParticipant.participant.municipalityInitiativeId);
 
         assertSingleAffection(queryFactory.update(QParticipant.participant)
                 .setNull(QParticipant.participant.confirmationCode)
@@ -132,21 +131,30 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
                 .execute());
 
-        if (Boolean.TRUE.equals(showName)) {
-            assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                    .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic,
-                            QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1))
-                    .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
-                            QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
-                    .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeIdByParticipant))
-                    .execute());
-        } else {
-            assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                    .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
-                            QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
-                    .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeIdByParticipant))
-                    .execute());
+        return participant;
+    }
+
+    @Override
+    public void increaseParticipantCountFor(Long initiativeId, boolean showName, boolean citizen) {
+
+        SQLUpdateClause updateClause = queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
+                        QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId));
+
+        if (showName) {
+            updateClause.set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic,
+                    QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1));
+
+
         }
+
+        if (citizen) {
+            // updateClause.set(QMunicipalityInitiative.municipalityInitiative.participantCountCitizen)
+        }
+
+        assertSingleAffection(updateClause.execute());
+
     }
 
     @Override
@@ -344,6 +352,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 ));
                 participant.setMembership(row.get(ParticipateUnionRow.membership_type));
                 participant.setMunicipalityVerified(row.get(ParticipateUnionRow.verified));
+                participant.setShowName(row.get(ParticipateUnionRow.show_name));
                 participant.setParticipateDate(row.get(ParticipateUnionRow.participate_date));
                 return participant;
             }

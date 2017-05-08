@@ -109,14 +109,14 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(defaultInitiative, HELSINKI_ID)
                 .withParticipantName(publicName)
-                .withPublicName(true));
+                .withShowName(true));
 
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(defaultInitiative, HELSINKI_ID)
                 .withParticipantName(privateName)
-                .withPublicName(false));
+                .withShowName(false));
 
         testHelper.createUnconfirmedParticipant(new TestHelper.AuthorDraft(defaultInitiative, HELSINKI_ID)
-                .withPublicName(true)
+                .withShowName(true)
                 .withParticipantName(notAcceptedName), "someConfirmationCode");
 
         open(urls.participantList(defaultInitiative));
@@ -349,11 +349,11 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, HELSINKI_ID)
                 .withParticipantName(publicName)
-                .withPublicName(true));
+                .withShowName(true));
 
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, HELSINKI_ID)
                 .withParticipantName(privateName)
-                .withPublicName(false));
+                .withShowName(false));
 
         open(urls.graphIFrame(initiativeId));
 

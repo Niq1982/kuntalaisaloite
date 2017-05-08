@@ -374,7 +374,7 @@ public class TestHelper {
                 .execute();
 
         queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
-                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
+                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.showName)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
                 .set(QVerifiedParticipant.verifiedParticipant.municipalityId, authorDraft.participantMunicipality)
@@ -410,7 +410,7 @@ public class TestHelper {
         SQLUpdateClause updateClause = queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1));
 
-        if (authorDraft.publicName) {
+        if (authorDraft.showName) {
             updateClause.set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1));
         }
 
@@ -430,7 +430,7 @@ public class TestHelper {
                 .executeWithKey(QVerifiedUser.verifiedUser.id);
 
         queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
-                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
+                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.showName)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
@@ -454,7 +454,7 @@ public class TestHelper {
                 .executeWithKey(QVerifiedUser.verifiedUser.id);
 
         Long id = queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
-                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
+                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.showName)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
@@ -472,7 +472,7 @@ public class TestHelper {
     public Long createVerifiedParticipantWithVerifiedUserId(AuthorDraft authorDraft) {
 
         Long id = queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
-                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
+                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.showName)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, authorDraft.verifiedUserId.getValue())
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
@@ -517,7 +517,7 @@ public class TestHelper {
                 .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)
                 .set(QParticipant.participant.municipalityInitiativeId, authorDraft.initiativeId)
                 .set(QParticipant.participant.name, authorDraft.participantName)
-                .set(QParticipant.participant.showName, authorDraft.publicName)
+                .set(QParticipant.participant.showName, authorDraft.showName)
                 .set(QParticipant.participant.email, authorDraft.participantEmail)
                 .set(QParticipant.participant.membershipType, authorDraft.municipalityMembership)
                 .executeWithKey(QParticipant.participant.id);
@@ -532,7 +532,7 @@ public class TestHelper {
                 .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)
                 .set(QParticipant.participant.municipalityInitiativeId, authorDraft.initiativeId)
                 .set(QParticipant.participant.name, authorDraft.participantName)
-                .set(QParticipant.participant.showName, authorDraft.publicName)
+                .set(QParticipant.participant.showName, authorDraft.showName)
                 .set(QParticipant.participant.email, authorDraft.participantEmail)
                 .set(QParticipant.participant.membershipType, authorDraft.municipalityMembership)
                 .set(QParticipant.participant.participateTime, date);
@@ -832,7 +832,7 @@ public class TestHelper {
         public Membership municipalityMembership = Membership.none;
         public String participantName = DEFAULT_PARTICIPANT_NAME;
         public String participantEmail = DEFAULT_PARTICIPANT_EMAIL;
-        public boolean publicName = DEFAULT_PUBLIC_NAME;
+        public boolean showName = DEFAULT_PUBLIC_NAME;
         public String authorAddress = DEFAULT_AUTHOR_ADDRESS;
         public String authorPhone = DEFAULT_AUTHOR_PHONE;
         public Maybe<String> userSsn = Maybe.absent();
@@ -881,8 +881,8 @@ public class TestHelper {
             return this;
         }
 
-        public AuthorDraft withPublicName(boolean publicName) {
-            this.publicName = publicName;
+        public AuthorDraft withShowName(boolean showName) {
+            this.showName = showName;
             return this;
         }
 
