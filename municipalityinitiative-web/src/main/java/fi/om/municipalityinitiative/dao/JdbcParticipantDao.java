@@ -1,37 +1,31 @@
 package fi.om.municipalityinitiative.dao;
 
 import com.google.common.collect.Lists;
-import com.mysema.query.SearchResults;
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.SQLSubQuery;
 import com.mysema.query.sql.dml.SQLUpdateClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
-import com.mysema.query.support.CollectionAnyVisitor;
 import com.mysema.query.support.Expressions;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.Path;
 import com.mysema.query.types.expr.DslExpression;
-import com.mysema.query.types.expr.SimpleExpression;
-import com.mysema.query.types.expr.Wildcard;
+import com.mysema.query.types.expr.StringExpression;
+import com.mysema.query.types.path.*;
 import com.mysema.query.types.query.ListSubQuery;
-import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.service.NormalParticipant;
-import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
-import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
-import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
+import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationException;
 import fi.om.municipalityinitiative.service.id.NormalParticipantId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
-import org.postgresql.core.v2.QueryExecutorImpl;
+import org.joda.time.LocalDate;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Member;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static fi.om.municipalityinitiative.dao.Mappings.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
@@ -268,91 +262,118 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public List<ParticipantListInfo> findAsd(Long initiativeId) {
+    public List<Participant> findAllParticipants(Long initiativeId, boolean requireShowName) {
 
-        ListSubQuery verified = new SQLSubQuery()
+        ListSubQuery verifiedParticipants = new SQLSubQuery()
                 .from(QVerifiedParticipant.verifiedParticipant)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantVerifiedUserFk, QVerifiedUser.verifiedUser)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
                 .leftJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantMunicipalityIdFk, QMunicipality.municipality)
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
-                .list(QVerifiedUser.verifiedUser.id.as("id"),
-                        QVerifiedUser.verifiedUser.id.isNotNull().as("verified_user"),
-                        QVerifiedUser.verifiedUser.name.as("name"),
-                        QVerifiedParticipant.verifiedParticipant.showName.as("show_name"),
-                        QVerifiedParticipant.verifiedParticipant.verified.as("verified"),
-                        QVerifiedParticipant.verifiedParticipant.membershipType.as("membership_type"),
-                        QVerifiedParticipant.verifiedParticipant.participateTime.as("participate_date"),
-                        QMunicipality.municipality.id.as("municipality_id"),
-                        QMunicipality.municipality.name.as("municipality_name_fi"),
-                        QMunicipality.municipality.nameSv.as("municipality_name_sv"));
+                .list(QVerifiedUser.verifiedUser.id.as(ParticipateUnionRow.id.getMetadata().getName()),
+                        QVerifiedUser.verifiedUser.id.isNotNull().as(ParticipateUnionRow.verified_user.getMetadata().getName()),
+                        QVerifiedUser.verifiedUser.name.as(ParticipateUnionRow.name.getMetadata().getName()),
+                        QVerifiedUser.verifiedUser.email.as(ParticipateUnionRow.email.getMetadata().getName()), // XXX: This might be null for verified participants...
+                        QVerifiedParticipant.verifiedParticipant.showName.as(ParticipateUnionRow.show_name.getMetadata().getName()),
+                        QVerifiedParticipant.verifiedParticipant.verified.as(ParticipateUnionRow.verified.getMetadata().getName()),
+                        QVerifiedParticipant.verifiedParticipant.membershipType.as(ParticipateUnionRow.membership_type.getMetadata().getName()),
+                        QVerifiedParticipant.verifiedParticipant.participateTime.as(ParticipateUnionRow.participate_date.getMetadata().getName()),
+                        QMunicipality.municipality.id.as(ParticipateUnionRow.municipality_id.getMetadata().getName()),
+                        QMunicipality.municipality.name.as(ParticipateUnionRow.municipality_name_fi.getMetadata().getName()),
+                        QMunicipality.municipality.nameSv.as(ParticipateUnionRow.municipality_name_sv.getMetadata().getName()));
 
-        ListSubQuery normal = new SQLSubQuery().from(QVerifiedParticipant.verifiedParticipant)
+        ListSubQuery normalParticipants = new SQLSubQuery().from(QVerifiedParticipant.verifiedParticipant)
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .where(participant.confirmationCode.isNull())
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
                 .leftJoin(participant._verifiedUserNormalInitiativesParticipantId, QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
-                .list(participant.id.as("id"),
-                        participant.id.isNull().as("verified_user"),
-                        participant.name.as("name"),
-                        participant.showName.as("show_name"),
-                        participant.id.isNull().as("verified"),
-                        participant.membershipType.as("membership_type"),
-                        participant.participateTime.as("participate_date"),
-                        QMunicipality.municipality.id.as("municipality_id"),
-                        QMunicipality.municipality.name.as("municipality_name_fi"),
-                        QMunicipality.municipality.nameSv.as("municipality_name_sv"));
-
-        // new ConstantImpl(true);
-
+                .list(participant.id.as(ParticipateUnionRow.id.getMetadata().getName()),
+                        participant.id.isNull().as(ParticipateUnionRow.verified_user.getMetadata().getName()),
+                        participant.name.as(ParticipateUnionRow.name.getMetadata().getName()),
+                        participant.email.as(ParticipateUnionRow.email.getMetadata().getName()),
+                        participant.showName.as(ParticipateUnionRow.show_name.getMetadata().getName()),
+                        participant.id.isNull().as(ParticipateUnionRow.verified.getMetadata().getName()),
+                        participant.membershipType.as(ParticipateUnionRow.membership_type.getMetadata().getName()),
+                        participant.participateTime.as(ParticipateUnionRow.participate_date.getMetadata().getName()),
+                        QMunicipality.municipality.id.as(ParticipateUnionRow.municipality_id.getMetadata().getName()),
+                        QMunicipality.municipality.name.as(ParticipateUnionRow.municipality_name_fi.getMetadata().getName()),
+                        QMunicipality.municipality.nameSv.as(ParticipateUnionRow.municipality_name_sv.getMetadata().getName()));
 
 
-        System.out.println("-----");
-//        List list1 = queryFactory.query().union(normal, verified).list();
-//
-//        list1
-//                .stream().map(a -> {
-//
-//            System.out.println(a);
-//            return a;
-//
-//        })
-//                .collect(Collectors.toList());
-
-        System.out.println("-----");
-
-
-        Path innerUnion = Expressions.path(Void.class, "innernamequery");
-        DslExpression unionExpression = new SQLSubQuery().union(normal, verified).as(innerUnion);
-//
-        SQLSubQuery subQuery = new SQLSubQuery().from(unionExpression).limit(2);
-
-        //List<Long> list = queryFactory.from(unionExpression).limit(2).list(asdMapping());
-
-        // List<Tuple> list = queryFactory.from(unionExpression).list();
-
-        List<Object[]> wuut = queryFactory.from(unionExpression).list(Wildcard.all);
-
-        System.out.println(wuut.size());
-
-
-        return Lists.newArrayList();
-
-
-    }
-
-    private MappingProjection<Long> asdMapping() {
-        return new MappingProjection<Long>(Long.class, Wildcard.all) {
+        DslExpression unionExpression = new SQLSubQuery().union(normalParticipants, verifiedParticipants).as(ParticipateUnionRow.path);
+        Expression<Participant> mapping = new MappingProjection<Participant>(Participant.class,
+                ParticipateUnionRow.id,
+                ParticipateUnionRow.name,
+                ParticipateUnionRow.email,
+                ParticipateUnionRow.show_name,
+                ParticipateUnionRow.verified,
+                ParticipateUnionRow.verified_user,
+                ParticipateUnionRow.participate_date,
+                ParticipateUnionRow.membership_type,
+                ParticipateUnionRow.municipality_id,
+                ParticipateUnionRow.municipality_name_fi,
+                ParticipateUnionRow.municipality_name_sv) {
             @Override
-            protected Long map(Tuple row) {
-                System.out.println("got " + row.getClass());
-                System.out.println(row);
-                return null;
+            protected Participant map(Tuple row) {
+
+                Participant participant;
+
+                if (row.get(ParticipateUnionRow.verified_user)) {
+                    participant = new VerifiedParticipant() {{
+                        setId(new VerifiedUserId(row.get(ParticipateUnionRow.id)));
+                    }};
+
+                }
+                else {
+                    participant = new NormalParticipant() {{
+                        setId(new NormalParticipantId(row.get(ParticipateUnionRow.id)));
+                    }};
+                }
+
+                participant.setName(row.get(ParticipateUnionRow.name));
+                participant.setEmail(row.get(ParticipateUnionRow.email));
+                participant.setHomeMunicipality(Maybe.fromNullable(
+                         (row.get(ParticipateUnionRow.municipality_id) != null)
+                            ? new Municipality(row.get(ParticipateUnionRow.municipality_id),
+                                 row.get(ParticipateUnionRow.municipality_name_fi),
+                                 row.get(ParticipateUnionRow.municipality_name_sv),
+                                 false)
+                                 : null
+                ));
+                participant.setMembership(row.get(ParticipateUnionRow.membership_type));
+                participant.setMunicipalityVerified(row.get(ParticipateUnionRow.verified));
+                participant.setParticipateDate(row.get(ParticipateUnionRow.participate_date));
+                return participant;
             }
         };
+        // XXX: This ordering does not use any indices. Ordering by date only is not enough, because the field does not have time attributes :E
+        List<Participant> list = queryFactory.from(unionExpression).orderBy(ParticipateUnionRow.participate_date.desc(), ParticipateUnionRow.name.asc()).list(mapping);
+
+
+        return list;
+
+
     }
+
+    private static class ParticipateUnionRow {
+
+        public static final Path path = Expressions.path(Void.class, "innernamequery");
+
+        public static final NumberPath<Long> id = new NumberPath<>(Long.class, path, "id");
+        public static final BooleanPath verified_user = new BooleanPath(path, "verified_user");
+        public static final StringPath name = new StringPath(path, "name");
+        public static final BooleanPath show_name = new BooleanPath(path, "show_name");
+        public static final BooleanPath verified = new BooleanPath(path, "verified");
+        public static final EnumPath<Membership> membership_type = new EnumPath<>(Membership.class, path, "membership_type");
+        public static final DatePath<LocalDate> participate_date = new DatePath<>(LocalDate.class, path, "participate_date");
+        public static final NumberPath<Long> municipality_id = new NumberPath<>(Long.class, path, "municipality_id");
+        public static final StringPath municipality_name_fi = new StringPath(path, "municipality_name_fi");
+        public static final StringPath municipality_name_sv = new StringPath(path, "municipality_name_sv");
+        public static final StringPath email = new StringPath(path, "email");
+    }
+
 
     @Override
     public Maybe<Long> getInitiativeIdByParticipant(Long participantId) {

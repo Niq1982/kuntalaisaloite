@@ -14,6 +14,8 @@ public abstract class Participant<E extends Id> {
     private Membership membership;
     private Maybe<Municipality> homeMunicipality;
 
+    public abstract boolean isVerified();
+
     public Membership getMembership() {
         return membership;
     }

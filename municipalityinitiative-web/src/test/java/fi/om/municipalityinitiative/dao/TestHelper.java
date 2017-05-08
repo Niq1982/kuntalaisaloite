@@ -378,7 +378,8 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
                 .set(QVerifiedParticipant.verifiedParticipant.municipalityId, authorDraft.participantMunicipality)
-                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
+                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
+                .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
                 .execute();
 
         increaseParticipantCount(authorDraft);
@@ -432,7 +433,8 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
-                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
+                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
+                .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
                 .set(QVerifiedParticipant.verifiedParticipant.municipalityId, authorDraft.participantMunicipality)
                 .execute();
 
@@ -455,7 +457,8 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
-                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
+                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
+                .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
                 .set(QVerifiedParticipant.verifiedParticipant.participateTime, date)
                 .execute();
 
@@ -472,7 +475,8 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, authorDraft.verifiedUserId.getValue())
-                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
+                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
+                .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
                 .execute();
 
         increaseParticipantCount(authorDraft);
@@ -824,6 +828,7 @@ public class TestHelper {
 
         public final Maybe<InitiativeDraft> initiativeDraftMaybe;
         public Long participantMunicipality;
+        public boolean verifiedParticipantMunicipalityVerified = true;
         public Membership municipalityMembership = Membership.none;
         public String participantName = DEFAULT_PARTICIPANT_NAME;
         public String participantEmail = DEFAULT_PARTICIPANT_EMAIL;
@@ -847,6 +852,11 @@ public class TestHelper {
 
         public AuthorDraft withMunicipalityMembership(Membership municipalityMembership) {
             this.municipalityMembership = municipalityMembership;
+            return this;
+        }
+
+        public AuthorDraft withVerifiedParticipantMunicipalityVerified(boolean isVerified) {
+            this.verifiedParticipantMunicipalityVerified = isVerified;
             return this;
         }
 

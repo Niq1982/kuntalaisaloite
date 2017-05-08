@@ -1,9 +1,9 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
+import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
-import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
@@ -43,5 +43,5 @@ public interface ParticipantDao {
 
     void addVerifiedParticipant(Long initiativeId, VerifiedUserId verifiedUserId, boolean showName, boolean present, Long aLong, Membership municipalMembership);
 
-    List<ParticipantListInfo> findAsd(Long initiativeId);
+    List<Participant> findAllParticipants(Long initiativeId, boolean requireShowName);
 }

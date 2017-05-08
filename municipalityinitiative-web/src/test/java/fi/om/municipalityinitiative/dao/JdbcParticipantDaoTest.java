@@ -1,10 +1,8 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
-import fi.om.municipalityinitiative.dto.service.NormalParticipant;
-import fi.om.municipalityinitiative.dto.service.Participant;
-import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
-import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
+import fi.om.municipalityinitiative.dto.service.*;
+import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -24,8 +22,11 @@ import java.util.Collection;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import static fi.om.municipalityinitiative.util.Membership.community;
+import static fi.om.municipalityinitiative.util.Membership.none;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static fi.om.municipalityinitiative.web.Urls.MAX_PARTICIPANT_LIST_LIMIT;
+import static fi.om.municipalityinitiative.web.Urls.MUNICIPALITIES;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -87,7 +88,7 @@ public class JdbcParticipantDaoTest {
     }
 
     @Test
-    public void getPublicParticipants_returns_public_names() {
+    public void getNormalPublicParticipants_returns_public_names() {
 
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().withPublicName(false).toInitiativeDraft());
 
@@ -104,7 +105,7 @@ public class JdbcParticipantDaoTest {
     }
 
     @Test
-    public void getAllParticipants_returns_public_and_private_names() {
+    public void getAllNormalParticipants_returns_public_and_private_names() {
         Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
         createConfirmedParticipant(initiativeId, false, "no right no public");
@@ -115,6 +116,80 @@ public class JdbcParticipantDaoTest {
         List<NormalParticipant> participants = participantDao.findNormalAllParticipants(initiativeId, 0, MAX_PARTICIPANT_LIST_LIMIT);
 
         assertThat(participants, hasSize(5)); // Four and the creator
+
+    }
+
+    @Test
+    public void getAllParticipants_returns_verified_and_normal_participants() {
+
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId)
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE));
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, otherMunicipalityId)
+                .withMunicipalityMembership(Membership.community)
+                .withParticipantEmail("par1@example.com")
+                .withParticipantName("2 Normal community"));
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
+                .withMunicipalityMembership(none)
+                .withParticipantEmail("par2@example.com")
+                .withParticipantName("1 Normal inhabitant"));
+
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, otherMunicipalityId)
+                .withMunicipalityMembership(Membership.community)
+                .withParticipantEmail("ver1@example.com")
+                .withVerifiedParticipantMunicipalityVerified(false)
+                .withParticipantName("4 Non-verified"));
+
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
+                .withParticipantEmail("ver2@example.com")
+                .withVerifiedParticipantMunicipalityVerified(true)
+                .withParticipantName("3 Verified"));
+
+
+        List<Participant> allParticipants = participantDao.findAllParticipants(initiativeId, false);
+
+        allParticipants.stream().forEach(p -> System.out.println(p.getName()));
+
+        assertThat(allParticipants, hasSize(4));
+
+        Participant normalInhabitant = allParticipants.get(0);
+        Participant normalCommunity = allParticipants.get(1);
+        Participant verified = allParticipants.get(2);
+        Participant verifiedNonVerifiedMunicipality = allParticipants.get(3);
+
+        assertThat(normalInhabitant.getEmail(), is("par2@example.com"));
+        assertThat(normalInhabitant.isVerified(), is(false));
+        assertThat(normalInhabitant.getName(), is("1 Normal inhabitant"));
+        assertThat(normalInhabitant.getMembership(), is(none));
+        assertThat(normalInhabitant.getParticipateDate(), is(LocalDate.now()));
+        assertThat(normalInhabitant.isMunicipalityVerified(), is(false));
+        assertThat(((Municipality) normalInhabitant.getHomeMunicipality().get()).getId(), is(testMunicipalityId));
+
+        assertThat(normalCommunity.getEmail(), is("par1@example.com"));
+        assertThat(normalCommunity.isVerified(), is(false));
+        assertThat(normalCommunity.getName(), is("2 Normal community"));
+        assertThat(normalCommunity.getMembership(), is(community));
+        assertThat(normalCommunity.getParticipateDate(), is(LocalDate.now()));
+        assertThat(normalCommunity.isMunicipalityVerified(), is(false));
+        assertThat(((Municipality) normalCommunity.getHomeMunicipality().get()).getId(), is(otherMunicipalityId));
+
+        assertThat(verified.getEmail(), is("ver2@example.com"));
+        assertThat(verified.isVerified(), is(true));
+        assertThat(verified.getName(), is("3 Verified"));
+        assertThat(verified.getMembership(), is(none));
+        assertThat(verified.getParticipateDate(), is(LocalDate.now()));
+        assertThat(verified.isMunicipalityVerified(), is(true));
+        assertThat(((Municipality) verified.getHomeMunicipality().get()).getId(), is(testMunicipalityId));
+
+        assertThat(verifiedNonVerifiedMunicipality.getEmail(), is("ver1@example.com"));
+        assertThat(verifiedNonVerifiedMunicipality.isVerified(), is(true));
+        assertThat(verifiedNonVerifiedMunicipality.getName(), is("4 Non-verified"));
+        assertThat(verifiedNonVerifiedMunicipality.getMembership(), is(community));
+        assertThat(verifiedNonVerifiedMunicipality.getParticipateDate(), is(LocalDate.now()));
+        assertThat(verifiedNonVerifiedMunicipality.isMunicipalityVerified(), is(false));
+        assertThat(((Municipality) verifiedNonVerifiedMunicipality.getHomeMunicipality().get()).getId(), is(otherMunicipalityId));
 
     }
 

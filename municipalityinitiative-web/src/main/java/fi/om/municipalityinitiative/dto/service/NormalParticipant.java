@@ -6,5 +6,8 @@ import fi.om.municipalityinitiative.util.Membership;
 
 public class NormalParticipant extends Participant<NormalParticipantId>{
 
-
+    @Override
+    public boolean isVerified() {
+        return false;
+    }
 }
