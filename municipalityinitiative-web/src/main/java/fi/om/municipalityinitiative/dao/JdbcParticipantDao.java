@@ -428,19 +428,6 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, municipalMembership == null ? Membership.none : municipalMembership)
                 .execute());
 
-        if (showName) {
-            assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                    .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
-                    .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1))
-                    .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId)).execute());
-        }
-        else {
-            assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                    .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
-                    .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
-                    .execute());
-        }
-
     }
 
     @Override

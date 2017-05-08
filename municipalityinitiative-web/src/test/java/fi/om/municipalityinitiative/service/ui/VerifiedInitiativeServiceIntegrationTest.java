@@ -546,6 +546,34 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     }
 
     @Test
+    public void participating_increases_participant_count_for_public_names_if_showName_is_true() {
+
+        Long initiativeId = createVerifiedCollaborative();
+        precondition(testHelper.getInitiative(initiativeId).getParticipantCount(), is(0));
+
+        ParticipantUICreateDto createDto = participantCreateDto();
+        createDto.setShowName(true);
+        service.createParticipant(createDto, initiativeId, verifiedLoginUserHolder);
+
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCountPublic(), is(1));
+    }
+
+    @Test
+    public void participating_does_not_increase_participant_count_for_public_names_if_showName_is_false() {
+
+        Long initiativeId = createVerifiedCollaborative();
+        precondition(testHelper.getInitiative(initiativeId).getParticipantCount(), is(0));
+
+        ParticipantUICreateDto createDto = participantCreateDto();
+        createDto.setShowName(false);
+        service.createParticipant(createDto, initiativeId, verifiedLoginUserHolder);
+
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCountPublic(), is(0));
+    }
+
+    @Test
     public void participating_if_already_participated_throws_exception() {
         Long initiativeId = createVerifiedCollaborative();
         service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder);
