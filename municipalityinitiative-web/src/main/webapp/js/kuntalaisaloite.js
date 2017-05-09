@@ -257,6 +257,10 @@ $(document).ready(function () {
 		var btnClicked, firstBtnInForm, $loader, $submitInfo, $submitWarning;
 		btnClicked = $(this);
 
+		if (btnClicked.attr('class').indexOf('email-auth-btn') > 0) {
+			$(".prepare-auth").addClass('hide');
+			return;
+		}
 		// Disable in some cases
 		if (!btnClicked.hasClass('disable-dbl-click-check')){
 			// We may have more than one submit button. For example in create.
@@ -507,6 +511,9 @@ var initiativeType = (function() {
 	},
 
 	disableVerifiable = function(disable){
+		if($("#form-preparation").attr('data-verified') === "false") {
+			disable = true;
+		}
 		if (disable) {
 			$('.initiative-types').append(mask);
 			verifiable.find('.action').addClass(hideClass);
@@ -568,12 +575,13 @@ var initiativeType = (function() {
 			resetTypes(true);
 			setSelected(thisObj);
 			toggleSubmitBlock();
+            municipalitySelection.preventContinuing(false, 'mask-send', $('.toggle-disable-send'));
 		} else {
 			resetTypes(true);
 			emailBlock.hide();
 			vetumaBlock.hide();
+            municipalitySelection.preventContinuing(true, 'mask-send', $('.toggle-disable-send'));
 		}
-
 		return false;
 	});
 
@@ -638,6 +646,17 @@ var municipalitySelection = (function() {
 			}
 		}
 	},
+
+	equalVerifiedMunicipalities = function () {
+        var select			= $('#municipality'),
+            verifiedHome	= $('#verifiedHomeMunicipality');
+
+        if ( verifiedHome.length > 0 && select.val() == verifiedHome.data('initiative-municipality') ) {
+        	return true;
+		}
+		return false;
+	},
+
 	slideOptions = {
 		duration: speedFast,
 		easing: 'easeOutExpo'
@@ -649,6 +668,9 @@ var municipalitySelection = (function() {
 		if(!isIE7){
 			$(".chzn-select").loadChosen();
 		}
+
+        preventContinuing(true, 'mask', $('.toggle-disable'));
+        preventContinuing(true, 'mask-send', $('.toggle-disable-send'));
 
 		updateSelectedMunicipality();
 
@@ -719,21 +741,20 @@ var municipalitySelection = (function() {
 	};
 
 	// Disable form
-	function preventContinuing(prevent){
+	function preventContinuing(prevent, maskClass, toggleDisable) {
 		var authorEmail			= $('#participantEmail'),
-			toggleDisable		= $('.toggle-disable'),
 			toggleDisableInput	= toggleDisable.find('input, select, textarea, button'),
-			mask				= $('.mask'),
-			btnParticipate		= $("button#participate");
+			btnParticipate		= $("button#participate"),
+            mask 				= $("." + maskClass);
 
 		//btnParticipate.disableButton(prevent); // use general form validation
-
 		mask.remove();
 
 		if (prevent) {
 			toggleDisableInput.attr('disabled','disabled');
 			toggleDisable.addClass('disabled');
-			toggleDisable.prepend('<div class="mask" />');
+			var elem = "<div class='" + maskClass + "'/>";
+			toggleDisable.prepend(elem);
 		} else {
 			toggleDisableInput.removeAttr('disabled');
 			toggleDisable.removeClass('disabled');
@@ -752,18 +773,20 @@ var municipalitySelection = (function() {
 
 		if( equalMunicipalitys() || ((typeof userMunicipalityMatchesInitiativeMunicipality !== 'undefined') && userMunicipalityMatchesInitiativeMunicipality)){
 			municipalityNotEqual.stop(false,true).slideUp(slideOptions);
-			preventContinuing(false);
+			preventContinuing(false, 'mask', $('.toggle-disable'));
 			disableSubmit(false);
 			showMembership(false);
 		} else {
 			municipalityNotEqual.stop(false,true).slideDown(slideOptions);
 			if (!validationErrors){
-				preventContinuing(true);
+				preventContinuing(true, 'mask', $('.toggle-disable'));
 			}
 			if (Init.isVerifiedInitiative()) {
 			  disableSubmit(true);
 			}
-			showMembership(true);
+			if( $("input[value=other-municipality]").prop('checked')) {
+                showMembership(true);
+			}
 		}
 	};
 
@@ -808,7 +831,7 @@ var municipalitySelection = (function() {
 			var disable = isNotMember();
 
 			//btn.disableButton( disable ); // use general form validation
-			preventContinuing( disable );
+			preventContinuing( disable, 'mask', $('.toggle-disable') );
 			warningNotMember( disable );
 		});
 	};
@@ -820,15 +843,20 @@ var municipalitySelection = (function() {
 			checkedMembership			= $("input[name=municipalMembership]:checked"),
 			radioMunicipalMembership	= $("input[name=municipalMembership]"),
 			participationCriterion 		= $("#participation-criterion"),
+            verifiedHome				= $('#verifiedHomeMunicipality');
 			equalMun					= true;
-
 		// Update home municipality automatically
 		if (!isHomeMunicipality(thisSelect)){
 			updateHomeMunicipality(thisSelect);
 			homeMunicipalitySelect.data("initiative-municipality",municipalitySelect.val());
-			participationCriterion.attr('class', participationCriterion.attr('class').replace("hide", "show"));
 		} else {
 			homeMunicipalitySelect.addClass("updated");
+		}
+
+		if (verifiedHome.length == 0) {
+            participationCriterion.attr('class', participationCriterion.attr('class').replace("hide", "show"));
+		} else if (participationCriterion.attr('class').indexOf("show") >= 0 && !equalMunicipalitys()) {
+            participationCriterion.attr('class', participationCriterion.attr('class').replace("show", "hide"));
 		}
 
 		equalMun = equalMunicipalitys();
@@ -841,9 +869,14 @@ var municipalitySelection = (function() {
 		toggleMembershipRadios(thisSelect);
 		warningNotMember(false);
 
+		var sameMunicipality = $("input[value=same-municipality]").prop('checked');
+		var otherMunicipality = $("input[value=other-municipality]").prop('checked');
+
+		var disableContinuing = (!sameMunicipality && !otherMunicipality) || !equalMun;
+
 		// Disable / enable proceeding to the next form steps
 		if ( checkedMembership.length === 0){
-			preventContinuing(!equalMun);
+			preventContinuing(disableContinuing, 'mask', $('.toggle-disable'));
 		} else {
 			municipalMembershipRadios.removeAttr('checked');
 		}
@@ -852,14 +885,31 @@ var municipalitySelection = (function() {
 	$('#participation-criterion').live('change', function() {
 		var otherMunicipalitySelect = $("input[value=other-municipality]"),
 			sameMunicipalitySelect = $("input[value=same-municipality]"),
-			homeMunicipalitySelect = $("#home-municipality-select")
+			homeMunicipalitySelectDiv = $("#home-municipality-select");
 
 		if (otherMunicipalitySelect && otherMunicipalitySelect.prop('checked')) {
-            homeMunicipalitySelect.attr('class', homeMunicipalitySelect.attr('class').replace("hide", "show"));
+            homeMunicipalitySelectDiv.attr('class', homeMunicipalitySelectDiv.attr('class').replace("hide", "show"));
+            initiativeType.disableVerifiable(true);
 		}
 		if (sameMunicipalitySelect && sameMunicipalitySelect.prop('checked')) {
-            homeMunicipalitySelect.attr('class', homeMunicipalitySelect.attr('class').replace("show", "hide"));
+            homeMunicipalitySelectDiv.attr('class', homeMunicipalitySelectDiv.attr('class').replace("show", "hide"));
+            homeMunicipalitySelect
+                .val($("#municipality").val())
+                .trigger("liszt:updated");
+            toggleMembershipRadios();
+            equalMun = equalMunicipalitys();
+            initiativeType.disableVerifiable(!equalMun);
 		}
+
+	});
+
+	$('.email-auth-btn').live('click', function() {
+		var prepareContent = $('.prepare-content');
+
+		if( prepareContent && prepareContent.attr('class').indexOf('hide') > 0 ) {
+			prepareContent.attr('class', prepareContent.attr('class').replace('hide', 'show'));
+		}
+        initiativeType.disableVerifiable(true);
 	});
 
 	// Initialize form state on page load
@@ -868,7 +918,8 @@ var municipalitySelection = (function() {
 	return {
 		// Return Init-function for the modal
 		init: init,
-		equalMunicipalitys: equalMunicipalitys
+		equalMunicipalitys: equalMunicipalitys,
+        preventContinuing: preventContinuing
     };
 
 }());

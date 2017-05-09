@@ -27,13 +27,15 @@
  * @param type is the type of the button: next, save-and-send, save
  * @param nextStep is the number of the following block
  -->
-<#macro buttons type="" nextStep="0">
+<#macro buttons type="" nextStep="0" class="">
     <#if type == "next">
-        <button type="submit" id="action-send-confirm" name="action-send-confirm" class="small-button" value="true" ><span class="small-icon next"><@u.message "action.prepare.next" /></span></button>
+        <button type="submit" id="action-send-confirm" name="action-send-confirm" class="${class}" value="true" ><span class="small-icon next"><@u.message "action.prepare.next" /></span></button>
     <#elseif type == "verify">
-        <button value="true" class="small-button" name="action-send-verify" id="action-send-confirm" type="submit"><span class="small-icon ${user.isVerifiedUser()?string("save-and-send","next")}"><@u.message "action.prepare."+user.isVerifiedUser()?string("create","authenticate") /></span></button>
+        <button value="true" class="${class}" name="action-send-verify" id="action-send-confirm" type="submit"><span class="small-icon ${user.isVerifiedUser()?string("save-and-send","next")}"><@u.message "action.prepare."+user.isVerifiedUser()?string("create","authenticate") /></span></button>
     <#elseif type == "save">
-        <button type="submit" id="action-send-confirm" name="action-send-confirm" class="small-button" value="true" ><span class="small-icon save-and-send"><@u.message "action.prepare.send" /></span></button>
+        <button type="submit" id="action-send-confirm" name="action-send-confirm" class="${class}" value="true" ><span class="small-icon save-and-send"><@u.message "action.prepare.send" /></span></button>
+    <#elseif type == "continue">
+        <button type="button" id="action-send-confirm" name="action-send-confirm" class="${class}" value="true" ><span class="small-icon next"><@u.message "action.prepare.next" /></span></button>
     </#if>
 </#macro>
 
@@ -64,7 +66,7 @@
     </div>
 
     <div class="input-block-content hide" id="participation-criterion">
-        <input type="radio" name="participation-criterion" value="same-municipality" checked/><label><@u.message "initiative.sameMunicipality" /></label>
+        <input type="radio" name="participation-criterion" value="same-municipality" /><label><@u.message "initiative.sameMunicipality" /></label>
         <input type="radio" name="participation-criterion" value="other-municipality" /><label><@u.message "initiative.otherMunicipality" /></label>
     </div>
 
@@ -143,7 +145,6 @@
         <@f.showError />
 
         <@initiativeTypeBlock type=InitiativeType.UNDEFINED enabled=true/>
-        <@initiativeTypeBlock type=InitiativeType.COLLABORATIVE_COUNCIL enabled=enableVerifiedInitiatives />
         <@initiativeTypeBlock type=InitiativeType.COLLABORATIVE_CITIZEN enabled=enableVerifiedInitiatives />
     </div>
 </#macro>
@@ -164,10 +165,8 @@
     <#if type == InitiativeType.COLLABORATIVE_COUNCIL || type == InitiativeType.COLLABORATIVE_CITIZEN>
         <#assign verifiable=true />
     </#if>
-    <#if type == InitiativeType.COLLABORATIVE_COUNCIL>
+    <#if type == InitiativeType.COLLABORATIVE_CITIZEN>
         <#assign typeNumber = 2 />
-    <#elseif type == InitiativeType.COLLABORATIVE_CITIZEN>
-        <#assign typeNumber = 3 />
     <#else>
         <#assign typeNumber = 1 />
     </#if>

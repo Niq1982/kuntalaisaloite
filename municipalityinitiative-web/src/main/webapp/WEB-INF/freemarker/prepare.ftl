@@ -33,26 +33,14 @@
     </noscript>
 
     <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
-    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-preparation" class="js-validate <#if hasErrors>has-errors</#if>" novalidate>
+    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-preparation" class="js-validate <#if hasErrors>has-errors</#if>" novalidate data-verified="${user.isVerifiedUser()?c}">
 
         <@f.securityFilters />
         <@f.notTooFastField initiative />
 
         <div class="form-block-container">
-            <div class="input-block cf" id="prepare-municipality-selection">
-                <@edit.municipalityBlock municipality=currentMunicipality/>
-            </div>
-        </div>
-
-        <div class="form-block-container toggle-disable">
-            <div class="input-block no-sidebar cf">
-                <@edit.chooseInitiativeType />
-            </div>
-        </div>
-
-        <div class="form-block-container">
-
-            <div class="input-block cf">
+            <#if !user.isVerifiedUser()>
+            <div class="input-block cf prepare-auth" >
 
                 <div class="input-block-extra">
                     <div class="input-block-extra-content">
@@ -79,7 +67,6 @@
                                 <@u.systemMessage path="authentication.selection.verified.description" type="info" />
                             </div>
                         </form>
-
                         <div class="input-block-content">
                             <#if locale == "fi">
                                 <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/" />
@@ -88,7 +75,7 @@
                             </#if>
                             <#--<@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=[vetumaUrl] />-->
 
-                            <@edit.buttons type="verify" />
+                            <@edit.buttons type="verify" class="small-button"/>
                         </div>
 
                     </div>
@@ -100,7 +87,7 @@
                         <@edit.authorEmailBlock />
 
                         <div class="input-block-content no-top-margin">
-                            <@edit.buttons type="save" />
+                            <@edit.buttons type="continue" class="small-button email-auth-btn"/>
                         </div>
 
                     </div>
@@ -108,9 +95,35 @@
                 </div>
 
             </div>
+            </#if>
 
         </div>
 
+        <div class="prepare-content <#if !user.isVerifiedUser()>hide</#if>">
+            <div class="form-block-container">
+                <div class="input-block cf" id="prepare-municipality-selection">
+                    <@edit.municipalityBlock municipality=currentMunicipality/>
+                </div>
+            </div>
+
+            <div class="form-block-container toggle-disable">
+                <div class="input-block no-sidebar cf">
+                    <@edit.chooseInitiativeType />
+                </div>
+            </div>
+            <div class="form-block-container">
+                <div class="input-block-content" style="float:initial">
+                    <#if locale == "fi">
+                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/" />
+                    <#else>
+                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/arbetsrum/allmant/sprakversionen_fattas/index.html" />
+                    </#if>
+                <#--<@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=[vetumaUrl] />-->
+
+                    <div class="toggle-disable-send mask-div"><@edit.buttons type="verify" class="small-button" /></div>
+                </div>
+            </div>
+        </div>
     </form>
 
 <#--
