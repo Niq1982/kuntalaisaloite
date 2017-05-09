@@ -194,37 +194,49 @@
                         <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
                      </#if>
                 </div>
-                <div class="column col-1of2 last">
+
+
+                 <#assign selectedHomeMunicipalitySameAsInitiatives = !participant.homeMunicipality?? || initiative.municipality.id == participant.homeMunicipality/>
+
+                 <div class="column col-1of2" id="participation-criterion">
+                     <input type="radio" name="participation-criterion" value="same-municipality" <#if selectedHomeMunicipalitySameAsInitiatives>checked</#if>/><label><@u.message "initiative.sameMunicipality" /></label>
+                     <input type="radio" name="participation-criterion" value="other-municipality" <#if !selectedHomeMunicipalitySameAsInitiatives>checked</#if>/><label><@u.message "initiative.otherMunicipality" /></label>
+                 </div>
+
+                <div class="column col-1of2 <#if selectedHomeMunicipalitySameAsInitiatives>hide<#else>show</#if>" id="home-municipality-select">
                     <#if user.isVerifiedUser() && user.homeMunicipality.present>
                         <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
                         <div class="input-placeholder"><@u.solveMunicipality user.homeMunicipality/></div>
                     <#else>
-                        <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id multiple=false/>
+                        <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id multiple=false id="homeMunicipality"/>
                     </#if>
                 </div>
             </div>
 
-            <div id="municipalMembership" class="js-hide">
-                <#if !initiative.verifiable>
-                    <div class="input-block-content hidden">
-                        <#assign href=urls.help(HelpPage.PARTICIPANTS.getUri(locale)) />
+            <div class="input-block-content cf">
+                <div id="municipalMembership" class="municipality-not-equal js-hide">
+                    <#if !initiative.verifiable>
+                        <div class="input-block-content hidden">
+                            <#assign href=urls.help(HelpPage.PARTICIPANTS.getUri(locale)) />
                         <@u.systemMessage path="initiative.municipality.notEqual.participation" type="info" args=[href] />
-                    </div>
-                    <div class="input-block-content">
-                        <@f.radiobutton path="participant.municipalMembership" required="required" options={
+                        </div>
+                        <div class="input-block-content">
+                            <@f.radiobutton path="participant.municipalMembership" required="required" options={
                             "community":"initiative.municipalMembership.community",
                             "company":"initiative.municipalMembership.company",
                             "property":"initiative.municipalMembership.property",
                             "none":"initiative.municipalMembership.none"
-                        } attributes="" />
+                            } attributes="" />
+                        </div>
+                    </#if>
+
+                    <div class="input-block-content <#if !initiative.verifiable>is-not-member no-top-margin js-hide </#if> hidden">
+                        <@u.systemMessage path="warning.participant.notMember" type="warning" />
                     </div>
-                </#if>
-                
-                <div class="input-block-content <#if !initiative.verifiable>is-not-member no-top-margin js-hide </#if> hidden">
-                    <@u.systemMessage path="warning.participant.notMember" type="warning" />
+
                 </div>
-                
             </div>
+
             
             <div class="input-block-content">
                 <@f.formCheckbox path="participant.showName" checked=true />
