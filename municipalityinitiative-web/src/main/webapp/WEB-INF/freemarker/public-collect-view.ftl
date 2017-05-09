@@ -201,8 +201,14 @@
 
                  <#if !hasVerifiedMunicipality>
                      <div class="column col-1of2" id="participation-criterion">
-                         <input type="radio" name="participation-criterion" value="same-municipality" <#if selectedHomeMunicipalitySameAsInitiatives>checked</#if>/><label><@u.message "initiative.sameMunicipality" /></label>
-                         <input type="radio" name="participation-criterion" value="other-municipality" <#if !selectedHomeMunicipalitySameAsInitiatives>checked</#if>/><label><@u.message "initiative.otherMunicipality" /></label>
+                         <label>
+                             <input type="radio" name="participation-criterion" value="same-municipality" <#if selectedHomeMunicipalitySameAsInitiatives>checked</#if>/>
+                             <@u.message "initiative.sameMunicipality" />
+                         </label>
+                         <label>
+                             <input type="radio" name="participation-criterion" value="other-municipality" <#if !selectedHomeMunicipalitySameAsInitiatives>checked</#if>/>
+                             <@u.message "initiative.otherMunicipality" />
+                         </label>
                      </div>
 
                      <div class="column col-1of2 <#if selectedHomeMunicipalitySameAsInitiatives>hide<#else>show</#if>" id="home-municipality-select">
