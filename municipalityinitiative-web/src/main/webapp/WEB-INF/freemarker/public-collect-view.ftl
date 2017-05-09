@@ -8,12 +8,12 @@
 <#import "components/some.ftl" as some />
 <#import "components/mobile-components.ftl" as mobile />
 
-<#escape x as x?html> 
+<#escape x as x?html>
 
 <#-- For verifiable initiatives when user returns from VETUMA -->
 <#assign showNotAllowedToParticipate = user.isVerifiedUser() && !user.allowVerifiedParticipation(initiative.id, initiative.municipality) &&
      initiative.verifiable && RequestParameters['show-participate']?? />
-     
+
 <#assign notAllowedToParticipateHTML>
     <@compress single_line=true>
     	<#if user.hasParticipatedToInitiative(initiative.id)>
@@ -52,7 +52,7 @@
     </#if>
 
     <@e.initiativeTitle initiative />
-    
+
     <@prog.progress initiative />
 
     <#if decisionInfo.isPresent() >
@@ -67,30 +67,30 @@
 
     <#assign contactAuthorForm>
     <@compress single_line=true>
-    
+
         <@u.errorsSummary path="authorMessage.*" prefix="authorMessage."/>
-    
+
         <#-- Do not use NOSCRIPT here as it will be descendant of another NOSCRIPT. -->
         <div class="js-hide">
             <@f.cookieWarning springMacroRequestContext.requestUri />
         </div>
-        
+
         <form action="${springMacroRequestContext.requestUri}?formError=contactAuthor" method="POST" id="form-contact-author" class="sodirty dirtylisten js-validate <#if hasErrors>has-errors</#if>" novalidate>
             <@f.securityFilters/>
 
             <div class="input-block-content no-top-margin">
-                <@u.systemMessage path="contactAuthor.description" args=[authors.publicNameCount+authors.privateNameCount] type="info" />  
+                <@u.systemMessage path="contactAuthor.description" args=[authors.publicNameCount+authors.privateNameCount] type="info" />
             </div>
-            
+
             <div class="input-block-content">
                 <p><@f.fieldRequiredInfo /></p>
                 <@f.textarea path="authorMessage.message" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.AUTHOR_MESSAGE_MAX?string("#") />
             </div>
-            
+
              <div class="input-block-content">
                 <@f.textField path="authorMessage.contactName" required="required" optional=false cssClass="large"  maxLength=InitiativeConstants.CONTACT_NAME_MAX />
             </div>
-            
+
             <div class="input-block-content">
                 <@f.textField path="authorMessage.contactEmail" required="required" optional=true cssClass="large" attributes='data-type="email"' maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
             </div>
@@ -99,9 +99,9 @@
                 <button id="contact-author" type="submit" name="${UrlConstants.ACTION_CONTACT_AUTHOR}" value="true" class="small-button"><span class="small-icon mail"><@u.message "action.sendMessage" /></span></button>
                 <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
             </div>
-        
+
         </form>
-    
+
     </@compress>
     </#assign>
 
@@ -157,15 +157,15 @@
         </div>
 
         <div class="participation-authentication-container" <#if !formSelectionVisible>style="display:none"</#if>>
-    
-        <#-- Participate form errors summary -->    
+
+        <#-- Participate form errors summary -->
         <@u.errorsSummary path="participant.*" prefix="participant."/>
-    
+
         <#-- Do not use NOSCRIPT here as it will be descendant of another NOSCRIPT. -->
         <div class="js-hide">
             <@f.cookieWarning springMacroRequestContext.requestUri />
         </div>
-        
+
         <form action="${springMacroRequestContext.requestUri}?formError=participate" method="POST" id="form-participate" class="sodirty dirtylisten js-validate <#if hasErrors>has-errors</#if>" novalidate>
             <@f.securityFilters/>
             <@f.notTooFastField participant/>
@@ -181,9 +181,9 @@
             </#if>
 
             <div class="input-block-content no-top-margin">
-                <@u.systemMessage path="participate.contactInfo.description"+infoKeyPostfix type="info" />  
+                <@u.systemMessage path="participate.contactInfo.description"+infoKeyPostfix type="info" />
             </div>
-            
+
              <div class="input-block-content">
                 <p><@f.fieldRequiredInfo /></p>
                 <div class="column col-1of2">
@@ -197,20 +197,24 @@
 
 
                  <#assign selectedHomeMunicipalitySameAsInitiatives = !participant.homeMunicipality?? || initiative.municipality.id == participant.homeMunicipality/>
+                 <#assign hasVerifiedMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present)/>
 
-                 <div class="column col-1of2" id="participation-criterion">
-                     <input type="radio" name="participation-criterion" value="same-municipality" <#if selectedHomeMunicipalitySameAsInitiatives>checked</#if>/><label><@u.message "initiative.sameMunicipality" /></label>
-                     <input type="radio" name="participation-criterion" value="other-municipality" <#if !selectedHomeMunicipalitySameAsInitiatives>checked</#if>/><label><@u.message "initiative.otherMunicipality" /></label>
-                 </div>
+                 <#if !hasVerifiedMunicipality>
+                     <div class="column col-1of2" id="participation-criterion">
+                         <input type="radio" name="participation-criterion" value="same-municipality" <#if selectedHomeMunicipalitySameAsInitiatives>checked</#if>/><label><@u.message "initiative.sameMunicipality" /></label>
+                         <input type="radio" name="participation-criterion" value="other-municipality" <#if !selectedHomeMunicipalitySameAsInitiatives>checked</#if>/><label><@u.message "initiative.otherMunicipality" /></label>
+                     </div>
 
-                <div class="column col-1of2 <#if selectedHomeMunicipalitySameAsInitiatives>hide<#else>show</#if>" id="home-municipality-select">
-                    <#if user.isVerifiedUser() && user.homeMunicipality.present>
-                        <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
-                        <div class="input-placeholder"><@u.solveMunicipality user.homeMunicipality/></div>
-                    <#else>
-                        <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id multiple=false id="homeMunicipality"/>
-                    </#if>
-                </div>
+                     <div class="column col-1of2 <#if selectedHomeMunicipalitySameAsInitiatives>hide<#else>show</#if>" id="home-municipality-select">
+                         <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id multiple=false id="homeMunicipality"/>
+                     </div>
+                 <#else>
+                     <div class="column col-1of2 last">
+                         <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
+                         <div class="input-placeholder"><@u.solveMunicipality user.homeMunicipality/></div>
+                     </div>
+                 </#if>
+
             </div>
 
             <div class="input-block-content cf">
@@ -237,7 +241,7 @@
                 </div>
             </div>
 
-            
+
             <div class="input-block-content">
                 <@f.formCheckbox path="participant.showName" checked=true />
             </div>
@@ -267,7 +271,7 @@
         </div>
 
     </div>
-    
+
     </@compress>
     </#assign>
 
@@ -372,12 +376,12 @@
     -->
     <@u.modalTemplate />
     <@u.jsMessageTemplate />
-    
+
     <script type="text/javascript">
         var modalData = {};
-        
+
         <#-- Modal: Request messages. Check for components/utils.ftl -->
-        <#if requestMessageModalHTML??>    
+        <#if requestMessageModalHTML??>
             modalData.requestMessage = function() {
                 return [{
                     title:      '<@u.message requestMessageModalTitle+".title" />',
@@ -385,7 +389,7 @@
                 }]
             };
         </#if>
-    
+
         <#-- Modal: Form modified notification. Uses dirtyforms jQuery-plugin. -->
         modalData.formModifiedNotification = function() {
             return [{
@@ -393,9 +397,9 @@
                 content:    '<@u.messageHTML "form.modified.notification" />'
             }]
         };
-    
+
         <#-- Modal: Participate initiative -->
-        <#if participateFormHTML??>    
+        <#if participateFormHTML??>
             modalData.participateForm = function() {
                 return [{
                     title:      '<@u.message "participate.title" />',
@@ -433,10 +437,10 @@
                 }]
             };
             </#if>
-            
+
             var messageData = {};
         </#if>
-        
+
         <#-- Modal: Participate initiative -->
         modalData.contactAuthor = function() {
             return [{
@@ -444,7 +448,7 @@
                 content:    '<#noescape>${contactAuthorForm?replace("'","&#39;")}</#noescape>'
             }]
         };
-        
+
         <#-- Autoload modal if it has errors -->
         <#if RequestParameters['formError']?? && RequestParameters['formError'] == "contactAuthor">
         modalData.contactAuthorFormAutoLoad = function() {
@@ -454,7 +458,7 @@
             }]
         };
         </#if>
-        
+
         <#-- jsMessage: Warning if cookies are not enabled -->
         messageData.warningCookiesDisabled = function() {
             return [{
@@ -480,7 +484,7 @@
         </#if>
 
     </script>
-    
+
 </@l.main>
 
 </#escape> 
