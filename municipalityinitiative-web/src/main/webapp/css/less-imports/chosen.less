@@ -46,6 +46,11 @@
     display:block;
     font-size:1em;
 
+    .chzn-drop {
+        border: 1px solid @borderGray;
+        border-top: none;
+    }
+
     .chzn-single {
         height:34px;
         line-height:34px;
@@ -168,11 +173,7 @@
         width: 80%;
     }
 } */
-#prepare-municipality-selection {
-    .chzn-select {
-        width: 100%;
-    }
-}
+
 // Frontpage Browse initiatives
 .flat-style {
     #municipality {
@@ -241,6 +242,7 @@
 //Fix a bug by overriding the following
 .chzn-container.chzn-container-single .chzn-drop {
     width: 100%!important;
+    box-sizing: border-box;
 }
 
 .chzn-container-single .chzn-search input {

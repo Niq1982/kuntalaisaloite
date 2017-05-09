@@ -267,3 +267,54 @@ label  {
 
     }
 }
+
+//generalize this later
+#form-preparation {
+    .chzn-select {
+        width: 100%;
+    }
+    .chzn-container .chzn-single {
+        padding: 0 10px;
+        div {
+            b {
+                background: url("@{imagesPath}/arrows_down.png?version=${timestamp}") no-repeat -4px 50%;
+                background-size: 30px;
+            }
+            border-style: none;
+            background: none;
+            &:hover {
+                background: none;
+            }
+
+        }
+        li {
+            padding: 5px 10px;
+        }
+    }
+
+    .chzn-container .chzn-single.chzn-single-with-drop div b {
+        background: url("@{imagesPath}/arrows_down.png?version=${timestamp}") no-repeat -4px 50%;
+        background-size: 30px;
+    }
+    .chzn-container .chzn-results {
+        margin: 0;
+    }
+
+    .small-button {
+        height: 36px;
+        width: 250px;
+        margin: 0;
+    }
+    .input-block.form-block-container {
+        background: none;
+        border-color: rgba(255, 255, 255, .0);
+    }
+}
+#participation-criterion {
+    div {
+        display: flex;
+    }
+    input {
+        margin: auto 8px auto 0px;
+    }
+}

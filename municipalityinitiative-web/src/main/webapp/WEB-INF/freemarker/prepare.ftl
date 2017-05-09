@@ -111,8 +111,8 @@
                     <@edit.chooseInitiativeType />
                 </div>
             </div>
-            <div class="form-block-container">
-                <div class="input-block-content" style="float:initial">
+            <div class="form-block-container input-block">
+                <div class="input-block-content float-init">
                     <#if locale == "fi">
                         <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/" />
                     <#else>

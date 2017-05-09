@@ -66,8 +66,14 @@
     </div>
 
     <div class="input-block-content hide" id="participation-criterion">
-        <input type="radio" name="participation-criterion" value="same-municipality" /><label><@u.message "initiative.sameMunicipality" /></label>
-        <input type="radio" name="participation-criterion" value="other-municipality" /><label><@u.message "initiative.otherMunicipality" /></label>
+        <div>
+            <input type="radio" name="participation-criterion"
+                   value="same-municipality"/><label><@u.message "initiative.sameMunicipality" /></label>
+        </div>
+        <div>
+            <input type="radio" name="participation-criterion"
+                   value="other-municipality"/><label><@u.message "initiative.otherMunicipality" /></label>
+        </div>
     </div>
 
     <div class="input-block-content hide" id="home-municipality-select">
