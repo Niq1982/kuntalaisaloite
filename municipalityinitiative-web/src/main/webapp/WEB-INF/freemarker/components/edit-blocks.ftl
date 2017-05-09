@@ -36,6 +36,8 @@
         <button type="submit" id="action-send-confirm" name="action-send-confirm" class="${class}" value="true" ><span class="small-icon save-and-send"><@u.message "action.prepare.send" /></span></button>
     <#elseif type == "continue">
         <button type="button" id="action-send-confirm" name="action-send-confirm" class="${class}" value="true" ><span class="small-icon next"><@u.message "action.prepare.next" /></span></button>
+    <#elseif type == "send">
+        <button type="submit" id="action-send-confirm" name="action-send-confirm" class="${class}" value="true" ><span class="small-icon save-and-send"><@u.message "action.prepare.create" /></span></button>
     </#if>
 </#macro>
 
@@ -67,12 +69,10 @@
 
     <div class="input-block-content hide" id="participation-criterion">
         <div>
-            <input type="radio" name="participation-criterion"
-                   value="same-municipality"/><label><@u.message "initiative.sameMunicipality" /></label>
+            <label><input type="radio" name="participation-criterion" value="same-municipality"/><@u.message "initiative.sameMunicipality" /></label>
         </div>
         <div>
-            <input type="radio" name="participation-criterion"
-                   value="other-municipality"/><label><@u.message "initiative.otherMunicipality" /></label>
+            <label><input type="radio" name="participation-criterion" value="other-municipality"/><@u.message "initiative.otherMunicipality" /></label>
         </div>
     </div>
 

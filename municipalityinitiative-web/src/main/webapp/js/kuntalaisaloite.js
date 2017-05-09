@@ -258,7 +258,6 @@ $(document).ready(function () {
 		btnClicked = $(this);
 
 		if (btnClicked.attr('class').indexOf('email-auth-btn') > 0) {
-			$(".prepare-auth").addClass('hide');
 			return;
 		}
 		// Disable in some cases
@@ -519,8 +518,11 @@ var initiativeType = (function() {
 			verifiable.find('.action').addClass(hideClass);
 			verifiable.find('input[type="radio"]').removeAttr('checked');
 			vetumaBlock.hide();
-
 			resetTypes(false);
+            if (municipalitySelection !== undefined) {
+                municipalitySelection.preventContinuing(true, 'mask-send', $('.toggle-disable-send'));
+			}
+
 		} else {
 			verifiable.find('.action').removeClass(hideClass);
 			mask.remove();
@@ -904,7 +906,14 @@ var municipalitySelection = (function() {
 	});
 
 	$('.email-auth-btn').live('click', function() {
+
+		if (!$('#participantEmail').val()) {
+			return;
+		}
+
 		var prepareContent = $('.prepare-content');
+
+        $(".prepare-auth").addClass('hide');
 
 		if( prepareContent && prepareContent.attr('class').indexOf('hide') > 0 ) {
 			prepareContent.attr('class', prepareContent.attr('class').replace('hide', 'show'));

@@ -68,13 +68,6 @@
                             </div>
                         </form>
                         <div class="input-block-content">
-                            <#if locale == "fi">
-                                <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/" />
-                            <#else>
-                                <#assign vetumaUrl = "http://www.suomi.fi/suomifi/arbetsrum/allmant/sprakversionen_fattas/index.html" />
-                            </#if>
-                            <#--<@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=[vetumaUrl] />-->
-
                             <@edit.buttons type="verify" class="small-button"/>
                         </div>
 
@@ -113,14 +106,7 @@
             </div>
             <div class="form-block-container input-block">
                 <div class="input-block-content float-init">
-                    <#if locale == "fi">
-                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/" />
-                    <#else>
-                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/arbetsrum/allmant/sprakversionen_fattas/index.html" />
-                    </#if>
-                <#--<@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=[vetumaUrl] />-->
-
-                    <div class="toggle-disable-send mask-div"><@edit.buttons type="verify" class="small-button" /></div>
+                    <div class="toggle-disable-send mask-div"><@edit.buttons type="send" class="small-button" /></div>
                 </div>
             </div>
         </div>
