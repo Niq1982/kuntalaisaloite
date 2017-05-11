@@ -87,19 +87,6 @@
     </div>
     <br class="clear" />
 
-    <noscript>
-        <div class="input-block-content no-top-margin">
-            <div class="system-msg msg-info">
-                <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
-
-                <#if !user.isVerifiedUser()>
-                    <@u.messageHTML key="initiative.municipality.different" args=[href] />
-                <#else>
-                    <@u.messageHTML key="initiative.municipality.different.verifiedUser" args=[href] />
-                </#if>
-            </div>
-        </div>
-    </noscript>
 
     <div id="municipalMembership" class="municipality-not-equal js-hide">
 
