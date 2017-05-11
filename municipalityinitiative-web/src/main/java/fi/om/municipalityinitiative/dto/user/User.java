@@ -23,9 +23,11 @@ public abstract class User implements Serializable {
         return new NormalLoginUser(authorId, authorsInitiatives);
     }
 
-    public static VerifiedUser verifiedUser(VerifiedUserId verifiedUserId, String hash, ContactInfo contactInfo, Set<Long> initiatives, Set<Long> initiativesWithParticipation, Maybe<Municipality> homeMunicipality) {
-        return new VerifiedUser(verifiedUserId, hash, contactInfo, initiatives, initiativesWithParticipation, homeMunicipality);
+    public static VerifiedUser verifiedUser(VerifiedUserId verifiedUserId, String hash, ContactInfo contactInfo, Set<Long> initiatives, Set<Long> initiativesWithParticipation, Maybe<Municipality> homeMunicipality, int age) {
+        return new VerifiedUser(verifiedUserId, hash, contactInfo, initiatives, initiativesWithParticipation, homeMunicipality, age);
     }
+
+    public abstract boolean tooYoungForVerifiedParticipation();
 
     public static User anonym() {
         return new AnonymUser();
@@ -43,7 +45,7 @@ public abstract class User implements Serializable {
 
     public abstract boolean hasParticipatedToInitiative(Long initiativeId);
     
-    public abstract boolean allowVerifiedParticipation(Long initiativeId, Municipality municipality);
+    public abstract boolean municipalityOkForVerifiedParticipation(Long initiativeId, Municipality municipality);
 
     public abstract boolean isLoggedIn();
 

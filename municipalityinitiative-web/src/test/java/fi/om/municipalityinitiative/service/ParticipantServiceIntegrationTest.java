@@ -4,10 +4,9 @@ import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
+import fi.om.municipalityinitiative.dto.service.VerifiedUserDbDetails;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
-import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -327,7 +326,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
 
         Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, TestHelper.lastLoggedInVerifiedUserHolder);
 
-        Maybe<VerifiedUser> verifiedUser = refreshVerifiedUser();
+        Maybe<VerifiedUserDbDetails> verifiedUser = refreshVerifiedUser();
 
         Set<Long> initiativesWithParticipation = verifiedUser.getValue().getInitiativesWithParticipation();
 
@@ -345,14 +344,14 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
 
         participantDao.deleteParticipant(initiativeId, participantId);
 
-        Maybe<VerifiedUser> verifiedUser = refreshVerifiedUser();
+        Maybe<VerifiedUserDbDetails> verifiedUser = refreshVerifiedUser();
 
         Set<Long> initiativesWithParticipation = verifiedUser.getValue().getInitiativesWithParticipation();
 
         assertThat(initiativesWithParticipation, empty());
     }
 
-    private Maybe<VerifiedUser> refreshVerifiedUser() {
+    private Maybe<VerifiedUserDbDetails> refreshVerifiedUser() {
         return userDao.getVerifiedUser(TestHelper.lastLoggedInVerifiedUserHolder.getVerifiedUser().getHash());
     }
 

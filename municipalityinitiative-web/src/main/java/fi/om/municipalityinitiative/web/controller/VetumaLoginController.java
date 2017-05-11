@@ -1,17 +1,13 @@
 package fi.om.municipalityinitiative.web.controller;
 
-import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
-import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.vetuma.VTJData;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginRequest;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginResponse;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaResponse;
-import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.SsnValidator;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -144,15 +140,11 @@ public class VetumaLoginController extends DefaultLoginController {
 
             String ssn = vetumaResponse.getSsn();
 
-            if (!SsnValidator.isAdult(LocalDate.now(), ssn)) {
-                return redirect(urls.notAdultError());
-            }
-
             userService.login(encryptionService.registeredUserHash(ssn),
                     vtjData.getFullName(),
                     locale.equals(Locales.LOCALE_FI) ? vtjData.getAddressFi() : vtjData.getAddressSv(),
                     vtjData.getMunicipality(),
-                    request);
+                    request, SsnValidator.getAge(LocalDate.now(), ssn));
 
             return redirectToTarget(session);
         } else {

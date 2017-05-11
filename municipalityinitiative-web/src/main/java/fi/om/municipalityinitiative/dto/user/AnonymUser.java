@@ -7,6 +7,11 @@ public class AnonymUser extends User {
     AnonymUser() { }
 
     @Override
+    public boolean tooYoungForVerifiedParticipation() {
+        return false;
+    }
+
+    @Override
     public boolean isOmUser() {
         return false;
     }
@@ -27,7 +32,7 @@ public class AnonymUser extends User {
     }
 
     @Override
-    public boolean allowVerifiedParticipation(Long initiativeId, Municipality municipality){
+    public boolean municipalityOkForVerifiedParticipation(Long initiativeId, Municipality municipality){
         return false;
     }
     

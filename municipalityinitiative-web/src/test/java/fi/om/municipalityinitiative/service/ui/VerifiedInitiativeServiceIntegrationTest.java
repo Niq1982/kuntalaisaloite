@@ -3,10 +3,7 @@ package fi.om.municipalityinitiative.service.ui;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dao.UserDao;
-import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
-import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
+import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
@@ -81,11 +78,11 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         ContactInfo contactInfo = contactInfo();
 
         verifiedLoginUserHolder = new LoginUserHolder<>(
-                User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo, Collections.<Long>emptySet(), Collections.<Long>emptySet(), Maybe.of(testMunicipality))
+                User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo, Collections.<Long>emptySet(), Collections.<Long>emptySet(), Maybe.of(testMunicipality), 20)
         );
 
         anotherVerifiedLoginUserHolder = new LoginUserHolder<>(
-                User.verifiedUser(new VerifiedUserId(-1L), HASH + "2", contactInfo, Collections.<Long>emptySet(), Collections.<Long>emptySet(), Maybe.of(anotherMunicipality))
+                User.verifiedUser(new VerifiedUserId(-1L), HASH + "2", contactInfo, Collections.<Long>emptySet(), Collections.<Long>emptySet(), Maybe.of(anotherMunicipality), 20)
         );
 
 
@@ -121,7 +118,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         service.prepareVerifiedInitiative(verifiedLoginUserHolder, prepareSafeUICreateDto());
 
         assertThat(testHelper.countAll(QVerifiedUser.verifiedUser), is(1L));
-        VerifiedUser created = userDao.getVerifiedUser(HASH).get();
+        VerifiedUserDbDetails created = userDao.getVerifiedUser(HASH).get();
         assertThat(created.getContactInfo().getName(), is(VERIFIED_AUTHOR_NAME));
         assertThat(created.getContactInfo().getAddress(), is(ADDRESS));
         assertThat(created.getHash(), is(HASH));
@@ -140,7 +137,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     public void get_verified_user_gets_its_initiatives() {
 
         Long initiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
-        VerifiedUser verifiedUser = userDao.getVerifiedUser(testHelper.getPreviousUserSsnHash()).get();
+        VerifiedUserDbDetails verifiedUser = userDao.getVerifiedUser(testHelper.getPreviousUserSsnHash()).get();
 
         assertThat(verifiedUser.getInitiativesWithParticipation(), hasSize(1));
 
@@ -155,7 +152,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         Long initiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId()));
 
-        VerifiedUser verifiedUser = userDao.getVerifiedUser(testHelper.getPreviousUserSsnHash()).get();
+        VerifiedUserDbDetails verifiedUser = userDao.getVerifiedUser(testHelper.getPreviousUserSsnHash()).get();
 
         assertThat(verifiedUser.getInitiativesWithManagementRight(), hasSize(0));
 
@@ -367,7 +364,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()));
 
         LoginUserHolder<VerifiedUser> loginUserHolder = new LoginUserHolder<>(
-                User.verifiedUser(new VerifiedUserId(testHelper.getLastVerifiedUserId()), testHelper.getPreviousUserSsnHash(), new ContactInfo(), Collections.<Long>emptySet(), Collections.<Long>emptySet(), Maybe.<Municipality>absent())
+                User.verifiedUser(new VerifiedUserId(testHelper.getLastVerifiedUserId()), testHelper.getPreviousUserSsnHash(), new ContactInfo(), Collections.<Long>emptySet(), Collections.<Long>emptySet(), Maybe.<Municipality>absent(), 20)
         );
 
         testHelper.addAuthorInvitation(authorInvitation(initiativeId), false);
@@ -441,7 +438,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
 
-        Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(HASH);
+        Maybe<VerifiedUserDbDetails> verifiedUser = userDao.getVerifiedUser(HASH);
         assertThat(verifiedUser, isPresent());
         assertReflectionEquals(verifiedUser.get().getContactInfo(), contactInfo());
     }
@@ -639,11 +636,11 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         else {
             municipality = Maybe.absent();
         }
-        return new LoginUserHolder<>(User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo(), Collections.<Long>emptySet(), Collections.<Long>emptySet(), municipality));
+        return new LoginUserHolder<>(User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo(), Collections.<Long>emptySet(), Collections.<Long>emptySet(), municipality, 20));
     }
 
     private static LoginUserHolder<VerifiedUser> verifiedUserHolderForInitiative(Long initiativeId) {
-        return new LoginUserHolder<>(User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo(), Collections.singleton(initiativeId), Collections.singleton(initiativeId), Maybe.<Municipality>absent()));
+        return new LoginUserHolder<>(User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo(), Collections.singleton(initiativeId), Collections.singleton(initiativeId), Maybe.<Municipality>absent(), 20));
     }
 
     private PrepareSafeInitiativeUICreateDto prepareSafeUICreateDto() {

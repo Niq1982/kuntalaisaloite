@@ -78,7 +78,7 @@ public class ParticipantCreateDtoTest {
         contactInfo.setName("Paavo Pesusieni");
 
 
-        VerifiedUser user = User.verifiedUser(new VerifiedUserId(randomId), randomHash, contactInfo, null, null, null);
+        VerifiedUser user = User.verifiedUser(new VerifiedUserId(randomId), randomHash, contactInfo, null, null, null, 20);
 
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parseParticipantFromVerifiedUser(uiCreateDto, new LoginUserHolder<>(user).getVerifiedUser(), 121L);
 

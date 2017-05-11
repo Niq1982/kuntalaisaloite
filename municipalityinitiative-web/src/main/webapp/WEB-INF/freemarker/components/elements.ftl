@@ -450,9 +450,12 @@
         <#if user.hasParticipatedToInitiative(initiative.id)>
             <@u.systemMessage path="warning.already.participated" type="warning" />
              <br class="clear" />
-        <#elseif initiative.verifiable && user.isVerifiedUser() && !user.allowVerifiedParticipation(initiative.id, initiative.municipality)>
+        <#elseif initiative.verifiable && user.isVerifiedUser() && user.tooYoungForVerifiedParticipation()>
+            <@u.systemMessage path="warning.participant.too.young.to.verified.participation" type="warning" />
             <br class="clear" />
+        <#elseif initiative.verifiable && user.isVerifiedUser() && !user.municipalityOkForVerifiedParticipation(initiative.id, initiative.municipality)>
             <@u.systemMessage path="warning.participant.notMember" type="warning" />
+            <br class="clear" />
         <#elseif initiative.verifiable && ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
             <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
             <br class="clear" />
@@ -469,7 +472,9 @@
         <div class="participants-block ${showForm?string("hidden","")} noprint">
             <#if initiative.verifiable>
                 <#if user.isVerifiedUser()>
-                    <#if !user.hasParticipatedToInitiative(initiative.id) && (user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
+                    <#if !user.hasParticipatedToInitiative(initiative.id)
+                    && !user.tooYoungForVerifiedParticipation()
+                    && (user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
                         <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
                     </#if>
                 <#else>

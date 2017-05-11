@@ -8,9 +8,9 @@ import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.dto.service.VerifiedUserDbDetails;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
-import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.InvalidVideoUrlException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
@@ -158,7 +158,7 @@ public class InitiativeManagementService {
         }
         else {
             VerifiedAuthor author = new VerifiedAuthor();
-            VerifiedUser dbVerifiedUser = userDao.getVerifiedUser(loginUserHolder.getVerifiedUser().getHash()).get();
+            VerifiedUserDbDetails dbVerifiedUser = userDao.getVerifiedUser(loginUserHolder.getVerifiedUser().getHash()).get();
             author.setContactInfo(dbVerifiedUser.getContactInfo());
             author.setMunicipality(Maybe.of(initiative.getMunicipality()));
             author.setId(null); // FIXME: Omg

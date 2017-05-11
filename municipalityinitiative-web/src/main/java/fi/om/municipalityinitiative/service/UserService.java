@@ -6,8 +6,8 @@ import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dao.MunicipalityUserDao;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.VerifiedUserDbDetails;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.*;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.AuthenticationRequiredException;
@@ -162,19 +162,19 @@ public class UserService {
     }
 
     @Transactional(readOnly = false)
-    public void login(String hash, String fullName, String address, Maybe<Municipality> vetumaMunicipality, HttpServletRequest request) {
+    public void login(String hash, String fullName, String address, Maybe<Municipality> vetumaMunicipality, HttpServletRequest request, int age) {
 
         ContactInfo contactInfo;
         Set<Long> initiativesWithManagementRight;
         Set<Long> initiativesWithParticipation;
         VerifiedUserId verifiedUserId;
-        Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(hash);
+        Maybe<VerifiedUserDbDetails> verifiedUser = userDao.getVerifiedUser(hash);
         if (verifiedUser.isPresent()) {
             userDao.updateUserInformation(hash, fullName, vetumaMunicipality);
             verifiedUser = userDao.getVerifiedUser(hash);
             contactInfo = verifiedUser.get().getContactInfo();
             initiativesWithManagementRight = verifiedUser.get().getInitiativesWithManagementRight();
-            verifiedUserId = verifiedUser.get().getAuthorId();
+            verifiedUserId = verifiedUser.get().getVerifiedUserId();
             initiativesWithParticipation = verifiedUser.get().getInitiativesWithParticipation();
         }
         else {
@@ -201,7 +201,7 @@ public class UserService {
             municipality = Maybe.absent();
         }
 
-        storeLoggedInUserSession(request, User.verifiedUser(verifiedUserId, hash, contactInfo, initiativesWithManagementRight, initiativesWithParticipation, municipality));
+        storeLoggedInUserSession(request, User.verifiedUser(verifiedUserId, hash, contactInfo, initiativesWithManagementRight, initiativesWithParticipation, municipality, age));
     }
 
     /**
@@ -217,9 +217,19 @@ public class UserService {
         User user = (User) session.getAttribute(LOGIN_USER_PARAMETER);
 
         if (user instanceof VerifiedUser) {
-            Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(((VerifiedUser) user).getHash());
-            if (verifiedUser.isPresent()) {
-                session.setAttribute(LOGIN_USER_PARAMETER, verifiedUser.get());
+            Maybe<VerifiedUserDbDetails> dbVerifiedUser = userDao.getVerifiedUser(((VerifiedUser) user).getHash());
+            if (dbVerifiedUser.isPresent()) {
+
+                VerifiedUser refreshedUser = User.verifiedUser(
+                        dbVerifiedUser.get().getVerifiedUserId(),
+                        dbVerifiedUser.get().getHash(),
+                        dbVerifiedUser.get().getContactInfo(),
+                        dbVerifiedUser.get().getInitiativesWithManagementRight(),
+                        dbVerifiedUser.get().getInitiativesWithParticipation(),
+                        dbVerifiedUser.get().getHomeMunicipality(),
+                        ((VerifiedUser) user).getAge());
+
+                session.setAttribute(LOGIN_USER_PARAMETER, refreshedUser);
             }
         }
     }

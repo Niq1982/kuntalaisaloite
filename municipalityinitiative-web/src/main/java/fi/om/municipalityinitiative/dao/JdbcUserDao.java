@@ -7,9 +7,9 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.VerifiedUserDbDetails;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.User;
-import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
@@ -46,7 +46,7 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     // TODO: Argh. Improve usage of QueryDSL
-    public Maybe<VerifiedUser> getVerifiedUser(String hash) {
+    public Maybe<VerifiedUserDbDetails> getVerifiedUser(String hash) {
 
         class VerifiedUserDataWrapper {
 
@@ -112,7 +112,9 @@ public class JdbcUserDao implements UserDao {
 
         initiativesWithParticipation.addAll(normalInitiativesWithParticipation);
 
-        return Maybe.of(User.verifiedUser(userDataMaybe.get().verifiedUserId, hash, userDataMaybe.get().contactInfo, new HashSet<>(initiatives), new HashSet<>(initiativesWithParticipation), userDataMaybe.get().municipalityMaybe));
+        HashSet<Long> participations = new HashSet<>(initiativesWithParticipation);
+        HashSet<Long> ownInitiatives = new HashSet<>(initiatives);
+        return Maybe.of(new VerifiedUserDbDetails(userDataMaybe.get().verifiedUserId, hash, userDataMaybe.get().contactInfo, ownInitiatives, participations, userDataMaybe.get().municipalityMaybe));
     }
 
     @Override

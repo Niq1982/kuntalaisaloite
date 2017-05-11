@@ -401,7 +401,7 @@ public class TestHelper {
         authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId), previousUserSsnHash, contactInfo,
                 Collections.singleton(authorDraft.initiativeId),
                 Collections.singleton(authorDraft.initiativeId),
-                participantMunicipality));
+                participantMunicipality, 20));
 
         return lastVerifiedUserId;
     }
@@ -499,7 +499,7 @@ public class TestHelper {
         this.lastVerifiedUserId = verifiedUserId;
 
         Maybe<Municipality> participantMunicipality = Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true));
-        lastLoggedInVerifiedUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId), hash, new ContactInfo(), null, null, participantMunicipality));
+        lastLoggedInVerifiedUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId), hash, new ContactInfo(), null, null, participantMunicipality, 20));
         return verifiedUserId;
     }
 
@@ -546,7 +546,7 @@ public class TestHelper {
     public VerifiedUser getVerifiedUser() {
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setName("Paavo Paavolainen");
-        return User.verifiedUser(new VerifiedUserId(123L), "ffafdsf", contactInfo, null, null, Maybe.of(new Municipality(1, "Oulu", "Åbo", true)));
+        return User.verifiedUser(new VerifiedUserId(123L), "ffafdsf", contactInfo, null, null, Maybe.of(new Municipality(1, "Oulu", "Åbo", true)), 20);
     }
 
     @Transactional(readOnly = false)

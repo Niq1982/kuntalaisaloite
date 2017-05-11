@@ -13,6 +13,11 @@ public class MunicipalityLoginUser extends User {
     }
 
     @Override
+    public boolean tooYoungForVerifiedParticipation() {
+        return false;
+    }
+
+    @Override
     public boolean isOmUser() {
         return false;
     }
@@ -33,7 +38,7 @@ public class MunicipalityLoginUser extends User {
     }
 
     @Override
-    public boolean allowVerifiedParticipation(Long initiativeId, Municipality municipality) {
+    public boolean municipalityOkForVerifiedParticipation(Long initiativeId, Municipality municipality) {
         return false;
     }
 

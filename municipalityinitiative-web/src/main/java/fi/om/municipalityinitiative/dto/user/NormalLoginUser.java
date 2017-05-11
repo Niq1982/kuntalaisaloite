@@ -27,7 +27,7 @@ public class NormalLoginUser extends User {
     }
     
     @Override
-    public boolean allowVerifiedParticipation(Long initiativeId, Municipality municipality){
+    public boolean municipalityOkForVerifiedParticipation(Long initiativeId, Municipality municipality){
         return false;
     }
 
@@ -38,6 +38,11 @@ public class NormalLoginUser extends User {
 
     @Override
     public boolean isMunicipalityUser(Long initiativeId) {
+        return false;
+    }
+
+    @Override
+    public boolean tooYoungForVerifiedParticipation() {
         return false;
     }
 

@@ -11,6 +11,11 @@ public class OmLoginUser extends User {
     }
 
     @Override
+    public boolean tooYoungForVerifiedParticipation() {
+        return false;
+    }
+
+    @Override
     public boolean isOmUser() {
         return true;
     }
@@ -31,7 +36,7 @@ public class OmLoginUser extends User {
     }
     
     @Override
-    public boolean allowVerifiedParticipation(Long initiativeId, Municipality municipality){
+    public boolean municipalityOkForVerifiedParticipation(Long initiativeId, Municipality municipality){
         return false;
     }
 

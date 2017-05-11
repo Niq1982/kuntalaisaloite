@@ -35,17 +35,14 @@ public class SessionStoringAuthenticationSuccessHandler implements Authenticatio
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         SamlUser user = (SamlUser) authentication.getPrincipal();
 
-        if (SsnValidator.isAdult(LocalDate.now(), user.getSsn())) {
-            userService.login(
-                    encryptionService.registeredUserHash(user.getSsn()),
-                    user.getFullName(), user.getAddress(), user.getMunicipality(), request
-            );
-            new DefaultRedirectStrategy()
-                    .sendRedirect(request, response, baseUri + TargetStoringFilter.popCookieTarget(request, response));
-        } else {
-            new DefaultRedirectStrategy()
-                    .sendRedirect(request, response, Urls.get(Locales.LOCALE_FI).notAdultError());
-        }
+        userService.login(
+                encryptionService.registeredUserHash(user.getSsn()),
+                user.getFullName(), user.getAddress(), user.getMunicipality(), request,
+                SsnValidator.getAge(LocalDate.now(), user.getSsn())
+        );
+
+        new DefaultRedirectStrategy()
+                .sendRedirect(request, response, baseUri + TargetStoringFilter.popCookieTarget(request, response));
 
     }
 }

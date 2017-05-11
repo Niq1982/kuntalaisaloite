@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.json.InitiativeListJson;
-import fi.om.municipalityinitiative.dto.user.VerifiedUser;
+import fi.om.municipalityinitiative.dto.service.VerifiedUserDbDetails;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,12 +31,12 @@ public class KapaService {
     @Transactional(readOnly = true)
     public KapaInitiativeResult findInitiativesForUser(String ssn) {
 
-        Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(encryptionService.registeredUserHash(ssn));
+        Maybe<VerifiedUserDbDetails> verifiedUser = userDao.getVerifiedUser(encryptionService.registeredUserHash(ssn));
 
         if (verifiedUser.isPresent()) {
 
             KapaInitiativeResult kapaInitiativeResult = new KapaInitiativeResult();
-            VerifiedUserId authorId = verifiedUser.get().getAuthorId();
+            VerifiedUserId authorId = verifiedUser.get().getVerifiedUserId();
 
             // Get all users initiatives
             kapaInitiativeResult.initiatives = initiativeDao.findInitiatives(authorId).stream().map(InitiativeListJson::new).collect(Collectors.toList());

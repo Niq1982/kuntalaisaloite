@@ -33,8 +33,11 @@ public class SsnValidator {
     }
 
     public static boolean isAdult(LocalDate now, String ssn) {
-        Assert.notNull(ssn, "ssn");
+        return getAge(now, ssn) >= LEGAL_AGE;
+    }
 
+    public static int getAge(LocalDate now, String ssn) {
+        Assert.notNull(ssn, "ssn");
         Matcher m = SSN_PATTERN.matcher(ssn);
         if (m.matches()) {
             int dd = Integer.parseInt(m.group(1));
@@ -55,7 +58,7 @@ public class SsnValidator {
                 default:
                     throw invalidSSNException();
             }
-            return Years.yearsBetween(new LocalDate(yyyy, mm, dd), now).getYears() >= LEGAL_AGE;
+             return Years.yearsBetween(new LocalDate(yyyy, mm, dd), now).getYears();
         } else {
             throw invalidSSNException();
         }

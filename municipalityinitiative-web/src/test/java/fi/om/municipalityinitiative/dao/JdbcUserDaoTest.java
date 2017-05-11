@@ -2,8 +2,8 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.VerifiedUserDbDetails;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -63,7 +63,7 @@ public class JdbcUserDaoTest {
     public void create_and_get_verified_user() {
         ContactInfo contactInfo = contactInfo();
         VerifiedUserId verifiedUserId = userDao.addVerifiedUser(HASH, contactInfo, testMunicipality);
-        Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(HASH);
+        Maybe<VerifiedUserDbDetails> verifiedUser = userDao.getVerifiedUser(HASH);
         assertThat(verifiedUser, isPresent());
         assertThat(verifiedUserId, is(notNullValue()));
         ReflectionTestUtils.assertReflectionEquals(verifiedUser.get().getContactInfo(), contactInfo);
@@ -93,7 +93,7 @@ public class JdbcUserDaoTest {
         String newMunicipalityName = "name";
         userDao.updateUserInformation(HASH, newName, Maybe.of(new Municipality(testHelper.createTestMunicipality(newMunicipalityName), newMunicipalityName, newMunicipalityName, true)));
 
-        VerifiedUser result = userDao.getVerifiedUser(HASH).get();
+        VerifiedUserDbDetails result = userDao.getVerifiedUser(HASH).get();
         assertThat(result.getContactInfo().getName(), is(newName));
         assertThat(result.getHomeMunicipality(), isPresent());
         assertThat(result.getHomeMunicipality().get().getNameFi(), is(newMunicipalityName));
@@ -112,7 +112,7 @@ public class JdbcUserDaoTest {
         Long verifiedUserId = userDao.getVerifiedUserId(HASH).getValue().toLong();
         testHelper.createVerifiedParticipantWithVerifiedUserId(new TestHelper.AuthorDraft(testVerifiedInitiativeId, testMunicipalityId).withVerifiedUserId(verifiedUserId));
 
-        VerifiedUser user = userDao.getVerifiedUser(HASH).getValue();
+        VerifiedUserDbDetails user = userDao.getVerifiedUser(HASH).getValue();
 
         assertThat(user.getInitiativesWithParticipation(), contains(testVerifiedInitiativeId));
     }
@@ -127,7 +127,7 @@ public class JdbcUserDaoTest {
         Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
         participantDao.verifiedUserParticipatesNormalInitiative(participantId, new VerifiedUserId(verifiedUserId), true);
 
-        VerifiedUser user = userDao.getVerifiedUser(HASH).getValue();
+        VerifiedUserDbDetails user = userDao.getVerifiedUser(HASH).getValue();
 
         assertThat(user.getInitiativesWithParticipation(), contains(testInitiativeId));
 
