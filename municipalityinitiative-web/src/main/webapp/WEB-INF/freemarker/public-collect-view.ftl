@@ -196,7 +196,10 @@
                          <div class="input-placeholder">${user.contactInfo.name}</div>
                      <#else>
                         <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
-                     </#if>
+                        <div class="input-block-content">
+                            <@f.textField path="participant.participantEmail" required="required" optional=true cssClass="large" attributes='data-type="email"' maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+                        </div>
+                    </#if>
                 </div>
 
 
@@ -215,7 +218,32 @@
                          </label>
                      </div>
 
-                     <div class="column col-1of2 <#if selectedHomeMunicipalitySameAsInitiatives>hide<#else>show</#if>" id="home-municipality-select">
+                     <div class="input-block-content cf">
+                         <div id="municipalMembership" class="municipality-not-equal hide">
+                             <#if !initiative.verifiable>
+                                 <div class="input-block-content hide">
+                                     <#assign href=urls.help(HelpPage.PARTICIPANTS.getUri(locale)) />
+                        <@u.systemMessage path="initiative.municipality.notEqual.participation" type="info" args=[href] />
+                                 </div>
+                                 <div class="input-block-content">
+                                     <@f.radiobutton path="participant.municipalMembership" required="required" options={
+                                     "community":"initiative.municipalMembership.community",
+                                     "company":"initiative.municipalMembership.company",
+                                     "property":"initiative.municipalMembership.property",
+                                     "none":"initiative.municipalMembership.none"
+                                     } attributes="" />
+                                 </div>
+                             </#if>
+
+                             <div class="input-block-content <#if !initiative.verifiable>is-not-member no-top-margin js-hide </#if> hidden">
+                                 <@u.systemMessage path="warning.participant.notMember" type="warning" />
+                             </div>
+
+                         </div>
+                     </div>
+
+                     <div class="column col-1of2 <#if selectedHomeMunicipalitySameAsInitiatives>hide<#else>show</#if>"
+                          id="home-municipality-select">
                          <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id multiple=false id="homeMunicipality"/>
                      </div>
                  <#else>
@@ -227,42 +255,9 @@
 
             </div>
 
-            <div class="input-block-content cf">
-                <div id="municipalMembership" class="municipality-not-equal js-hide">
-                    <#if !initiative.verifiable>
-                        <div class="input-block-content hidden">
-                            <#assign href=urls.help(HelpPage.PARTICIPANTS.getUri(locale)) />
-                        <@u.systemMessage path="initiative.municipality.notEqual.participation" type="info" args=[href] />
-                        </div>
-                        <div class="input-block-content">
-                            <@f.radiobutton path="participant.municipalMembership" required="required" options={
-                            "community":"initiative.municipalMembership.community",
-                            "company":"initiative.municipalMembership.company",
-                            "property":"initiative.municipalMembership.property",
-                            "none":"initiative.municipalMembership.none"
-                            } attributes="" />
-                        </div>
-                    </#if>
-
-                    <div class="input-block-content <#if !initiative.verifiable>is-not-member no-top-margin js-hide </#if> hidden">
-                        <@u.systemMessage path="warning.participant.notMember" type="warning" />
-                    </div>
-
-                </div>
-            </div>
-
-
             <div class="input-block-content">
                 <@f.formCheckbox path="participant.showName" checked=true />
             </div>
-
-            <#if user.isVerifiedUser()>
-
-            <#else>
-                <div class="input-block-content">
-                    <@f.textField path="participant.participantEmail" required="required" optional=true cssClass="large" attributes='data-type="email"' maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
-                </div>
-            </#if>
 
             <div class="input-block-content">
                 <#if user.isVerifiedUser()>

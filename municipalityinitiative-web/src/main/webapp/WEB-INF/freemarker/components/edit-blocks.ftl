@@ -76,7 +76,7 @@
         </div>
     </div>
 
-    <div id="municipalMembership" class="municipality-not-equal js-hide">
+    <div id="municipalMembership" class="municipality-not-equal hide">
 
         <div class="input-block-content hidden">
             <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />

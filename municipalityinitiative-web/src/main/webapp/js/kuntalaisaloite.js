@@ -797,10 +797,10 @@ var municipalitySelection = (function() {
 			radios = municipalMembership.find('[type="radio"]');
 
 		if (show){
-			municipalMembership.removeClass(hideClass);
+			municipalMembership.show();
 			radios.attr('required','required');
 		} else {
-			municipalMembership.addClass(hideClass);
+			municipalMembership.hide();
 			radios.removeAttr('required');
 		}
 	}
@@ -824,7 +824,8 @@ var municipalitySelection = (function() {
 
 		// Use live as this is fired also in the modal
 		cb.live('change',function(){
-			var disable = isNotMember();
+			var disable = isNotMember(),
+                homeMunicipalitySelectDiv   = $("#home-municipality-select");
 
 			//btn.disableButton( disable ); // use general form validation
 
@@ -859,9 +860,12 @@ var municipalitySelection = (function() {
     }
 
     function removeSelectedFromHomeMunicipalitySelection() {
-        var selectedElemId = $('#municipality_chzn').find(".active-result.result-selected").attr('id');
-        var elemId = selectedElemId.replace("municipality", "homeMunicipality");
-        $('#' + elemId).hide();
+		var municipalityChzn = $('#municipality_chzn');
+		if (municipalityChzn.length !== 0) {
+            var selectedElemId = municipalityChzn.find(".active-result.result-selected").attr('id');
+            var elemId = selectedElemId.replace("municipality", "homeMunicipality");
+            $('#' + elemId).hide();
+		}
     }
 
     $('#municipality').live('change', function () {
@@ -905,8 +909,11 @@ var municipalitySelection = (function() {
 
 
 	$('#participation-criterion').live('change', function() {
-        var radioMunicipalMembership = $("input[name=municipalMembership]");
+		var otherMunicipalitySelect 	= $("input[value=other-municipality]"),
+			sameMunicipalitySelect	 	= $("input[value=same-municipality]"),
+			radioMunicipalMembership 	= $("input[name=municipalMembership]");
 		if (otherMunicipalitySelect.prop('checked')) {
+
             warningNotMember(false);
             radioMunicipalMembership.removeAttr('checked');
             preventContinuing(true, 'mask', $('.toggle-disable'));
@@ -914,6 +921,7 @@ var municipalitySelection = (function() {
             initiativeType.disableVerifiable(true);
             preventContinuing(true, 'mask-send', $('.toggle-disable-send'));
 		}
+
 		if (sameMunicipalitySelect.prop('checked')) {
 		    showMembership(false);
             homeMunicipalitySelectDiv.hide();
