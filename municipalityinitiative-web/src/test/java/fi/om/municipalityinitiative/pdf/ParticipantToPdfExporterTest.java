@@ -57,10 +57,10 @@ public class ParticipantToPdfExporterTest {
                             ? municipality
                             : new Municipality(random.nextLong(), RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10), false);
             NormalParticipant participant = new NormalParticipant();
-            participant.setParticipateDate(new LocalDate());
-            participant.setName(RandomStringUtils.randomAlphabetic(20));
+            participant.setParticipateDate(new LocalDate().minusDays(random.nextInt(60)));
+            participant.setName(generateName());
             participant.setHomeMunicipality(Maybe.of(m));
-            participant.setMunicipalityVerified(municipality == m);
+            participant.setMunicipalityVerified(random.nextInt(20) != 1);
 
             switch( m == municipality ? 3 : random.nextInt(3)) {
                 case 0:
@@ -81,12 +81,20 @@ public class ParticipantToPdfExporterTest {
         return participants;
     }
 
+    private static String generateName() {
+        return RandomStringUtils.randomAlphabetic(1).toUpperCase()
+        + RandomStringUtils.randomAlphabetic(10).toLowerCase()
+                + " " +
+                RandomStringUtils.randomAlphabetic(1).toUpperCase()
+                + RandomStringUtils.randomAlphabetic(10).toLowerCase();
+    }
+
     private static List<VerifiedParticipant> createVerifiedParticipants(Municipality municipality) {
         List<VerifiedParticipant> participants = Lists.newArrayList();
         for (int i = 0; i < 1000; ++i) {
             VerifiedParticipant participant = new VerifiedParticipant();
             participant.setParticipateDate(new LocalDate());
-            participant.setName(RandomStringUtils.randomAlphabetic(20));
+            participant.setName(generateName());
             participant.setMunicipalityVerified(new Random().nextInt(100) % 10 == 0);
             participant.setHomeMunicipality(Maybe.of(municipality));
             participants.add(participant);

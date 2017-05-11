@@ -16,7 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.OutputStream;
+import java.util.Comparator;
 import java.util.List;
+
+import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
 
 public class ParticipantToPdfExporter {
 
@@ -49,12 +52,16 @@ public class ParticipantToPdfExporter {
             throw new RuntimeException(e);
         }
 
-        mainTitle = new Font(fontFamily, 16, Font.BOLD);
-        subTitle = new Font(fontFamily, 14, Font.BOLD);
-        bodyText = new Font(fontFamily, 10, Font.NORMAL);
-        smallBold = new Font(fontFamily, 10, Font.BOLD);
+        mainTitle = new Font(fontFamily, 14, Font.BOLD);
+        subTitle = new Font(fontFamily, 12, Font.BOLD);
+        bodyText = new Font(fontFamily, 8, Font.NORMAL);
+        smallBold = new Font(fontFamily, 8, Font.BOLD);
 
         this.initiative = initiative;
+
+        participants.sort(Comparator.comparing(p ->
+                (p.isMunicipalityVerified() + p.getParticipateDate().toString("yyyyMMdd"))));
+
         this.participants = participants;
     }
 
@@ -202,7 +209,7 @@ public class ParticipantToPdfExporter {
         table.addCell(createCell("Pvm\nDatum", true));
         table.addCell(createCell("Nimi\nNamn", true));
         if (initiative.getType().isNotVerifiable()) {
-            table.setWidths(new int[] {6, 12, 42, 18, 12, 12});
+            table.setWidths(new int[] {6, 12, 34, 26, 12, 12});
             table.addCell(createCell("Kotikunta\nHemkommun", true));
             table.addCell(createCell("Jäsenyys\nMedlemskap", true));
         }
@@ -223,7 +230,7 @@ public class ParticipantToPdfExporter {
                 table.addCell(createCell(p.getParticipateDate().toString(DATE_FORMAT), false));
                 table.addCell(createCell(p.getName(), false));
                 Municipality homeMunicipality = (Municipality) p.getHomeMunicipality().get();
-                table.addCell(createCell(homeMunicipality.getNameFi() + "\n" + homeMunicipality.getNameSv() + "\n", false));
+                table.addCell(createCell(homeMunicipality.getNameFi() + " / " + homeMunicipality.getNameSv() + "\n", false));
 
                 String membershipType = "";
 
