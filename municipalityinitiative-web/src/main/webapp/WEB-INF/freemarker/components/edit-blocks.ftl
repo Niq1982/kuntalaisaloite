@@ -76,6 +76,31 @@
         </div>
     </div>
 
+    <div id="municipalMembership" class="municipality-not-equal js-hide">
+
+        <div class="input-block-content hidden">
+            <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
+                <@u.systemMessage path="initiative.municipality.notEqual" type="info" args=[href] />
+        </div>
+        <div class="input-block-content">
+            <@f.radiobutton path="initiative.municipalMembership" required="required" options={
+            "community":"initiative.municipalMembership.community",
+            "company":"initiative.municipalMembership.company",
+            "property":"initiative.municipalMembership.property"
+
+            } attributes="" />
+            <br/>
+            <@f.radiobutton path="initiative.municipalMembership" required="required" options={
+            "none":"initiative.municipalMembership.none"
+            } attributes="" header=false/>
+
+        </div>
+
+        <div class="input-block-content is-not-member no-top-margin js-hide hidden">
+            <@u.systemMessage path="warning.initiative.notMember" type="warning" />
+        </div>
+    </div>
+
     <div class="input-block-content hide" id="home-municipality-select">
         <#if user.isVerifiedUser() && user.homeMunicipality.present>
             <input type="hidden" name="homeMunicipality" value="${user.homeMunicipality.value.id}" />
@@ -101,30 +126,6 @@
         </div>
     </noscript>
 
-    <div id="municipalMembership" class="municipality-not-equal js-hide">
-
-            <div class="input-block-content hidden">
-                <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
-                <@u.systemMessage path="initiative.municipality.notEqual" type="info" args=[href] />
-            </div>
-            <div class="input-block-content">
-                <@f.radiobutton path="initiative.municipalMembership" required="required" options={
-                "community":"initiative.municipalMembership.community",
-                "company":"initiative.municipalMembership.company",
-                "property":"initiative.municipalMembership.property"
-
-                } attributes="" />
-                <br/>
-                <@f.radiobutton path="initiative.municipalMembership" required="required" options={
-                "none":"initiative.municipalMembership.none"
-                } attributes="" header=false/>
-
-            </div>
-
-            <div class="input-block-content is-not-member no-top-margin js-hide hidden">
-                <@u.systemMessage path="warning.initiative.notMember" type="warning" />
-            </div>
-    </div>
 </#macro>
 
 <#--
