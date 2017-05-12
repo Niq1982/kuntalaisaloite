@@ -169,13 +169,10 @@
         <div class="js-hide">
             <@f.cookieWarning springMacroRequestContext.requestUri />
         </div>
-            <#assign selectedHomeMunicipalitySameAsInitiatives = !participant.homeMunicipality?? || initiative.municipality.id == participant.homeMunicipality/>
             <#assign hasVerifiedMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present)/>
             <#assign hasVerifiedSameMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present && user.homeMunicipality.value.id?c == initiative.municipality.id?c)/>
 
-
-
-        <form action="${springMacroRequestContext.requestUri}?formError=participate" method="POST" id="form-participate" class="sodirty dirtylisten js-validate <#if hasErrors>has-errors</#if>" data-verified=${hasVerifiedSameMunicipality?c} novalidate>
+        <form action="${springMacroRequestContext.requestUri}?formError=participate" method="POST" id="form-participate" class="sodirty dirtylisten js-validate <#if hasErrors>has-errors</#if>" data-verified=${hasVerifiedSameMunicipality?c} data-homemunicipality=${hasVerifiedMunicipality?c} novalidate>
             <@f.securityFilters/>
             <@f.notTooFastField participant/>
 
@@ -207,17 +204,19 @@
                     </#if>
                 </div>
 
-                 <#if !hasVerifiedMunicipality>
-                     <div class="column col-1of2" id="participation-criterion">
-                         <label>
-                             <input type="radio" name="participation-criterion" value="same-municipality" />
-                             <@u.message "initiative.sameMunicipality" />
-                         </label>
-                         <label>
-                             <input type="radio" name="participation-criterion" value="other-municipality" />
-                             <@u.message "initiative.otherMunicipality" />
-                         </label>
-                     </div>
+                 <#if (!hasVerifiedSameMunicipality) >
+                     <#if (!hasVerifiedMunicipality)>
+                         <div class="column col-1of2" id="participation-criterion">
+                             <label>
+                                 <input type="radio" name="participation-criterion" value="same-municipality" />
+                                 <@u.message "initiative.sameMunicipality" />
+                             </label>
+                             <label>
+                                 <input type="radio" name="participation-criterion" value="other-municipality" />
+                                 <@u.message "initiative.otherMunicipality" />
+                             </label>
+                         </div>
+                     </#if>
 
                      <div class="input-block-content cf">
                          <div id="municipalMembership" class="municipality-not-equal hide">
@@ -242,11 +241,12 @@
 
                          </div>
                      </div>
-
-                     <div class="column col-1of2 <#if selectedHomeMunicipalitySameAsInitiatives>hide<#else>show</#if>"
+                     <#if (!hasVerifiedMunicipality)>
+                     <div class="column col-1of2 hide"
                           id="home-municipality-select">
                          <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected="" multiple=false id="homeMunicipality"/>
                      </div>
+                     </#if>
                  <#else>
                      <div class="column col-1of2 last">
                          <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
@@ -256,7 +256,7 @@
 
             </div>
 
-            <#if !(user.isVerifiedUser() && !hasVerifiedSameMunicipality) >
+            <#if user.isVerifiedUser()>
                 <div class="input-block-content">
                     <@f.formCheckbox path="participant.showName" checked=true />
                 </div>

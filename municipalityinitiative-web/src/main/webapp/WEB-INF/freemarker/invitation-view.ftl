@@ -121,6 +121,8 @@
                 <div class="authentication-selection">
 
                     <#assign formSelectionVisible=user.isVerifiedUser() || RequestParameters['formError']??/>
+                    <#assign hasVerifiedMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present)/>
+                    <#assign hasVerifiedSameMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present && user.homeMunicipality.value.id?c == initiative.municipality.id?c)/>
 
                     <#if !user.isVerifiedUser()>
                         <label id="vetuma-authentication-button" class="authentication verified <#if !formSelectionVisible>selected</#if>"><@u.message "authentication.selection.verified" /></label>
@@ -143,7 +145,7 @@
 
                     <@u.errorsSummary path="authorInvitation.*" prefix="initiative."/>
 
-                    <form action="${springMacroRequestContext.requestUri + '?formError'}" method="POST" class="js-validate" novalidate>
+                    <form action="${springMacroRequestContext.requestUri + '?formError'}" method="POST" id="form-invitation" class="js-validate" novalidate data-verified=${hasVerifiedSameMunicipality?c} data-homemunicipality=${hasVerifiedMunicipality?c}>
 
                         <div class="input-block-content no-top-margin">
                             <@u.systemMessage path="invitation.accept.confirm.description" type="info" />
@@ -164,20 +166,34 @@
                                     <@f.textField path="authorInvitation.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
                                 </#if>
                             </div>
-                            <div class="column col-1of2 last">
-                                <#if user.isVerifiedUser() && user.homeMunicipality.present>
+                            <#if hasVerifiedMunicipality>
+                                <div class="column col-1of2 last">
                                     <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
-                                    <div><@u.solveMunicipality user.homeMunicipality/></div>
-                                <#else>
-                                    <@f.municipalitySelect path="authorInvitation.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id key="initiative.homeMunicipality" multiple=false/>
-                                </#if>
-                            </div>
+                                    <div class="input-placeholder"><@u.solveMunicipality user.homeMunicipality/></div>
+                                </div>
+                            </#if>
 
                         </div>
 
+
+                        <#if !hasVerifiedMunicipality>
+                            <div class="column col-1of2" id="participation-criterion">
+                                <label>
+                                    <input type="radio" name="participation-criterion" value="same-municipality" />
+                                    <@u.message "initiative.sameMunicipality" />
+                                </label>
+                                <label>
+                                    <input type="radio" name="participation-criterion" value="other-municipality" />
+                                    <@u.message "initiative.otherMunicipality" />
+                                </label>
+                            </div>
+                        </#if>
+
+                        <#if !(user.isVerifiedUser() && hasVerifiedSameMunicipality)>
+
                         <br class="clear" />
 
-                        <div id="municipalMembership" class="js-hide">
+                        <div id="municipalMembership" class="hide">
                             <#if !initiative.verifiable>
                                 <div class="input-block-content hidden">
                                     <#assign href="#" />
@@ -200,6 +216,14 @@
                                 <@u.systemMessage path="warning.normalAuthor.notMember" type="warning" />
                             </div>
                         </div>
+                        </#if>
+
+                        <#if !hasVerifiedMunicipality >
+                            <div class="column col-1of2 hide"
+                                 id="home-municipality-select">
+                                <@f.municipalitySelect path="initiative.municipality" key="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected="" multiple=false id="homeMunicipality"/>
+                            </div>
+                        </#if>
 
                         <div class="input-block-content">
                             <@f.formCheckbox path="authorInvitation.contactInfo.showName" checked=true key="contactInfo.showName" />
@@ -214,7 +238,14 @@
                         </div>
 
                         <div class="input-block-content">
-                            <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INVITATION}" id="modal-${UrlConstants.ACTION_ACCEPT_INVITATION}" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept.confirm" /></span></button>
+                            <div class="toggle-disable-send mask-div">
+                                <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INVITATION}"
+                                        id="modal-${UrlConstants.ACTION_ACCEPT_INVITATION}"
+                                        value="<@u.message "invitation.accept.confirm" />"
+                                        class="small-button green save-and-send"><span
+                                        class="small-icon save-and-send"><@u.message "invitation.accept.confirm" /></span>
+                                </button>
+                            </div>
                             <a href="?invitation=${authorInvitation.confirmCode!""}" class="push close"><@u.message "action.cancel" /></a>
                         </div>
                     </form>
