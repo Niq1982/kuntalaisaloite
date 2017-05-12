@@ -21,10 +21,6 @@ public interface ParticipantDao {
 
     void increaseParticipantCountFor(Long initiativeId, boolean showName, boolean citizen);
 
-    void verifiedUserParticipatesNormalInitiative(Long participantId, VerifiedUserId userId, boolean verified);
-
-    Collection<Long> getNormalInitiativesVerifiedUserHasParticipated(VerifiedUserId userId);
-
     List<NormalParticipant> findNormalPublicParticipants(Long initiativeId);
 
     List<NormalParticipant> findNormalPublicParticipants(Long initiativeId, int offset, int limit);

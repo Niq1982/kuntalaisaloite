@@ -102,7 +102,7 @@ public class JdbcConfiguration {
         configuration.register("email", "attachment", new EnumAsObjectType<>(EmailAttachmentType.class));
         configuration.register("review_history", "type", new EnumAsObjectType<>(ReviewHistoryType.class));
 
-        configuration.register(new EnumByNameType<>(Membership.class));
+//         configuration.register(new EnumByNameType<>(Membership.class));
         return configuration;
     }
 

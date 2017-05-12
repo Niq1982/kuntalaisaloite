@@ -249,14 +249,6 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         participantService.createParticipant(participant, initiative, null);
     }
 
-    @Test(expected = OperationNotAllowedException.class)
-    public void participating_allowance_is_checked_when_directly_participating() {
-        Long initiative = testHelper.createCollaborativeReview(testMunicipalityId);
-
-        ParticipantUICreateDto participant = participantUICreateDto();
-        participantService.createConfirmedParticipant(participant, initiative, TestHelper.authorLoginUserHolder);
-    }
-
 
     @Test
     public void adding_participant_does_not_increase_denormalized_participantCount_but_accepting_does() throws MessagingException, InterruptedException {
@@ -291,64 +283,6 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount + 1));
         assertThat(getSingleInitiativeInfo().getParticipantCountPublic(), is(originalParticipantCountPublic));
 
-    }
-
-    @Test
-    public void adding_confirmed_participant_increases_denormalized_participantCount() throws MessagingException, InterruptedException {
-        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
-        testHelper.createVerifiedUser(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId));
-
-        Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, TestHelper.lastLoggedInVerifiedUserHolder);
-
-        assertThat(getSingleInitiativeInfo().getParticipantCount(), Matchers.is(originalParticipantCount + 1));
-    }
-
-    @Test
-    public void adding_confirmed_participant_sets_verified_flag() throws MessagingException, InterruptedException {
-        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        testHelper.createVerifiedUser(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId));
-
-        Long verified = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, TestHelper.lastLoggedInVerifiedUserHolder);
-
-        List<ParticipantListInfo> publicParticipants = participantService.findPublicParticipants(0, initiativeId);
-
-        assertThat(publicParticipants.get(0).getParticipant().isMunicipalityVerified(), is(true)); // Confirmed
-        assertThat(publicParticipants.get(1).getParticipant().isMunicipalityVerified(), is(false)); // The "original" author, non-confirmed
-    }
-
-    @Transactional
-    @Test
-    public void adding_confirmed_participant_to_normal_initiative_shows_in_user_session() throws MessagingException, InterruptedException {
-        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-
-        testHelper.createVerifiedUser(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId));
-
-        Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, TestHelper.lastLoggedInVerifiedUserHolder);
-
-        Maybe<VerifiedUserDbDetails> verifiedUser = refreshVerifiedUser();
-
-        Set<Long> initiativesWithParticipation = verifiedUser.getValue().getInitiativesWithParticipation();
-
-        assertThat(initiativesWithParticipation, contains(initiativeId));
-    }
-
-    @Transactional
-    @Test
-    public void removing_confirmed_user_from_normal_initiative_also_removes_the_initiative_from_verified_user() throws MessagingException, InterruptedException {
-        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-
-        testHelper.createVerifiedUser(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId));
-
-        Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, TestHelper.lastLoggedInVerifiedUserHolder);
-
-        participantDao.deleteParticipant(initiativeId, participantId);
-
-        Maybe<VerifiedUserDbDetails> verifiedUser = refreshVerifiedUser();
-
-        Set<Long> initiativesWithParticipation = verifiedUser.getValue().getInitiativesWithParticipation();
-
-        assertThat(initiativesWithParticipation, empty());
     }
 
     private Maybe<VerifiedUserDbDetails> refreshVerifiedUser() {

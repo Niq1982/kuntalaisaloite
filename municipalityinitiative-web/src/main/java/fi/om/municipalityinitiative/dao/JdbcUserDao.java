@@ -108,10 +108,6 @@ public class JdbcUserDao implements UserDao {
                 .where(QVerifiedUser.verifiedUser.hash.eq(hash))
                 .list(QMunicipalityInitiative.municipalityInitiative.id);
 
-        Collection<Long> normalInitiativesWithParticipation = participantDao.getNormalInitiativesVerifiedUserHasParticipated(userDataMaybe.getValue().verifiedUserId);
-
-        initiativesWithParticipation.addAll(normalInitiativesWithParticipation);
-
         HashSet<Long> participations = new HashSet<>(initiativesWithParticipation);
         HashSet<Long> ownInitiatives = new HashSet<>(initiatives);
         return Maybe.of(new VerifiedUserDbDetails(userDataMaybe.get().verifiedUserId, hash, userDataMaybe.get().contactInfo, ownInitiatives, participations, userDataMaybe.get().municipalityMaybe));

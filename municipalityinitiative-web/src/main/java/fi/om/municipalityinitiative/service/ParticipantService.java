@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
-import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.*;
@@ -161,24 +160,4 @@ public class ParticipantService {
         return participantId;
     }
 
-    @Transactional(readOnly = false)
-    public Long createConfirmedParticipant(ParticipantUICreateDto participant, Long initiativeId, LoginUserHolder loginUserHolder) {
-        assertAllowance("Allowed to participate", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipation());
-
-        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parseParticipantFromVerifiedUser(participant, loginUserHolder.getVerifiedUser(), initiativeId);
-        participantCreateDto.setMunicipalityInitiativeId(initiativeId);
-
-        String confirmationCode = RandomHashGenerator.shortHash();
-        Long participantId = participantDao.create(participantCreateDto, confirmationCode);
-
-        confirmParticipation(participantId, confirmationCode);
-
-        VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
-
-        VerifiedUserId verifiedUserId = verifiedInitiativeService.getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
-
-        participantDao.verifiedUserParticipatesNormalInitiative(participantId, verifiedUserId, verifiedUser.getHomeMunicipality().isPresent());
-
-        return participantId;
-    }
 }

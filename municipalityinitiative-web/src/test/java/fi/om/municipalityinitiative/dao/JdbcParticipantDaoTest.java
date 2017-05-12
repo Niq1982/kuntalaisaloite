@@ -425,20 +425,6 @@ public class JdbcParticipantDaoTest {
         participantDao.deleteParticipant(wrongInitiativeId, participantId);
     }
 
-    @Test
-    public void add_verified_user_normal_initiative(){
-        // Verified user participates verified initiative
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(testVerifiedInitiativeId, testMunicipalityId));
-        Long verifiedUserId = testHelper.getLastVerifiedUserId();
-
-        // Verified user participates to normal initiative
-        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
-        participantDao.verifiedUserParticipatesNormalInitiative(participantId, new VerifiedUserId(verifiedUserId), true);
-
-        Collection<Long> initiatives = participantDao.getNormalInitiativesVerifiedUserHasParticipated(new VerifiedUserId(verifiedUserId));
-        assertThat(initiatives, contains(testInitiativeId));
-    }
-
     private Long createConfirmedParticipant(Long initiativeId, Long homeMunicipality, boolean publicName, String participantName) {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);

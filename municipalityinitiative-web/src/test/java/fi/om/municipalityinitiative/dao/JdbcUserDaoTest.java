@@ -117,22 +117,6 @@ public class JdbcUserDaoTest {
         assertThat(user.getInitiativesWithParticipation(), contains(testVerifiedInitiativeId));
     }
 
-    @Test
-    public void get_normal_initiatives_verified_user_has_participated() {
-
-        userDao.addVerifiedUser(HASH, contactInfo(), testMunicipality);
-        Long verifiedUserId = userDao.getVerifiedUserId(HASH).getValue().toLong();
-
-        // Verified user participates to normal initiative
-        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
-        participantDao.verifiedUserParticipatesNormalInitiative(participantId, new VerifiedUserId(verifiedUserId), true);
-
-        VerifiedUserDbDetails user = userDao.getVerifiedUser(HASH).getValue();
-
-        assertThat(user.getInitiativesWithParticipation(), contains(testInitiativeId));
-
-    }
-
     private static ContactInfo contactInfo() {
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setEmail(EMAIL);

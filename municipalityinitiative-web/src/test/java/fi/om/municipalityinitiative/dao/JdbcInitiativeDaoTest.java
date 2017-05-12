@@ -828,30 +828,6 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void get_participated_initiatives_returns_normal_and_verified_initiatives_with_verified_participation() {
-
-        Long otherInitiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
-
-        // Verified participation
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(otherInitiative, testMunicipality.getId()));
-        Long lastVerifiedUserId = testHelper.getLastVerifiedUserId();
-
-        List<InitiativeListInfo> initiativesBySupport = initiativeDao.findInitiativesByParticipation(new VerifiedUserId(lastVerifiedUserId));
-        assertThat(initiativesBySupport, hasSize(1));
-
-        // Test verified participation to normal initiative
-        Long defaultInitiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
-        Long defaultParticipant = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(defaultInitiative, testMunicipality.getId()));
-
-        participantDao.verifiedUserParticipatesNormalInitiative(defaultParticipant, new VerifiedUserId(lastVerifiedUserId), true);
-
-        List<InitiativeListInfo> bothInitiativesThatSupported = initiativeDao.findInitiativesByParticipation(new VerifiedUserId(lastVerifiedUserId));
-
-        assertThat(bothInitiativesThatSupported, hasSize(2));
-
-    }
-
-    @Test
     public void update_denormalized_participant_count() {
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true));

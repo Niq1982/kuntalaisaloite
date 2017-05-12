@@ -21,14 +21,11 @@ import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.LocalDate;
 
 import javax.annotation.Resource;
-import java.util.Collection;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.dao.Mappings.assertSingleAffection;
-import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 import static fi.om.municipalityinitiative.sql.QVerifiedParticipant.verifiedParticipant;
-import static fi.om.municipalityinitiative.sql.QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives;
 
 @SQLExceptionTranslated
 public class JdbcParticipantDao implements ParticipantDao {
@@ -69,7 +66,7 @@ public class JdbcParticipantDao implements ParticipantDao {
     };
     static final Expression<NormalParticipant> normalParticipantMapping =
             new MappingProjection<NormalParticipant>(NormalParticipant.class,
-                    participant.all(), QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives.all(), QMunicipality.municipality.all()) {
+                    participant.all(), QMunicipality.municipality.all()) {
                 @Override
                 protected NormalParticipant map(Tuple row) {
                     NormalParticipant par = new NormalParticipant();
@@ -77,7 +74,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                     par.setName(row.get(participant.name));
                     par.setEmail(row.get(participant.email));
                     par.setMembership(row.get(participant.membershipType));
-                    par.setMunicipalityVerified(Boolean.TRUE.equals(row.get(QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives.verified)));
+                    par.setMunicipalityVerified(false);
                     par.setShowName(row.get(participant.showName));
                     if (row.get(QMunicipality.municipality.id) != null) {
                         par.setHomeMunicipality(Maybe.of(Mappings.parseMunicipality(row)));
@@ -118,7 +115,6 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(QParticipant.participant.id.eq(participantId))
                 .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
                  .leftJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
-                 .leftJoin(QParticipant.participant._verifiedUserNormalInitiativesParticipantId, QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives)
                 .singleResult(normalParticipantMapping);
 
         if (participant == null) {
@@ -158,26 +154,6 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public void verifiedUserParticipatesNormalInitiative(Long participantId, VerifiedUserId userId, boolean verified) {
-        assertSingleAffection(queryFactory.insert(verifiedUserNormalInitiatives)
-                .set(verifiedUserNormalInitiatives.participant, participantId)
-                .set(verifiedUserNormalInitiatives.verified, verified)
-                .set(verifiedUserNormalInitiatives.verifiedUser, userId.toLong()).execute());
-    }
-
-    @Override
-    public Collection<Long> getNormalInitiativesVerifiedUserHasParticipated(VerifiedUserId userId) {
-        return queryFactory.from(verifiedUserNormalInitiatives)
-                .where(verifiedUserNormalInitiatives.verifiedUser
-                        .eq(userId.toLong()))
-                .innerJoin(participant)
-                    .on(verifiedUserNormalInitiatives.participant.eq(participant.id))
-                .innerJoin(municipalityInitiative)
-                    .on(participant.municipalityInitiativeId.eq(municipalityInitiative.id))
-                .list(municipalityInitiative.id);
-    }
-
-    @Override
     // Preparing because we do not know participants name
     public Long prepareConfirmedParticipant(Long initiativeId, Long homeMunicipality, String email, Membership membership, boolean showName) {
         Long participantId = queryFactory.insert(participant)
@@ -207,7 +183,6 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
-                .leftJoin(participant._verifiedUserNormalInitiativesParticipantId, QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives)
                 .where(participant.showName.eq(true))
                 .where(participant.confirmationCode.isNull())
                 .orderBy(participant.id.desc())
@@ -220,7 +195,6 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
-                .leftJoin(participant._verifiedUserNormalInitiativesParticipantId, QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives)
                 .where(participant.showName.eq(true))
                 .where(participant.confirmationCode.isNull())
                 .orderBy(participant.id.desc())
@@ -236,7 +210,6 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .where(participant.confirmationCode.isNull())
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
-                .leftJoin(participant._verifiedUserNormalInitiativesParticipantId, QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives)
                 .orderBy(participant.id.desc())
                 .limit(limit)
                 .offset(offset)
@@ -295,7 +268,6 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .where(participant.confirmationCode.isNull())
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
-                .leftJoin(participant._verifiedUserNormalInitiativesParticipantId, QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .list(participant.id.as(ParticipateUnionRow.id.getMetadata().getName()),
                         participant.id.isNull().as(ParticipateUnionRow.verified_user.getMetadata().getName()),
@@ -350,7 +322,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                                  false)
                                  : null
                 ));
-                participant.setMembership(row.get(ParticipateUnionRow.membership_type));
+                participant.setMembership(Membership.valueOf(row.get(ParticipateUnionRow.membership_type)));
                 participant.setMunicipalityVerified(row.get(ParticipateUnionRow.verified));
                 participant.setShowName(row.get(ParticipateUnionRow.show_name));
                 participant.setParticipateDate(row.get(ParticipateUnionRow.participate_date));
@@ -375,7 +347,7 @@ public class JdbcParticipantDao implements ParticipantDao {
         public static final StringPath name = new StringPath(path, "name");
         public static final BooleanPath show_name = new BooleanPath(path, "show_name");
         public static final BooleanPath verified = new BooleanPath(path, "verified");
-        public static final EnumPath<Membership> membership_type = new EnumPath<>(Membership.class, path, "membership_type");
+        public static final StringPath membership_type = new StringPath(path, "membership_type");
         public static final DatePath<LocalDate> participate_date = new DatePath<>(LocalDate.class, path, "participate_date");
         public static final NumberPath<Long> municipality_id = new NumberPath<>(Long.class, path, "municipality_id");
         public static final StringPath municipality_name_fi = new StringPath(path, "municipality_name_fi");

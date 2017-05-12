@@ -673,7 +673,6 @@ public class TestHelper {
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
-                .leftJoin(participant._verifiedUserNormalInitiativesParticipantId, QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives)
                 .orderBy(participant.id.desc())
                 .uniqueResult(JdbcParticipantDao.normalParticipantMapping);
     }
