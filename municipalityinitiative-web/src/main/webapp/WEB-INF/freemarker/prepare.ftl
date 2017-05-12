@@ -74,7 +74,7 @@
                     </div>
 
 
-                    <div class="participation-authentication-container" <#if !formSelectionVisible>style="display:none"</#if>>
+                    <div id="email-auth-container" class="participation-authentication-container" <#if !formSelectionVisible>style="display:none"</#if>>
 
 
                         <@edit.authorEmailBlock />

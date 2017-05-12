@@ -169,8 +169,13 @@
         <div class="js-hide">
             <@f.cookieWarning springMacroRequestContext.requestUri />
         </div>
+            <#assign selectedHomeMunicipalitySameAsInitiatives = !participant.homeMunicipality?? || initiative.municipality.id == participant.homeMunicipality/>
+            <#assign hasVerifiedMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present)/>
+            <#assign hasVerifiedSameMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present && user.homeMunicipality.value.id?c == initiative.municipality.id?c)/>
 
-        <form action="${springMacroRequestContext.requestUri}?formError=participate" method="POST" id="form-participate" class="sodirty dirtylisten js-validate <#if hasErrors>has-errors</#if>" novalidate>
+
+
+        <form action="${springMacroRequestContext.requestUri}?formError=participate" method="POST" id="form-participate" class="sodirty dirtylisten js-validate <#if hasErrors>has-errors</#if>" data-verified=${hasVerifiedSameMunicipality?c} novalidate>
             <@f.securityFilters/>
             <@f.notTooFastField participant/>
 
@@ -202,18 +207,14 @@
                     </#if>
                 </div>
 
-
-                 <#assign selectedHomeMunicipalitySameAsInitiatives = !participant.homeMunicipality?? || initiative.municipality.id == participant.homeMunicipality/>
-                 <#assign hasVerifiedMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present)/>
-
                  <#if !hasVerifiedMunicipality>
                      <div class="column col-1of2" id="participation-criterion">
                          <label>
-                             <input type="radio" name="participation-criterion" value="same-municipality" <#if selectedHomeMunicipalitySameAsInitiatives>checked</#if>/>
+                             <input type="radio" name="participation-criterion" value="same-municipality" />
                              <@u.message "initiative.sameMunicipality" />
                          </label>
                          <label>
-                             <input type="radio" name="participation-criterion" value="other-municipality" <#if !selectedHomeMunicipalitySameAsInitiatives>checked</#if>/>
+                             <input type="radio" name="participation-criterion" value="other-municipality" />
                              <@u.message "initiative.otherMunicipality" />
                          </label>
                      </div>
@@ -244,7 +245,7 @@
 
                      <div class="column col-1of2 <#if selectedHomeMunicipalitySameAsInitiatives>hide<#else>show</#if>"
                           id="home-municipality-select">
-                         <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id multiple=false id="homeMunicipality"/>
+                         <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected="" multiple=false id="homeMunicipality"/>
                      </div>
                  <#else>
                      <div class="column col-1of2 last">
@@ -255,17 +256,26 @@
 
             </div>
 
-            <div class="input-block-content">
-                <@f.formCheckbox path="participant.showName" checked=true />
-            </div>
+            <#if !(user.isVerifiedUser() && !hasVerifiedSameMunicipality) >
+                <div class="input-block-content">
+                    <@f.formCheckbox path="participant.showName" checked=true />
+                </div>
+            <#else>
+                <@u.message "Osallistuaksesi aloitteeseen sinun täytyy olla kunnan asukas tai jäsen" />
+            </#if>
 
             <div class="input-block-content">
                 <#if user.isVerifiedUser()>
-                    <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
+                    <div class="toggle-disable-send mask-div">
+                        <button id="participate" type="submit" name="save" value="true" class="small-button"><span
+                                class="small-icon save-and-send"><@u.message "action.save" /></span></button>
+                    </div>
                 <#else>
                     <@u.systemMessage type="warning" path="participate.confirmation.notification"/>
                     <br/>
-                    <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.send.confirmation" /></span></button>
+                    <div class="toggle-disable-send mask-div">
+                        <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.send.confirmation" /></span></button>
+                    </div>
                 </#if>
 
                 <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>

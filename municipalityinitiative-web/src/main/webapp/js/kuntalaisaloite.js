@@ -678,7 +678,10 @@ var municipalitySelection = (function() {
 		}
 
         preventContinuing(true, 'mask', $('.toggle-disable'));
-        preventContinuing(true, 'mask-send', $('.toggle-disable-send'));
+
+		if ($('#form-participate').data('verified') == "") {
+            preventContinuing(true, 'mask-send', $('.toggle-disable-send'));
+		}
 
 		updateSelectedMunicipality();
 
@@ -806,7 +809,7 @@ var municipalitySelection = (function() {
 	}
 
 	function resetHomeMunicipalitySelect() {
-        homeMunicipalitySelect
+        $("#home-municipality-select")
             .val(-1)
             .trigger("liszt:updated");
 	}
@@ -828,7 +831,6 @@ var municipalitySelection = (function() {
                 homeMunicipalitySelectDiv   = $("#home-municipality-select");
 
 			//btn.disableButton( disable ); // use general form validation
-
             if (disable) {
                 homeMunicipalitySelectDiv.hide();
                 preventContinuing(true, 'mask', $('.toggle-disable'));
@@ -904,16 +906,25 @@ var municipalitySelection = (function() {
     });
 
     $('#homeMunicipality').live('change', function() {
-            preventContinuing(false, 'mask', $('.toggle-disable'));
+        var initiativeTypes = $('.initiative-types');
+
+		preventContinuing(false, 'mask', $('.toggle-disable'));
+
+        if (initiativeTypes.length === 0) {
+            preventContinuing(false, 'mask-send', $('.toggle-disable-send'));
+        }
+
     });
 
 
 	$('#participation-criterion').live('change', function() {
 		var otherMunicipalitySelect 	= $("input[value=other-municipality]"),
 			sameMunicipalitySelect	 	= $("input[value=same-municipality]"),
-			radioMunicipalMembership 	= $("input[name=municipalMembership]");
-		if (otherMunicipalitySelect.prop('checked')) {
+			radioMunicipalMembership 	= $("input[name=municipalMembership]"),
+			homeMunicipalitySelectDiv	= $("#home-municipality-select"),
+        	initiativeTypes 			= $('.initiative-types');
 
+		if (otherMunicipalitySelect.prop('checked')) {
             warningNotMember(false);
             radioMunicipalMembership.removeAttr('checked');
             preventContinuing(true, 'mask', $('.toggle-disable'));
@@ -928,24 +939,40 @@ var municipalitySelection = (function() {
             preventContinuing(false, 'mask', $('.toggle-disable'));
             var equalMun = equalMunicipalitys();
             initiativeType.disableVerifiable(!equalMun);
+            if (initiativeTypes.length === 0) {
+                preventContinuing(false, 'mask-send', $('.toggle-disable-send'));
+            }
 		}
 	});
 
 	$('.email-auth-btn').live('click', function() {
+        handleEmailAuthentication();
+	});
+
+	function handleEmailAuthentication() {
         var prepareContent = $('.prepare-content');
 
-		if (!$('#participantEmail').val()) {
-			return;
-		}
+        if (!$('#participantEmail').val()) {
+            return;
+        }
 
         $(".prepare-auth").hide();
 
-		if( prepareContent.hasClass("hide") ) {
-			prepareContent.show();
-		}
+        if (prepareContent.hasClass("hide")) {
+            prepareContent.show();
+        }
 
         initiativeType.disableVerifiable(true);
-	});
+	}
+
+    $('#form-preparation').submit(function(event) {
+
+        if ($('#email-auth-container').is(':visible')) {
+            handleEmailAuthentication();
+            event.preventDefault();
+		}
+
+    });
 
 	// Initialize form state on page load
 	init();
