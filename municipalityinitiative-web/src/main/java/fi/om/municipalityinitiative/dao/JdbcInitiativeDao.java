@@ -26,6 +26,7 @@ import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
+import org.apache.commons.lang.mutable.MutableInt;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -243,35 +244,47 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public void denormalizeParticipantCountForNormalInitiative(Long initiativeId) {
+    public void denormalizeParticipantCounts(Long initiativeId) {
 
-        // Querydsl: subquery?
-        long publicParticipants = queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
-                .innerJoin(QMunicipalityInitiative.municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
-                .where(QParticipant.participant.confirmationCode.isNull())
-                .where(QParticipant.participant.showName.eq(true))
+        Long municipalityId = get(initiativeId).getMunicipality().getId();
+
+        final MutableInt allParticipants = new MutableInt(0);
+        final MutableInt publicParticipants = new MutableInt(0);
+        final MutableInt citizenParticipants = new MutableInt(0);
+
+        queryFactory.from(QParticipant.participant)
                 .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
-                .count();
+                .list(QParticipant.participant.showName,
+                        QParticipant.participant.municipalityId).forEach(row -> {
+            allParticipants.increment();
+            if (row.get(QParticipant.participant.showName)) {
+                publicParticipants.increment();
+            }
+            if (row.get(QParticipant.participant.municipalityId).equals(municipalityId)) {
+                citizenParticipants.increment();
+            }
+        });
 
-        Mappings.assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, (int) publicParticipants)
-                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
-                .execute());
-    }
-
-    @Override
-    public void denormalizeParticipantCountForVerifiedInitiative(Long initiativeId) {
-        long publicParticipants = queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
-                .innerJoin(QMunicipalityInitiative.municipalityInitiative._verifiedParticipantInitiativeFk, QVerifiedParticipant.verifiedParticipant)
-                .where(QVerifiedParticipant.verifiedParticipant.showName.eq(true))
+        queryFactory.from(QVerifiedParticipant.verifiedParticipant)
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
-                .count();
+                .list(QVerifiedParticipant.verifiedParticipant.showName,
+                        QVerifiedParticipant.verifiedParticipant.municipalityId)
+                .forEach(row -> {
+                    allParticipants.increment();
+                    if (row.get(QVerifiedParticipant.verifiedParticipant.showName)) {
+                        publicParticipants.increment();
+                    }
+                    if (row.get(QVerifiedParticipant.verifiedParticipant.municipalityId).equals(municipalityId)) {
+                        citizenParticipants.increment();
+                    }
+                });
 
         Mappings.assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, (int) publicParticipants)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, allParticipants.intValue())
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, publicParticipants.intValue())
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCountCitizen, citizenParticipants.intValue())
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
                 .execute());
-
     }
 
     private static void orderBy(PostgresQuery query, InitiativeSearch.OrderBy orderBy) {

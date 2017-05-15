@@ -408,16 +408,6 @@ public class JdbcParticipantDaoTest {
         assertThat(participantsAfterDelete, is(participantsBeforeDelete - 1));
     }
 
-    @Test
-    public void delete_participant_decreases_denormalized_participantCount() {
-        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
-        int participantsBeforeDelete = testHelper.getInitiative(testInitiativeId).getParticipantCount();
-        participantDao.deleteParticipant(testInitiativeId, participantId);
-
-        int participantsAfterDelete = testHelper.getInitiative(testInitiativeId).getParticipantCount();
-        assertThat(participantsAfterDelete, is(participantsBeforeDelete - 1));
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void delete_participant_fails_if_initiative_id_and_participant_does_not_match() {
         Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));

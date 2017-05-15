@@ -124,6 +124,8 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         createDto.setMunicipalMembership(Membership.community); //XXX: Not tested
         createDto.setHomeMunicipality(authorsMunicipality);
 
+        testHelper.denormalizeParticipantCount(initiativeId);
+
         precondition(countAllNormalAuthors(), is(1L)); // XXX: This does not care if the authors does not belong to this initiative
         precondition(participantCountOfInitiative(initiativeId), is(1));
 
@@ -470,6 +472,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         Long originalAuthor = testHelper.getLastVerifiedUserId();
 
         testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
+        testHelper.denormalizeParticipantCount(initiativeId);
 
         precondition(countAllVerifiedAuthors(), is(2));
         precondition(countAllVerifiedParticipants(), is(2));

@@ -217,7 +217,7 @@ public class AuthorService {
 
         ContactInfo contactInfo = authorDao.getVerifiedAuthor(initiativeId, authorToDelete).getContactInfo();
         authorDao.deleteAuthorAndParticipant(initiativeId, authorToDelete);
-        initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
+        initiativeDao.denormalizeParticipantCounts(initiativeId);
         return contactInfo;
     }
 
@@ -234,7 +234,7 @@ public class AuthorService {
         else {
             ContactInfo deletedAuthorContactInfo = authorDao.getNormalAuthor(authorToDelete).getContactInfo();
             authorDao.deleteAuthorAndParticipant(authorToDelete);
-            initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
+            initiativeDao.denormalizeParticipantCounts(initiativeId);
             return deletedAuthorContactInfo;
         }
     }

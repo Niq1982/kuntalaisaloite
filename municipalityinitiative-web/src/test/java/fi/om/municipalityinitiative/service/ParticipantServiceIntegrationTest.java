@@ -135,16 +135,19 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
                         .toInitiativeDraft()
         );
         Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
+        testHelper.denormalizeParticipantCount(initiativeId);
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
-        precondition(initiative.getParticipantCountPublic(), is(1));
-        precondition(initiative.getParticipantCount(), is(2));
+        int participantCountPublicOriginal = initiative.getParticipantCountPublic();
+        int participantCountOriginal = initiative.getParticipantCount();
+        int participantCountCitizenOriginal = initiative.getParticipantCountCitizen();
 
         participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, participantId);
 
         Initiative updated = testHelper.getInitiative(initiativeId);
-        assertThat(updated.getParticipantCount(), is(1));
-        assertThat(updated.getParticipantCountPublic(), is(0));
+        assertThat(updated.getParticipantCount(), is(participantCountOriginal - 1));
+        assertThat(updated.getParticipantCountPublic(), is(participantCountPublicOriginal - 1));
+        assertThat(updated.getParticipantCountCitizen(), is(participantCountCitizenOriginal - 1));
 
         assertParticipantListSize(initiativeId, 1);
     }
@@ -164,6 +167,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         );
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
+        testHelper.denormalizeParticipantCount(initiativeId);
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
         precondition(initiative.getParticipantCountPublic(), is(2));
@@ -188,6 +192,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         );
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(false));
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(false));
+        testHelper.denormalizeParticipantCount(initiativeId);
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
         precondition(initiative.getParticipantCountPublic(), is(0));
@@ -213,6 +218,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
                         .toInitiativeDraft()
         );
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
+        testHelper.denormalizeParticipantCount(initiativeId);
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
         precondition(initiative.getParticipantCountPublic(), is(1));
@@ -236,10 +242,6 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
                         .toInitiativeDraft()
         );
         Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
-
-        Initiative initiative = testHelper.getInitiative(initiativeId);
-        precondition(initiative.getParticipantCountPublic(), is(1));
-        precondition(initiative.getParticipantCount(), is(2));
 
         participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, participantId);
     }

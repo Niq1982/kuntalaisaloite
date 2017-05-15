@@ -28,6 +28,7 @@ import java.util.List;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -63,12 +64,14 @@ public class JdbcInitiativeDaoTest {
     TestHelper testHelper;
 
     private Municipality testMunicipality;
+    private Long anotherMunicipality;
 
     @Before
     public void setup() {
         testHelper.dbCleanup();
         String municipalityName = "Test municipality";
         testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
+        anotherMunicipality = testHelper.createTestMunicipality(randomAlphabetic(10));
     }
 
     // Create and get are tested at MunicipalityInitiativeServiceIntegrationTests
@@ -145,6 +148,7 @@ public class JdbcInitiativeDaoTest {
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withSent(new DateTime(2010, 1, 1, 0, 0))
                 .witEmailReportSent(EmailReportType.IN_ACCEPTED, new DateTime())
+                .withParticipantCount(1)
                 .applyAuthor().withParticipantMunicipality(authorsMunicipalityId)
                 .toInitiativeDraft());
 
@@ -828,17 +832,68 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void update_denormalized_participant_count() {
-        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
-        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true));
-        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true));
-        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(false));
+    public void update_denormalized_participant_count_updates_total_count() {
 
-        initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
+        Long initiative = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        initiativeDao.denormalizeParticipantCounts(initiative);
+        int originalParticipantCount = initiativeDao.get(initiative).getParticipantCount();
 
-        Initiative initiative = testHelper.getInitiative(initiativeId);
-        assertThat(initiative.getParticipantCount(), is(3));
-        assertThat(initiative.getParticipantCountPublic(), is(2));
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId()));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId()));
+
+        initiativeDao.denormalizeParticipantCounts(initiative);
+
+        assertThat(initiativeDao.get(initiative).getParticipantCount(), is(originalParticipantCount+ 2));
+
+    }
+
+    @Test
+    public void update_denormalized_participant_count_updates_public_names_count() {
+
+        Long initiative = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        initiativeDao.denormalizeParticipantCounts(initiative);
+        int originalPublicNamesCount = initiativeDao.get(initiative).getParticipantCountPublic();
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId())
+                .withShowName(true));
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId())
+                .withShowName(true));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId())
+                .withShowName(true));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId())
+                .withShowName(true));
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId())
+                .withShowName(false));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId())
+                .withShowName(false));
+
+
+        initiativeDao.denormalizeParticipantCounts(initiative);
+
+        assertThat(initiativeDao.get(initiative).getParticipantCountPublic(), is(originalPublicNamesCount+ 4));
+
+    }
+
+    @Test
+    public void update_denormalized_participant_count_updates_citizen_participant_count() {
+
+        Long initiative = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        initiativeDao.denormalizeParticipantCounts(initiative);
+        int originalCitizenParticipants = initiativeDao.get(initiative).getParticipantCountCitizen();
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiative, anotherMunicipality));
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiative, anotherMunicipality));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiative, anotherMunicipality));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiative, anotherMunicipality));
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId()));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId()));
+
+        initiativeDao.denormalizeParticipantCounts(initiative);
+
+        assertThat(initiativeDao.get(initiative).getParticipantCountCitizen(), is(originalCitizenParticipants+ 2));
+
     }
 
     @Test
@@ -848,7 +903,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true));
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(false));
 
-        initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
+        initiativeDao.denormalizeParticipantCounts(initiativeId);
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
         assertThat(initiative.getParticipantCount(), is(3));

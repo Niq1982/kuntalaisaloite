@@ -58,11 +58,9 @@ public interface InitiativeDao {
 
     List<InitiativeListInfo> findInitiatives(VerifiedUserId verifiedUserId);
 
-    void denormalizeParticipantCountForNormalInitiative(Long initiativeId);
+    void denormalizeParticipantCounts(Long initiativeId);
 
     InitiativeListWithCount findUnCached(InitiativeSearch search);
-
-    void denormalizeParticipantCountForVerifiedInitiative(Long initiativeId);
 
     List<Initiative> findAllByStateChangeBefore(InitiativeState accepted, LocalDate date);
 

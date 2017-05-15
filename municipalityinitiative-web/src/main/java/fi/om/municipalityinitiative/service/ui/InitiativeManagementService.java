@@ -97,7 +97,7 @@ public class InitiativeManagementService {
             String hash = loginUserHolder.getVerifiedUser().getHash();
             userDao.updateUserInformation(hash, editDto.getContactInfo());
             participantDao.updateVerifiedParticipantShowName(initiativeId, hash, editDto.getContactInfo().isShowName());
-            initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
+            initiativeDao.denormalizeParticipantCounts(initiativeId);
 
             // This is a little strange :)
             // When verified user starts creating a initiative, we'll send the first email after he/she updates
@@ -110,7 +110,7 @@ public class InitiativeManagementService {
         }
         else {
             authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), editDto.getContactInfo());
-            initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
+            initiativeDao.denormalizeParticipantCounts(initiativeId);
         }
 
 
@@ -182,13 +182,11 @@ public class InitiativeManagementService {
             String hash = loginUserHolder.getVerifiedUser().getHash();
             userDao.updateUserInformation(hash, updateDto.getContactInfo());
             participantDao.updateVerifiedParticipantShowName(initiativeId, hash, updateDto.getContactInfo().isShowName());
-            initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
         }
         else {
             authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), updateDto.getContactInfo());
-            initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
         }
-
+        initiativeDao.denormalizeParticipantCounts(initiativeId);
     }
 
     @Transactional(readOnly = false)

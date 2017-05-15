@@ -11,7 +11,6 @@ import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
-import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationException;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
@@ -109,12 +108,11 @@ public class ParticipantService {
 
         if (initiativeDao.get(initiativeId).getType().isNotVerifiable()) {
             participantDao.deleteParticipant(initiativeId, participantId);
-            initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
         }
         else {
             participantDao.deleteVerifiedParticipant(initiativeId, participantId);
-            initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
         }
+        initiativeDao.denormalizeParticipantCounts(initiativeId);
 
 
     }

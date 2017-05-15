@@ -3,7 +3,6 @@ package fi.om.municipalityinitiative.dao;
 import com.google.common.net.MediaType;
 import com.mysema.query.sql.RelationalPathBase;
 import com.mysema.query.sql.dml.SQLInsertClause;
-import com.mysema.query.sql.dml.SQLUpdateClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
 import com.mysema.query.types.Predicate;
@@ -21,6 +20,7 @@ import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
+import org.apache.commons.lang.mutable.MutableInt;
 import org.hamcrest.core.Is;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -382,8 +382,6 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
                 .execute();
 
-        increaseParticipantCount(authorDraft);
-
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setAddress(authorDraft.authorAddress);
         contactInfo.setPhone(authorDraft.authorPhone);
@@ -403,18 +401,57 @@ public class TestHelper {
                 Collections.singleton(authorDraft.initiativeId),
                 participantMunicipality, 20));
 
+
         return lastVerifiedUserId;
     }
 
-    private void increaseParticipantCount(AuthorDraft authorDraft) {
-        SQLUpdateClause updateClause = queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1));
+    @Transactional
+    public void denormalizeParticipantCount(Long initiativeId) {
 
-        if (authorDraft.showName) {
-            updateClause.set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1));
-        }
+        // :((((
+        // CopyPasted from InitiativeDao. This is bad. But this whole TestHelper class should be refactored asap.
 
-        updateClause.where(QMunicipalityInitiative.municipalityInitiative.id.eq(authorDraft.initiativeId)).execute();
+        Long municipalityId = getInitiative(lastInitiativeId).getMunicipality().getId();
+
+        final MutableInt allParticipants = new MutableInt(0);
+        final MutableInt publicParticipants = new MutableInt(0);
+        final MutableInt citizenParticipants = new MutableInt(0);
+
+        queryFactory.from(QParticipant.participant)
+                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
+                .list(QParticipant.participant.showName,
+                        QParticipant.participant.municipalityId).forEach(row -> {
+            allParticipants.increment();
+            if (row.get(QParticipant.participant.showName)) {
+                publicParticipants.increment();
+            }
+            if (row.get(QParticipant.participant.municipalityId).equals(municipalityId)) {
+                citizenParticipants.increment();
+            }
+        });
+
+        queryFactory.from(QVerifiedParticipant.verifiedParticipant)
+                .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
+                .list(QVerifiedParticipant.verifiedParticipant.showName,
+                        QVerifiedParticipant.verifiedParticipant.municipalityId)
+                .forEach(row -> {
+                    allParticipants.increment();
+                    if (row.get(QVerifiedParticipant.verifiedParticipant.showName)) {
+                        publicParticipants.increment();
+                    }
+                    if (row.get(QVerifiedParticipant.verifiedParticipant.municipalityId).equals(municipalityId)) {
+                        citizenParticipants.increment();
+                    }
+                });
+
+        System.out.println(citizenParticipants.intValue());
+        Mappings.assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, allParticipants.intValue())
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, publicParticipants.intValue())
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCountCitizen, citizenParticipants.intValue())
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute());
+
     }
 
     @Transactional(readOnly = false)
@@ -438,7 +475,6 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.municipalityId, authorDraft.participantMunicipality)
                 .execute();
 
-        increaseParticipantCount(authorDraft);
         this.lastVerifiedUserId = verifiedUserId;
     }
     @Transactional(readOnly = false)
@@ -462,9 +498,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.participateTime, date)
                 .execute();
 
-        increaseParticipantCount(authorDraft);
         this.lastVerifiedUserId = verifiedUserId;
-
         return id;
     }
 
@@ -479,28 +513,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
                 .execute();
 
-        increaseParticipantCount(authorDraft);
-
         return id;
-    }
-
-    @Transactional(readOnly = false)
-    public Long createVerifiedUser(AuthorDraft authorDraft){
-        String hash = createUserSsnHash();
-        Long verifiedUserId = queryFactory.insert(QVerifiedUser.verifiedUser)
-                .set(QVerifiedUser.verifiedUser.hash, hash)
-                .set(QVerifiedUser.verifiedUser.address, authorDraft.authorAddress)
-                .set(QVerifiedUser.verifiedUser.phone, authorDraft.authorPhone)
-                .set(QVerifiedUser.verifiedUser.email, authorDraft.participantEmail)
-                .set(QVerifiedUser.verifiedUser.name, authorDraft.participantName)
-                .set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.participantMunicipality)
-                .executeWithKey(QVerifiedUser.verifiedUser.id);
-
-        this.lastVerifiedUserId = verifiedUserId;
-
-        Maybe<Municipality> participantMunicipality = Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true));
-        lastLoggedInVerifiedUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId), hash, new ContactInfo(), null, null, participantMunicipality, 20));
-        return verifiedUserId;
     }
 
     private String createUserSsnHash() {
@@ -511,9 +524,7 @@ public class TestHelper {
     @Transactional(readOnly = false)
     public Long createDefaultParticipant(AuthorDraft authorDraft) {
 
-        increaseParticipantCount(authorDraft);
-
-        return queryFactory.insert(QParticipant.participant)
+        Long aLong = queryFactory.insert(QParticipant.participant)
                 .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)
                 .set(QParticipant.participant.municipalityInitiativeId, authorDraft.initiativeId)
                 .set(QParticipant.participant.name, authorDraft.participantName)
@@ -521,12 +532,11 @@ public class TestHelper {
                 .set(QParticipant.participant.email, authorDraft.participantEmail)
                 .set(QParticipant.participant.membershipType, authorDraft.municipalityMembership)
                 .executeWithKey(QParticipant.participant.id);
+        return aLong;
     }
 
     @Transactional(readOnly = false)
     public Long createDefaultParticipantWithDate(AuthorDraft authorDraft, LocalDate date, String confirmationCode) {
-
-        increaseParticipantCount(authorDraft);
 
         SQLInsertClause set = queryFactory.insert(QParticipant.participant)
                 .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)
@@ -540,7 +550,8 @@ public class TestHelper {
         if (confirmationCode != null) {
             set.set(QParticipant.participant.confirmationCode, confirmationCode);
         }
-        return set.executeWithKey(QParticipant.participant.id);
+        Long aLong = set.executeWithKey(QParticipant.participant.id);
+        return aLong;
     }
 
     public VerifiedUser getVerifiedUser() {
@@ -705,23 +716,6 @@ public class TestHelper {
         contactInfo.setAddress(DEFAULT_AUTHOR_ADDRESS);
         contactInfo.setShowName(DEFAULT_PUBLIC_NAME);
         return contactInfo;
-    }
-
-    @Transactional
-    public void simpleCreate(Long municipality, InitiativeState published, InitiativeType type, DateTime now) {
-        SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
-
-        insert.set(municipalityInitiative.name, "name");
-        insert.set(municipalityInitiative.proposal, "proposal");
-        insert.set(municipalityInitiative.municipalityId, municipality);
-        insert.set(municipalityInitiative.participantCount, 0);
-        insert.set(municipalityInitiative.extraInfo, "");
-        insert.set(municipalityInitiative.externalparticipantcount, 0);
-        insert.set(municipalityInitiative.state, published);
-        insert.set(municipalityInitiative.type, type);
-        insert.set(municipalityInitiative.fixState, FixState.OK);
-        insert.set(municipalityInitiative.stateTimestamp, now);
-        insert.execute();
     }
 
     @Transactional(readOnly = true)
