@@ -254,6 +254,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         queryFactory.from(QParticipant.participant)
                 .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
+                .where(QParticipant.participant.confirmationCode.isNull())
                 .list(QParticipant.participant.showName,
                         QParticipant.participant.municipalityId).forEach(row -> {
             allParticipants.increment();

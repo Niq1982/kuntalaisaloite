@@ -838,6 +838,12 @@ public class JdbcInitiativeDaoTest {
         initiativeDao.denormalizeParticipantCounts(initiative);
         int originalParticipantCount = initiativeDao.get(initiative).getParticipantCount();
 
+        // These should not count
+        testHelper.createUnconfirmedParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId()), randomAlphabetic(10));
+        testHelper.createUnconfirmedParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId()), randomAlphabetic(10));
+        testHelper.createUnconfirmedParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId()), randomAlphabetic(10));
+        testHelper.createUnconfirmedParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId()), randomAlphabetic(10));
+
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId()));
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId()));
 
