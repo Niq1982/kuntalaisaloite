@@ -94,6 +94,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setExtraInfo(row.get(municipalityInitiative.extraInfo));
                     info.setModeratorComment(Strings.nullToEmpty(row.get(municipalityInitiative.moderatorComment)));
                     info.setParticipantCount(row.get(municipalityInitiative.participantCount));
+                    info.setParticipantCountCitizen(row.get(municipalityInitiative.participantCountCitizen));
                     info.setSentComment(row.get(municipalityInitiative.sentComment));
                     info.setFixState(row.get(municipalityInitiative.fixState));
                     info.setExternalParticipantCount(Mappings.nullToZero(row.get(municipalityInitiative.externalparticipantcount)));

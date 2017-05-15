@@ -191,9 +191,15 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         confirmDto.setHomeMunicipality(testMunicipality);
         confirmDto.setConfirmCode(invitation.getConfirmationCode());
 
+        int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
         int originalPublicParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCountPublic();
+        int originalCitizenCount = testHelper.getInitiative(initiativeId).getParticipantCountCitizen();
+
         authorService.confirmAuthorInvitation(initiativeId, confirmDto, Locales.LOCALE_FI);
+
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(originalParticipantCount + 1));
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCountPublic(), is(originalPublicParticipantCount + 1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCountCitizen(), is(originalCitizenCount + 1));
 
     }
 

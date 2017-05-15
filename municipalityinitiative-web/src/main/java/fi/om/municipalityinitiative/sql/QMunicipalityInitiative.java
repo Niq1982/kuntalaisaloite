@@ -49,7 +49,7 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final NumberPath<Integer> participantCount = createNumber("participantCount", Integer.class);
 
-    public final NumberPath<Long> participantCountCitizen = createNumber("participantCountCitizen", Long.class);
+    public final NumberPath<Integer> participantCountCitizen = createNumber("participantCountCitizen", Integer.class);
 
     public final NumberPath<Integer> participantCountPublic = createNumber("participantCountPublic", Integer.class);
 
@@ -133,7 +133,7 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
         addMetadata(municipalityId, ColumnMetadata.named("municipality_id").ofType(-5).withSize(19).notNull());
         addMetadata(name, ColumnMetadata.named("name").ofType(12).withSize(512));
         addMetadata(participantCount, ColumnMetadata.named("participant_count").ofType(4).withSize(10));
-        addMetadata(participantCountCitizen, ColumnMetadata.named("participant_count_citizen").ofType(-5).withSize(19).notNull());
+        addMetadata(participantCountCitizen, ColumnMetadata.named("participant_count_citizen").ofType(4).withSize(10).notNull());
         addMetadata(participantCountPublic, ColumnMetadata.named("participant_count_public").ofType(4).withSize(10));
         addMetadata(proposal, ColumnMetadata.named("proposal").ofType(12).withSize(2147483647));
         addMetadata(sent, ColumnMetadata.named("sent").ofType(93).withSize(29).withDigits(6));

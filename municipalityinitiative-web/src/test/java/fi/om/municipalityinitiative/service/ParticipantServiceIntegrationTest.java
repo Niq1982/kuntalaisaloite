@@ -12,6 +12,7 @@ import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
 import fi.om.municipalityinitiative.web.Urls;
 import org.hamcrest.Matchers;
@@ -41,10 +42,12 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     private UserDao userDao;
 
     private Long testMunicipalityId;
+    private Long anotherMunicipality;
 
     @Override
     protected void childSetup() {
         testMunicipalityId = testHelper.createTestMunicipality("Some municipality");
+        anotherMunicipality = testHelper.createTestMunicipality("Another municipality");
     }
 
     @Test
@@ -255,13 +258,17 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
         int originalParticipantCountPublic = testHelper.getInitiative(initiativeId).getParticipantCount();
+        int originalParticipantCountCitizen = testHelper.getInitiative(initiativeId).getParticipantCountCitizen();
 
         Long participantId = participantService.createParticipant(participantUICreateDto(), initiativeId, null);
-        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), Matchers.is(originalParticipantCount));
+        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount));
+        assertThat(getSingleInitiativeInfo().getParticipantCountPublic(), is(originalParticipantCountPublic));
+        assertThat(getSingleInitiativeInfo().getParticipantCountCitizen(), is(originalParticipantCountCitizen));
 
         participantService.confirmParticipation(participantId, PreviousHashGetter.get());
         assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount + 1));
         assertThat(getSingleInitiativeInfo().getParticipantCountPublic(), is(originalParticipantCountPublic + 1));
+        assertThat(getSingleInitiativeInfo().getParticipantCountCitizen(), is(originalParticipantCountCitizen + 1));
 
         assertUniqueSentEmail(participantUICreateDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PARTICIPATION_CONFIRMATION_SUBJECT);
     }
@@ -282,6 +289,28 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         participantService.confirmParticipation(participantId, PreviousHashGetter.get());
         assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount + 1));
         assertThat(getSingleInitiativeInfo().getParticipantCountPublic(), is(originalParticipantCountPublic));
+
+    }
+
+    @Test
+    public void confirming_participation_does_not_increase_citizen_participant_amount_if_from_another_municipality() {
+        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
+        int originalParticipantCountPublic = testHelper.getInitiative(initiativeId).getParticipantCount();
+        int originalParticipantCountCitizen = testHelper.getInitiative(initiativeId).getParticipantCountCitizen();
+
+        ParticipantUICreateDto participant = participantUICreateDto();
+        participant.setHomeMunicipality(anotherMunicipality);
+        participant.setMunicipalMembership(Membership.community);
+        participant.setShowName(true);
+
+        Long participantId = participantService.createParticipant(participant, initiativeId, null);
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(originalParticipantCount));
+
+        participantService.confirmParticipation(participantId, PreviousHashGetter.get());
+        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount + 1));
+        assertThat(getSingleInitiativeInfo().getParticipantCountPublic(), is(originalParticipantCountPublic +1));
+        assertThat(getSingleInitiativeInfo().getParticipantCountCitizen(), is(originalParticipantCountCitizen));
 
     }
 

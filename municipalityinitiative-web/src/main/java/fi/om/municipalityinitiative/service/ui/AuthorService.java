@@ -145,6 +145,11 @@ public class AuthorService {
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
                 String managementHash = createAuthorAndParticipant(initiativeId, confirmDto);
                 emailService.sendAuthorConfirmedInvitation(initiativeId, invitation.getEmail(), managementHash, locale);
+                participantDao.increaseParticipantCountFor(
+                        initiativeId,
+                        confirmDto.getContactInfo().isShowName(),
+                        initiative.getMunicipality().getId().equals(confirmDto.getHomeMunicipality())
+                );
                 return managementHash;
             }
         }

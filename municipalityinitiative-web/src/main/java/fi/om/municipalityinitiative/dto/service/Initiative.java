@@ -27,6 +27,7 @@ public class Initiative {
     private String moderatorComment;
     private int participantCount;
     private int participantCountPublic;
+    private int participantCountCitizen;
     private String sentComment;
     private FixState fixState;
     private DateTime lastEmailReportTime;
@@ -146,6 +147,10 @@ public class Initiative {
         this.participantCount = participantCount;
     }
 
+    public void setParticipantCountCitizen(int participantCountCitizen) {
+        this.participantCountCitizen = participantCountCitizen;
+    }
+
     public int getParticipantCount() {
         return participantCount;
     }
@@ -176,6 +181,10 @@ public class Initiative {
 
     public int getParticipantCountPublic() {
         return participantCountPublic;
+    }
+
+    public int getParticipantCountCitizen() {
+        return participantCountCitizen;
     }
 
     public void setParticipantCountPublic(int participantCountPublic) {

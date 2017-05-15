@@ -84,6 +84,8 @@ public class NormalInitiativeEmailUserServiceIntegrationTest extends ServiceInte
         Long initiativeId = service.prepareInitiativeWithEmail(prepareInitiativeUICreateDto, Locales.LOCALE_FI);
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCountPublic(), is(1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCountCitizen(), is(0));
     }
 
 

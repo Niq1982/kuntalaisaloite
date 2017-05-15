@@ -107,6 +107,8 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     public void preparing_sets_participant_count_to_one_when_adding_normal_initiative_with_authentication() {
         long initiativeId = service.prepareNormalInitiative(verifiedLoginUserHolder, prepareNormalUiCreateDto());
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCountCitizen(), is(1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCountPublic(), is(1));
     }
 
 
@@ -426,6 +428,8 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, authorInvitationConfirmDto(), Locales.LOCALE_FI);
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCountPublic(), is(1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCountCitizen(), is(1));
     }
 
     @Test
@@ -540,6 +544,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder);
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCountCitizen(), is(1));
     }
 
     @Test

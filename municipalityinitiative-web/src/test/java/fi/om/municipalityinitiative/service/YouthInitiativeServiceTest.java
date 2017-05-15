@@ -77,6 +77,11 @@ public class YouthInitiativeServiceTest {
         assertThat(createdInitiative.getYouthInitiativeId(), isPresent());
         assertThat(createdInitiative.getYouthInitiativeId().get(), is(editDto.getYouthInitiativeId()));
 
+        assertThat(createdInitiative.getParticipantCount(), is(1));
+        assertThat(createdInitiative.getParticipantCountPublic(), is(1));
+        assertThat(createdInitiative.getParticipantCountCitizen(), is(0));
+
+
     }
 
     @Transactional

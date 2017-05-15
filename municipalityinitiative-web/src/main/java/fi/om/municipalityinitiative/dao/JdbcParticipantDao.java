@@ -142,11 +142,10 @@ public class JdbcParticipantDao implements ParticipantDao {
             updateClause.set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic,
                     QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1));
 
-
         }
 
         if (citizen) {
-            // updateClause.set(QMunicipalityInitiative.municipalityInitiative.participantCountCitizen)
+            updateClause.set(QMunicipalityInitiative.municipalityInitiative.participantCountCitizen, QMunicipalityInitiative.municipalityInitiative.participantCountCitizen.add(1));
         }
 
         assertSingleAffection(updateClause.execute());
@@ -163,16 +162,6 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(participant.membershipType, membership)
                 .set(participant.showName, showName) // Default is true
                 .executeWithKey(participant.id);
-
-        // Increase denormalized participantCount if collaborative initiative.
-        SQLUpdateClause updateParticipantCount = queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
-                        QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
-                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId));
-        if (showName) {
-            updateParticipantCount.set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1));
-        }
-        updateParticipantCount.execute();
 
         return participantId;
     }

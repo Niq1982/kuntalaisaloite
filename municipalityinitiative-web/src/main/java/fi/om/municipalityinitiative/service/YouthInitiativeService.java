@@ -44,12 +44,13 @@ public class YouthInitiativeService {
 
         Long youthInitiativeId = initiativeDao.prepareYouthInitiative(createDto.getYouthInitiativeId(), createDto.getName(), createDto.getProposal(), createDto.getExtraInfo(), createDto.getMunicipality());
 
+        boolean showName = true;
         Long participantId = participantDao.prepareConfirmedParticipant(
                 youthInitiativeId,
                 createDto.getContactInfo().getMunicipality(),
                 createDto.getContactInfo().getEmail(),
                 createDto.getContactInfo().getMembership(),
-                true);
+                showName);
 
         String managementHash = RandomHashGenerator.longHash();
         NormalAuthorId authorId = authorDao.createAuthor(youthInitiativeId, participantId, managementHash);
@@ -58,12 +59,15 @@ public class YouthInitiativeService {
         contactInfo.setEmail(createDto.getContactInfo().getEmail());
         contactInfo.setPhone(createDto.getContactInfo().getPhone());
         contactInfo.setName(createDto.getContactInfo().getName());
-        contactInfo.setShowName(true);
+        contactInfo.setShowName(showName);
         authorDao.updateAuthorInformation(authorId, contactInfo);
 
         Locale locale = Locales.forLanguageTag(createDto.getLocale());
 
         emailService.sendPrepareCreatedEmail(youthInitiativeId, authorId, managementHash, locale);
+
+        participantDao.increaseParticipantCountFor(youthInitiativeId, showName,
+                createDto.getMunicipality().equals(createDto.getContactInfo().getMunicipality()));
 
         return new YouthInitiativeCreateResult(youthInitiativeId, Urls.get(locale).loginAuthor(managementHash));
     }

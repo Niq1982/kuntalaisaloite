@@ -1,5 +1,5 @@
 ALTER TABLE municipality_initiative
-  ADD COLUMN participant_count_citizen BIGINT NOT NULL DEFAULT 0;
+  ADD COLUMN participant_count_citizen INTEGER NOT NULL DEFAULT 0;
 
 -- Denormalize from verified participants
 update municipality_initiative

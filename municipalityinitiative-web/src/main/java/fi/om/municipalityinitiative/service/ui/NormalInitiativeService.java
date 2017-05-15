@@ -83,15 +83,18 @@ public class NormalInitiativeService {
         assertMunicipalityActive(createDto.getMunicipality());
 
         Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality());
+        boolean showName = true;
         Long participantId = participantDao.prepareConfirmedParticipant(
                 initiativeId,
                 createDto.getHomeMunicipality(),
                 createDto.getParticipantEmail(),
                 createDto.hasMunicipalMembership() ? createDto.getMunicipalMembership() : Membership.none,
-                true);
+                showName);
         String managementHash = RandomHashGenerator.longHash();
         NormalAuthorId authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
 
+        participantDao.increaseParticipantCountFor(initiativeId,
+                showName, createDto.getMunicipality().equals(createDto.getHomeMunicipality()));
         emailService.sendPrepareCreatedEmail(initiativeId, authorId, managementHash, locale);
 
         return initiativeId;
