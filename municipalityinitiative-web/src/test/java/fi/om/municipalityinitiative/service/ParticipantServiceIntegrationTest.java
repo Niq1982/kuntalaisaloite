@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dao.UserDao;
@@ -7,6 +8,9 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.VerifiedUserDbDetails;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.NormalLoginUser;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -16,6 +20,7 @@ import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.annotation.Resource;
@@ -60,11 +65,16 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     }
 
     @Test
-    public void findPublicParticipants_limits_results() {
+    @Ignore("TODO")
+    public void findPublicParticipants_limits_results_and_orders_by_participate_time() {
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId));
 
         int participantCount = 101;
-        createParticipants(initiativeId, participantCount);
+
+        for (int i = 0; i < participantCount; ++i) {
+            testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
+                    .withParticipantName(String.valueOf(i+1)));
+        }
 
         // Get without offset, should be limited
         assertThat(participantService.findPublicParticipants(0, initiativeId), hasSize(Urls.MAX_PARTICIPANT_LIST_LIMIT));
@@ -80,11 +90,6 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
 
     }
 
-    private void createParticipants(Long initiativeId, int participantCount) {
-        for (int i = 0; i < participantCount; ++i) {
-            testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName(String.valueOf(i+1)));
-        }
-    }
 
     @Test
     public void findAllParticipants_for_verified_initiative() {
@@ -99,27 +104,58 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     }
 
     @Test
-    public void findPublicParticipants_for_normal_initiative_sets_author_flag_true_if_author() {
-        Long initiativeId = createNormalInitiativeWithAuthor();
-        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
+    public void findAllParticipants_sets_author_flat_true_for_authors_and_false_for_normal_participants() {
+        Long defaultInitiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId));
 
-        List<ParticipantListInfo> publicParticipants = participantService.findPublicParticipants(0, initiativeId);
-        precondition(publicParticipants, hasSize(2));
+        testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(defaultInitiative, testMunicipalityId)
+                .withParticipantName("Normal Author"));
 
-        assertThat(publicParticipants.get(0).isAuthor(), is(false));
-        assertThat(publicParticipants.get(1).isAuthor(), is(true));
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(defaultInitiative, testMunicipalityId)
+                .withParticipantName("Normal Participant"));
+
+        testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(defaultInitiative, testMunicipalityId)
+                .withParticipantName("Verified Author"));
+
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(defaultInitiative, testMunicipalityId)
+                .withParticipantName("Verified Participant"));
+
+        LoginUserHolder loginUserHolder = new LoginUserHolder<NormalLoginUser>(User.normalUser(null, Sets.newHashSet(defaultInitiative)));
+        List<ParticipantListInfo> allParticipants = participantService.findAllParticipants(defaultInitiative, loginUserHolder, 0);
+
+        assertThat(allParticipants, hasSize(4));
+
+        assertThat(allParticipants.stream().filter(p -> p.getParticipant().getName().equals("Normal Author")).findAny().get().isAuthor(), is(true));
+        assertThat(allParticipants.stream().filter(p -> p.getParticipant().getName().equals("Verified Author")).findAny().get().isAuthor(), is(true));
+        assertThat(allParticipants.stream().filter(p -> p.getParticipant().getName().equals("Normal Participant")).findAny().get().isAuthor(), is(false));
+        assertThat(allParticipants.stream().filter(p -> p.getParticipant().getName().equals("Verified Participant")).findAny().get().isAuthor(), is(false));
     }
 
     @Test
-    public void findPublicParticipants_for_verified_initiative_sets_author_flag_true_if_author() {
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
+    public void findPublicParticipants_returns_only_public_participants() {
+        Long defaultInitiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId));
 
-        List<ParticipantListInfo> publicParticipants = participantService.findPublicParticipants(0, initiativeId);
-        precondition(publicParticipants, hasSize(2));
+        testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(defaultInitiative, testMunicipalityId)
+                .withParticipantName("Normal Author")
+                .withShowName(true));
 
-        assertThat(publicParticipants.get(0).isAuthor(), is(false));
-        assertThat(publicParticipants.get(1).isAuthor(), is(true));
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(defaultInitiative, testMunicipalityId)
+                .withParticipantName("Normal Participant")
+                .withShowName(true));
+
+        testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(defaultInitiative, testMunicipalityId)
+                .withParticipantName("Verified Author")
+                .withShowName(false));
+
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(defaultInitiative, testMunicipalityId)
+                .withParticipantName("Verified Participant")
+                .withShowName(false));
+
+        List<ParticipantListInfo> allParticipants = participantService.findPublicParticipants(0, defaultInitiative);
+
+        assertThat(allParticipants, hasSize(2));
+
+        assertThat(allParticipants.stream().filter(p -> p.getParticipant().getName().equals("Normal Author")).findAny().get().isAuthor(), is(true));
+        assertThat(allParticipants.stream().filter(p -> p.getParticipant().getName().equals("Normal Participant")).findAny().get().isAuthor(), is(false));
     }
 
     @Test
