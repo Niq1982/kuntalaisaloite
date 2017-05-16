@@ -20,6 +20,7 @@ import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -65,31 +66,37 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     }
 
     @Test
-    @Ignore("TODO")
-    public void findPublicParticipants_limits_results_and_orders_by_participate_time() {
+    public void findPublicParticipants_are_ordered_by_date_and_pagination_works() {
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId));
 
-        int participantCount = 101;
+        int participantCount = 90;
 
         for (int i = 0; i < participantCount; ++i) {
-            testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
-                    .withParticipantName(String.valueOf(i+1)));
+            if (i % 2 == 0) {
+                testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
+                        .withParticipateDate(LocalDate.now().plusDays(i))
+                        .withParticipantName(String.valueOf(i +1)));
+            }
+            else {
+                testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
+                        .withParticipateDate(LocalDate.now().plusDays(i))
+                        .withParticipantName(String.valueOf(i +1)));
+            }
         }
 
         // Get without offset, should be limited
-        assertThat(participantService.findPublicParticipants(0, initiativeId), hasSize(Urls.MAX_PARTICIPANT_LIST_LIMIT));
+        List<ParticipantListInfo> publicParticipants = participantService.findPublicParticipants(0, initiativeId);
+        assertThat(publicParticipants, hasSize(Urls.MAX_PARTICIPANT_LIST_LIMIT));
+        assertThat(publicParticipants.get(0).getParticipant().getName(), is("90"));
+        assertThat(publicParticipants.get(publicParticipants.size() - 1).getParticipant().getName(), is("41"));
 
-        int offset = 60;
-
-        // Use offset, result is the content of "last page"
-        List<ParticipantListInfo> lastOnes = participantService.findPublicParticipants(offset, initiativeId);
-        assertThat(lastOnes, hasSize(participantCount- offset));
-
-        assertThat(lastOnes.get(0).getParticipant().getName(), is(String.valueOf(participantCount - offset)));
-        assertThat(lastOnes.get(lastOnes.size()-1).getParticipant().getName(), is("1"));
+        // Get the rest with offset
+        List<ParticipantListInfo> nextParticipants = participantService.findPublicParticipants(Urls.MAX_PARTICIPANT_LIST_LIMIT, initiativeId);
+        assertThat(nextParticipants, hasSize(participantCount - Urls.MAX_PARTICIPANT_LIST_LIMIT));
+        assertThat(nextParticipants.get(0).getParticipant().getName(), is("40"));
+        assertThat(nextParticipants.get(nextParticipants.size() - 1).getParticipant().getName(), is("1"));
 
     }
-
 
     @Test
     public void findAllParticipants_for_verified_initiative() {

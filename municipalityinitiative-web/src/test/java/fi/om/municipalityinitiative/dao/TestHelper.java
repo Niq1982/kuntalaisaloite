@@ -380,6 +380,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.municipalityId, authorDraft.participantMunicipality)
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
+                .set(QVerifiedParticipant.verifiedParticipant.participateTime, authorDraft.participateDate)
                 .execute();
 
         ContactInfo contactInfo = new ContactInfo();
@@ -472,6 +473,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
+                .set(QVerifiedParticipant.verifiedParticipant.participateTime, authorDraft.participateDate)
                 .set(QVerifiedParticipant.verifiedParticipant.municipalityId, authorDraft.participantMunicipality)
                 .execute();
 
@@ -511,6 +513,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, authorDraft.verifiedUserId.getValue())
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
+                .set(QVerifiedParticipant.verifiedParticipant.participateTime, authorDraft.participateDate)
                 .execute();
 
         return id;
@@ -531,6 +534,7 @@ public class TestHelper {
                 .set(QParticipant.participant.showName, authorDraft.showName)
                 .set(QParticipant.participant.email, authorDraft.participantEmail)
                 .set(QParticipant.participant.membershipType, authorDraft.municipalityMembership)
+                .set(QParticipant.participant.participateTime, authorDraft.participateDate)
                 .executeWithKey(QParticipant.participant.id);
         return aLong;
     }
@@ -831,6 +835,7 @@ public class TestHelper {
         public Maybe<String> userSsn = Maybe.absent();
         public Maybe<Long> verifiedUserId = Maybe.absent();
         public Maybe<Long> verifiedAuthorMunicipality;
+        public LocalDate participateDate = LocalDate.now();
 
         public AuthorDraft(Long initiativeId, Long participantMunicipality) {
             this.initiativeId = initiativeId;
@@ -899,6 +904,11 @@ public class TestHelper {
 
         public AuthorDraft withVerifiedAuthorMunicipality(Long municipalityId) {
             this.verifiedAuthorMunicipality = Maybe.fromNullable(municipalityId);
+            return this;
+        }
+
+        public AuthorDraft withParticipateDate(LocalDate localDate) {
+            this.participateDate = localDate;
             return this;
         }
     }
