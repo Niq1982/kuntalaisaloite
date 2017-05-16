@@ -20,8 +20,6 @@ public interface ParticipantDao {
 
     void increaseParticipantCountFor(Long initiativeId, boolean showName, boolean citizen);
 
-    List<NormalParticipant> findNormalPublicParticipants(Long initiativeId);
-
     List<NormalParticipant> findNormalPublicParticipants(Long initiativeId, int offset, int limit);
 
     List<NormalParticipant> findNormalAllParticipants(Long initiativeId, int offset, int limit);

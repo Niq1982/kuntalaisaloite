@@ -63,37 +63,22 @@ public class JdbcParticipantDaoTest {
 
     @Test
     public void participant_information_is_saved() {
-        precondition(participantDao.findNormalPublicParticipants(testInitiativeId), hasSize(0));
+        precondition(participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE), hasSize(0));
 
         participantDao.confirmParticipation(participantDao.create(participantCreateDto(), CONFIRMATION_CODE), CONFIRMATION_CODE);
-        List<NormalParticipant> allParticipants = participantDao.findNormalPublicParticipants(testInitiativeId);
+        List<Participant> allParticipants = participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE);
+
         assertThat(allParticipants, hasSize(1));
 
-        NormalParticipant participant = allParticipants.get(0);
+        Participant participant = allParticipants.get(0);
         assertThat(participant.getName(), is(PARTICIPANTS_NAME));
-        assertThat(participant.getHomeMunicipality().get().getId(), is(otherMunicipalityId));
+        Maybe<Municipality> homeMunicipality = participant.getHomeMunicipality();
+        assertThat(homeMunicipality.get().getId(), is(otherMunicipalityId));
         assertThat(participant.getParticipateDate(), is(notNullValue()));
         assertThat(participant.getEmail(), is(PARTICIPANT_EMAIL));
         assertThat(participant.getMembership(), is(PARTICIPANT_MEMBERSHIP));
         assertThat(participant.getId(), is(notNullValue()));
         ReflectionTestUtils.assertNoNullFields(participant);
-    }
-
-    @Test
-    public void getNormalPublicParticipants_returns_public_names() {
-
-        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().withShowName(false).toInitiativeDraft());
-
-        createConfirmedParticipant(initiativeId, false, "no right no public");
-        createConfirmedParticipant(initiativeId, false, "yes right no public");
-        createConfirmedParticipant(initiativeId, true, "no right yes public");
-        createConfirmedParticipant(initiativeId, true, "yes right yes public");
-
-        List<NormalParticipant> participants = participantDao.findNormalPublicParticipants(initiativeId);
-
-        assertThat(participants, hasSize(2));
-        assertThat(participants.get(0).getName(), is("yes right yes public"));
-        assertThat(participants.get(1).getName(), is("no right yes public"));
     }
 
     @Test
@@ -311,23 +296,6 @@ public class JdbcParticipantDaoTest {
     }
 
 
-
-
-    @Test
-    public void find_verified_public_participants_sets_all_data() {
-        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().toInitiativeDraft());
-
-        List<VerifiedParticipant> participants = participantDao.findVerifiedPublicParticipants(initiativeId, 0, MAX_PARTICIPANT_LIST_LIMIT);
-        assertThat(participants, hasSize(1));
-        VerifiedParticipant participant = participants.get(0);
-
-        assertThat(participant.getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
-        assertThat(participant.getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
-        assertThat(participant.isMunicipalityVerified(), is(true));
-        assertThat(participant.getParticipateDate(), is(LocalDate.now()));
-
-    }
-
     @Test
     public void find_verified_all_participants_sets_all_data() {
 
@@ -344,36 +312,6 @@ public class JdbcParticipantDaoTest {
         assertThat(participant.isMunicipalityVerified(), is(true));
         assertThat(participant.getParticipateDate(), is(LocalDate.now()));
 
-    }
-
-    @Test
-    public void find_verified_public_participants_returns_only_public_participants() {
-
-        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId)
-                .applyAuthor()
-                .withParticipantName("Private Participant")
-                .withShowName(false)
-                .toInitiativeDraft());
-
-        testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
-                .withParticipantName("Public Participant")
-                .withShowName(true));
-
-        List<VerifiedParticipant> participants = participantDao.findVerifiedPublicParticipants(initiativeId, 0, MAX_PARTICIPANT_LIST_LIMIT);
-        assertThat(participants, hasSize(1));
-        assertThat(participants.get(0).getName(), is("Public Participant"));
-
-    }
-
-    @Test
-    public void find_verified_public_participants_uses_offset_and_limit() {
-        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId));
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("1"));
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("2"));
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("3"));
-        List<VerifiedParticipant> result = participantDao.findVerifiedPublicParticipants(initiativeId, 1, 1);
-        assertThat(result, hasSize(1));
-        assertThat(result.get(0).getName(), is("2"));
     }
 
     @Test
@@ -443,18 +381,20 @@ public class JdbcParticipantDaoTest {
     }
 
     @Test
-    public void getPublicParticipants_adds_municipality_name_to_participant_data() {
+    public void findAllParticipants_adds_municipality_name_to_participant_data() {
 
         Long otherMunicipality = testHelper.createTestMunicipality("Some other Municipality");
         createConfirmedParticipant(testInitiativeId, otherMunicipality, true, "1 First");
 
-        List<NormalParticipant> participants = participantDao.findNormalPublicParticipants(testInitiativeId);
+        List<Participant> participants = participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE);
+
         assertThat(participants, hasSize(1));
 
-        NormalParticipant participant = participants.get(0);
-        assertThat(participant.getHomeMunicipality(), isPresent());
-        assertThat(participant.getHomeMunicipality().get().getNameFi(), is("Some other Municipality"));
-        assertThat(participant.getHomeMunicipality().get().getNameSv(), is("Some other Municipality sv"));
+        Participant participant = participants.get(0);
+        Maybe<Municipality> homeMunicipality = participant.getHomeMunicipality();
+        assertThat(homeMunicipality, isPresent());
+        assertThat(homeMunicipality.get().getNameFi(), is("Some other Municipality"));
+        assertThat(homeMunicipality.get().getNameSv(), is("Some other Municipality sv"));
     }
 
     @Test

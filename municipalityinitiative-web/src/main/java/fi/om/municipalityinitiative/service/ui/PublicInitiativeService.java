@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.LocationService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ParticipantService;
+import org.joda.time.Years;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -74,6 +75,7 @@ public class PublicInitiativeService {
                 participantService.findPublicParticipants(participantListOffset, initiativeId)
         );
     }
+
 
     @Transactional(readOnly = true)
     public InitiativeListPageInfo getInitiativeListPageInfo(InitiativeSearch search, LoginUserHolder loginUserHolder, Locale locale) {
