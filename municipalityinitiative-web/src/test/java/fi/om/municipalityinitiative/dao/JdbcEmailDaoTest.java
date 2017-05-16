@@ -45,7 +45,7 @@ public class JdbcEmailDaoTest {
     @Before
     public void setup() {
         testHelper.dbCleanup();
-        testInitiative = testHelper.create(testHelper.createTestMunicipality("asd"), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testInitiative = testHelper.createWithAuthor(testHelper.createTestMunicipality("asd"), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
     }
 
     @Test

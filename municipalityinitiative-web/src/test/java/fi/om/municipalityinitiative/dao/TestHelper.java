@@ -184,7 +184,7 @@ public class TestHelper {
     }
 
     @Transactional
-    public Long create(Long municipalityId, InitiativeState state, InitiativeType type) {
+    public Long createWithAuthor(Long municipalityId, InitiativeState state, InitiativeType type) {
         InitiativeDraft initiativeDraft = new InitiativeDraft(municipalityId)
                 .withState(state)
                 .withType(type)
@@ -255,10 +255,10 @@ public class TestHelper {
         insert.set(municipalityInitiative.state, initiativeDraft.state);
 
         if (initiativeDraft.type.isVerifiable() && !verified) {
-            throw new RuntimeException("TestHelper init failure - trying to create verified initiative type with non-verified function call");
+            throw new RuntimeException("TestHelper init failure - trying to createWithAuthor verified initiative type with non-verified function call");
         }
         if (initiativeDraft.type != InitiativeType.UNDEFINED && initiativeDraft.type.isNotVerifiable() && verified) {
-            throw new RuntimeException("TestHelper init failure - trying to create non-verified initiative type with verified function call");
+            throw new RuntimeException("TestHelper init failure - trying to createWithAuthor non-verified initiative type with verified function call");
         }
 
         if (initiativeDraft.type.isNotVerifiable() && verified) {

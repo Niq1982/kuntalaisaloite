@@ -55,8 +55,8 @@ public class JdbcUserDaoTest {
         testHelper.dbCleanup();
         testMunicipality = Maybe.of(new Municipality(testHelper.createTestMunicipality("Municipality"), "Municipality", "Municipality", true));
         testMunicipalityId = testMunicipality.getValue().getId();
-        testInitiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        testVerifiedInitiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
+        testInitiativeId = testHelper.createWithAuthor(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testVerifiedInitiativeId = testHelper.createWithAuthor(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
     }
 
     @Test

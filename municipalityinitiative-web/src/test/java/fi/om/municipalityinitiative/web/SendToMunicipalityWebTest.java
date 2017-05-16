@@ -28,7 +28,7 @@ public class SendToMunicipalityWebTest extends WebTestBase {
     @Test
     public void send_to_municipality() {
 
-        Long initiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long initiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         
@@ -40,7 +40,7 @@ public class SendToMunicipalityWebTest extends WebTestBase {
 
     @Test
     public void trying_operation_which_initiative_state_prevents_shows_error_page() {
-        Long initiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long initiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         try {

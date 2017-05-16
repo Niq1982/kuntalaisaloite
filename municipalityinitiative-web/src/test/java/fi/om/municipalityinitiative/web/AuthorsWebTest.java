@@ -46,7 +46,7 @@ public class AuthorsWebTest extends WebTestBase {
     @Override
     public void childSetup() {
 
-        normalInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE);
+        normalInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE);
         verifiedInitiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
                 .withState(InitiativeState.ACCEPTED)
                 .applyAuthor(VERIFIED_USER_AUTHOR_SSN)
@@ -150,7 +150,7 @@ public class AuthorsWebTest extends WebTestBase {
 
     @Test
     public void accepting_normal_author_invitation_lets_user_to_accept_invitation_even_if_logged_in_as_author() {
-        Long publishedInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
         AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
@@ -162,7 +162,7 @@ public class AuthorsWebTest extends WebTestBase {
     @Test
     public void accepting_invitation_to_normal_initiative_as_verified_author_with_valid_municipality() {
 
-        Long publishedInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
 
         vetumaLogin("111111-1111", HELSINKI);
@@ -180,7 +180,7 @@ public class AuthorsWebTest extends WebTestBase {
     @Test
     public void accepting_invitation_to_normal_initiative_as_verified_author_requires_membership_selection_if_municipality_mismatch() {
 
-        Long publishedInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
 
         vetumaLogin("111111-1111", VANTAA);
@@ -201,7 +201,7 @@ public class AuthorsWebTest extends WebTestBase {
     @Test
     public void accepting_invitation_to_normal_initiative_as_verified_author_requires_has_municipality_pre_selected() {
 
-        Long publishedInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
 
         vetumaLogin("111111-1111", null);
@@ -218,7 +218,7 @@ public class AuthorsWebTest extends WebTestBase {
     @Test
     public void accepting_invitation_to_normal_initiative_as_verified_author_allows_change_of_municipality_if_not_received_from_vetuma_and_requires_membershipType_if_selected_municipality_mismatch() {
 
-        Long publishedInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
 
         vetumaLogin("111111-1111", null);
@@ -242,7 +242,7 @@ public class AuthorsWebTest extends WebTestBase {
     @Test
     public void accepting_invitation_to_normal_initiative_redirects_to_authentication_and_back_if_user_wants_verified_authentication() {
 
-        Long publishedInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
 
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
@@ -374,7 +374,7 @@ public class AuthorsWebTest extends WebTestBase {
     
     @Test
     public void author_removes_participant(){
-        Long publishedInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(publishedInitiativeId, HELSINKI_ID));
         

@@ -408,7 +408,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void publish_initiative_and_start_collecting_sets_all_data() {
-        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
+        Long accepted = testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
         service.publishAndStartCollecting(accepted, TestHelper.authorLoginUserHolder);
 
@@ -432,7 +432,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void publish_initiative_and_start_collecting_sends_status_email_to_author() throws MessagingException, InterruptedException {
-        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
+        Long accepted = testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
         service.publishAndStartCollecting(accepted, TestHelper.authorLoginUserHolder);
         assertUniqueSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.PUBLISHED_COLLECTING.name() + ".subject");
@@ -440,14 +440,14 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test(expected = AccessDeniedException.class)
     public void publish_inititive_and_send_to_municipality_fails_of_not_author() {
-        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
+        Long accepted = testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
         service.sendToMunicipality(accepted, TestHelper.unknownLoginUserHolder, "", null);
     }
 
     @Test
     @Transactional
     public void publish_initiative_and_send_to_municipality_sets_all_data() {
-        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
+        Long accepted = testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
 //        service.publishAcceptedInitiative(accepted, false, authorLoginUserHolder, null);
         service.sendToMunicipality(accepted, TestHelper.authorLoginUserHolder, "some sent comment", null);
@@ -470,7 +470,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void publish_initiative_and_send_to_municipality_sends_emails_to_municipality_and_author() throws MessagingException {
-        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
+        Long accepted = testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
         service.sendToMunicipality(accepted, TestHelper.authorLoginUserHolder, "some sent comment", null);
 
         assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_MUNICIPALITY.name() + ".subject");
@@ -479,7 +479,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void send_published_collaborative_to_municipality_sends_emails_to_municipality_and_author() throws MessagingException {
-        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long accepted = testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         service.sendToMunicipality(accepted, TestHelper.authorLoginUserHolder, "some sent comment", null);
 
         assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_AUTHOR_SUBJECT);
@@ -543,7 +543,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void sendToMunicipality_marks_initiative_as_sigle_if_not_marked_as_collaboratibe() {
-        Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
+        Long initiativeId = testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
         service.sendToMunicipality(initiativeId, TestHelper.authorLoginUserHolder, "comment for municipality", null);
         Initiative sent = testHelper.getInitiative(initiativeId);
         assertThat(sent.getType(), is(InitiativeType.SINGLE));
@@ -553,7 +553,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void sendToMunicipality_marks_initiative_as_sent_if_marked_as_collaborative() {
-        Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE);
+        Long initiativeId = testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE);
         service.sendToMunicipality(initiativeId, TestHelper.authorLoginUserHolder, "comment for municipality", null);
         Initiative sent = testHelper.getInitiative(initiativeId);
         assertThat(sent.getType(), is(InitiativeType.COLLABORATIVE));

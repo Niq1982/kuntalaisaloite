@@ -6,10 +6,9 @@ import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.YouthInitiativeCreateDto;
-import fi.om.municipalityinitiative.dto.service.EmailDto;
-import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.NormalParticipant;
+import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
 import fi.om.municipalityinitiative.web.Urls;
@@ -96,11 +95,12 @@ public class YouthInitiativeServiceTest {
         assertThat(createdInitiative.getParticipantCount(), is(1));
         assertThat(createdInitiative.getParticipantCountPublic(), is(1));
 
-        List<NormalParticipant> normalAllParticipants = participantDao.findNormalAllParticipants(createdInitiative.getId(), 0, 10);
+        List<Participant> normalAllParticipants = participantDao.findAllParticipants(createdInitiative.getId(), false, 0, 10);
         assertThat(normalAllParticipants, hasSize(1));
 
         assertThat(normalAllParticipants.get(0).getEmail(), is(editDto.getContactInfo().getEmail()));
-        assertThat(normalAllParticipants.get(0).getHomeMunicipality().get().getId(), is(editDto.getContactInfo().getMunicipality()));
+        Maybe<Municipality> homeMunicipality = normalAllParticipants.get(0).getHomeMunicipality();
+        assertThat(homeMunicipality.get().getId(), is(editDto.getContactInfo().getMunicipality()));
         assertThat(normalAllParticipants.get(0).getName(), is(editDto.getContactInfo().getName()));
         assertThat(normalAllParticipants.get(0).getMembership(), is(Membership.none));
     }
@@ -118,7 +118,7 @@ public class YouthInitiativeServiceTest {
         assertThat(createdInitiative.getParticipantCount(), is(1));
         assertThat(createdInitiative.getParticipantCountPublic(), is(1));
 
-        List<NormalParticipant> normalAllParticipants = participantDao.findNormalAllParticipants(createdInitiative.getId(), 0, 10);
+        List<Participant> normalAllParticipants = participantDao.findAllParticipants(createdInitiative.getId(), false,  0, 10);
         assertThat(normalAllParticipants, hasSize(1));
         assertThat(normalAllParticipants.get(0).getMembership(), is(Membership.community));
     }

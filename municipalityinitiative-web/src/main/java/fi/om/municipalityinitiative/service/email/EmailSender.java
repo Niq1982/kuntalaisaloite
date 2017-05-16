@@ -112,11 +112,7 @@ public class EmailSender {
 
     private List<? extends Participant> getParticipants(Initiative initiative) {
 
-        return new ArrayList<Participant>() {{
-            addAll(participantDao.findVerifiedAllParticipants(initiative.getId(), 0, Integer.MAX_VALUE));
-            addAll(participantDao.findNormalAllParticipants(initiative.getId(), 0, Integer.MAX_VALUE));
-            sort((o1, o2) -> (int) (o1.getId().toLong() - o2.getId().toLong())); // These are ids from different tables...
-        }};
+        return participantDao.findAllParticipants(initiative.getId(), false, 0, Integer.MAX_VALUE);
     }
 
     private static final String FILE_NAME = "Kuntalaisaloite_{0}_{1}_osallistujat.pdf";

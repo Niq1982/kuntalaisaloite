@@ -180,14 +180,13 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         assertThat(testHelper.countAll(QVerifiedAuthor.verifiedAuthor), is(1L));
         assertThat(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(1L));
 
-        assertThat(participantDao.findNormalAllParticipants(id, 0, 100), hasSize(0));
-        List<VerifiedParticipant> verifiedParticipants = participantDao.findVerifiedAllParticipants(id, 0, 100);
+        List<Participant> verifiedParticipants = participantDao.findAllParticipants(id, false, 0, 100);
         assertThat(verifiedParticipants, hasSize(1));
-
 
         assertThat(verifiedParticipants.get(0).getEmail(), is(EMAIL));
         assertThat(verifiedParticipants.get(0).getName(), is(VERIFIED_AUTHOR_NAME));
-        assertThat(verifiedParticipants.get(0).getHomeMunicipality().get().getId(), is(testMunicipality.getId()));
+        Maybe<Municipality> homeMunicipality = verifiedParticipants.get(0).getHomeMunicipality();
+        assertThat(homeMunicipality.get().getId(), is(testMunicipality.getId()));
         assertThat(verifiedParticipants.get(0).getMembership(), is(Membership.none));
     }
 

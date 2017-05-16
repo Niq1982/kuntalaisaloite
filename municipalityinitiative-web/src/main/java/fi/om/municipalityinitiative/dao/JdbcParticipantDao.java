@@ -95,7 +95,7 @@ public class JdbcParticipantDao implements ParticipantDao {
     public Long create(ParticipantCreateDto createDto, String confirmationCode) {
 
         if (confirmationCode == null) {
-            throw new NullPointerException("confirmationCode may not be null: Participation would be accepted without participantCount increasing.");
+            throw new NullPointerException("confirmationCode may not be null");
         }
 
         return queryFactory.insert(participant)
@@ -253,7 +253,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                         QMunicipality.municipality.name.as(ParticipateUnionRow.municipality_name_fi.getMetadata().getName()),
                         QMunicipality.municipality.nameSv.as(ParticipateUnionRow.municipality_name_sv.getMetadata().getName()));
 
-        ListSubQuery normalParticipants = new SQLSubQuery().from(QVerifiedParticipant.verifiedParticipant)
+        ListSubQuery normalParticipants = new SQLSubQuery()
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .where(participant.confirmationCode.isNull())

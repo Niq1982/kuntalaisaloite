@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Municipality;
@@ -221,7 +220,7 @@ public class JdbcAuthorDaoTest {
 
     @Test
     public void get_authors_management_hashes_and_emails() {
-        Long initiativeId = testHelper.create(testMunicipality, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long initiativeId = testHelper.createWithAuthor(testMunicipality, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         String firstAuthorManagementHash = testHelper.getPreviousTestManagementHash();
         String firstEmail = TestHelper.DEFAULT_PARTICIPANT_EMAIL;
 

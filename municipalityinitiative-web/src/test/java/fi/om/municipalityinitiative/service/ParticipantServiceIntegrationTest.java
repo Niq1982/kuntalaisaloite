@@ -15,15 +15,12 @@ import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
 import fi.om.municipalityinitiative.web.Urls;
-import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import java.util.List;
-import java.util.Set;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.CoreMatchers.is;
@@ -257,7 +254,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
 
     @Test
     public void adding_participant_does_not_increase_denormalized_participantCount_but_accepting_does() throws MessagingException, InterruptedException {
-        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long initiativeId = testHelper.createWithAuthor(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
         int originalParticipantCountPublic = testHelper.getInitiative(initiativeId).getParticipantCount();
         int originalParticipantCountCitizen = testHelper.getInitiative(initiativeId).getParticipantCountCitizen();
@@ -278,7 +275,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     @Test
     public void confirming_participation_does_not_increase_public_names_if_showName_is_false() {
 
-        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long initiativeId = testHelper.createWithAuthor(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
         int originalParticipantCountPublic = testHelper.getInitiative(initiativeId).getParticipantCount();
 
@@ -296,7 +293,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
 
     @Test
     public void confirming_participation_does_not_increase_citizen_participant_amount_if_from_another_municipality() {
-        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        Long initiativeId = testHelper.createWithAuthor(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
         int originalParticipantCountPublic = testHelper.getInitiative(initiativeId).getParticipantCount();
         int originalParticipantCountCitizen = testHelper.getInitiative(initiativeId).getParticipantCountCitizen();

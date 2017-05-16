@@ -27,7 +27,7 @@ public class CreateVideoWebTest extends WebTestBase {
 
     @Override
     protected void childSetup() {
-        normalInitiativeId = testHelper.create(HELSINKI_ID, InitiativeState.DRAFT, InitiativeType.COLLABORATIVE);
+        normalInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.DRAFT, InitiativeType.COLLABORATIVE);
         verifiedInitiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
                 .withState(InitiativeState.DRAFT)
                 .applyAuthor(VERIFIED_USER_AUTHOR_SSN)
