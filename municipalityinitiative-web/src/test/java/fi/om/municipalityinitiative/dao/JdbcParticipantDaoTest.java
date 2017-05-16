@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.Membership.community;
@@ -152,8 +153,6 @@ public class JdbcParticipantDaoTest {
 
         List<Participant> allParticipants = participantDao.findAllParticipants(initiativeId, false);
 
-        allParticipants.stream().forEach(p -> System.out.println(p.getName()));
-
         assertThat(allParticipants, hasSize(4));
 
         Participant normalInhabitant = allParticipants.get(0);
@@ -198,6 +197,48 @@ public class JdbcParticipantDaoTest {
         assertThat(((Municipality) verifiedNonVerifiedMunicipality.getHomeMunicipality().get()).getId(), is(otherMunicipalityId));
 
     }
+
+    @Test
+    public void get_all_participants_can_return_only_public_participants() {
+
+
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId)
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE));
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, otherMunicipalityId)
+                .withMunicipalityMembership(Membership.community)
+                .withParticipantEmail("par1@example.com")
+                .withShowName(true)
+                .withParticipantName("2 Normal community"));
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
+                .withMunicipalityMembership(none)
+                .withShowName(false)
+                .withParticipantEmail("par2@example.com")
+                .withParticipantName("1 Normal inhabitant"));
+
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, otherMunicipalityId)
+                .withMunicipalityMembership(Membership.community)
+                .withParticipantEmail("ver1@example.com")
+                .withShowName(true)
+                .withVerifiedParticipantMunicipalityVerified(false)
+                .withParticipantName("4 Non-verified"));
+
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
+                .withParticipantEmail("ver2@example.com")
+                .withShowName(false)
+                .withVerifiedParticipantMunicipalityVerified(true)
+                .withParticipantName("3 Verified"));
+
+        List<Participant> allParticipants = participantDao.findAllParticipants(initiativeId, true);
+
+        assertThat(allParticipants, hasSize(2));
+        assertThat(allParticipants.stream().filter(Participant::isShowName).count(), is(2L));
+
+    }
+
+
 
     @Test
     public void find_verified_public_participants_sets_all_data() {

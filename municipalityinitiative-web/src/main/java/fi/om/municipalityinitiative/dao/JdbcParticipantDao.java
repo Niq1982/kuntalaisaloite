@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.dao;
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.SQLSubQuery;
 import com.mysema.query.sql.dml.SQLUpdateClause;
+import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.support.Expressions;
 import com.mysema.query.types.Expression;
@@ -319,7 +320,16 @@ public class JdbcParticipantDao implements ParticipantDao {
             }
         };
         // XXX: This ordering does not use any indices. Ordering by date only is not enough, because the field does not have time attributes :E
-        List<Participant> list = queryFactory.from(unionExpression).orderBy(ParticipateUnionRow.participate_date.desc(), ParticipateUnionRow.name.asc()).list(mapping);
+        PostgresQuery unionQuery = queryFactory.from(unionExpression);
+
+
+        if (requireShowName) {
+            unionQuery.where(ParticipateUnionRow.show_name.isTrue());
+        }
+
+        List<Participant> list = unionQuery
+                .orderBy(ParticipateUnionRow.participate_date.desc(), ParticipateUnionRow.name.asc())
+                .list(mapping);
 
 
         return list;
