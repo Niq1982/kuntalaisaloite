@@ -13,12 +13,6 @@
     <#if initiative.isCollaborative()>
         <div class="participant-graph">
 
-            <h3 class="inline-style">
-                <@u.message key="graph.title" />
-                <span id="internal-support-count-${initiative.id?c}" >
-                    <span >${totalParticipantCount!0}</span>
-                </span>
-            </h3>
             <div id="participantGraph">
                 <noscript><@u.message key="graph.javaScriptSupport" /></noscript>
             </div>
@@ -516,9 +510,16 @@
     </div>
     <div class="participants-block separate">
             <span class="user-count-sub-total">
-                <#if (participantCount.publicNames > 0)><span class="public-names"><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.publicNames] /></a></span></#if><br/>
-                <#if (participantCount.privateNames > 0)><span class="private-names"><@u.message key="participantCount.privateNames" args=[participantCount.privateNames] /></span><br/></#if>
-                <#if (initiative.externalParticipantCount > 0)><span class="private-names"><@u.message key="participantCount.externalNames" args=[initiative.externalParticipantCount]/></span></p></#if>
+
+                <#if (initiative.externalParticipantCount > 0)>
+                    <span class="private-names"><@u.message key="participantCount.thisService" args=[participantCount.total]/></span><br/>
+                    <span class="private-names left-padding"><@u.message key="participantCount.citizen" args=[initiative.participantCountCitizen]/></span><br/>
+                    <#if (participantCount.publicNames > 0)><span class="public-names left-padding"><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.publicNames] /></a></span><br/></#if>
+                    <#if (initiative.externalParticipantCount > 0)><span class="private-names"><@u.message key="participantCount.externalNames" args=[initiative.externalParticipantCount]/></span></#if>
+                <#else>
+                    <#if (participantCount.publicNames > 0)><span class="public-names"><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.publicNames] /></a></span></#if><br/>
+                    <span class="private-names"><@u.message key="participantCount.citizen" args=[initiative.participantCountCitizen]/></span>
+                </#if>
             </span>
     </div>
     <br class="clear" />

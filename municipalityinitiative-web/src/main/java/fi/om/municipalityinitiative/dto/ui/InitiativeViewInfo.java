@@ -30,6 +30,10 @@ public final class InitiativeViewInfo {
         return initiative.getProposal();
     }
 
+    public int getParticipantCountCitizen() {
+        return initiative.getParticipantCountCitizen();
+    }
+
     public LocalDate getCreateTime() {
         return initiative.getCreateTime();
     }
