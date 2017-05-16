@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.service.*;
-import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -17,9 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.Membership.community;
@@ -151,7 +148,7 @@ public class JdbcParticipantDaoTest {
                 .withParticipantName("3 Verified"));
 
 
-        List<Participant> allParticipants = participantDao.findAllParticipants(initiativeId, false);
+        List<Participant> allParticipants = participantDao.findAllParticipants(initiativeId, false, 0, Integer.MAX_VALUE);
 
         assertThat(allParticipants, hasSize(4));
 
@@ -231,12 +228,61 @@ public class JdbcParticipantDaoTest {
                 .withVerifiedParticipantMunicipalityVerified(true)
                 .withParticipantName("3 Verified"));
 
-        List<Participant> allParticipants = participantDao.findAllParticipants(initiativeId, true);
+        List<Participant> allParticipants = participantDao.findAllParticipants(initiativeId, true, 0, Integer.MAX_VALUE);
 
         assertThat(allParticipants, hasSize(2));
         assertThat(allParticipants.stream().filter(Participant::isShowName).count(), is(2L));
 
     }
+
+    @Test
+    public void get_all_participants_can_user_offset_and_limit() {
+
+
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId)
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE));
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, otherMunicipalityId)
+                .withMunicipalityMembership(Membership.community)
+                .withParticipantEmail("par1@example.com")
+                .withShowName(true)
+                .withParticipantName("2 Normal community"));
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
+                .withMunicipalityMembership(none)
+                .withShowName(false)
+                .withParticipantEmail("par2@example.com")
+                .withParticipantName("1 Normal inhabitant"));
+
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, otherMunicipalityId)
+                .withMunicipalityMembership(Membership.community)
+                .withParticipantEmail("ver1@example.com")
+                .withShowName(true)
+                .withVerifiedParticipantMunicipalityVerified(false)
+                .withParticipantName("4 Non-verified"));
+
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
+                .withParticipantEmail("ver2@example.com")
+                .withShowName(false)
+                .withVerifiedParticipantMunicipalityVerified(true)
+                .withParticipantName("3 Verified"));
+
+
+        List<Participant> allParticipants = participantDao.findAllParticipants(initiativeId, false, 0, Integer.MAX_VALUE);
+        assertThat(allParticipants, hasSize(4));
+
+        List<Participant> firstTwo = participantDao.findAllParticipants(initiativeId, false, 0, 2);
+        assertThat(firstTwo, hasSize(2));
+        assertThat(firstTwo.get(0).getEmail(), is(allParticipants.get(0).getEmail()));
+        assertThat(firstTwo.get(1).getEmail(), is(allParticipants.get(1).getEmail()));
+
+        List<Participant> onlyThird = participantDao.findAllParticipants(initiativeId, false, 2, 1);
+        assertThat(onlyThird, hasSize(1));
+        assertThat(onlyThird.get(0).getEmail(), is(allParticipants.get(2).getEmail()));
+
+    }
+
 
 
 
@@ -424,8 +470,7 @@ public class JdbcParticipantDaoTest {
     @Test
     public void confirming_participant_makes_participation_public() {
 
-
-        int originalParticipantCount = participantDao.findAllParticipants(testInitiativeId, false).size();
+        int originalParticipantCount = participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE).size();
 
         String participantConfirmationCode = "someConfirmationCode";
         ParticipantCreateDto createDto = participantCreateDto();
@@ -433,10 +478,10 @@ public class JdbcParticipantDaoTest {
         Long participantId = participantDao.create(createDto, participantConfirmationCode);
 
         participantDao.create(participantCreateDto(), CONFIRMATION_CODE); // Some other unconfirmed participant
-        assertThat(participantDao.findAllParticipants(testInitiativeId, false), hasSize(originalParticipantCount));
+        assertThat(participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE), hasSize(originalParticipantCount));
 
         participantDao.confirmParticipation(participantId, participantConfirmationCode);
-        assertThat(participantDao.findAllParticipants(testInitiativeId, false), hasSize(originalParticipantCount + 1));
+        assertThat(participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE), hasSize(originalParticipantCount + 1));
     }
 
     @Test

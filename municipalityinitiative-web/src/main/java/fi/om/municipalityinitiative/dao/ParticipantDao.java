@@ -8,7 +8,6 @@ import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface ParticipantDao {
@@ -41,5 +40,5 @@ public interface ParticipantDao {
 
     void addVerifiedParticipant(Long initiativeId, VerifiedUserId verifiedUserId, boolean showName, boolean present, Long aLong, Membership municipalMembership);
 
-    List<Participant> findAllParticipants(Long initiativeId, boolean requireShowName);
+    List<Participant> findAllParticipants(Long initiativeId, boolean requireShowName, int offset, int limit);
 }

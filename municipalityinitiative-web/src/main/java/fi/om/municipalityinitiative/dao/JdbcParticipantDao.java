@@ -233,7 +233,7 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public List<Participant> findAllParticipants(Long initiativeId, boolean requireShowName) {
+    public List<Participant> findAllParticipants(Long initiativeId, boolean requireShowName, int offset, int limit) {
 
         ListSubQuery verifiedParticipants = new SQLSubQuery()
                 .from(QVerifiedParticipant.verifiedParticipant)
@@ -320,8 +320,9 @@ public class JdbcParticipantDao implements ParticipantDao {
             }
         };
         // XXX: This ordering does not use any indices. Ordering by date only is not enough, because the field does not have time attributes :E
-        PostgresQuery unionQuery = queryFactory.from(unionExpression);
-
+        PostgresQuery unionQuery = queryFactory.from(unionExpression)
+                 .offset(offset)
+                 .limit(limit);
 
         if (requireShowName) {
             unionQuery.where(ParticipateUnionRow.show_name.isTrue());
