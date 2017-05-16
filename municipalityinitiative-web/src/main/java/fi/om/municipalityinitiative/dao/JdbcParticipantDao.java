@@ -319,7 +319,6 @@ public class JdbcParticipantDao implements ParticipantDao {
                 return participant;
             }
         };
-        // XXX: This ordering does not use any indices. Ordering by date only is not enough, because the field does not have time attributes :E
         PostgresQuery unionQuery = queryFactory.from(unionExpression)
                  .offset(offset)
                  .limit(limit);
@@ -329,6 +328,7 @@ public class JdbcParticipantDao implements ParticipantDao {
         }
 
         List<Participant> list = unionQuery
+                // XXX: This ordering does not use any indices. Ordering by date only is not enough, because the field does not have time attributes :E
                 .orderBy(ParticipateUnionRow.participate_date.desc(), ParticipateUnionRow.name.asc())
                 .list(mapping);
 
