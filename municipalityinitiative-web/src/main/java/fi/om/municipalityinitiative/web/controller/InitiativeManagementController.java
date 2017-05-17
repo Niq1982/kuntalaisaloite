@@ -428,10 +428,11 @@ public class InitiativeManagementController extends BaseController {
     
     @RequestMapping(value = {PARTICIPANT_LIST_MANAGE_FI, PARTICIPANT_LIST_MANAGE_SV}, method = POST)
     public String deleteParticipant(@PathVariable("id") Long initiativeId,
-                                     @RequestParam(PARAM_PARTICIPANT_ID) Long participantId,
-                                     Locale locale, HttpServletRequest request) {
+                                    @RequestParam(PARAM_PARTICIPANT_ID) Long participantId,
+                                    @RequestParam("verified") boolean isVerifiedParticipant,
+                                    Locale locale, HttpServletRequest request) {
         
-        participantService.deleteParticipant(initiativeId, userService.getRequiredLoginUserHolder(request), participantId);
+        participantService.deleteParticipant(initiativeId, userService.getRequiredLoginUserHolder(request), participantId, isVerifiedParticipant);
         
         return redirectWithMessage(Urls.get(locale).participantListManage(initiativeId), RequestMessage.PARTICIPANT_DELETED, request);
     }

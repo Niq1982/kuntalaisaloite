@@ -1839,6 +1839,7 @@ var deleteParticipant = (function() {
 				form = 					    $('#delete-participant-form'),
 				selParticipant =		$('#selected-participant'),
 				participantInput =		$('#participantId'),
+                isVerified =		$('#verified'),
 				participantNameId =  'participant-name',
 				participantDetails =	'<li><span class="date">' + participant.data("date") + '</span>' +
 										'<span class="name-container"><span id="' + participantNameId + '" class="name"></span>';
@@ -1853,6 +1854,8 @@ var deleteParticipant = (function() {
       		$('#'+participantNameId).text(participant.data('name'));
 
 			participantInput.val(participant.data("id"));
+            console.log(participant.data);
+            isVerified.val(participant.data("verified"));
 
 		}
 	};

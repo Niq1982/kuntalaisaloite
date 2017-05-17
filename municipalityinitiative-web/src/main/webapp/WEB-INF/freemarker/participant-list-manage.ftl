@@ -118,15 +118,18 @@
             <#if !initiative.isVerifiable()><span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.participant.homeMunicipality/></span></#if>
 
             <#-- Generate links for removing author -->
-            <#if !participant.isAuthor()>
+            <#if participant.isAuthor()>
+                <span class="bull">&bull;</span> <@u.message "deleteParticipant.authorCannotBeDeleted" />
+
+            <#elseif !participant.participant.isVerified()>
                 <span class="bull">&bull;</span>
-                <a  href="?deleteParticipant=${participant.participant.id!""}" class="js-delete-participant"
+                <a  href="?deleteParticipant=${participant.participant.id!""}&verified=${participant.participant.isVerified()?c}" class="js-delete-participant"
                     data-id="${participant.participant.id!""}"
+                    data-verified="${participant.participant.isVerified()?c}"
                     data-date="<@u.localDate participant.participant.participateDate!"" />"
                     data-name="<@u.stripHtmlTags participant.participant.name!"" />"
                     <#if !initiative.isVerifiable()>data-municipality="<@u.solveMunicipality participant.participant.homeMunicipality /></#if>"><@u.message "deleteParticipant.delete" /></a></span></li>
-            <#else>
-                <span class="bull">&bull;</span> <@u.message "deleteParticipant.authorCannotBeDeleted" />
+
             </#if>
 
             
@@ -167,6 +170,7 @@
         <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
         
         <input type="hidden" name="${UrlConstants.PARAM_PARTICIPANT_ID}" id="${UrlConstants.PARAM_PARTICIPANT_ID}" value="<#if !modal>${RequestParameters['deleteParticipant']}</#if>"/>
+        <input type="hidden" name="verified" id="verified" value="<#if !modal>${RequestParameters['verified']}</#if>"/>
         
         <h3><@u.message "deleteParticipant.confirm.description" /></h3>
         

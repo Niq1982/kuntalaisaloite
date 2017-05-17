@@ -5,8 +5,6 @@ import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
-import fi.om.municipalityinitiative.dto.NormalAuthor;
-import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
@@ -22,7 +20,6 @@ import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -100,18 +97,17 @@ public class ParticipantService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteParticipant(Long initiativeId, LoginUserHolder loginUserHolder, Long participantId) {
+    public void deleteParticipant(Long initiativeId, LoginUserHolder loginUserHolder, Long participantId, boolean isVerifiedParticipant) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Delete participant", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipation());
 
-        if (initiativeDao.get(initiativeId).getType().isNotVerifiable()) {
-            participantDao.deleteParticipant(initiativeId, participantId);
-        }
-        else {
+        if (isVerifiedParticipant) {
             participantDao.deleteVerifiedParticipant(initiativeId, participantId);
         }
+        else {
+            participantDao.deleteParticipant(initiativeId, participantId);
+        }
         initiativeDao.denormalizeParticipantCounts(initiativeId);
-
 
     }
 

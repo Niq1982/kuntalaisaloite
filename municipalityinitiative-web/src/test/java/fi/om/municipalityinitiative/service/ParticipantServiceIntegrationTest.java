@@ -21,8 +21,9 @@ import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
@@ -46,6 +47,9 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
 
     private Long testMunicipalityId;
     private Long anotherMunicipality;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Override
     protected void childSetup() {
@@ -182,7 +186,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         int participantCountOriginal = initiative.getParticipantCount();
         int participantCountCitizenOriginal = initiative.getParticipantCountCitizen();
 
-        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, participantId);
+        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, participantId, false);
 
         Initiative updated = testHelper.getInitiative(initiativeId);
         assertThat(updated.getParticipantCount(), is(participantCountOriginal - 1));
@@ -214,7 +218,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         precondition(initiative.getParticipantCount(), is(3));
 
         assertParticipantListSize(initiativeId, 3);
-        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId());
+        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId(), true);
         assertParticipantListSize(initiativeId, 2);
 
         Initiative updated = testHelper.getInitiative(initiativeId);
@@ -241,13 +245,16 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         List<ParticipantListInfo> allParticipants = participantService.findAllParticipants(initiativeId, TestHelper.authorLoginUserHolder, 0);
 
         assertParticipantListSize(initiativeId, 3);
-        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId());
+        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId(), true);
         assertParticipantListSize(initiativeId, 2);
 
         Initiative updated = testHelper.getInitiative(initiativeId);
         assertThat(updated.getParticipantCount(), is(2));
         assertThat(updated.getParticipantCountPublic(), is(0));
     }
+
+
+
     @Test
     public void delete_verified_participant_decreases_participant_count_council() {
         Long initiativeId = testHelper.createVerifiedInitiative(
@@ -265,12 +272,33 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         precondition(initiative.getParticipantCount(), is(2));
 
         assertParticipantListSize(initiativeId, 2);
-        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId());
+        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId(), true);
         assertParticipantListSize(initiativeId, 1);
 
         Initiative updated = testHelper.getInitiative(initiativeId);
         assertThat(updated.getParticipantCount(), is(1));
         assertThat(updated.getParticipantCountPublic(), is(0));
+    }
+
+    @Test
+    public void deleting_verified_participant_with_normal_id_throws_exception() {
+
+        Long initiativeId = testHelper.createVerifiedInitiative(
+                new TestHelper.InitiativeDraft(testMunicipalityId)
+                        .withState(InitiativeState.PUBLISHED)
+                        .withType(InitiativeType.COLLABORATIVE_COUNCIL)
+                        .applyAuthor().withShowName(false)
+                        .toInitiativeDraft()
+        );
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
+        testHelper.denormalizeParticipantCount(initiativeId);
+
+
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage(containsString("Should have affected only one row. Affected: 0"));
+
+        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId(), false);
+
     }
 
     @Test(expected = OperationNotAllowedException.class)
@@ -283,7 +311,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         );
         Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
 
-        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, participantId);
+        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, participantId, false);
     }
 
     @Test(expected = OperationNotAllowedException.class)
