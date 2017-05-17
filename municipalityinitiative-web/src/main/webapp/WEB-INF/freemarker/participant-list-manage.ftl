@@ -30,17 +30,6 @@
                 <p><@u.message "participantList.goToUpdate"/><a href="${urls.update(initiative.id)}#form-initiative"><@u.message "participantList.here"/></a></p>
             </#if>
 
-            <#if initiative.verifiable>
-                <#assign secureCount = 0/>
-                <#list participants as participant>
-                    <#if !participant.participant.municipalityVerified>
-                        <#assign secureCount = secureCount+1/>
-                    </#if>
-                </#list>
-
-                <#if (secureCount > 0)><p><@u.message key="participantList.secureCount" args=[secureCount] /></p></#if>
-            </#if>
-
             <#assign paginationParams = {
                 "total":      participantCount.total,
                 "limit":      50,
