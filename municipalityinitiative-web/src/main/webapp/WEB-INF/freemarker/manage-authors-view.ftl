@@ -132,11 +132,12 @@
             <div class="invitation">
                 <span class="status"><span class="icon-small icon-16 confirmed"></span> <span class="trigger-tooltip" title="<@u.message "invitation.accepted" />"><@u.localDate a.createTime/></span></span>
                 <#if a.id != user.authorId>
-                <span class="action"><span class="icon-small icon-16 cancel"></span> <a href="?deleteAuthor=${a.id!""}" class="js-delete-author"
+                <span class="action"><span class="icon-small icon-16 cancel"></span> <a href="?deleteAuthor=${a.id!""}&verified=${a.isVerified()?c}" class="js-delete-author"
                     data-id="${a.id!""}"
                     data-name="<@u.stripHtmlTags a.contactInfo.name!"" />"
                     data-email="<@u.stripHtmlTags a.contactInfo.email!"" />"
                     data-address="<@u.stripHtmlTags a.contactInfo.address!"" />"
+                    data-verified="${a.isVerified()?c}"
                     data-phone="<@u.stripHtmlTags a.contactInfo.phone!"" />"><@u.message "deleteAuthor.delete" /></a></span>
                 </#if>
             </div>
@@ -256,9 +257,10 @@
 <#macro deleteAuthorForm modal=true>
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="delete-author-form">
         <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-        
+
         <input type="hidden" name="${UrlConstants.PARAM_AUTHOR_ID}" id="${UrlConstants.PARAM_AUTHOR_ID}" value="<#if !modal>${RequestParameters['deleteAuthor']}</#if>"/>
-        
+        <input type="hidden" name="verified" id="authorVerified" value="<#if !modal>${RequestParameters['verified']}</#if>"/
+
         <h3><@u.message "deleteAuthor.confirm.description" /></h3>
         
         <#if modal>

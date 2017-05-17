@@ -416,13 +416,14 @@ public class InitiativeManagementController extends BaseController {
     @RequestMapping(value = {MANAGE_AUTHORS_FI, MANAGE_AUTHORS_SV}, method = POST, params = ACTION_DELETE_AUTHOR)
     public String deleteAuthor(@PathVariable("id") Long initiativeId,
                                @RequestParam(PARAM_AUTHOR_ID) Long authorId,
+                               @RequestParam("verified") boolean isVerified,
                                Model model,
                                Locale locale,
                                HttpServletRequest request) {
 
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
 
-        authorService.deleteAuthor(initiativeId, loginUserHolder, authorId);
+        authorService.deleteAuthor(initiativeId, loginUserHolder, authorId, isVerified);
         return redirectWithMessage(Urls.get(locale).manageAuthors(initiativeId), RequestMessage.AUTHOR_DELETED, request);
     }
     

@@ -43,7 +43,7 @@ public interface AuthorDao {
 
     VerifiedAuthor getVerifiedAuthor(Long initiativeId, VerifiedUserId userId);
 
-    void deleteAuthorAndParticipant(NormalAuthorId authorId);
+    void deleteAuthorAndParticipant(Long initiativeId, NormalAuthorId authorId);
 
     void updateManagementHash(NormalAuthorId authorId, String newManagementHash);
 

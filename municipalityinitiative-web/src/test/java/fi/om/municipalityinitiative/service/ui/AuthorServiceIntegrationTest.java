@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.service.ui;
 
-import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.Author;
@@ -36,10 +35,6 @@ import org.junit.rules.ExpectedException;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static fi.om.municipalityinitiative.service.ui.AuthorService.AuthorInvitationConfirmViewData;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
@@ -386,7 +381,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
 
         thrown.expect(AccessDeniedException.class);
-        authorService.deleteAuthor(initiativeId, TestHelper.unknownLoginUserHolder, testHelper.getLastNormalAuthorId().toLong());
+        authorService.deleteAuthor(initiativeId, TestHelper.unknownLoginUserHolder, testHelper.getLastNormalAuthorId().toLong(), true);
 
     }
 
@@ -396,8 +391,8 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         LoginUserHolder fakeLoginUserHolderWithManagementRights = new LoginUserHolder(User.normalUser(someAuthorId, Collections.singleton(initiativeId)));
 
         thrown.expect(OperationNotAllowedException.class);
-        thrown.expectMessage(containsString("Unable to delete author"));
-        authorService.deleteAuthor(initiativeId, fakeLoginUserHolderWithManagementRights, testHelper.getLastNormalAuthorId().toLong());
+        thrown.expectMessage(containsString("Unable to delete the final author"));
+        authorService.deleteAuthor(initiativeId, fakeLoginUserHolderWithManagementRights, testHelper.getLastNormalAuthorId().toLong(), false);
     }
 
     @Test
@@ -410,11 +405,11 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         thrown.expect(OperationNotAllowedException.class);
         thrown.expectMessage(containsString("Operation not allowed: Invite authors"));
-        authorService.deleteAuthor(initiative, TestHelper.authorLoginUserHolder, anotherAuthor);
+        authorService.deleteAuthor(initiative, TestHelper.authorLoginUserHolder, anotherAuthor, true);
     }
 
     @Test
-    public void deleting_author_fails_if_initiativeId_and_authorId_mismatch() {
+    public void deleting_normal_author_fails_if_initiativeId_and_authorId_mismatch() {
         Long initiative1 = testHelper.createCollaborativeAccepted(testMunicipality);
         Long author1 = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative1, testMunicipality));
 
@@ -424,19 +419,24 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         thrown.expect(NotFoundException.class);
         thrown.expectMessage(containsString("initiative"));
         thrown.expectMessage(containsString("author"));
-        authorService.deleteAuthor(initiative2, TestHelper.authorLoginUserHolder, author1);
+        authorService.deleteAuthor(initiative2, TestHelper.authorLoginUserHolder, author1, false);
     }
 
     @Test
-    public void deleting_normal_author_fails_if_trying_to_delete_myself() {
-        Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
-        Long anotherAuthor = testHelper.getLastNormalAuthorId().toLong();
-        Long currentAuthor = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
+    public void deleting_verified_author_fails_if_initiativeId_and_authorId_mismatch() {
+        Long verifiedInitiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality)
+                .withState(InitiativeState.PUBLISHED)
+                .applyAuthor("121212-1212").toInitiativeDraft());
+        testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(verifiedInitiative, testMunicipality));
+        LoginUserHolder authorLoginUserHolder = TestHelper.authorLoginUserHolder;
 
-        thrown.expect(OperationNotAllowedException.class);
-        thrown.expectMessage(containsString("Removing yourself from authors is not allowed"));
-        authorService.deleteAuthor(initiative, TestHelper.authorLoginUserHolder, currentAuthor);
+        Long anotherInitiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality));
+        Long anotherAuthor = testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(anotherInitiative, testMunicipality));
 
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage(containsString("initiative"));
+        thrown.expectMessage(containsString("author"));
+        authorService.deleteAuthor(verifiedInitiative, authorLoginUserHolder, anotherAuthor, true);
     }
 
     @Test
@@ -445,13 +445,15 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
         Long anotherAuthor = testHelper.getLastNormalAuthorId().toLong();
         Long currentAuthor = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality).withParticipantEmail("author_left@example.com"));
+        testHelper.denormalizeParticipantCount(initiative);
 
+        int originalParticipantCount = testHelper.getInitiative(initiative).getParticipantCount();
         precondition(countAllNormalAuthors(), is(2L));
 
-        authorService.deleteAuthor(initiative, TestHelper.authorLoginUserHolder, anotherAuthor);
+        authorService.deleteAuthor(initiative, TestHelper.authorLoginUserHolder, anotherAuthor, false);
 
+        assertThat(testHelper.getInitiative(initiative).getParticipantCount(), is(originalParticipantCount - 1));
         assertThat(countAllNormalAuthors(), is(1L));
-
 
         List<EmailDto> emails = testHelper.findQueuedEmails();
         assertThat(emails, hasSize(2));
@@ -477,7 +479,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         precondition(countAllVerifiedAuthors(), is(2));
         precondition(countAllVerifiedParticipants(), is(2));
         precondition(testHelper.getInitiative(initiativeId).getParticipantCount(), is(2));
-        authorService.deleteAuthor(initiativeId, TestHelper.authorLoginUserHolder, originalAuthor);
+        authorService.deleteAuthor(initiativeId, TestHelper.authorLoginUserHolder, originalAuthor, true);
         assertThat(countAllVerifiedAuthors(), is(1));
         assertThat(countAllVerifiedParticipants(), is(1));
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
@@ -490,7 +492,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         thrown.expect(OperationNotAllowedException.class);
         thrown.expectMessage(containsString("Removing yourself from authors is not allowed"));
-        authorService.deleteAuthor(initiativeId, TestHelper.authorLoginUserHolder, authorId);
+        authorService.deleteAuthor(initiativeId, TestHelper.authorLoginUserHolder, authorId, true);
 
     }
 
@@ -498,44 +500,6 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         return testHelper.countAll(QVerifiedParticipant.verifiedParticipant).intValue();
     }
 
-
-    @Test
-    public void two_concurrent_tries_to_delete_two_last_normal_authors_will_fail() {
-
-        final Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
-
-        final Long author1 = testHelper.getLastNormalAuthorId().toLong();
-        final Long author2 = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
-
-        final LoginUserHolder loginUserHolder =  new LoginUserHolder(User.normalUser(someAuthorId, Collections.singleton(initiative)));
-
-        List<Callable<Boolean>> callables = Lists.newArrayList();
-        callables.add(authorDeletorCallable(initiative, loginUserHolder, author1));
-        callables.add(authorDeletorCallable(initiative, loginUserHolder, author2));
-
-        executeCallablesSilently(callables);
-
-        assertThat(countAllNormalAuthors(), is(1L));
-    }
-
-    @Test
-    public void two_concurrent_tries_to_delete_two_last_verified_authors_will_fail() {
-
-        final Long initiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).withState(InitiativeState.ACCEPTED).applyAuthor().toInitiativeDraft());
-
-        final Long author1 = testHelper.getLastVerifiedUserId();
-        final Long author2 = testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
-
-        final LoginUserHolder loginUserHolder = getVerifiedLoginUserHolderFor(initiative);
-
-        List<Callable<Boolean>> callables = Lists.newArrayList();
-        callables.add(authorDeletorCallable(initiative, loginUserHolder, author1));
-        callables.add(authorDeletorCallable(initiative, loginUserHolder, author2));
-
-        executeCallablesSilently(callables);
-
-        assertThat(countAllVerifiedAuthors(), is(1));
-    }
 
     @Test
     public void find_authors_for_default_initiative_returns_authors() {
@@ -581,30 +545,6 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     private int countAllVerifiedAuthors() {
         return testHelper.countAll(QVerifiedAuthor.verifiedAuthor).intValue();
-    }
-
-    private static void executeCallablesSilently(List<Callable<Boolean>> threads) {
-        ExecutorService executor = Executors.newCachedThreadPool();
-
-        try {
-            for (Future<Boolean> future : executor.invokeAll(threads)) {
-                future.get();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            executor.shutdownNow();
-        }
-    }
-
-    private Callable<Boolean> authorDeletorCallable(final Long initiative, final LoginUserHolder loginUserHolder, final Long givenAuthor) {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                authorService.deleteAuthor(initiative, loginUserHolder, givenAuthor);
-                return true;
-            }
-        };
     }
 
     private Long allCurrentInvitations() {

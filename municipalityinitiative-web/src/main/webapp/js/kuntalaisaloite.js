@@ -1873,6 +1873,7 @@ var deleteAuthor = (function() {
 				form =					$('#delete-author-form'),
 				selAuthor =				$('#selected-author'),
 				authorInput =			$('#authorId'),
+				authorVerified = 		$('#authorVerified'),
 				authorNameId =  'author-name',
 				authorDetails =			'<h4 id="' + authorNameId + '" class="header"></h4><div class="contact-info">' +
 										author.data("email") + '<br/>' +
@@ -1883,6 +1884,7 @@ var deleteAuthor = (function() {
 			// Avoid XSS
       $('#'+authorNameId).text(author.data('name'));
 
+            authorVerified.val(author.data('verified'));
 			authorInput.val(author.data("id"));
 		}
 	};

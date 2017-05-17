@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QParticipant;
@@ -140,39 +139,14 @@ public class JdbcAuthorDaoTest {
         int originalAuthorCount = authorDao.findNormalAuthors(initiativeId).size();
         long originalParticipantCount = participantCountOfInitiative(initiativeId);
 
-        authorDao.deleteAuthorAndParticipant(new NormalAuthorId(authorId));
+        authorDao.deleteAuthorAndParticipant(initiativeId, new NormalAuthorId(authorId));
 
         assertThat(authorDao.findNormalAuthors(initiativeId), hasSize(originalAuthorCount - 1));
         assertThat(participantCountOfInitiative(initiativeId), is(originalParticipantCount - 1));
     }
 
-    @Test
-    public void delete_author_decreases_denormalized_participant_count() {
-
-        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
-        Long authorId = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
-
-        int originalAuthorCount = authorDao.findNormalAuthors(initiativeId).size();
-        int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
-
-        authorDao.deleteAuthorAndParticipant(new NormalAuthorId(authorId));
-
-        assertThat(authorDao.findNormalAuthors(initiativeId), hasSize(originalAuthorCount - 1));
-        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(originalParticipantCount - 1));
-
-    }
-
     private Long participantCountOfInitiative(Long initiativeId) {
         return testHelper.countAll(QParticipant.participant, QParticipant.participant.municipalityInitiativeId.eq(initiativeId));
-    }
-
-    @Test
-    public void deleting_final_author_is_not_allowed() {
-        testHelper.createCollaborativeAccepted(testMunicipality);
-
-        thrown.expect(OperationNotAllowedException.class);
-        thrown.expectMessage(containsString("Deleting last author is forbidden"));
-        authorDao.deleteAuthorAndParticipant(testHelper.getLastNormalAuthorId());
     }
 
     @Test

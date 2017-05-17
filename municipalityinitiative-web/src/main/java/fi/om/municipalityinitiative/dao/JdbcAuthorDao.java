@@ -13,7 +13,6 @@ import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
@@ -254,44 +253,17 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public void deleteAuthorAndParticipant(NormalAuthorId authorId) {
-
-        Long initiativeId = queryFactory.from(QAuthor.author)
-                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
-                .where(QAuthor.author.participantId.eq(authorId.toLong()))
-                .uniqueResult(QParticipant.participant.municipalityInitiativeId);
-
-        // Lock all authors of the initiative from another transactions
-        queryFactory.from(QAuthor.author)
-                .where(QAuthor.author.initiativeId.eq(initiativeId))
-                .forUpdate().of(QAuthor.author).list(QAuthor.author.participantId);
+    public void deleteAuthorAndParticipant(Long initiativeId, NormalAuthorId authorId) {
 
         assertSingleAffection(queryFactory.delete(QAuthor.author)
                 .where(QAuthor.author.participantId.eq(authorId.toLong())).execute());
         assertSingleAffection(queryFactory.delete(QParticipant.participant)
                 .where(QParticipant.participant.id.eq(authorId.toLong())).execute());
-        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.subtract(1))
-                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
-                .execute());
-
-        long authorCount = queryFactory.from(QAuthor.author)
-                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
-                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
-                .count();
-
-        assertNotZero(authorCount, "Deleting last author is forbidden");
 
     }
 
     @Override
     public void deleteAuthorAndParticipant(Long initiativeId, VerifiedUserId authorToDelete) {
-
-        // Lock all authors of the initiative from another transactions
-
-        queryFactory.from(QVerifiedAuthor.verifiedAuthor)
-                .where(QVerifiedAuthor.verifiedAuthor.initiativeId.eq(initiativeId))
-                .forUpdate().of(QVerifiedAuthor.verifiedAuthor).list(QVerifiedAuthor.verifiedAuthor.initiativeId);
 
         assertSingleAffection(queryFactory.delete(QVerifiedAuthor.verifiedAuthor)
                 .where(QVerifiedAuthor.verifiedAuthor.initiativeId.eq(initiativeId))
@@ -303,23 +275,6 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QVerifiedParticipant.verifiedParticipant.verifiedUserId.eq(authorToDelete.toLong()))
                 .execute());
 
-        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.subtract(1))
-                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
-                .execute());
-
-        long authorCount = queryFactory.from(QVerifiedAuthor.verifiedAuthor)
-                .where(QVerifiedAuthor.verifiedAuthor.initiativeId.eq(initiativeId))
-                .count();
-
-        assertNotZero(authorCount, "Deleting last verified author is forbidden");
-
-    }
-
-    private static void assertNotZero(long authorCount, String messag) {
-        if (authorCount == 0) {
-            throw new OperationNotAllowedException(messag);
-        }
     }
 
     @Override

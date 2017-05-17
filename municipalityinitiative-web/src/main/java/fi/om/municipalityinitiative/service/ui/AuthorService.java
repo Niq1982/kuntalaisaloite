@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
+import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
@@ -93,7 +94,7 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
+    public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId, boolean targetAuthorIsVerified) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         Initiative initiative = initiativeDao.get(initiativeId);
@@ -101,27 +102,25 @@ public class AuthorService {
         assertAllowance("Invite authors", ManagementSettings.of(initiative).isAllowInviteAuthors());
 
         User user = loginUserHolder.getUser();
+        if ((user.isVerifiedUser() && targetAuthorIsVerified && ((VerifiedUser) user).getAuthorId().toLong() == authorId)
+                || (!user.isVerifiedUser() && !targetAuthorIsVerified && ((NormalLoginUser) user).getAuthorId().toLong() == authorId)) {
+            throw new OperationNotAllowedException("Removing yourself from authors is not allowed");
+        }
+
+        if (authorDao.findAllAuthors(initiativeId).size() == 1) {
+            throw new OperationNotAllowedException("Unable to delete the final author.");
+        }
+
         ContactInfo deletedAuthorContactInfo;
 
-        if (initiative.getType().isVerifiable()) {
-            VerifiedUser currentUser = (VerifiedUser) user;
-            VerifiedUserId authorToDelete = new VerifiedUserId(authorId);
-
-            if (currentUser.getAuthorId().toLong() == authorId) {
-                throw new OperationNotAllowedException("Removing yourself from authors is not allowed");
-            }
-            deletedAuthorContactInfo = deleteVerifiedAuthor(initiativeId, authorToDelete);
+        if (targetAuthorIsVerified) {
+            deletedAuthorContactInfo = deleteVerifiedAuthor(initiativeId, new VerifiedUserId(authorId));
         }
-
         else {
-            NormalLoginUser currentUser = (NormalLoginUser) user;
-            NormalAuthorId authorToDelete = new NormalAuthorId(authorId);
-
-            if (currentUser.getAuthorId().toLong() == authorId) {
-                throw new OperationNotAllowedException("Removing yourself from authors is not allowed");
-            }
-            deletedAuthorContactInfo = deleteNormalAuthor(initiativeId, authorToDelete);
+            deletedAuthorContactInfo = deleteNormalAuthor(initiativeId, new NormalAuthorId(authorId));
         }
+
+        initiativeDao.denormalizeParticipantCounts(initiativeId);
 
         emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeId, deletedAuthorContactInfo);
         emailService.sendAuthorDeletedEmailToDeletedAuthor(initiativeId, deletedAuthorContactInfo.getEmail());
@@ -215,7 +214,11 @@ public class AuthorService {
 
     private ContactInfo deleteVerifiedAuthor(Long initiativeId, VerifiedUserId authorToDelete) {
 
-        ContactInfo contactInfo = authorDao.getVerifiedAuthor(initiativeId, authorToDelete).getContactInfo();
+        VerifiedAuthor verifiedAuthor = authorDao.getVerifiedAuthor(initiativeId, authorToDelete);
+        if (verifiedAuthor == null) {
+            throw new NotFoundException("Author", "initiative: " + initiativeId + ", author: " + authorToDelete);
+        }
+        ContactInfo contactInfo = verifiedAuthor.getContactInfo();
         authorDao.deleteAuthorAndParticipant(initiativeId, authorToDelete);
         initiativeDao.denormalizeParticipantCounts(initiativeId);
         return contactInfo;
@@ -228,12 +231,9 @@ public class AuthorService {
         if (!hasAuthor(authorToDelete, authors)) {
             throw new NotFoundException("Author", "initiative: " + initiativeId + ", author: " + authorToDelete);
         }
-        else if (authors.size() < 2) {
-            throw new OperationNotAllowedException("Unable to delete author. Initiative has only " + authors.size() +" author(s)");
-        }
         else {
             ContactInfo deletedAuthorContactInfo = authorDao.getNormalAuthor(authorToDelete).getContactInfo();
-            authorDao.deleteAuthorAndParticipant(authorToDelete);
+            authorDao.deleteAuthorAndParticipant(initiativeId, authorToDelete);
             initiativeDao.denormalizeParticipantCounts(initiativeId);
             return deletedAuthorContactInfo;
         }
