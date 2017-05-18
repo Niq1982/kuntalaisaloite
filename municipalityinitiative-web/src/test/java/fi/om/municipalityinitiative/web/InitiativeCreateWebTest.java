@@ -109,7 +109,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         // When
         getElemContaining("Olen kunnan asukas", "label").click();
         // Then
-        assertThat(isInitiativeTypeSelectable(true), is(true));
+        assertThat(isNormalInitiativeTypeSelectable(), is(true));
         assertVerifiedInitiativeDisabledBecauseOf("Vaatii vahvan tunnistautumisen");
 
         assertThat(isConfirmButtonDisabled(), is(true));
@@ -130,7 +130,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         homeMunicipalitySelect(HELSINKI);
         // Then
         assertThat(isConfirmButtonDisabled(), is(true));
-        assertThat(isInitiativeTypeSelectable(true), is(true));
+        assertThat(isNormalInitiativeTypeSelectable(), is(true));
         assertVerifiedInitiativeDisabledBecauseOf("Vaatii vahvan tunnistautumisen");
         assertThat(isConfirmButtonDisabled(), is(true));
     }
@@ -541,7 +541,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         enterVetumaLoginInformationAndSubmit("121212-0000", HELSINKI);
         municipalitySelect(HELSINKI);
         // TODO: Verified initiative should be selectable
-        assertThat(isInitiativeTypeSelectable(false), is(true));
+        assertThat(isNormalInitiativeTypeSelectable(), is(true));
     }
 
 
@@ -576,7 +576,8 @@ public class InitiativeCreateWebTest extends WebTestBase {
     }
 
     private void assertVerifiedInitiativeDisabledBecauseOf(String s) {
-        // TODO
+        assertThat(getElement(By.cssSelector("[data-verifiable=true]")).getText(),
+                containsString(s));
 
     }
     
@@ -623,7 +624,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         return getElement(By.id("initiative-type")).getAttribute("class").contains("toggle-disable disabled");
     }
 
-    private boolean isInitiativeTypeSelectable(boolean normal) {
+    private boolean isNormalInitiativeTypeSelectable() {
         return !driver.findElements(By.cssSelector(".initiative-type")).get(0).findElement(By.cssSelector(".action.open")).getAttribute("class").contains("js-hide");
     }
 
