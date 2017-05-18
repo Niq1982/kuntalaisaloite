@@ -121,7 +121,7 @@
             <#if participant.isAuthor()>
                 <span class="bull">&bull;</span> <@u.message "deleteParticipant.authorCannotBeDeleted" />
 
-            <#elseif !participant.participant.isVerified()>
+            <#else>
                 <span class="bull">&bull;</span>
                 <a  href="?deleteParticipant=${participant.participant.id!""}&verified=${participant.participant.isVerified()?c}" class="js-delete-participant"
                     data-id="${participant.participant.id!""}"
