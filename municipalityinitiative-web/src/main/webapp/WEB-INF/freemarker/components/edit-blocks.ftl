@@ -106,9 +106,8 @@
             <input type="hidden" name="homeMunicipality" value="${user.homeMunicipality.value.id}" />
             <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
             <div id="verifiedHomeMunicipality" class="input-placeholder" data-initiative-municipality="${user.homeMunicipality.value.id}"><@u.solveMunicipality user.homeMunicipality /></div>
-        <#else>
-            <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality multiple=false/>
         </#if>
+        <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality multiple=false/>
     </div>
     <br class="clear" />
 

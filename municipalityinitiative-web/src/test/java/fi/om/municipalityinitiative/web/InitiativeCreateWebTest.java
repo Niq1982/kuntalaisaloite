@@ -56,7 +56,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         clickButton("Aloita aloitteen tekeminen");
 
         // Then
-        shows_sending_email_page(recipientEmail); //Fails:  homeMunicipality is not defined
+        shows_sending_email_page(recipientEmail);
     }
 
     @Test
@@ -272,12 +272,12 @@ public class InitiativeCreateWebTest extends WebTestBase {
         getElemContaining("Siirry tunnistautumaan", "button").click();
         enterVetumaLoginInformationAndSubmit("121212-0000", null);
         // Then
-        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(false));
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
 
         // When
         municipalitySelect(VANTAA);
         // Then
-        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(false)); //FAILS
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
 
         // When
         getElemContaining("Olen kunnan asukas", "label").click();
@@ -287,7 +287,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         // When
         getElemContaining("Olen asukas toisessa kunnassa", "label").click();
         // Then
-        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(false)); //FAILS
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
 
         // When
         getElemContaining("Ei mitään näistä", "label").click();
@@ -308,14 +308,13 @@ public class InitiativeCreateWebTest extends WebTestBase {
         municipalitySelect(VANTAA);
         getElemContaining("Olen kunnan asukas", "label").click();
         getElemContaining("Aloite kunnallisesta kansanäänestyksestä", "span").click();
+        // Then
+        assertThat(isConfirmButtonDisabled(), is(false));
 
         // When
         clickButton("Aloita aloitteen tekeminen");
         // Then
-        assertThat(isConfirmButtonDisabled(), is(false));
-
-        // Then
-        shows_initiative_creating_page_without_error(); //FAILS homeMunicipality is not defined
+        shows_initiative_creating_page_without_error();
     }
 
     @Test
@@ -327,12 +326,12 @@ public class InitiativeCreateWebTest extends WebTestBase {
         getElemContaining("Siirry tunnistautumaan", "button").click();
         enterVetumaLoginInformationAndSubmit("121212-0000", null);
         // Then
-        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(false));
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
 
         // When
         municipalitySelect(VANTAA);
         // Then
-        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(false)); //FAILS
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true)); //FAILS
 
         // When
         getElemContaining("Olen asukas toisessa kunnassa", "label").click();
@@ -416,7 +415,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         Long initiative = testHelper.createDraft(HELSINKI_ID);
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.getEdit(initiative));
-//        assertThat(driver.getTitle(), is("asdasd"));
         assertPreparePageTitle();
     }
 

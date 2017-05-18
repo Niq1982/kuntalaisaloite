@@ -678,8 +678,7 @@ var municipalitySelection = (function() {
 		}
 
         preventContinuing(true, 'mask', $('.toggle-disable'));
-
-		if ($('#form-participate').data('verified') == "" || $('#form-invitation').data('verified') == "" ) {
+		if ($('#form-participate').data('verified') == "" || $('#form-invitation').data('verified') == "" || $('#form-preparation').length !== 0) {
             preventContinuing(true, 'mask-send', $('.toggle-disable-send'));
 		}
 
@@ -738,6 +737,19 @@ var municipalitySelection = (function() {
 	}
 
 
+	function updateHomeMuncipality() {
+		var verifiedHome = $('#verifiedHomeMunicipality');
+		if ($('#homeMunicipality').val() != "") {
+			return;
+		}
+		if (verifiedHome.length > 0 && verifiedHome.data('initiative-municipality') != "") {
+            $('#homeMunicipality').val(verifiedHome.data('initiative-municipality'));
+            return;
+		}
+        var val = $('#municipality').val();
+        $('#homeMunicipality').val(val);
+	}
+
 	// Disable form
 	function preventContinuing(prevent, maskClass, toggleDisable) {
 		var authorEmail			= $('#participantEmail'),
@@ -756,6 +768,10 @@ var municipalitySelection = (function() {
 		} else {
 			toggleDisableInput.removeAttr('disabled');
 			toggleDisable.removeClass('disabled');
+			//update homeMuncipality before sending
+			if (maskClass == 'mask-send') {
+				updateHomeMuncipality();
+			}
 		}
 	};
 
