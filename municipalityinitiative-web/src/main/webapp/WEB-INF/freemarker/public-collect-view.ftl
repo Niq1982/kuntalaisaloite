@@ -10,11 +10,12 @@
 
 <#escape x as x?html>
 
-<#-- For verifiable initiatives when user returns from VETUMA -->
-<#assign showNotAllowedToParticipate = user.isVerifiedUser()
-&& (!user.municipalityOkForVerifiedParticipation(initiative.id, initiative.municipality) || user.tooYoungForVerifiedParticipation())
-&& initiative.verifiable
-&& RequestParameters['show-participate']?? />
+<#-- For initiatives when user returns from VETUMA -->
+<#assign showNotAllowedToParticipate =
+    user.isVerifiedUser()
+    && (user.hasParticipatedToInitiative(initiative.id)
+        || (initiative.verifiable && (!user.municipalityOkForVerifiedParticipation(initiative.id, initiative.municipality) || user.tooYoungForVerifiedParticipation())))
+    && RequestParameters['show-participate']?? />
 
 <#assign notAllowedToParticipateHTML>
     <@compress single_line=true>
@@ -23,7 +24,7 @@
         <#elseif user.tooYoungForVerifiedParticipation()>
             <@u.systemMessage path="warning.participant.too.young.to.verified.participation" type="warning" />
        	<#else>
-       		<@u.systemMessage path="warning.participant.notMember" type="warning" />
+       		<@u.systemMessage path="warning.initiative.notCitizen" type="warning" />
         </#if>
 
         <div class="input-block-content">
