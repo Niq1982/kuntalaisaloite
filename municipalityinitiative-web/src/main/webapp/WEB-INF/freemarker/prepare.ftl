@@ -99,7 +99,7 @@
                 </div>
             </div>
 
-            <div class="form-block-container toggle-disable">
+            <div class="form-block-container toggle-disable" id="initiative-type">
                 <div class="input-block no-sidebar cf">
                     <@edit.chooseInitiativeType />
                 </div>

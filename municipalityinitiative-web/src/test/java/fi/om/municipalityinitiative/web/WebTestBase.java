@@ -300,6 +300,12 @@ public abstract class WebTestBase {
     protected void clickElementByClass(String cssClass) {
         findElementWhenClickable(By.cssSelector("." + cssClass)).click();
     }
+
+    protected void clickElementByXPath(String xPath) {
+        By.xpath("//form[@id='myform']//input[@type='submit']");
+        findElementWhenClickable(By.xpath(xPath)).click();
+    }
+
     protected void clickElementByCSS(String css) {
         findElementWhenClickable(By.cssSelector(css)).click();
     }

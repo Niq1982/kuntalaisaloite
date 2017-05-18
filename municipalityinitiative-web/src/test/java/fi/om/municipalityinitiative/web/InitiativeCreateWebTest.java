@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.web;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -37,74 +36,117 @@ public class InitiativeCreateWebTest extends WebTestBase {
         open(urls.prepare());
         assertPreparePageTitle();
     }
-    
-    @Test
-    public void authenticating_with_email_as_municipal_citizen_shows_email_sent_page() throws InterruptedException {
-
-        String recipientEmail = "testi@example.com";
-
-        open(urls.prepare());
-        assertPreparePageTitle();
-
-        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
-        getElementByLabel("Sähköpostiosoitteesi", "input")
-                .sendKeys(recipientEmail);
-        clickButton("Jatka");
-        municipalitySelect(VANTAA);
-        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
-        getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
-        municipalitySelect(HELSINKI);
-        getElemContaining("Kuntalaisaloite", "span").click();
-        clickButton("Aloita aloitteen tekeminen");
-
-        assertTitle("Linkki aloitteen tekemiseen on lähetetty sähköpostiisi - Kuntalaisaloitepalvelu");
-        assertThat(getElement(By.className("view-block")).getText(),
-                containsString("on lähetetty antamaasi sähköpostiosoitteeseen " + recipientEmail));
-        assertTotalEmailsInQueue(1);
-
-        assertThat(testHelper.getSingleQueuedEmail().getRecipientsAsString(), is(recipientEmail));
-        assertThat(testHelper.getSingleQueuedEmail().getSubject(), is("Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa"));
-
-    }
 
     @Test
-    @Ignore("TODO")
-    public void authenticating_with_email_and_selecting_same_municipality_as_home_municipality_shows_email_sent_page() {
-
-    }
-
-    @Test
-    public void authentication_with_email_disallowed_options() throws InterruptedException {
-
+    public void email_authentication_allows_normal_initiative_creation_to_own_municipality() throws InterruptedException {
         // Given
         String recipientEmail = "testi@example.com";
 
         open(urls.prepare());
         assertPreparePageTitle();
 
+        // When
         getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
         getElementByLabel("Sähköpostiosoitteesi", "input")
                 .sendKeys(recipientEmail);
         clickButton("Jatka");
         municipalitySelect(VANTAA);
+        getElemContaining("Olen kunnan asukas", "label").click();
+        getElemContaining("Kuntalaisaloite", "span").click();
+        clickButton("Aloita aloitteen tekeminen");
+
+        // Then
+        shows_sending_email_page(recipientEmail); //Fails:  homeMunicipality is not defined
+    }
+
+    @Test
+    public void email_authentication_allows_normal_initiative_creation_to_another_municipality() throws InterruptedException {
+        //Given
+        String recipientEmail = "testi@example.com";
+
+        open(urls.prepare());
+        assertPreparePageTitle();
+
+        //When
+        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
+        getElementByLabel("Sähköpostiosoitteesi", "input")
+                .sendKeys(recipientEmail);
+        clickButton("Jatka");
+        municipalitySelect(VANTAA);
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
+        homeMunicipalitySelect(HELSINKI);
+        getElemContaining("Kuntalaisaloite", "span").click();
+        clickButton("Aloita aloitteen tekeminen");
+
+        // Then
+        shows_sending_email_page(recipientEmail);
+    }
+
+    @Test
+    public void authentication_with_email_disallowed_options() throws InterruptedException {
+        // Given
+        String recipientEmail = "testi@example.com";
+
+        open(urls.prepare());
+        assertPreparePageTitle();
+
+        // When
+        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
+        getElementByLabel("Sähköpostiosoitteesi", "input")
+                .sendKeys(recipientEmail);
+        clickButton("Jatka");
+
+        // Then
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
+        // When
+        municipalitySelect(VANTAA);
+        // Then
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
+
+        // When
+        getElemContaining("Olen kunnan asukas", "label").click();
+        // Then
+        assertThat(isInitiativeTypeSelectable(true), is(true));
+        assertThat(isInitiativeTypeSelectable(false), is(false));
+
+        assertThat(isConfirmButtonDisabled(), is(true));
 
         // When
         getElemContaining("Olen asukas toisessa kunnassa", "label").click();
-        getElemContaining("Ei mitään näistä", "label").click();
+        // Then
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
 
+        // When
+        getElemContaining("Ei mitään näistä", "label").click();
         // Then
         assertWarningMessage("Jos mikään perusteista ei täyty, et voi tehdä aloitetta tähän kuntaan.");
-        assertThat(getElemContaining("Aloita aloitteen tekeminen", "button").isEnabled(), is(false));
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
 
         // When
         getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
+        homeMunicipalitySelect(HELSINKI);
+        // Then
+        assertThat(isConfirmButtonDisabled(), is(true));
+        assertThat(isInitiativeTypeSelectable(true), is(true));
+        assertThat(isInitiativeTypeSelectable(false), is(false));
+        assertThat(isConfirmButtonDisabled(), is(true));
+    }
+
+    @Test
+    public void verified_authentication_allows_normal_initiative_creation_to_own_municipality() throws InterruptedException {
+        // Given
+        open(urls.prepare());
+
+        // When
+        getElemContaining("Siirry tunnistautumaan", "button").click();
+        enterVetumaLoginInformationAndSubmit("121212-0000", HELSINKI);
         municipalitySelect(HELSINKI);
+        getElemContaining("Kuntalaisaloite", "span").click();
+        clickButton("Aloita aloitteen tekeminen");
 
         // Then
-        // TODO: Make a smart solution to check that 2-type is not selectable.
-        getElemContaining("Kuntalaisaloite", "span").click();
-        assertThat(getElemContaining("Aloita aloitteen tekeminen", "button").isEnabled(), is(true));
-
+        shows_initiative_creating_page_without_error();
     }
 
     @Test
@@ -116,75 +158,187 @@ public class InitiativeCreateWebTest extends WebTestBase {
         // When
         getElemContaining("Siirry tunnistautumaan", "button").click();
         enterVetumaLoginInformationAndSubmit("121212-0000", HELSINKI);
-
         municipalitySelect(VANTAA);
         getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
         getElemContaining("Kuntalaisaloite", "span").click();
         clickButton("Aloita aloitteen tekeminen");
 
-        assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
-
+        // Then
+        shows_initiative_creating_page_without_error();
     }
 
     @Test
-    @Ignore("TODO")
-    public void verified_authentication_disallowed_options() throws InterruptedException {
+    public void verified_authentication_disallows_normal_initiative_creation_to_another_municipality() throws InterruptedException {
+        // Given
+        open(urls.prepare());
 
+        // When
+        getElemContaining("Siirry tunnistautumaan", "button").click();
+        enterVetumaLoginInformationAndSubmit("121212-0000", HELSINKI);
+
+        // Then
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true)); //FAILS
+
+        // When
+        municipalitySelect(VANTAA);
+        // Then
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
+        // When
+        getElemContaining("Ei mitään näistä", "label").click();
+
+        // Then
+        assertWarningMessage("Jos mikään perusteista ei täyty, et voi tehdä aloitetta tähän kuntaan.");
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
     }
 
     @Test
-    @Ignore("TODO")
-    public void verified_authentication_allows_normal_initiative_creation_to_own_municipality() throws InterruptedException {
-
-    }
-
-    @Test
-    @Ignore("TODO")
     public void verified_authentication_allows_verified_initiative_creation_to_own_municipality() throws InterruptedException {
+        // Given
+        open(urls.prepare());
 
+        // When
+        getElemContaining("Siirry tunnistautumaan", "button").click();
+        enterVetumaLoginInformationAndSubmit("121212-0000", HELSINKI);
+        municipalitySelect(HELSINKI);
+        getElemContaining("Aloite kunnallisesta kansanäänestyksestä", "span").click();
+        clickButton("Aloita aloitteen tekeminen");
+
+        // Then
+        shows_initiative_creating_page_without_error();
     }
 
     @Test
-    @Ignore("TODO")
     public void verified_authentication_disallows_verified_initiative_creation_to_another_municipality() throws InterruptedException {
+        // Given
+        open(urls.prepare());
 
+        // When
+        getElemContaining("Siirry tunnistautumaan", "button").click();
+        enterVetumaLoginInformationAndSubmit("121212-0000", HELSINKI);
+        municipalitySelect(VANTAA);
+
+        // Then
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
+        // When
+        getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
+
+        // Then
+        assertThat(isInitiativeTypeSelectable(false), is(false));
+        assertThat(isConfirmButtonDisabled(), is(true));
+    }
+
+    @Test
+    public void verified_turvakielto_authentication_allows_normal_initiative_creation_to_own_municipality() throws InterruptedException {
+        // Given
+        open(urls.prepare());
+
+        // When
+        getElemContaining("Siirry tunnistautumaan", "button").click();
+        enterVetumaLoginInformationAndSubmit("121212-0000", null);
+        municipalitySelect(VANTAA);
+        getElemContaining("Olen kunnan asukas", "label").click();
+        getElemContaining("Kuntalaisaloite", "span").click();
+        clickButton("Aloita aloitteen tekeminen");
+
+        // Then
+        shows_initiative_creating_page_without_error(); //FAILS homeMunicipality is not defined
     }
 
     @Test
     public void verified_turvakielto_authentication_allows_normal_initiative_creation_to_another_municipality() throws InterruptedException {
+        // Given
+        open(urls.prepare());
 
+        // When
+        getElemContaining("Siirry tunnistautumaan", "button").click();
+        enterVetumaLoginInformationAndSubmit("121212-0000", null);
+        municipalitySelect(VANTAA);
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
+        homeMunicipalitySelect(HELSINKI);
+        getElemContaining("Kuntalaisaloite", "span").click();
+        clickButton("Aloita aloitteen tekeminen");
+
+        // Then
+        shows_initiative_creating_page_without_error(); //FAILS homeMunicipality is not defined
     }
 
     @Test
-    @Ignore("TODO")
-    public void verified_turvakielto_authentication_disallowed_options() throws InterruptedException {
+    public void verified_turvakielto_authentication_disallows_normal_initiative_creation() throws InterruptedException {
+        // Given
+        open(urls.prepare());
 
+        // When
+        getElemContaining("Siirry tunnistautumaan", "button").click();
+        enterVetumaLoginInformationAndSubmit("121212-0000", null);
+        // Then
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(false));
+
+        // When
+        municipalitySelect(VANTAA);
+        // Then
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(false)); //FAILS
+
+        // When
+        getElemContaining("Olen kunnan asukas", "label").click();
+        // Then
+        assertThat(isConfirmButtonDisabled(), is(true));
+
+        // When
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        // Then
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(false)); //FAILS
+
+        // When
+        getElemContaining("Ei mitään näistä", "label").click();
+        // Then
+        assertWarningMessage("Jos mikään perusteista ei täyty, et voi tehdä aloitetta tähän kuntaan.");
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
     }
 
-    @Test
-    @Ignore("TODO")
-    public void verified_turvakielto_authentication_allows_normal_initiative_creation_to_own_municipality() throws InterruptedException {
-
-    }
 
     @Test
-    @Ignore("TODO")
     public void verified_turvakielto_authentication_allows_verified_initiative_creation_to_own_municipality() throws InterruptedException {
+        // Given
+        open(urls.prepare());
 
+        // When
+        getElemContaining("Siirry tunnistautumaan", "button").click();
+        enterVetumaLoginInformationAndSubmit("121212-0000", null);
+        municipalitySelect(VANTAA);
+        getElemContaining("Olen kunnan asukas", "label").click();
+        getElemContaining("Aloite kunnallisesta kansanäänestyksestä", "span").click();
+
+        // When
+        clickButton("Aloita aloitteen tekeminen");
+        // Then
+        assertThat(isConfirmButtonDisabled(), is(false));
+
+        // Then
+        shows_initiative_creating_page_without_error(); //FAILS homeMunicipality is not defined
     }
 
     @Test
-    @Ignore("TODO")
     public void verified_turvakielto_authentication_disallows_verified_initiative_creation_to_another_municipality() throws InterruptedException {
+        // Given
+        open(urls.prepare());
 
-    }
+        // When
+        getElemContaining("Siirry tunnistautumaan", "button").click();
+        enterVetumaLoginInformationAndSubmit("121212-0000", null);
+        // Then
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(false));
 
+        // When
+        municipalitySelect(VANTAA);
+        // Then
+        assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(false)); //FAILS
 
-
-    public void municipalitySelect(String municipality) throws InterruptedException {
-        clickLink(getMessage(SELECT_MUNICIPALITY)); // Placeholder of municipalityselector
-        getElemContaining(municipality, "li").click();
-        Thread.sleep(200);
+        // When
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
+        // Then
+        assertThat(isInitiativeTypeSelectable(false), is(false));
     }
 
     @Test
@@ -364,6 +518,33 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assertPageHasValidationErrors();
     }
 
+    @Test
+    public void is_initiative_types_clickable() throws InterruptedException {
+        // Given
+        open(urls.prepare());
+
+        // When
+        getElemContaining("Siirry tunnistautumaan", "button").click();
+        enterVetumaLoginInformationAndSubmit("121212-0000", HELSINKI);
+        assertThat(isInitiativeTypesClickable(), is(false));
+        municipalitySelect(HELSINKI);
+        assertThat(isInitiativeTypesClickable(), is(true));
+    }
+
+    @Test
+    public void is_initiative_type_selectable() throws InterruptedException {
+        // Given
+        open(urls.prepare());
+
+        // When
+        getElemContaining("Siirry tunnistautumaan", "button").click();
+        enterVetumaLoginInformationAndSubmit("121212-0000", HELSINKI);
+        municipalitySelect(HELSINKI);
+        assertThat(isInitiativeTypeSelectable(true), is(true));
+        assertThat(isInitiativeTypeSelectable(false), is(true));
+    }
+
+
     public void fill_in_preparation_email_form() {
 
         getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
@@ -417,4 +598,50 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assertTitle(getMessage(MSG_PAGE_CREATE_NEW) + " - " + getMessage(MSG_SITE_NAME));
     }
 
+    private void municipalitySelect(String municipality) throws InterruptedException {
+        clickElementByXPath("//div[@id='municipality_chzn']//a");
+        getElemContaining(municipality, "li").click();
+        Thread.sleep(500);
+    }
+
+    private void homeMunicipalitySelect(String municipality) throws InterruptedException {
+        clickElementByXPath("//div[@id='homeMunicipality_chzn']//a");
+        getElemContaining(municipality, "li").click();
+        Thread.sleep(500);
+    }
+
+    private boolean isInitiativeTypesClickable() {
+        return !getElement(By.id("initiative-type")).getAttribute("class").equals("form-block-container toggle-disable disabled");
+    }
+
+    private boolean isInitiativeTypesDisabled() {
+        return getElement(By.id("initiative-type")).getAttribute("class").contains("toggle-disable disabled");
+    }
+
+    private boolean isInitiativeTypeSelectable(boolean normal) {
+        int idx = (normal) ? 0 : 1;
+        return !driver.findElements(By.cssSelector(".initiative-type")).get(idx).findElement(By.cssSelector(".action.open")).getAttribute("class").contains("js-hide");
+    }
+
+    private boolean isConfirmButtonDisabled() {
+        return !getElemContaining("Aloita aloitteen tekeminen", "button").isEnabled();
+    }
+
+    private boolean areInitiativeTypesAndConfirmButtonDisabled(){
+        return isInitiativeTypesDisabled() && isConfirmButtonDisabled();
+    }
+
+    private void shows_sending_email_page(String recipientEmail) {
+        assertTitle("Linkki aloitteen tekemiseen on lähetetty sähköpostiisi - Kuntalaisaloitepalvelu");
+        assertThat(getElement(By.className("view-block")).getText(),
+                containsString("on lähetetty antamaasi sähköpostiosoitteeseen " + recipientEmail));
+        assertTotalEmailsInQueue(1);
+
+        assertThat(testHelper.getSingleQueuedEmail().getRecipientsAsString(), is(recipientEmail));
+        assertThat(testHelper.getSingleQueuedEmail().getSubject(), is("Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa"));
+    }
+
+    private void shows_initiative_creating_page_without_error() {
+        assertThat(getElement(By.id("form-initiative")).getText(), containsString("Kirjoita aloitteen sisältö"));
+    }
 }
