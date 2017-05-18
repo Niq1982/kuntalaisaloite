@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 
 import static fi.om.municipalityinitiative.dao.TestHelper.InitiativeDraft;
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -16,8 +17,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
 /**
      * Form values as constants.
      */
-    private static final String MUNICIPALITY_1 = "Vantaa";
-    private static final String MUNICIPALITY_2 = "Helsinki";
     
     private static final String NAME = "Aloitteen otsikko";
     private static final String PROPOSAL = "Aloitteen sisältö";
@@ -34,23 +33,48 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void page_opens() {
-        openAndAssertPreparePage();
+        open(urls.prepare());
+        assertPreparePageTitle();
     }
     
     @Test
-    public void filling_prepare_page_and_submitting_shows_success_message() {
-        overrideDriverToFirefox(true);
+    public void authenticating_with_email_as_municipal_citizen_shows_success_message() throws InterruptedException {
 
-        openAndAssertPreparePage();
-        select_municipality(false);
-        fill_in_preparation_email_form();
+        String recipientEmail = "testi@example.com";
+
+        open(urls.prepare());
+        assertPreparePageTitle();
+
+        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
+        getElementByLabel("Sähköpostiosoitteesi", "input")
+                .sendKeys(recipientEmail);
+        clickButton("Jatka");
+        municipalitySelect(VANTAA);
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
+        municipalitySelect(HELSINKI);
+        getElemContaining("Kuntalaisaloite", "span").click();
+        clickButton("Aloita aloitteen tekeminen");
+
+        assertTitle("Linkki aloitteen tekemiseen on lähetetty sähköpostiisi - Kuntalaisaloitepalvelu");
+        assertThat(getElement(By.className("view-block")).getText(),
+                containsString("on lähetetty antamaasi sähköpostiosoitteeseen " + recipientEmail));
         assertTotalEmailsInQueue(1);
+
+        assertThat(testHelper.getSingleQueuedEmail().getRecipientsAsString(), is(recipientEmail));
+
+    }
+
+    public void municipalitySelect(String municipality) {
+        clickLink(getMessage(SELECT_MUNICIPALITY)); // Placeholder of municipalityselector
+        getElemContaining(municipality, "li").click();
     }
 
     @Test
     public void prepare_page_shows_validation_errors_on_email_login_no_matter_what_initiativeType_is_selected() {
         overrideDriverToFirefox(true);
-        openAndAssertPreparePage();
+        open(urls.prepare());
+        assertPreparePageTitle();
 
         getElemContaining("Kuntalaisaloite", "span").click();
         getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
@@ -62,13 +86,14 @@ public class InitiativeCreateWebTest extends WebTestBase {
     @Test
     public void filling_prepare_page_with_verified_initiative_redirects_to_vetuma_and_back_to_prepare_page_and_then_allows_creation() {
         overrideDriverToFirefox(true);
-        openAndAssertPreparePage();
+        open(urls.prepare());
+        assertPreparePageTitle();
         select_municipality(false);
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
         getElemContaining("Siirry tunnistautumaan", "button").click();
 
         // Get redirected to vetuma
-        enterVetumaLoginInformationAndSubmit(USER_SSN, MUNICIPALITY_1);
+        enterVetumaLoginInformationAndSubmit(USER_SSN, VANTAA);
 
         // User get's redirected back to prepare page and has to reselect all :(
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
@@ -80,12 +105,13 @@ public class InitiativeCreateWebTest extends WebTestBase {
     @Test
     public void filling_prepare_page_with_verified_initiative_redirects_to_vetuma_but_back_to_prepare_page_with_membership_selection_if_homemunicipality_mismatch() {
         overrideDriverToFirefox(true);
-        openAndAssertPreparePage();
+        open(urls.prepare());
+        assertPreparePageTitle();
         select_municipality(false);
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
         getElemContaining("Siirry tunnistautumaan", "button").click();
         // Get redirected to vetuma
-        enterVetumaLoginInformationAndSubmit(USER_SSN, MUNICIPALITY_2);
+        enterVetumaLoginInformationAndSubmit(USER_SSN, HELSINKI);
 
         assertPreparePageTitle();
         assertInfoMessageContainsText("Kotikuntasi ei ole kunta, jota aloite koskee. Voit silti tehdä aloitteen, jos olet jäsen kyseisessä kunnassa");
@@ -101,9 +127,10 @@ public class InitiativeCreateWebTest extends WebTestBase {
     @Test
     public void first_logging_in_before_creating_verified_initiative_creates_draft_straigtly() {
         overrideDriverToFirefox(true);
-        vetumaLogin(USER_SSN, MUNICIPALITY_1);
+        vetumaLogin(USER_SSN, VANTAA);
 
-        openAndAssertPreparePage();
+        open(urls.prepare());
+        assertPreparePageTitle();
         select_municipality(true);
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
         getElemContaining("Aloita aloitteen tekeminen", "button").click();
@@ -125,7 +152,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     @Test
     public void editing_verified_initiative_shows_success_message() {
         Long initiativeId = testHelper.createVerifiedInitiative(new InitiativeDraft(HELSINKI_ID).applyAuthor(USER_SSN).toInitiativeDraft());
-        vetumaLogin(USER_SSN, MUNICIPALITY_1);
+        vetumaLogin(USER_SSN, VANTAA);
         open(urls.edit(initiativeId));
 
         inputText("name", NAME);
@@ -147,7 +174,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
                 .withName("")
                 .applyAuthor(USER_SSN).toInitiativeDraft());
 
-        vetumaLogin(USER_SSN, MUNICIPALITY_1);
+        vetumaLogin(USER_SSN, VANTAA);
         open(urls.edit(initiativeId));
 
         inputText("name", NAME);
@@ -173,7 +200,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
                         .toInitiativeDraft()
         );
 
-        vetumaLogin(USER_SSN, MUNICIPALITY_1);
+        vetumaLogin(USER_SSN, VANTAA);
         open(urls.edit(initiativeId));
 
         clickByName(Urls.ACTION_SAVE);
@@ -289,11 +316,11 @@ public class InitiativeCreateWebTest extends WebTestBase {
     }
 
     public void select_municipality(boolean homeMunicipalityVerified) {
-        clickLink(getMessage(SELECT_MUNICIPALITY));
-        getElemContaining(MUNICIPALITY_1, "li").click();
+        clickLink(getMessage(SELECT_MUNICIPALITY)); // Placeholder of municipalityselector
+        getElemContaining(VANTAA, "li").click();
 
         if (!homeMunicipalityVerified) {
-            assertTextContainedByXPath("//div[@id='homeMunicipality_chzn']/a/span", MUNICIPALITY_1);
+            assertTextContainedByXPath("//div[@id='homeMunicipality_chzn']/a/span", VANTAA);
         }
     }
 
@@ -344,11 +371,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     private void assertSuccessDraftSaved() {
         assertSuccessMessage("Luonnos tallennettu");
-    }
-
-    private void openAndAssertPreparePage() {
-        open(urls.prepare());
-        assertPreparePageTitle();
     }
 
     private void assertPreparePageTitle() {
