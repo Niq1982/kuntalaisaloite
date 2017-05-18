@@ -215,7 +215,7 @@
             line-height:1.2em;
         }
 
-        .action {
+        .action, .warning {
             position:absolute;
             z-index:2;
             bottom:0;
@@ -231,6 +231,10 @@
                 .grayGradient();
             }
 
+            &.warning {
+                background-color:red;
+            }
+
             &.blocked {
                 padding-left:20px;
                 background:@grayGradient2;
@@ -242,7 +246,6 @@
                 top:8px;
             }
         }
-
 
     }
 }

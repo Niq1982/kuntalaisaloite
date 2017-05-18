@@ -24,7 +24,7 @@
         <#elseif user.tooYoungForVerifiedParticipation()>
             <@u.systemMessage path="warning.participant.too.young.to.verified.participation" type="warning" />
        	<#else>
-       		<@u.systemMessage path="warning.initiative.notCitizen" type="warning" />
+       		<@u.systemMessage path="warning.participant.notCitizen" type="warning" />
         </#if>
 
         <div class="input-block-content">

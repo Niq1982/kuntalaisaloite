@@ -446,7 +446,7 @@
         <#elseif initiative.verifiable && user.isVerifiedUser() && user.tooYoungForVerifiedParticipation()>
             <@u.systemMessage path="warning.participant.too.young.to.verified.participation" type="warning" />
         <#elseif initiative.verifiable && user.isVerifiedUser() && !user.municipalityOkForVerifiedParticipation(initiative.id, initiative.municipality)>
-            <@u.systemMessage path="warning.initiative.notCitizen" type="warning" />
+            <@u.systemMessage path="warning.participant.notCitizen" type="warning" />
         <#elseif initiative.verifiable && ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
             <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
         </#if>

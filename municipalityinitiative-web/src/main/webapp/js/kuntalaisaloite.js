@@ -509,13 +509,14 @@ var initiativeType = (function() {
 		};
 	},
 
-	disableVerifiable = function(disable){
+	disableVerifiable = function(disable, errorClassToShow){
 		if($("#form-preparation").attr('data-verified') === "false") {
 			disable = true;
 		}
 		if (disable) {
 			$('.initiative-types').append(mask);
 			verifiable.find('.action').addClass(hideClass);
+            verifiable.find('.disabledNotCitizen').removeClass(hideClass);
 			verifiable.find('input[type="radio"]').removeAttr('checked');
 			vetumaBlock.hide();
 			resetTypes(true);
@@ -525,6 +526,7 @@ var initiativeType = (function() {
 
 		} else {
 			verifiable.find('.action').removeClass(hideClass);
+            verifiable.find('.disabledNotCitizen').addClass(hideClass);
 			mask.remove();
 		}
 	},

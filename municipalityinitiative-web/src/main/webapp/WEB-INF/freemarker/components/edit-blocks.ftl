@@ -175,19 +175,34 @@
             <span class="description"><@u.message "initiative.initiativeType."+type+".description" /></span>
         </span>
         <#if enabled>
-            <span class="action open">
-                <span class="checkbox hidden <#if spring.stringStatusValue == type>checked</#if>"></span>
-                <input type="radio" name="${spring.status.expression}" value="${type}" class="js-hide" required
-                <#if spring.stringStatusValue == type>checked="checked"</#if>
-                <@spring.closeTag/>
-                <span class="push" data-choose="<@u.message "initiative.initiativeType.choose" />" data-chosen="<@u.message "initiative.initiativeType.chosen" />">
-                    <#if spring.stringStatusValue == type>
-                        <@u.message "initiative.initiativeType.chosen" />
+            <#if typeNumber == 2>
+                <span class="warning blocked">
+
+                    <#if !user.isVerifiedUser()>
+                        <span><@u.message "warning.initiative.verification" /></span>
+                    <#elseif user.tooYoungForVerifiedParticipation()>
+                        <span><@u.message "warning.initiative.too.young.to.verified.participation" /></span>
                     <#else>
-                        <@u.message "initiative.initiativeType.choose" />
+                        <span class="disabledNotCitizen js-hide"><@u.message "warning.initiative.notCitizen" /></span>
                     </#if>
+
                 </span>
-            </span>
+            </#if>
+            <#if typeNumber == 1 || user.isVerifiedUser() && !user.tooYoungForVerifiedParticipation()>
+                <span class="action open">
+                    <span class="checkbox hidden <#if spring.stringStatusValue == type>checked</#if>"></span>
+                    <input type="radio" name="${spring.status.expression}" value="${type}" class="js-hide" required
+                    <#if spring.stringStatusValue == type>checked="checked"</#if>
+                    <@spring.closeTag/>
+                    <span class="push" data-choose="<@u.message "initiative.initiativeType.choose" />" data-chosen="<@u.message "initiative.initiativeType.chosen" />">
+                        <#if spring.stringStatusValue == type>
+                            <@u.message "initiative.initiativeType.chosen" />
+                        <#else>
+                            <@u.message "initiative.initiativeType.choose" />
+                        </#if>
+                    </span>
+                </span>
+            </#if>
 
         <#else>
             <span class="action blocked">
