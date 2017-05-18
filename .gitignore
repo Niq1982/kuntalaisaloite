@@ -30,3 +30,4 @@
 /municipalityinitiative-web/src/test/resources/app.properties
 /municipalityinitiative-web/src/test/resources/bonecp-config.xml
 /municipalityinitiative-web/target
+.DS_Store
