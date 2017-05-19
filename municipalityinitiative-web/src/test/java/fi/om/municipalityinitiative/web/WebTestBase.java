@@ -453,4 +453,16 @@ public abstract class WebTestBase {
     protected void assertTotalEmailsInQueue(int count) {
         assertThat(testHelper.findQueuedEmails(), hasSize(count));
     }
+
+    protected void municipalitySelect(String municipality) throws InterruptedException {
+        clickElementByXPath("//div[@id='municipality_chzn']//a");
+        getElemContaining(municipality, "li").click();
+        Thread.sleep(500);
+    }
+
+    protected void homeMunicipalitySelect(String municipality) throws InterruptedException {
+        clickElementByXPath("//div[@id='homeMunicipality_chzn']//a");
+        getElemContaining(municipality, "li").click();
+        Thread.sleep(500);
+    }
 }

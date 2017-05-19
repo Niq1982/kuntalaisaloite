@@ -741,6 +741,11 @@ var municipalitySelection = (function() {
 
 	function updateHomeMuncipality() {
 		var verifiedHome = $('#verifiedHomeMunicipality');
+
+        if ($('#form-participate').length !== 0) {
+            $('#homeMunicipality').val($('#form-participate').data('initiativemunicipality'));
+        }
+
 		if ($('#homeMunicipality').val() != "") {
 			return;
 		}

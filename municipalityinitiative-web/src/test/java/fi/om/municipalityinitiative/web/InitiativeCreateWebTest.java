@@ -604,18 +604,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assertTitle(getMessage(MSG_PAGE_CREATE_NEW) + " - " + getMessage(MSG_SITE_NAME));
     }
 
-    private void municipalitySelect(String municipality) throws InterruptedException {
-        clickElementByXPath("//div[@id='municipality_chzn']//a");
-        getElemContaining(municipality, "li").click();
-        Thread.sleep(500);
-    }
-
-    private void homeMunicipalitySelect(String municipality) throws InterruptedException {
-        clickElementByXPath("//div[@id='homeMunicipality_chzn']//a");
-        getElemContaining(municipality, "li").click();
-        Thread.sleep(500);
-    }
-
     private boolean isInitiativeTypesClickable() {
         return !getElement(By.id("initiative-type")).getAttribute("class").equals("form-block-container toggle-disable disabled");
     }

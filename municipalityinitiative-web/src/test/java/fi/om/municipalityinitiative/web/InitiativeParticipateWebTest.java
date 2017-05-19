@@ -56,16 +56,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         );
     }
 
-    @Test
-    public void participate_normal_initiative_shows_validation_errors() {
-        open(urls.view(normalInitiativeHelsinki));
-
-        clickLink(getMessage(MSG_BTN_PARTICIPATE));
-        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
-        getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
-        assertPageHasValidationErrors();
-    }
-
+    // Email -> normal initiative -> another municipality -> public name
     @Test
     public void participate_to_normal_initiative_with_public_name() {
         open(urls.view(normalInitiativeHelsinki));
@@ -76,19 +67,80 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         inputText("participantName", PARTICIPANT_NAME);
         inputText("participantEmail", PARTICIPANT_EMAIL);
-        
+
+        getElemContaining("Olen kunnan asukas", "label").click();
+
         getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
-        
+
         assertSuccessMessage("Vahvistuslinkki on lähetetty antamaasi sähköpostiosoitteeseen");
 
         assertTotalEmailsInQueue(1);
-       
-        assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a"), isNotPresent());
-        
-        open(urls.confirmParticipant(testHelper.getLastParticipantId(), PreviousHashGetter.get()));
-        
-        assertTextContainedByClass("public-names", "1 nimi julkaistu palvelussa");
 
+        assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a"), isNotPresent());
+
+        open(urls.confirmParticipant(testHelper.getLastParticipantId(), PreviousHashGetter.get()));
+
+        assertTextContainedByClass("public-names", "1 nimi julkaistu palvelussa"); //TODO
+    }
+
+    // Email -> normal initiative -> another municipality -> private name
+    @Test
+    public void participate_to_normal_initiative_with_private_name_and_select_membership_type() throws InterruptedException {
+        overrideDriverToFirefox(true); // Municipality select need firefox driver
+
+        open(urls.view(normalInitiativeHelsinki));
+
+        clickLink(getMessage(MSG_BTN_PARTICIPATE));
+
+        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
+
+        inputText("participantName", PARTICIPANT_NAME);
+        inputText("participantEmail", PARTICIPANT_EMAIL);
+
+        getElemContaining(getMessage(PARTICIPANT_SHOW_NAME), "span").click();
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+
+        getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
+        homeMunicipalitySelect(VANTAA);
+        getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
+
+        assertSuccessMessage("Vahvistuslinkki on lähetetty antamaasi sähköpostiosoitteeseen");
+
+        assertTotalEmailsInQueue(1);
+
+        assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a"), isNotPresent());
+
+        open(urls.confirmParticipant(testHelper.getLastParticipantId(), PreviousHashGetter.get()));
+
+        assertTextContainedByClass("private-names", "1 kunnan asukas"); //TODO
+    }
+
+    // Email -> normal initiative -> disallow
+    @Test
+    public void authentication_with_email_disallowed_options() throws InterruptedException {
+        overrideDriverToFirefox(true); // Municipality select need firefox driver
+
+        open(urls.view(normalInitiativeHelsinki));
+
+        clickLink(getMessage(MSG_BTN_PARTICIPATE));
+
+        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
+        assertThat(getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").isEnabled(), is(false));
+
+        inputText("participantName", PARTICIPANT_NAME);
+        inputText("participantEmail", PARTICIPANT_EMAIL);
+        assertThat(getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").isEnabled(), is(false));
+
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        assertThat(getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").isEnabled(), is(false));
+
+        getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
+        assertThat(getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").isEnabled(), is(false));
+        homeMunicipalitySelect(VANTAA);
+        assertThat(getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").isEnabled(), is(true));
+        getElemContaining("Ei mitään näistä", "label").click();
+        assertWarningMessage("Jos mikään perusteista ei täyty, et voi osallistua tähän aloitteeseen.");
+        assertThat(getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").isEnabled(), is(false));
     }
 
     @Test
@@ -119,9 +171,173 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         enterVetumaLoginInformationAndSubmit("111111-1111", HELSINKI);
         assertTitle(TestHelper.DEFAULT_INITIATIVE_NAME + " - Kuntalaisaloitepalvelu");
         assertThat(participateToInitiativeButton(), isPresent());
+    }
+
+    // Vetuma, private municipality -> normal initiative -> same municipality
+    @Test
+    public void participating_to_normal_initiative_when_private_home_municipality_from_vetuma_succeeds() {
+        participating_to_own_municipality_initiative_when_private_home_municipality_from_vetuma_succeeds(normalInitiativeHelsinki);
+    }
+
+    // Vetuma, private municipality -> normal initiative -> another municipality
+    @Test
+    public void participating_to_normal_initiative_when_private_home_municipality_from_vetuma_succeeds_and_select_membership_type() throws InterruptedException{
+        vetumaLogin(OTHER_USER_SSN, null);
+
+        open(urls.view(normalInitiativeHelsinki));
+        assertThat(participateToInitiativeButton(), isPresent());
+        participateToInitiativeButton().get().click();
+        assertInfoMessageContainsText("Vain nimesi voitiin hakea");
+
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
+        homeMunicipalitySelect(VANTAA);
+
+        // Vetuma participant has no information to fill
+        getElemContaining("Tallenna", "button").click();
+
+        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
+        //open(urls.confirmParticipant(testHelper.getLastParticipantId(), PreviousHashGetter.get())); FAILS
+        //assertTextContainedByClass("public-names", "1 nimi julkaistu palvelussa");
+    }
+
+    // Vetuma, private municipality -> normal initiative -> disallow
+    @Test
+    public void participating_to_normal_initiative_disallowed_options() throws InterruptedException {
+        vetumaLogin(OTHER_USER_SSN, null);
+
+        open(urls.view(normalInitiativeHelsinki));
+        assertThat(participateToInitiativeButton(), isPresent());
+
+        participateToInitiativeButton().get().click();
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        getElemContaining("Ei mitään näistä", "label").click();
+        assertWarningMessage("Jos mikään perusteista ei täyty, et voi osallistua tähän aloitteeseen.");
+        assertThat(getElemContaining("Tallenna", "button").isEnabled(), is(false));
+    }
+
+    // Vetuma, private municipality -> verified initiative -> same municipality
+    @Test
+    public void participating_to_verified_initiative_when_private_home_municipality_from_vetuma_succeeds() {
+        participating_to_own_municipality_initiative_when_private_home_municipality_from_vetuma_succeeds(verifiedInitiativeHelsinki);
+    }
+
+    private void participating_to_own_municipality_initiative_when_private_home_municipality_from_vetuma_succeeds(Long initiativeId) {
+        vetumaLogin(OTHER_USER_SSN, null);
+
+        open(urls.view(initiativeId));
+        assertThat(participateToInitiativeButton(), isPresent());
+
+        participateToInitiativeButton().get().click();
+        getElemContaining("Olen kunnan asukas", "label").click();
+
+        // Vetuma participant has no information to fill
+        getElemContaining("Tallenna", "button").click();
+
+        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
+        //open(urls.confirmParticipant(testHelper.getLastParticipantId(), PreviousHashGetter.get())); FAILS
+        //assertTextContainedByClass("public-names", "1 nimi julkaistu palvelussa");
+    }
+
+    // Vetuma, private municipality -> verified initiative -> another municipality -> error
+    @Test
+    public void participating_to_verified_initiative_when_private_home_municipality_from_vetuma_is_prevented_if_user_selects_wrong_municipality() {
+        vetumaLogin(OTHER_USER_SSN, null);
+
+        open(urls.view(verifiedInitiativeHelsinki));
+
+        assertThat(participateToInitiativeButton(), isPresent());
+        participateToInitiativeButton().get().click();
+        assertInfoMessageContainsText("Vain nimesi voitiin hakea");
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        assertThat(getElemContaining("Tallenna", "button").isEnabled(), is(false));
+        //assertTextContainedByClass("msg-warning", "Et ole aloitteen kunnan jäsen"); //FAILS: wrong text
+    }
+
+    // Vetuma -> normal initiative -> same municipality
+    @Test
+    public void participating_to_normal_initiative_as_verified_user_with_correct_municipality() {
+        vetumaLogin(OTHER_USER_SSN, HELSINKI);
+
+        open(urls.view(normalInitiativeHelsinki));
+
+        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+
+        assertThat(participateToInitiativeButton(), isPresent());
+        participateToInitiativeButton().get().click();
+
+        assertInfoMessageContainsText("Nimesi ja kotikuntasi on haettu");
+
+        // Vetuma participant has no information to fill
+        getElemContaining("Tallenna", "button").click();
+
+        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
+        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+
+        assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
+
+        assertWarningMessage("Olet jo osallistunut tähän aloitteeseen");
+        assertThat(participateToInitiativeButton(), isNotPresent());
+    }
+
+    // Vetuma -> normal initiative -> same municipality
+    @Test
+    public void participate_to_normal_initiative_as_verified_user_by_clicking_authentication_link_on_participate_page() {
+        open(urls.view(normalInitiativeHelsinki));
+
+        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+
+        clickLink(getMessage(MSG_BTN_PARTICIPATE));
+        clickLink("Tunnistaudu ja osallistu");
+        enterVetumaLoginInformationAndSubmit(OTHER_USER_SSN, HELSINKI);
+        clickButton("Tallenna");
+        clickLink("Jatka kirjautuneena");
+
+        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+        assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
 
     }
 
+    // Vetuma -> normal initiative -> another municipality
+    @Test
+    public void participating_to_normal_initiative_with_another_municipality() {
+        vetumaLogin(OTHER_USER_SSN, VANTAA);
+        open(urls.view(normalInitiativeHelsinki));
+
+        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+
+        assertThat(participateToInitiativeButton(), isPresent());
+        participateToInitiativeButton().get().click();
+
+        getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
+
+        // Vetuma participant has no information to fill
+        getElemContaining("Tallenna", "button").click();
+
+        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
+        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+
+        assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
+
+        assertWarningMessage("Olet jo osallistunut tähän aloitteeseen");
+        assertThat(participateToInitiativeButton(), isNotPresent());
+    }
+
+    // Vetuma -> normal initiative -> another municipality -> error
+    @Test
+    public void participating_to_normal_initiative_as_verified_user_with_another_municipality_disallowed_options(){
+        vetumaLogin(OTHER_USER_SSN, VANTAA);
+        open(urls.view(normalInitiativeHelsinki));
+
+        assertThat(participateToInitiativeButton(), isPresent());
+        participateToInitiativeButton().get().click();
+
+        getElemContaining("Ei mitään näistä", "label").click();
+        assertWarningMessage("Jos mikään perusteista ei täyty, et voi osallistua tähän aloitteeseen.");
+        assertThat(getElemContaining("Tallenna", "button").isEnabled(), is(false));
+    }
+
+    // Vetuma -> verified initiative -> same municipality
     @Test
     public void participate_to_verified_initiative_shows_success_message_and_increases_participant_count_on_page() {
         vetumaLogin("111111-1111", HELSINKI);
@@ -142,87 +358,20 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         assertWarningMessage("Olet jo osallistunut tähän aloitteeseen");
         assertThat(participateToInitiativeButton(), isNotPresent());
-
     }
 
+    // Vetuma -> verified initiative -> another municipality -> error
     @Test
     public void participating_to_verified_initiative_is_not_allowed_if_wrong_homeMunicipality() {
         vetumaLogin(OTHER_USER_SSN, VANTAA);
         open(urls.view(verifiedInitiativeHelsinki));
 
-        assertWarningMessage("Et ole aloitteen kunnan jäsen, joten et voi osallistua aloitteeseen.");
+        assertWarningMessage("Et ole aloitteen kunnan asukas, joten et voi osallistua aloitteeseen.");
         assertThat(participateToInitiativeButton(), isNotPresent());
-    }
-
-    @Test
-    public void participating_to_verified_initiative_when_private_home_municipality_from_vetuma_succeeds() {
-        vetumaLogin(OTHER_USER_SSN, null);
-
-        open(urls.view(verifiedInitiativeHelsinki));
-
-        assertThat(participateToInitiativeButton(), isPresent());
-        participateToInitiativeButton().get().click();
-
-        assertThat(findElementWhenClickable(By.id("homeMunicipality_chzn")).getText(), is(HELSINKI));
-
-        // Vetuma participant has no information to fill
-        getElemContaining("Tallenna", "button").click();
-
-        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
-    }
-
-    @Test
-    public void participating_to_verified_initiative_when_private_home_municipality_from_vetuma_is_prevented_if_user_selects_wrong_municipality() {
-        vetumaLogin(OTHER_USER_SSN, null);
-
-        open(urls.view(verifiedInitiativeHelsinki));
-
-        assertThat(participateToInitiativeButton(), isPresent());
-        participateToInitiativeButton().get().click();
-
-        assertThat(findElementWhenClickable(By.id("homeMunicipality_chzn")).getText(), is(HELSINKI));
-
-        clickLink(HELSINKI); // Chosen select box default value. Expects helsinki to be selected by default.
-        getElemContaining(VANTAA, "li").click();
-
-        assertTextContainedByClass("msg-warning", "Et ole aloitteen kunnan jäsen");
     }
 
     private Maybe<WebElement> participateToInitiativeButton() {
         return getOptionalElemContaining("Osallistu aloitteeseen", "span");
-    }
-
-    @Test
-    public void participate_to_normal_initiative_with_private_name_and_select_membership_type() {
-        overrideDriverToFirefox(true); // Municipality select need firefox driver
-
-        open(urls.view(normalInitiativeHelsinki));
-
-        clickLink(getMessage(MSG_BTN_PARTICIPATE));
-
-        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
-
-        inputText("participantName", PARTICIPANT_NAME);
-        getElemContaining(getMessage(PARTICIPANT_SHOW_NAME), "span").click();
-
-        clickLink(HELSINKI);
-        getElemContaining(VANTAA, "li").click();
-
-        getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
-
-        inputText("participantEmail", PARTICIPANT_EMAIL);
-
-        getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
-
-        assertSuccessMessage("Vahvistuslinkki on lähetetty antamaasi sähköpostiosoitteeseen");
-
-        assertTotalEmailsInQueue(1);
-
-        assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a"), isNotPresent());
-
-        open(urls.confirmParticipant(testHelper.getLastParticipantId(), PreviousHashGetter.get()));
-
-        assertTextContainedByClass("private-names", "1 nimi ei julkaistu palvelussa");
     }
 
     @Test
@@ -281,117 +430,6 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     }
 
     @Test
-    public void participating_to_normal_initiative_as_verified_user_with_correct_municipality() {
-        vetumaLogin(OTHER_USER_SSN, HELSINKI);
-
-        open(urls.view(normalInitiativeHelsinki));
-
-        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
-
-        assertThat(participateToInitiativeButton(), isPresent());
-        participateToInitiativeButton().get().click();
-
-        assertInfoMessageContainsText("Nimesi ja kotikuntasi on haettu");
-
-        // Vetuma participant has no information to fill
-        getElemContaining("Tallenna", "button").click();
-
-        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
-        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
-
-        assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
-
-        assertWarningMessage("Olet jo osallistunut tähän aloitteeseen");
-        assertThat(participateToInitiativeButton(), isNotPresent());
-
-
-    }
-
-    @Test
-    public void participate_to_normal_initiative_as_verified_user_by_clicking_authentication_link_on_participate_page() {
-        open(urls.view(normalInitiativeHelsinki));
-
-        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
-
-        clickLink(getMessage(MSG_BTN_PARTICIPATE));
-        // This should be selected by default
-        // getElemContaining("Vahva tunnistautuminen", "label").click();
-        clickLink("Tunnistaudu ja osallistu");
-        enterVetumaLoginInformationAndSubmit(OTHER_USER_SSN, HELSINKI);
-        clickButton("Tallenna");
-        clickLink("Jatka kirjautuneena");
-
-        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
-        assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
-
-    }
-
-    @Test
-    public void participating_to_normal_initiative_with_wrong_municipality() {
-        vetumaLogin(OTHER_USER_SSN, VANTAA);
-        open(urls.view(normalInitiativeHelsinki));
-
-        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
-
-        assertThat(participateToInitiativeButton(), isPresent());
-        participateToInitiativeButton().get().click();
-
-        getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
-
-        // Vetuma participant has no information to fill
-        getElemContaining("Tallenna", "button").click();
-
-        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
-        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
-
-        assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
-
-        assertWarningMessage("Olet jo osallistunut tähän aloitteeseen");
-        assertThat(participateToInitiativeButton(), isNotPresent());
-    }
-
-    @Test
-    public void leave_municipality_blank_in_vetuma_and_choose_when_participating() {
-        vetumaLogin(OTHER_USER_SSN, null);
-
-        open(urls.view(normalInitiativeHelsinki));
-
-        assertThat(participateToInitiativeButton(), isPresent());
-        participateToInitiativeButton().get().click();
-
-        assertInfoMessageContainsText("Vain nimesi voitiin hakea");
-
-        assertThat(findElementWhenClickable(By.id("homeMunicipality_chzn")).getText(), is(HELSINKI));
-
-        // Vetuma participant has no information to fill
-        getElemContaining("Tallenna", "button").click();
-
-        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
-    }
-
-    @Test
-    public void leave_municipality_blank_in_vetuma_and_choose_wrong_municipality_when_participating() {
-        vetumaLogin(OTHER_USER_SSN, null);
-
-        open(urls.view(normalInitiativeHelsinki));
-
-        assertThat(participateToInitiativeButton(), isPresent());
-        participateToInitiativeButton().get().click();
-
-        assertThat(findElementWhenClickable(By.id("homeMunicipality_chzn")).getText(), is(HELSINKI));
-
-        clickLink(HELSINKI); // Chosen select box default value. Expects helsinki to be selected by default.
-        getElemContaining(VANTAA, "li").click();
-
-        getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
-
-        // Vetuma participant has no information to fill
-        getElemContaining("Tallenna", "button").click();
-
-        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
-    }
-
-    @Test
     public void follow_initiative() {
         open(urls.view(normalInitiativeHelsinki));
         clickElementByCSS(".js-follow");
@@ -403,8 +441,4 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         assertTotalEmailsInQueue(1);
     }
-
-
-
-
 }

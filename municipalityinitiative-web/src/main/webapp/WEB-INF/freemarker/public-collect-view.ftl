@@ -173,7 +173,8 @@
             <#assign hasVerifiedMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present)/>
             <#assign hasVerifiedSameMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present && user.homeMunicipality.value.id?c == initiative.municipality.id?c)/>
 
-        <form action="${springMacroRequestContext.requestUri}?formError=participate" method="POST" id="form-participate" class="sodirty dirtylisten js-validate <#if hasErrors>has-errors</#if>" data-verified=${hasVerifiedSameMunicipality?c} data-homemunicipality=${hasVerifiedMunicipality?c} novalidate>
+        <form action="${springMacroRequestContext.requestUri}?formError=participate" method="POST" id="form-participate" class="sodirty dirtylisten js-validate <#if hasErrors>has-errors</#if>"
+              data-verified=${hasVerifiedSameMunicipality?c} data-homemunicipality=${hasVerifiedMunicipality?c} data-initiativemunicipality=${initiative.municipality.id} novalidate>
             <@f.securityFilters/>
             <@f.notTooFastField participant/>
 
@@ -256,14 +257,9 @@
                  </#if>
 
             </div>
-
-            <#if user.isVerifiedUser()>
-                <div class="input-block-content">
-                    <@f.formCheckbox path="participant.showName" checked=true />
-                </div>
-            <#else>
-                <@u.message "Osallistuaksesi aloitteeseen sinun täytyy olla kunnan asukas tai jäsen" />
-            </#if>
+            <div class="input-block-content">
+                <@f.formCheckbox path="participant.showName" checked=true />
+            </div>
 
             <div class="input-block-content">
                 <#if user.isVerifiedUser()>
