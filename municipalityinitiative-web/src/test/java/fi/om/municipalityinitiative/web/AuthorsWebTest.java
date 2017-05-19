@@ -87,6 +87,9 @@ public class AuthorsWebTest extends WebTestBase {
 
         getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
         getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
+
+        getElemContaining("Olen kunnan asukas", "label").click();
+
         clickDialogButton("Hyväksy ja tallenna tiedot");
 
         assertSuccessMessage("Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");

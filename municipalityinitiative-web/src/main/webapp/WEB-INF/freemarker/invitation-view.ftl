@@ -145,7 +145,8 @@
 
                     <@u.errorsSummary path="authorInvitation.*" prefix="initiative."/>
 
-                    <form action="${springMacroRequestContext.requestUri + '?formError'}" method="POST" id="form-invitation" class="js-validate" novalidate data-verified=${hasVerifiedSameMunicipality?c} data-homemunicipality=${hasVerifiedMunicipality?c}>
+                    <form action="${springMacroRequestContext.requestUri + '?formError'}" method="POST" id="form-invitation" class="js-validate" novalidate
+                          data-verified=${hasVerifiedSameMunicipality?c} data-homemunicipality=${hasVerifiedMunicipality?c} data-initiativemunicipality=${initiative.municipality.id}>
 
                         <div class="input-block-content no-top-margin">
                             <@u.systemMessage path="invitation.accept.confirm.description" type="info" />
