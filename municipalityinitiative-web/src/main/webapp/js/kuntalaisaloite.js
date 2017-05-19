@@ -686,7 +686,7 @@ var municipalitySelection = (function() {
 		}
 
         preventContinuing(true, 'mask', $('.toggle-disable'));
-		if ($('#form-participate').data('verified') == "" || $('#form-invitation').data('verified') == "" || $('#form-preparation').length !== 0) {
+		if ($('#form-participate').data('verified') == "" || $('#form-invitation').data('verified') == "" || $('#form-preparation').data('verified') == "") {
             preventContinuing(true, 'mask-send', $('.toggle-disable-send'));
 		}
 
@@ -745,23 +745,27 @@ var municipalitySelection = (function() {
 	}
 
 
-	function updateHomeMuncipality() {
+	function updateHomeMunicipality() {
 		var verifiedHome = $('#verifiedHomeMunicipality');
 
         if ($('#form-participate').length !== 0) {
-            $('#homeMunicipality').val($('#form-participate').data('initiativemunicipality'));
+			var homeMun = $('#form-participate').data('initiativemunicipality');
+            $('#homeMunicipality').val(homeMun);
+            return;
         }
 
         if ($('#form-invitation').length !== 0) {
             $('#homeMunicipality').val($('#form-invitation').data('initiativemunicipality'));
+            return;
         }
 
-		if ($('#homeMunicipality').val() != "") {
-			return;
-		}
-		if (verifiedHome.length > 0 && verifiedHome.data('initiative-municipality') != "") {
+        if (verifiedHome.length > 0 && verifiedHome.data('initiative-municipality') !== "") {
             $('#homeMunicipality').val(verifiedHome.data('initiative-municipality'));
             return;
+        }
+
+		if ($('#homeMunicipality').val() != "" && $("input[value=other-municipality]").prop('checked')) {
+			return;
 		}
         var val = $('#municipality').val();
         $('#homeMunicipality').val(val);
@@ -785,10 +789,6 @@ var municipalitySelection = (function() {
 		} else {
 			toggleDisableInput.removeAttr('disabled');
 			toggleDisable.removeClass('disabled');
-			//update homeMuncipality before sending
-			if (maskClass == 'mask-send') {
-				updateHomeMuncipality();
-			}
 		}
 	};
 
@@ -974,6 +974,7 @@ var municipalitySelection = (function() {
 		}
 
 		if (sameMunicipalitySelect.prop('checked')) {
+            updateHomeMunicipality();
 		    showMembership(false);
             homeMunicipalitySelectDiv.hide();
             preventContinuing(false, 'mask', $('.toggle-disable'));
