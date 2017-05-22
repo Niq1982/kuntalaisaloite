@@ -172,7 +172,7 @@
         <span class="inner">
             <span class="icon-32 secondary left">${typeNumber}</span>
             <span class="type"><@u.message "initiative.initiativeType."+type /><#if type == "UNDEFINED"><br/><br/></#if></span>
-            <span class="description"><@u.message "initiative.initiativeType."+type+".description" /></span>
+            <span class="description"><@u.messageHTML "initiative.initiativeType."+type+".description" /></span>
         </span>
         <#if enabled>
             <#if typeNumber == 2>
