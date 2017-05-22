@@ -203,8 +203,8 @@
                                 <div class="input-block-content">
                                     <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
                                         "community":"initiative.municipalMembership.community",
-                                        "company":"initiative.municipalMembership.company",
-                                        "property":"initiative.municipalMembership.property"
+                                        "property":"initiative.municipalMembership.property",
+                                        "service":"initiative.municipalMembership.service"
                                     } attributes="" key="initiative.municipalMembership" />
                                     <br/>
                                     <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={

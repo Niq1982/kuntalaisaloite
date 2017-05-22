@@ -67,7 +67,7 @@ public class ParticipantToPdfExporterTest {
                     participant.setMembership(Membership.community);
                     break;
                 case 1:
-                    participant.setMembership(Membership.company);
+                    participant.setMembership(Membership.service);
                     break;
                 case 2:
                     participant.setMembership(Membership.property);

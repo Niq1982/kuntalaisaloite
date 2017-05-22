@@ -37,7 +37,7 @@ public class ParticipantCreateDtoTest {
         ParticipantUICreateDto participantUICreateDto = new ParticipantUICreateDto();
         participantUICreateDto.assignInitiativeMunicipality(1L);
         participantUICreateDto.setHomeMunicipality(1L);
-        participantUICreateDto.setMunicipalMembership(Membership.company);
+        participantUICreateDto.setMunicipalMembership(Membership.community);
 
         assertThat(ParticipantCreateDto.parse(participantUICreateDto, null).getMunicipalMembership(), is(Membership.none));
     }
@@ -47,9 +47,9 @@ public class ParticipantCreateDtoTest {
         ParticipantUICreateDto participantUICreateDto = new ParticipantUICreateDto();
         participantUICreateDto.assignInitiativeMunicipality(1L);
         participantUICreateDto.setHomeMunicipality(2L);
-        participantUICreateDto.setMunicipalMembership(Membership.company);
+        participantUICreateDto.setMunicipalMembership(Membership.community);
 
-        assertThat(ParticipantCreateDto.parse(participantUICreateDto, null).getMunicipalMembership(), is(Membership.company));
+        assertThat(ParticipantCreateDto.parse(participantUICreateDto, null).getMunicipalMembership(), is(Membership.community));
     }
 
     @Test

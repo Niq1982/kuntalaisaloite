@@ -6,7 +6,10 @@ import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import fi.om.municipalityinitiative.dto.service.*;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -19,16 +22,14 @@ import java.io.OutputStream;
 import java.util.Comparator;
 import java.util.List;
 
-import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
-
 public class ParticipantToPdfExporter {
 
     public static final String DATETIME_FORMAT = "dd.MM.yyyy HH:mm:ss";
     public static final String DATE_FORMAT = "dd.MM.yyyy";
 
     public static final String COMMUNITY = "A";
-    public static final String COMPANY = "B";
     public static final String PROPERTY = "C";
+    public static final String SERVICE = "D";
 
     private Document document;
 
@@ -133,8 +134,8 @@ public class ParticipantToPdfExporter {
 
             com.lowagie.text.List list = new com.lowagie.text.List(true, 20);
             list.add(new ListItem(COMMUNITY + ": Nimenkirjoitusoikeus yhteisössä, laitoksessa tai säätiössä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
-            list.add(new ListItem(COMPANY + ": Nimenkirjoitusoikeus yrityksessä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
             list.add(new ListItem(PROPERTY + ": Hallinto-oikeus tai omistus kiinteään omaisuuteen aloitetta koskevassa kunnassa", bodyText));
+            list.add(new ListItem(SERVICE + ": Aloite koskee kunnan palvelua, jota käytän", bodyText));
 
             lastPage.add(list);
 
@@ -144,8 +145,8 @@ public class ParticipantToPdfExporter {
 
             list = new com.lowagie.text.List(true, 20);
             list.add(new ListItem(COMMUNITY + ": Har namnteckningsrätt i ett samfund, en institution eller stiftelse vars hemort finns i den kommun som initiativet gäller", bodyText));
-            list.add(new ListItem(COMPANY + ": Har namnteckningsrätt i ett företag vars hemort finns i den kommun som initiativet gäller", bodyText));
             list.add(new ListItem(PROPERTY + ": Äger eller besitter egendom i den kommun som initiativet gäller", bodyText));
+            list.add(new ListItem(SERVICE + ": Initiativet gäller en kommunal tjänst jag använder", bodyText));
 
             lastPage.add(list);
 
@@ -235,9 +236,9 @@ public class ParticipantToPdfExporter {
                 String membershipType = "";
 
                 if (p.getMembership() == Membership.community) {
-                    membershipType = COMMUNITY;
-                } else if (p.getMembership() == Membership.company) {
-                    membershipType = COMPANY;
+                    membershipType = SERVICE;
+                } else if (p.getMembership() == Membership.service) {
+                    membershipType = SERVICE;
                 } else if (p.getMembership() == Membership.property) {
                     membershipType = PROPERTY;
                 } else {
