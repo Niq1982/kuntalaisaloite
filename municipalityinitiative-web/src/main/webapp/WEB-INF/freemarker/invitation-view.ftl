@@ -222,7 +222,7 @@
                         <#if !hasVerifiedMunicipality >
                             <div class="column col-1of2 hide"
                                  id="home-municipality-select">
-                                <@f.municipalitySelect path="initiative.municipality" key="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected="" multiple=false id="homeMunicipality"/>
+                                <@f.municipalitySelect path="authorInvitation.homeMunicipality" key="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected="" multiple=false id="homeMunicipality"/>
                             </div>
                         </#if>
 
