@@ -222,11 +222,6 @@
  *
  -->
 <#macro authorEmailBlock>
-    <#--<div class="input-block-extra">-->
-        <#--<div class="input-block-extra-content">-->
-            <#--<@f.helpText "help.participantEmail" />-->
-        <#--</div>-->
-    <#--</div>-->
 
     <div class="input-block-content">
 

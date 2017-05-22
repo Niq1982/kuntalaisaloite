@@ -42,9 +42,13 @@
             <#if !user.isVerifiedUser()>
             <div class="input-block cf prepare-auth" >
 
+                <div class="form-introduction">
+                    <@u.message "prepare.form.introduction"/>
+                </div>
+
                 <div class="input-block-extra">
                     <div class="input-block-extra-content">
-                        <@f.helpText "help.participantEmail" />
+                        <@f.helpText "help.authenticationSelection" />
                     </div>
 
                 </div>
