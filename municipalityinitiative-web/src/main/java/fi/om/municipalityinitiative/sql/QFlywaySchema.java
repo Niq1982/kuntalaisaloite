@@ -1,14 +1,16 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
-import com.mysema.query.types.path.*;
-
-import com.mysema.query.types.PathMetadata;
-import javax.annotation.Generated;
-import com.mysema.query.types.Path;
-
 import com.mysema.query.sql.ColumnMetadata;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
+import com.mysema.query.types.path.BooleanPath;
+import com.mysema.query.types.path.DateTimePath;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.StringPath;
+
+import javax.annotation.Generated;
+
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -41,9 +43,7 @@ public class QFlywaySchema extends com.mysema.query.sql.RelationalPathBase<QFlyw
 
     public final StringPath version = createString("version");
 
-    public final NumberPath<Integer> versionRank = createNumber("versionRank", Integer.class);
-
-    public final com.mysema.query.sql.PrimaryKey<QFlywaySchema> flywaySchemaPk = createPrimaryKey(version);
+    public final com.mysema.query.sql.PrimaryKey<QFlywaySchema> flywaySchemaPk = createPrimaryKey(installedRank);
 
     public QFlywaySchema(String variable) {
         super(QFlywaySchema.class,  forVariable(variable), "municipalityinitiative", "flyway_schema");
@@ -70,8 +70,7 @@ public class QFlywaySchema extends com.mysema.query.sql.RelationalPathBase<QFlyw
         addMetadata(script, ColumnMetadata.named("script").ofType(12).withSize(1000).notNull());
         addMetadata(success, ColumnMetadata.named("success").ofType(-7).withSize(1).notNull());
         addMetadata(type, ColumnMetadata.named("type").ofType(12).withSize(20).notNull());
-        addMetadata(version, ColumnMetadata.named("version").ofType(12).withSize(50).notNull());
-        addMetadata(versionRank, ColumnMetadata.named("version_rank").ofType(4).withSize(10).notNull());
+        addMetadata(version, ColumnMetadata.named("version").ofType(12).withSize(50));
     }
 
 }
