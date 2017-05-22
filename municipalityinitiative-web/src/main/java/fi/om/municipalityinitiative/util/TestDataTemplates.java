@@ -42,7 +42,7 @@ public class TestDataTemplates {
         List<InitiativeTemplate> initiatives = Lists.newArrayList();
         initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_1_NAME, INITIATIVE_1_PROPOSAL, INITIATIVE_1_EXTRAINFO, InitiativeType.SINGLE, email));
         initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_2_NAME, INITIATIVE_2_PROPOSAL, INITIATIVE_2_EXTRAINFO, InitiativeType.COLLABORATIVE, email));
-        initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_3_NAME, INITIATIVE_3_PROPOSAL, INITIATIVE_3_EXTRAINFO, InitiativeType.COLLABORATIVE_COUNCIL, email));
+        initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_3_NAME, INITIATIVE_3_PROPOSAL, INITIATIVE_3_EXTRAINFO, InitiativeType.COLLABORATIVE_CITIZEN, email));
         return initiatives;
     }
 

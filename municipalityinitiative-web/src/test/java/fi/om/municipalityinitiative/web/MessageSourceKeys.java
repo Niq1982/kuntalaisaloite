@@ -22,7 +22,6 @@ public class MessageSourceKeys {
     public static final String MSG_BTN_REJECT_INITIATIVE = "action.reject";
     public static final String SELECT_MUNICIPALITY = "initiative.chooseMunicipality";
     public static final String MSG_INITIATIVE_TYPE_NORMAL= "initiative.initiativeType.UNDEFINED";
-    public static final String MSG_INITIATIVE_TYPE_VERIFIED = "initiative.initiativeType.COLLABORATIVE_COUNCIL";
     public static final String MSG_SEND_TO_REVIEW_CONFIRM = "sendToReview.doNotCollect.confirm.title";
     public static final String MSG_INITIATIVE_PROPOSAL = "initiative.proposal.title";
     public static final String MSG_INITIATIVE_AUTHORS = "initiative.authors.title";

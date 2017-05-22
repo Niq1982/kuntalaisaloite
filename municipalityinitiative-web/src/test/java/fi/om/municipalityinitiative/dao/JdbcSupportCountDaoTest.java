@@ -191,7 +191,7 @@ public class JdbcSupportCountDaoTest {
 
     @Test
     public void create_verifiable_inititative(){
-        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withType(InitiativeType.COLLABORATIVE_COUNCIL));
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withType(InitiativeType.COLLABORATIVE_CITIZEN));
 
         testHelper.createVerifiedParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), twoDaysAgo);
 

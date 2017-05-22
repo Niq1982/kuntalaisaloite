@@ -260,7 +260,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         Long initiativeId = testHelper.createVerifiedInitiative(
                 new TestHelper.InitiativeDraft(testMunicipalityId)
                         .withState(InitiativeState.PUBLISHED)
-                        .withType(InitiativeType.COLLABORATIVE_COUNCIL)
+                        .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                         .applyAuthor().withShowName(false)
                         .toInitiativeDraft()
         );
@@ -286,7 +286,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         Long initiativeId = testHelper.createVerifiedInitiative(
                 new TestHelper.InitiativeDraft(testMunicipalityId)
                         .withState(InitiativeState.PUBLISHED)
-                        .withType(InitiativeType.COLLABORATIVE_COUNCIL)
+                        .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                         .applyAuthor().withShowName(false)
                         .toInitiativeDraft()
         );

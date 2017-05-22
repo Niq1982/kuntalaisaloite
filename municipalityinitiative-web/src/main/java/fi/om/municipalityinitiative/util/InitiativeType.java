@@ -12,7 +12,7 @@ public enum InitiativeType {
     COLLABORATIVE,
 
     // Type for verified initiative is chosen by author when initiative draft is created.
-    COLLABORATIVE_COUNCIL,
+    // COLLABORATIVE_COUNCIL, // Removed, but still present in db because enum values cannot be deleted that easily in postgres
     COLLABORATIVE_CITIZEN;
 
     public static boolean isCollaborative(InitiativeType type) {
@@ -21,7 +21,6 @@ public enum InitiativeType {
         }
         switch (type) {
             case COLLABORATIVE:
-            case COLLABORATIVE_COUNCIL:
             case COLLABORATIVE_CITIZEN:
                 return true;
             default:
@@ -30,16 +29,7 @@ public enum InitiativeType {
     }
 
     public static boolean isVerifiable(InitiativeType type) {
-        if (type == null) {
-            return false;
-        }
-        switch (type) {
-            case COLLABORATIVE_COUNCIL:
-            case COLLABORATIVE_CITIZEN:
-                return true;
-            default:
-                return false;
-        }
+        return COLLABORATIVE_CITIZEN.equals(type);
     }
 
     public static boolean isNotVerifiable(InitiativeType type) {

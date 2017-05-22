@@ -153,14 +153,12 @@
  * @param enabled enables/disables this selection
  -->
 <#macro initiativeTypeBlock type enabled=false>
-    <#assign verifiable=false />
-    <#if type == InitiativeType.COLLABORATIVE_COUNCIL || type == InitiativeType.COLLABORATIVE_CITIZEN>
-        <#assign verifiable=true />
-    </#if>
     <#if type == InitiativeType.COLLABORATIVE_CITIZEN>
         <#assign typeNumber = 2 />
+        <#assign verifiable=true />
     <#else>
         <#assign typeNumber = 1 />
+        <#assign verifiable=false />
     </#if>
 
     <#if enabled>

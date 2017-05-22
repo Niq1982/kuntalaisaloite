@@ -176,9 +176,7 @@ public class ParticipantToPdfExporter {
         
         String documentTitle = "";
         
-        if (initiative.getType().equals(InitiativeType.COLLABORATIVE_COUNCIL)){
-            documentTitle = "Valtuustokäsittelyyn tähtäävä aloite / Initiativ som syftar till behandling i fullmäktige";
-        } else if (initiative.getType().equals(InitiativeType.COLLABORATIVE_CITIZEN)) {
+        if (initiative.getType().equals(InitiativeType.COLLABORATIVE_CITIZEN)) {
             documentTitle = "Aloite kunnallisesta kansanäänestyksestä / Initiativ till kommunal folkomröstning";
         } else {
             documentTitle = "Kuntalaisaloite / Invånarinitiativ";

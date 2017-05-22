@@ -262,7 +262,7 @@ public class TestHelper {
         }
 
         if (initiativeDraft.type.isNotVerifiable() && verified) {
-            insert.set(municipalityInitiative.type, InitiativeType.COLLABORATIVE_COUNCIL);
+            insert.set(municipalityInitiative.type, InitiativeType.COLLABORATIVE_CITIZEN);
         }
         else {
             insert.set(municipalityInitiative.type, initiativeDraft.type);

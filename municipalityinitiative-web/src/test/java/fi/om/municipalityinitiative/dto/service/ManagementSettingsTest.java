@@ -119,7 +119,7 @@ public class ManagementSettingsTest {
     public void may_not_be_sent_to_municipality_if_verified_initiative_and_not_published() throws Exception {
         final Initiative initiative = new Initiative();
         initiative.setFixState(FixState.OK);
-        initiative.setType(InitiativeType.COLLABORATIVE_COUNCIL);
+        initiative.setType(InitiativeType.COLLABORATIVE_CITIZEN);
 
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
@@ -142,7 +142,7 @@ public class ManagementSettingsTest {
             }
         }, false, InitiativeState.values());
 
-        initiative.setType(InitiativeType.COLLABORATIVE_COUNCIL);
+        initiative.setType(InitiativeType.COLLABORATIVE_CITIZEN);
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {

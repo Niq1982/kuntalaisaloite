@@ -85,7 +85,7 @@ public class EmailReportServiceTest {
         Long verifiedInitiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality)
                 .withState(InitiativeState.ACCEPTED)
                 .withStateTime(new DateTime().minusDays(15))
-                .withType(InitiativeType.COLLABORATIVE_COUNCIL)
+                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .applyAuthor()
                 .withParticipantEmail("author@example.com")
                 .toInitiativeDraft());

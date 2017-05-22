@@ -80,7 +80,7 @@ public class JdbcInitiativeDaoTest {
     public void find_returns_all() {
 
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
+        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
         testHelper.createSingleSent(testMunicipality.getId());
 
@@ -776,7 +776,6 @@ public class JdbcInitiativeDaoTest {
         testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withType(InitiativeType.COLLABORATIVE_CITIZEN).withSent(DateTime.now()));
         testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withType(InitiativeType.COLLABORATIVE_CITIZEN).withSent(DateTime.now()));
         testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withType(InitiativeType.COLLABORATIVE_CITIZEN).withSent(DateTime.now()));
-        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withType(InitiativeType.COLLABORATIVE_COUNCIL).withSent(DateTime.now()));
         //4
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
@@ -942,21 +941,13 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void find_filters_by_type_council() {
-        createPublicInitiativesOfAllType();
-        List<InitiativeListInfo> result = initiativeDao.findCached(initiativeSearch().setType(InitiativeSearch.Type.council)).list;
-        assertThat(result, hasSize(1));
-        assertThat(result.get(0).getType(), is(InitiativeType.COLLABORATIVE_COUNCIL));
-    }
-
-    @Test
     public void counts_initiatives_according_to_selected_type_if_all() {
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
-        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
+        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
 
         InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.all);
         assertThat(all.collecting, is(4L));
@@ -976,7 +967,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
-        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
+        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
 
         InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.normal);
         assertThat(all.collecting, is(2L));
@@ -991,33 +982,15 @@ public class JdbcInitiativeDaoTest {
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
-        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
+        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
+        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
 
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
 
         InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.citizen);
-        assertThat(all.collecting, is(1L));
+        assertThat(all.collecting, is(3L));
         assertThat(all.sent, is(0L));
-        assertThat(all.getAll(), is(1L));
-    }
-
-    @Test
-    public void counts_initiatives_according_to_selected_type_if_council() {
-
-        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
-        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
-        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
-        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
-
-        testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
-
-        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.council);
-        assertThat(all.collecting, is(1L));
-        assertThat(all.sent, is(0L));
-        assertThat(all.getAll(), is(1L));
+        assertThat(all.getAll(), is(3L));
     }
 
     @Test
