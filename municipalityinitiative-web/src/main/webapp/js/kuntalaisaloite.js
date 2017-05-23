@@ -845,7 +845,10 @@ var municipalitySelection = (function() {
 	}
 
 	function resetHomeMunicipalitySelect() {
-        $("#home-municipality-select")
+		var homeMunVisibleSelect = $("#homeMunicipality_chzn");
+		homeMunVisibleSelect.find($(".chzn-single")).addClass('chzn-default');
+		homeMunVisibleSelect.find($(".chzn-singe span")).text('Valitse kunta');
+        $("#homeMunicipality")
             .val(-1)
             .trigger("liszt:updated");
 	}
@@ -866,13 +869,12 @@ var municipalitySelection = (function() {
 			var disable = isNotMember(),
                 homeMunicipalitySelectDiv   = $("#home-municipality-select");
 
-			//btn.disableButton( disable ); // use general form validation
             if (disable) {
+                resetHomeMunicipalitySelect();
                 homeMunicipalitySelectDiv.hide();
                 preventContinuing(true, 'mask', $('.toggle-disable'));
                 initiativeType.disableVerifiable(true);
             } else {
-                resetHomeMunicipalitySelect();
                 if (verifiedHome.length === 0) {
                     homeMunicipalitySelectDiv.show();
                 } else {
@@ -965,6 +967,7 @@ var municipalitySelection = (function() {
         	initiativeTypes 			= $('.initiative-types');
 
 		if (otherMunicipalitySelect.prop('checked')) {
+            resetHomeMunicipalitySelect();
             warningNotMember(false);
             radioMunicipalMembership.removeAttr('checked');
             preventContinuing(true, 'mask', $('.toggle-disable'));
