@@ -95,6 +95,11 @@ public class TestDataService {
         return initiativeId;
     }
 
+    @Transactional
+    public void denormalizeParticipantCount(Long initiativeId) {
+        initiativeDao.denormalizeParticipantCounts(initiativeId);
+    }
+
     private Long createVerifiableInitiative(TestDataTemplates.InitiativeTemplate template, VerifiedUser currentVerifiedUser) {
         Long initiativeId = initiativeDao.prepareInitiative(template.getInitiative().getMunicipality().getId(), template.getInitiative().getType());
         Maybe<VerifiedUserDbDetails> userMaybe = userDao.getVerifiedUser(currentVerifiedUser.getHash());

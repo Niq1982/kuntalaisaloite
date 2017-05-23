@@ -98,6 +98,8 @@ public class TestDataController extends BaseController {
             }
         }
 
+        testDataService.denormalizeParticipantCount(initiativeId);
+
         addRequestAttribute(Urls.get(locale).loginAuthor(testDataService.getPreviousHash().or("????")), request);
         return contextRelativeRedirect(urls.testDataGeneration());
     }
