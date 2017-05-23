@@ -27,6 +27,8 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String CONTACT_ADDRESS = "Osoitekatu 1 A, 00000 Helsinki";
     private static final String USER_SSN = "010190-0000";
 
+    private static final boolean RUN_HOME_MUNICIPALITY_SELECTION_TESTS = true;
+
     @Override
     public void childSetup() {
     }
@@ -51,6 +53,9 @@ public class InitiativeCreateWebTest extends WebTestBase {
                 .sendKeys(recipientEmail);
         clickButton("Jatka");
         municipalitySelect(VANTAA);
+        if (RUN_HOME_MUNICIPALITY_SELECTION_TESTS) {
+            assertHomeMunicipality(getMunicipality(), "Aloita aloitteen tekeminen", false);
+        }
         getElemContaining("Olen kunnan asukas", "label").click();
         getElemContaining("Kuntalaisaloite", "span").click();
         clickButton("Aloita aloitteen tekeminen");
@@ -73,8 +78,11 @@ public class InitiativeCreateWebTest extends WebTestBase {
                 .sendKeys(recipientEmail);
         clickButton("Jatka");
         municipalitySelect(VANTAA);
+        if (RUN_HOME_MUNICIPALITY_SELECTION_TESTS) {
+            assertHomeMunicipality(getMunicipality(), "Aloita aloitteen tekeminen", false);
+        }
         getElemContaining("Olen asukas toisessa kunnassa", "label").click();
-        getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
+        getElemContaining("Hallintaoikeus tai omistus kiinteään", "label").click();
         homeMunicipalitySelect(HELSINKI);
         getElemContaining("Kuntalaisaloite", "span").click();
         clickButton("Aloita aloitteen tekeminen");
@@ -103,7 +111,11 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         // When
         municipalitySelect(VANTAA);
+        if (RUN_HOME_MUNICIPALITY_SELECTION_TESTS) {
+            assertHomeMunicipality(getMunicipality(), "Aloita aloitteen tekeminen", false);
+        }
         // Then
+
         assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
 
         // When
@@ -126,7 +138,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
 
         // When
-        getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
+        getElemContaining("Hallintaoikeus tai omistus kiinteään", "label").click();
         homeMunicipalitySelect(HELSINKI);
         // Then
         assertThat(isConfirmButtonDisabled(), is(true));
@@ -161,7 +173,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         getElemContaining("Siirry tunnistautumaan", "button").click();
         enterVetumaLoginInformationAndSubmit("121212-0000", HELSINKI);
         municipalitySelect(VANTAA);
-        getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
+        getElemContaining("Hallintaoikeus tai omistus kiinteään", "label").click();
         getElemContaining("Kuntalaisaloite", "span").click();
         clickButton("Aloita aloitteen tekeminen");
 
@@ -222,7 +234,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         // Then
         assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
         // When
-        getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
+        getElemContaining("Hallintaoikeus tai omistus kiinteään", "label").click();
 
         // Then
         assertVerifiedInitiativeDisabledBecauseOf("Aloitteen voi tehdä vain kunnan asukas");
@@ -238,6 +250,9 @@ public class InitiativeCreateWebTest extends WebTestBase {
         getElemContaining("Siirry tunnistautumaan", "button").click();
         enterVetumaLoginInformationAndSubmit("121212-0000", null);
         municipalitySelect(VANTAA);
+        if (RUN_HOME_MUNICIPALITY_SELECTION_TESTS) {
+            assertHomeMunicipality(getMunicipality(), "Aloita aloitteen tekeminen", false);
+        }
         getElemContaining("Olen kunnan asukas", "label").click();
         getElemContaining("Kuntalaisaloite", "span").click();
         clickButton("Aloita aloitteen tekeminen");
@@ -255,8 +270,11 @@ public class InitiativeCreateWebTest extends WebTestBase {
         getElemContaining("Siirry tunnistautumaan", "button").click();
         enterVetumaLoginInformationAndSubmit("121212-0000", null);
         municipalitySelect(VANTAA);
+        if (RUN_HOME_MUNICIPALITY_SELECTION_TESTS) {
+            assertHomeMunicipality(getMunicipality(), "Aloita aloitteen tekeminen", false);
+        }
         getElemContaining("Olen asukas toisessa kunnassa", "label").click();
-        getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
+        getElemContaining("Hallintaoikeus tai omistus kiinteään", "label").click();
         homeMunicipalitySelect(HELSINKI);
         getElemContaining("Kuntalaisaloite", "span").click();
         clickButton("Aloita aloitteen tekeminen");
@@ -278,6 +296,9 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         // When
         municipalitySelect(VANTAA);
+        if (RUN_HOME_MUNICIPALITY_SELECTION_TESTS) {
+            assertHomeMunicipality(getMunicipality(), "Aloita aloitteen tekeminen", false);
+        }
         // Then
         assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true));
 
@@ -308,6 +329,9 @@ public class InitiativeCreateWebTest extends WebTestBase {
         getElemContaining("Siirry tunnistautumaan", "button").click();
         enterVetumaLoginInformationAndSubmit("121212-0000", null);
         municipalitySelect(VANTAA);
+        if (RUN_HOME_MUNICIPALITY_SELECTION_TESTS) {
+            assertHomeMunicipality(getMunicipality(), "Aloita aloitteen tekeminen", false);
+        }
         getElemContaining("Olen kunnan asukas", "label").click();
         getElemContaining("Aloite kunnallisesta kansanäänestyksestä", "span").click();
         // Then
@@ -332,12 +356,15 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         // When
         municipalitySelect(VANTAA);
+        if (RUN_HOME_MUNICIPALITY_SELECTION_TESTS) {
+            assertHomeMunicipality(getMunicipality(), "Aloita aloitteen tekeminen", false);
+        }
         // Then
         assertThat(areInitiativeTypesAndConfirmButtonDisabled(), is(true)); //FAILS
 
         // When
         getElemContaining("Olen asukas toisessa kunnassa", "label").click();
-        getElemContaining("Hallinta-oikeus tai omistus kiinteään", "label").click();
+        getElemContaining("Hallintaoikeus tai omistus kiinteään", "label").click();
         // Then
         assertVerifiedInitiativeDisabledBecauseOf("Aloitteen voi tehdä vain kunnan asukas");
     }

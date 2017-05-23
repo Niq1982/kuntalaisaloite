@@ -465,4 +465,118 @@ public abstract class WebTestBase {
         getElemContaining(municipality, "li").click();
         Thread.sleep(500);
     }
+
+    protected void assertHomeMunicipality(int initiativeMunicipality, String confirmBtn, boolean checkConfirmBtn) throws InterruptedException {
+        getElemContaining("Olen kunnan asukas", "label").click();
+
+        assertConfirmBtnSelectable(confirmBtn, checkConfirmBtn);
+        assertThat(getHomeMunicipality(), is(initiativeMunicipality));
+
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        assertConfirmBtnDisabled(confirmBtn, checkConfirmBtn);
+        getElemContaining("Olen kunnan asukas", "label").click();
+
+        assertThat(getHomeMunicipality(), is(initiativeMunicipality));
+
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        getElemContaining("Nimenkirjoitusoikeus", "label").click();
+
+        assertThat(getHomeMunicipality(), is(-1));
+
+        String anotherHomeMun = getAnotherHomeMun(initiativeMunicipality);
+        int anotherHomeMunId = getMunicipalityIdByName(anotherHomeMun);
+
+        homeMunicipalitySelect(anotherHomeMun); //Selects homeMunicipality other than initiative municipality
+
+        assertConfirmBtnSelectable(confirmBtn, checkConfirmBtn);
+        assertThat(getHomeMunicipality(), is(anotherHomeMunId));
+
+        getElemContaining("Hallintaoikeus", "label").click();
+
+        assertThat(getHomeMunicipality(), is(anotherHomeMunId));
+
+        getElemContaining("Ei mitään näistä", "label").click();
+
+        assertConfirmBtnDisabled(confirmBtn, checkConfirmBtn);
+        assertThat(getHomeMunicipality(), is(-1));
+
+        getElemContaining("Nimenkirjoitusoikeus", "label").click();
+
+        assertThat(getHomeMunicipality(), is(-1));
+
+        homeMunicipalitySelect(anotherHomeMun);
+
+        assertThat(getHomeMunicipality(), is(anotherHomeMunId));
+
+        getElemContaining("Olen kunnan asukas", "label").click();
+
+        assertConfirmBtnSelectable(confirmBtn, checkConfirmBtn);
+        assertThat(getHomeMunicipality(), is(initiativeMunicipality));
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        ((JavascriptExecutor)driver).executeScript("document.getElementById('homeMunicipality').style.display = 'none';");
+        ((JavascriptExecutor)driver).executeScript("document.getElementById('home-municipality-select').style.display = 'none';");
+        ((JavascriptExecutor)driver).executeScript("var municipality = document.getElementById('municipality'); if(municipality) {municipality.style.display = 'none';}");
+    }
+
+    private void assertConfirmBtnDisabled(String confirmBtn, boolean checkConfirmBtn) {
+        if (checkConfirmBtn) {
+            assertThat(getElemContaining(confirmBtn, "button").isEnabled(), is(false));
+        }
+    }
+
+    private void assertConfirmBtnSelectable(String confirmBtn, boolean checkConfirmBtn) {
+        if (checkConfirmBtn) {
+            assertThat(getElemContaining(confirmBtn, "button").isEnabled(), is(true));
+        }
+    }
+
+    private int getMunicipalityIdByName(String name) {
+        System.out.println("anotherHomeMun: " + name);
+        if (name.equals("")) {
+            return -1;
+        }
+        ((JavascriptExecutor)driver).executeScript("document.getElementById('homeMunicipality').style.display = 'block';");
+        ((JavascriptExecutor)driver).executeScript("document.getElementById('home-municipality-select').style.display = 'block';");
+        Select homeMunSelect = new Select(getElement(By.id("homeMunicipality")));
+        int id = Integer.parseInt(homeMunSelect.getOptions().stream()
+                .filter(option -> option.getText().equals(name))
+                .findAny()
+                .orElse(null)
+                .getAttribute("value"));
+        return id;
+    }
+
+    private String getAnotherHomeMun(int compare) {
+        ((JavascriptExecutor)driver).executeScript("document.getElementById('homeMunicipality').style.display = 'block';");
+        Select homeMunSelect = new Select(getElement(By.id("homeMunicipality")));
+        String another = homeMunSelect.getOptions().stream()
+                .filter((WebElement option) -> (option.getAttribute("value").equals("")) ? false : Integer.parseInt(option.getAttribute("value")) != compare)
+                .findAny()
+                .orElse(null)
+                .getText();
+        System.out.println("anotherHomeMun:" + another);
+        return another;
+    }
+
+    private int getHomeMunicipality() {
+        ((JavascriptExecutor)driver).executeScript("document.getElementById('homeMunicipality').style.display = 'block';");
+        ((JavascriptExecutor)driver).executeScript("document.getElementById('home-municipality-select').style.display = 'block';");
+        if (getElement(By.id("homeMunicipality")).isDisplayed()) {
+            String homeMunString = getElement(By.id("homeMunicipality")).getAttribute("value");
+            int homeMun = (homeMunString.equals("") ? -1 : Integer.parseInt(homeMunString));
+            return homeMun;
+        }
+        return -1;
+    }
+
+    protected int getMunicipality() {
+        ((JavascriptExecutor)driver).executeScript("document.getElementById('municipality').style.display = 'block';");
+        if (getElement(By.id("municipality")).isDisplayed()) {
+            int mun = Integer.parseInt(getElement(By.id("municipality")).getAttribute("value"));
+            System.out.println("municipality: " + mun);
+            return mun;
+
+        }
+        return -1;
+    }
 }

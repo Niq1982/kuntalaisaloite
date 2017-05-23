@@ -40,6 +40,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     private Long normalInitiativeHelsinki;
     private Long verifiedInitiativeHelsinki;
 
+    private static final boolean RUN_HOME_MUNICIPALITY_SELECTION_TESTS = true;
+
     @Override
     public void childSetup() {
         normalInitiativeHelsinki = testHelper.createDefaultInitiative(
@@ -58,7 +60,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
     // Email -> normal initiative -> same municipality -> public name
     @Test
-    public void participate_to_normal_initiative_with_public_name() {
+    public void participate_to_normal_initiative_with_public_name() throws InterruptedException {
         open(urls.view(normalInitiativeHelsinki));
 
         clickLink(getMessage(MSG_BTN_PARTICIPATE));
@@ -67,6 +69,11 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         inputText("participantName", PARTICIPANT_NAME);
         inputText("participantEmail", PARTICIPANT_EMAIL);
+
+        int initiativeMunicipality = Integer.parseInt(getElement(By.id("form-participate")).getAttribute("data-initiativemunicipality"));
+        if (RUN_HOME_MUNICIPALITY_SELECTION_TESTS) {
+            assertHomeMunicipality(initiativeMunicipality, "Lähetä vahvistus", true);
+        }
 
         getElemContaining("Olen kunnan asukas", "label").click();
 
@@ -98,6 +105,11 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         inputText("participantEmail", PARTICIPANT_EMAIL);
 
         getElemContaining(getMessage(PARTICIPANT_SHOW_NAME), "span").click();
+
+        int initiativeMunicipality = Integer.parseInt(getElement(By.id("form-participate")).getAttribute("data-initiativemunicipality"));
+        if (RUN_HOME_MUNICIPALITY_SELECTION_TESTS) {
+            assertHomeMunicipality(initiativeMunicipality, "Lähetä vahvistus", true);
+        }
         getElemContaining("Olen asukas toisessa kunnassa", "label").click();
 
         getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
@@ -131,6 +143,10 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         inputText("participantEmail", PARTICIPANT_EMAIL);
         assertThat(getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").isEnabled(), is(false));
 
+        int initiativeMunicipality = Integer.parseInt(getElement(By.id("form-participate")).getAttribute("data-initiativemunicipality"));
+        if (RUN_HOME_MUNICIPALITY_SELECTION_TESTS) {
+            assertHomeMunicipality(initiativeMunicipality, "Lähetä vahvistus", true);
+        }
         getElemContaining("Olen asukas toisessa kunnassa", "label").click();
         assertThat(getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").isEnabled(), is(false));
 
@@ -175,7 +191,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
     // Vetuma, private municipality -> normal initiative -> same municipality
     @Test
-    public void participating_to_normal_initiative_when_private_home_municipality_from_vetuma_succeeds() {
+    public void participating_to_normal_initiative_when_private_home_municipality_from_vetuma_succeeds() throws InterruptedException {
         participating_to_own_municipality_initiative_when_private_home_municipality_from_vetuma_succeeds(normalInitiativeHelsinki);
     }
 
@@ -188,6 +204,11 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertThat(participateToInitiativeButton(), isPresent());
         participateToInitiativeButton().get().click();
         assertInfoMessageContainsText("Vain nimesi voitiin hakea");
+
+        int initiativeMunicipality = Integer.parseInt(getElement(By.id("form-participate")).getAttribute("data-initiativemunicipality"));
+        if (RUN_HOME_MUNICIPALITY_SELECTION_TESTS) {
+            assertHomeMunicipality(initiativeMunicipality, "Tallenna", true);
+        }
 
         getElemContaining("Olen asukas toisessa kunnassa", "label").click();
         getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
@@ -210,6 +231,12 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertThat(participateToInitiativeButton(), isPresent());
 
         participateToInitiativeButton().get().click();
+
+        int initiativeMunicipality = Integer.parseInt(getElement(By.id("form-participate")).getAttribute("data-initiativemunicipality"));
+        if (RUN_HOME_MUNICIPALITY_SELECTION_TESTS) {
+            assertHomeMunicipality(initiativeMunicipality, "Tallenna", true);
+        }
+
         getElemContaining("Olen asukas toisessa kunnassa", "label").click();
         getElemContaining("Ei mitään näistä", "label").click();
         assertWarningMessage("Jos mikään perusteista ei täyty, et voi osallistua tähän aloitteeseen.");
@@ -218,11 +245,11 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
     // Vetuma, private municipality -> verified initiative -> same municipality
     @Test
-    public void participating_to_verified_initiative_when_private_home_municipality_from_vetuma_succeeds() {
+    public void participating_to_verified_initiative_when_private_home_municipality_from_vetuma_succeeds() throws InterruptedException {
         participating_to_own_municipality_initiative_when_private_home_municipality_from_vetuma_succeeds(verifiedInitiativeHelsinki);
     }
 
-    private void participating_to_own_municipality_initiative_when_private_home_municipality_from_vetuma_succeeds(Long initiativeId) {
+    private void participating_to_own_municipality_initiative_when_private_home_municipality_from_vetuma_succeeds(Long initiativeId) throws InterruptedException {
         vetumaLogin(OTHER_USER_SSN, null);
 
         open(urls.view(initiativeId));
@@ -241,7 +268,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
     // Vetuma, private municipality -> verified initiative -> another municipality -> error
     @Test
-    public void participating_to_verified_initiative_when_private_home_municipality_from_vetuma_is_prevented_if_user_selects_wrong_municipality() {
+    public void participating_to_verified_initiative_when_private_home_municipality_from_vetuma_is_prevented_if_user_selects_wrong_municipality() throws InterruptedException {
         vetumaLogin(OTHER_USER_SSN, null);
 
         open(urls.view(verifiedInitiativeHelsinki));
@@ -291,6 +318,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         clickLink("Tunnistaudu ja osallistu");
         enterVetumaLoginInformationAndSubmit(OTHER_USER_SSN, HELSINKI);
         clickButton("Tallenna");
+        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
         clickLink("Jatka kirjautuneena");
 
         Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
