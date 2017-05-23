@@ -194,17 +194,26 @@
 
              <div class="input-block-content">
                 <p><@f.fieldRequiredInfo /></p>
-                <div class="column col-1of2">
+
                     <#if user.isVerifiedUser()>
-                         <div class="input-header"><@u.message "contactInfo.verified.name" /></div>
-                         <div class="input-placeholder">${user.contactInfo.name}</div>
-                     <#else>
-                        <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
-                        <div class="input-block-content">
-                            <@f.textField path="participant.participantEmail" required="required" optional=true cssClass="large" attributes='data-type="email"' maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+                        <div class="column col-1of2">
+                             <div class="input-header"><@u.message "contactInfo.verified.name" /></div>
+                             <div class="input-placeholder">${user.contactInfo.name}</div>
                         </div>
+                        <#if hasVerifiedMunicipality>
+                            <div class="column col-1of2 last">
+                                <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
+                                <div class="input-placeholder"><@u.solveMunicipality user.homeMunicipality/></div>
+                            </div>
+                        </#if>
+                     <#else>
+                         <div class="column col-1of2">
+                            <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
+                            <div class="input-block-content">
+                                <@f.textField path="participant.participantEmail" required="required" optional=true cssClass="large" attributes='data-type="email"' maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+                            </div>
+                         </div>
                     </#if>
-                </div>
 
                  <#if (!hasVerifiedSameMunicipality) >
                      <#if (!hasVerifiedMunicipality)>
@@ -244,16 +253,11 @@
                          </div>
                      </div>
                      <#if (!hasVerifiedMunicipality)>
-                     <div class="column col-1of2 hide"
-                          id="home-municipality-select">
-                         <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected="" multiple=false id="homeMunicipality"/>
-                     </div>
+                         <div class="column col-1of2 hide"
+                              id="home-municipality-select">
+                             <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected="" multiple=false id="homeMunicipality"/>
+                         </div>
                      </#if>
-                 <#else>
-                     <div class="column col-1of2 last">
-                         <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
-                         <div class="input-placeholder"><@u.solveMunicipality user.homeMunicipality/></div>
-                     </div>
                  </#if>
 
             </div>
