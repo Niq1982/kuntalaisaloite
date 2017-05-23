@@ -15,12 +15,13 @@
 <@l.main page>
 
     <div class="msg-block cf">
-        <h1><@u.message "authenticate.title" /></h1>
+        <h1><@u.message "authenticate.title2" /></h1>
 
         <p><@u.message "authenticate.paragraph1" /></p>
         <ul>
             <li><@u.message "authenticate.listItem1" /></li>
             <li><@u.message "authenticate.listItem2" /></li>
+            <li><@u.message "authenticate.listItem3" /></li>
         </ul>
 
         <p><@u.message "authenticate.paragraph2" /></p>
