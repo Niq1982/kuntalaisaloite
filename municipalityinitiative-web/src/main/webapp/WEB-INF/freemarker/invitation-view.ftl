@@ -114,7 +114,7 @@
 
             <#if !user.isVerifiedUser()>
                 <div class="input-block-content no-top-margin">
-                    <@u.systemMessage path="authentication.selection.description" type="info" />
+                    <@u.systemMessage path="authentication.selection.invitation.description" type="info" />
                 </div>
                 </#if>
 
