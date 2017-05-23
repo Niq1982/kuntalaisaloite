@@ -124,11 +124,11 @@ public class JdbcSupportCountDaoTest {
 
         testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), twoDaysAgo);
 
-        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), twoDaysAgo);
+        testHelper.createVerifiedParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), twoDaysAgo);
 
         testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), twoDaysAgo);
 
-        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), yesterday);
+        testHelper.createVerifiedParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), yesterday);
 
         testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), yesterday);
 
@@ -195,7 +195,7 @@ public class JdbcSupportCountDaoTest {
 
         testHelper.createVerifiedParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), twoDaysAgo);
 
-        testHelper.createVerifiedParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), twoDaysAgo);
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withShowName(true), twoDaysAgo);
 
         Map<LocalDate, Long> supportVoteCountByDate =  initiativeDao.getSupportVoteCountByDateUntil(initiativeId, yesterday);
 

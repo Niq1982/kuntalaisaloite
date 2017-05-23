@@ -620,21 +620,24 @@ public class JdbcInitiativeDao implements InitiativeDao {
     @Override
     public Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay) {
 
-        if (get(initiativeId).getType().isVerifiable()) {
-            return queryFactory.from(verifiedParticipant)
-                    .where(verifiedParticipant.initiativeId.eq(initiativeId))
-                    .where(verifiedParticipant.participateTime.loe(tillDay))
-                    .groupBy(verifiedParticipant.participateTime)
-                    .map(verifiedParticipant.participateTime, verifiedParticipant.participateTime.count());
+        Map<LocalDate, Long> union = queryFactory.from(verifiedParticipant)
+                .where(verifiedParticipant.initiativeId.eq(initiativeId))
+                .where(verifiedParticipant.participateTime.loe(tillDay))
+                .groupBy(verifiedParticipant.participateTime)
+                .map(verifiedParticipant.participateTime, verifiedParticipant.participateTime.count());
 
-        } else {
-            return queryFactory.from(participant)
-                    .where(participant.municipalityInitiativeId.eq(initiativeId))
-                    .where(participant.participateTime.loe(tillDay))
-                    .where(participant.confirmationCode.isNull())
-                    .groupBy(participant.participateTime)
-                    .map(participant.participateTime, participant.participateTime.count());
+        Map<LocalDate, Long> others = queryFactory.from(participant)
+                .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .where(participant.participateTime.loe(tillDay))
+                .where(participant.confirmationCode.isNull())
+                .groupBy(participant.participateTime)
+                .map(participant.participateTime, participant.participateTime.count());
+
+        for (Map.Entry<LocalDate, Long> entrySet : others.entrySet()) {
+            union.put(entrySet.getKey(), union.getOrDefault(entrySet.getKey(), 0L) + entrySet.getValue());
         }
+
+        return union;
     }
 
     @Override
