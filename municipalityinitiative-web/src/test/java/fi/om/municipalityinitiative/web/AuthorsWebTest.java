@@ -40,6 +40,7 @@ public class AuthorsWebTest extends WebTestBase {
     public static final String HYVÄKSY_KUTSUN_HYLKÄÄMINEN = "invitation.reject.confirm";
     public static final String VERIFIED_USER_AUTHOR_SSN = "010190-0001";
     public static final String USER_SSN = "010191-0000";
+    private static final String MEMBERSHIP_RADIO = "initiative.municipalMembership.community";
     private Long normalInitiativeId;
     private Long verifiedInitiativeId;
 
@@ -54,27 +55,21 @@ public class AuthorsWebTest extends WebTestBase {
     }
 
     @Test
-    public void add_author() {
+    public void accepting_verified_initiative_shows_login_button_to_vetuma_and_logging_in_redirects_back_to_initiative_page() {
+        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        open(urls.invitation(verifiedInitiativeId, invitation.getConfirmationCode()));
 
-        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
-        
-        open(urls.management(normalInitiativeId));
-        clickLink(getMessage(MSG_ADD_AUTHORS_LINK));
-        
-        clickLink(getMessage(MSG_BTN_ADD_AUTHOR));
-        
-        inputText("authorName", CONTACT_NAME);
-        inputText("authorEmail", CONTACT_EMAIL);
+        getElemContaining("Tunnistaudu ja hyväksy kutsu", "span").click();
 
-        getElemContaining(getMessage(MSG_BTN_SEND), "button").click();
-        
-        assertSuccessMessage("Kutsu lähetetty");
-        assertTextContainedByXPath("//div[@class='view-block last']//span[@class='status']", getMessage(MSG_INVITATION_UNCONFIRMED));
-        assertTotalEmailsInQueue(1);
+        enterVetumaLoginInformationAndSubmit("111111-1111", HELSINKI);
+
+        assertTitle(TestHelper.DEFAULT_INITIATIVE_NAME + " - Kuntalaisaloitepalvelu");
+        assertThat(acceptInvitationButton(), isPresent());
     }
 
+    // Email -> normal initiative -> same municipality
     @Test
-    public void author_invitation_acceptance_dialog_has_given_values_prefilled_and_submitting_logs_user_in_as_author_with_given_information() throws InterruptedException {
+    public void email_author_invitation_acceptance_dialog_has_given_values_prefilled_and_submitting_logs_user_in_as_author_with_given_information() throws InterruptedException {
         AuthorInvitation invitation = testHelper.createInvitation(normalInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
 
@@ -92,6 +87,10 @@ public class AuthorsWebTest extends WebTestBase {
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
 
+        email_author_invitation_acceptance_dialog_shows(invitation);
+    }
+
+    private void email_author_invitation_acceptance_dialog_shows(AuthorInvitation invitation) {
         assertSuccessMessage("Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
 
         clickDialogButton("Muokkaa aloitetta");
@@ -103,12 +102,11 @@ public class AuthorsWebTest extends WebTestBase {
         assertInvitationPageIsGone(invitation);
 
         assertTotalEmailsInQueue(1);
-
     }
 
+    // Email -> normal initiative -> another municipality
     @Test
-    public void author_invitation_to_normal_initiative_shows_validation_messages() {
-
+    public void email_author_invitation_to_normal_initiative_with_another_home_municipality() throws InterruptedException {
         AuthorInvitation invitation = testHelper.createInvitation(normalInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
 
@@ -116,27 +114,217 @@ public class AuthorsWebTest extends WebTestBase {
 
         getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
 
-        getElementByLabel("Etu- ja sukunimi", "input").clear();
+        assertThat(getElementByLabel("Etu- ja sukunimi", "input").getAttribute("value"), containsString(CONTACT_NAME));
+        assertThat(getElementByLabel("Sähköpostiosoite", "input").getAttribute("value"), containsString(CONTACT_EMAIL));
+
+        getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
+        getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
+
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        getElemContaining("Nimenkirjoitusoikeus yhteisössä", "span").click();
+        homeMunicipalitySelect(VANTAA);
+
         clickDialogButton("Hyväksy ja tallenna tiedot");
 
-        assertPageHasValidationErrors();
-
-        assertTotalEmailsInQueue(0);
+        email_author_invitation_acceptance_dialog_shows(invitation);
     }
 
+    // Email -> normal initiative -> disallow
     @Test
-    public void accepting_verified_initiative_shows_login_button_to_vetuma_and_logging_in_redirects_back_to_initiative_page() {
-        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
-        open(urls.invitation(verifiedInitiativeId, invitation.getConfirmationCode()));
+    public void email_author_invitation_to_normal_initiative_shows_validation_messages() {
+        AuthorInvitation invitation = testHelper.createInvitation(normalInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
 
-        getElemContaining("Tunnistaudu ja hyväksy kutsu", "span").click();
+        acceptInvitationButton().get().click();
 
-        enterVetumaLoginInformationAndSubmit("111111-1111", HELSINKI);
+        getElemContaining("Sähköpostilla tunnistautuminen", "label").click();
 
-        assertTitle(TestHelper.DEFAULT_INITIATIVE_NAME + " - Kuntalaisaloitepalvelu");
-        assertThat(acceptInvitationButton(), isPresent());
+        assertThat(getElemContaining("Hyväksy ja tallenna tiedot", "button").isEnabled(), is(false));
+
+        getElementByLabel("Etu- ja sukunimi", "input").clear();
+        assertThat(getElemContaining("Hyväksy ja tallenna tiedot", "button").isEnabled(), is(false));
+
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        assertThat(getElemContaining("Hyväksy ja tallenna tiedot", "button").isEnabled(), is(false));
+
+        getElemContaining("Ei mitään näistä", "label").click();
+        assertTextContainedByClass("msg-warning", "Jos mikään perusteista ei täyty, et voi liittyä aloitteen vastuuhenkilöksi");
+        assertThat(getElemContaining("Hyväksy ja tallenna tiedot", "button").isEnabled(), is(false));
     }
 
+    // Vetuma, private municipality -> normal initiative -> same municipality
+    @Test
+    public void author_invitation_to_normal_initiative_when_private_home_municipality_from_vetuma_succeeds() throws InterruptedException {
+        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+
+        vetumaLogin("111111-1111", null);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        acceptInvitationButton().get().click();
+
+        getElemContaining("Olen kunnan asukas", "label").click();
+
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+
+        author_invitation_acceptance_dialog_shows(invitation);
+    }
+
+    // Vetuma, private municipality -> normal initiative -> another municipality
+    @Test
+    public void accepting_invitation_to_normal_initiative_as_verified_author_allows_change_of_municipality_if_not_received_from_vetuma_and_requires_membershipType_if_selected_municipality_mismatch() throws InterruptedException {
+        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+
+        vetumaLogin("111111-1111", null);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        acceptInvitationButton().get().click();
+
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+
+        getElemContaining("Nimenkirjoitusoikeus yhteisössä", "span").click();
+        homeMunicipalitySelect(VANTAA);
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+
+        author_invitation_acceptance_dialog_shows(invitation);
+    }
+
+    private void author_invitation_acceptance_dialog_shows(AuthorInvitation invitation) {
+        assertSuccessMessage("Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
+        assertInvitationPageIsGone(invitation);
+        assertTotalEmailsInQueue(1);
+    }
+
+    // Vetuma, private municipality -> normal initiative -> disallow
+    @Test
+    public void accepting_invitation_to_normal_initiative_as_verified_author_requires_has_municipality_pre_selected() {
+        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+
+        vetumaLogin("111111-1111", null);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        acceptInvitationButton().get().click();
+
+        assertThat(getElemContaining("Hyväksy ja tallenna tiedot", "button").isEnabled(), is(false));
+
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        assertThat(getElemContaining("Hyväksy ja tallenna tiedot", "button").isEnabled(), is(false));
+
+        getElemContaining("Ei mitään näistä", "label").click();
+        assertTextContainedByClass("msg-warning", "Jos mikään perusteista ei täyty, et voi liittyä aloitteen vastuuhenkilöksi");
+        assertThat(getElemContaining("Hyväksy ja tallenna tiedot", "button").isEnabled(), is(false));
+    }
+
+    // Vetuma, private municipality -> verified initiative -> same municipality
+    @Test
+    public void accepting_verified_author_invitation_when_unknown_municipality_from_vetuma_preselects_initiatives_municipality_and_allows_accepting() throws InterruptedException {
+        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        vetumaLogin("111111-1111", null);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+
+        acceptInvitationButton().get().click();
+
+        getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
+        getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
+
+        getElemContaining("Olen kunnan asukas", "label").click();
+
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+        author_invitation_acceptance_dialog_shows(invitation);
+    }
+
+    // Vetuma, private municipality -> verified initiative -> another municipality -> error
+    @Test
+    public void accepting_verified_author_invitation_when_unknown_municipality_prevents_accepting_if_user_selects_wrong_municipality() throws InterruptedException {
+        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        vetumaLogin("111111-1111", null);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        acceptInvitationButton().get().click();
+
+        assertThat(getElemContaining("Hyväksy ja tallenna tiedot", "button").isEnabled(), is(false));
+        getElemContaining("Olen asukas toisessa kunnassa", "label").click();
+        assertThat(getElemContaining("Hyväksy ja tallenna tiedot", "button").isEnabled(), is(false));
+
+        assertTextContainedByClass("msg-warning", "Et ole aloitteen kunnan asukas"); //FAILS: wrong text
+    }
+
+    //Vetuma -> normal initiative -> same municipality
+    @Test
+    public void accepting_invitation_to_normal_initiative_as_verified_author_with_valid_municipality() {
+        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+
+        vetumaLogin("111111-1111", HELSINKI);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+
+        acceptInvitationButton().get().click();
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+
+        author_invitation_acceptance_dialog_shows(invitation);
+    }
+
+    // Vetuma -> normal initiative -> another municipality
+    @Test
+    public void accepting_invitation_to_normal_initiative_as_verified_author_requires_membership_selection_if_municipality_mismatch() {
+        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+
+        vetumaLogin("111111-1111", VANTAA);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        acceptInvitationButton().get().click();
+
+        assertThat(getElemContaining("Ei mitään näistä", "span").isDisplayed(), is(true));
+
+        getElemContaining("Nimenkirjoitusoikeus yhteisössä", "span").click();
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+
+        author_invitation_acceptance_dialog_shows(invitation);
+    }
+
+    // Vetuma -> normal initiative -> another municipality -> error
+    @Test
+    public void author_invitation_to_normal_initiative_as_verified_with_another_municipality_disallowed_options() {
+        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+
+        vetumaLogin("111111-1111", VANTAA);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        acceptInvitationButton().get().click();
+
+        assertThat(getElemContaining("Hyväksy ja tallenna tiedot", "button").isEnabled(), is(false));
+        getElemContaining("Ei mitään näistä", "label").click();
+        assertTextContainedByClass("msg-warning", "Jos mikään perusteista ei täyty, et voi liittyä aloitteen vastuuhenkilöksi");
+        assertThat(getElemContaining("Hyväksy ja tallenna tiedot", "button").isEnabled(), is(false));
+    }
+
+    // Vetuma -> verified initiative -> same municipality
+    @Test
+    public void author_invitation_to_verified_initiative_as_verified_with_same_municipality() {
+        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        vetumaLogin("111111-1111", HELSINKI);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+
+        acceptInvitationButton().get().click();
+
+        getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
+        getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
+
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+        author_invitation_acceptance_dialog_shows(invitation);
+    }
+
+    // Vetuma -> verified initiative -> another municipality -> error
+    @Test
+    public void author_invitation_to_verified_initiative_as_verified_with_another_municipality_disallowed_options() {
+        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        vetumaLogin("111111-1111", VANTAA);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+
+        assertTextContainedByClass("msg-warning", "Väestötietojärjestelmän mukaan kotikuntasi ei ole kunta, jota aloite koskee, joten et voi liittyä aloitteen vastuuhenkilöksi");
+        assertThat(acceptInvitationButton(), isNotPresent());
+        assertThat(rejectInvitationButton(), isPresent());
+    }
+
+    // Vetuma -> verified initiative -> disallow
     @Test
     public void author_invitation_to_verified_initiative_shows_validation_messages() {
         AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
@@ -147,12 +335,31 @@ public class AuthorsWebTest extends WebTestBase {
 
         // Clear email field so we get a validation error
         getElementByLabel("Sähköpostiosoite", "input").clear();
+        //TODO: disable the save button
         clickDialogButton("Hyväksy ja tallenna tiedot");
         assertPageHasValidationErrors();
     }
 
     @Test
-    public void accepting_normal_author_invitation_lets_user_to_accept_invitation_even_if_logged_in_as_author() {
+    public void add_author() {
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
+
+        open(urls.management(normalInitiativeId));
+        clickLink(getMessage(MSG_ADD_AUTHORS_LINK));
+        clickLink(getMessage(MSG_BTN_ADD_AUTHOR));
+
+        inputText("authorName", CONTACT_NAME);
+        inputText("authorEmail", CONTACT_EMAIL);
+
+        getElemContaining(getMessage(MSG_BTN_SEND), "button").click();
+
+        assertSuccessMessage("Kutsu lähetetty");
+        assertTextContainedByXPath("//div[@class='view-block last']//span[@class='status']", getMessage(MSG_INVITATION_UNCONFIRMED));
+        assertTotalEmailsInQueue(1);
+    }
+
+    @Test
+    public void accepting_normal_author_invitation_lets_user_to_accept_invitation_even_if_logged_in_as_author() throws InterruptedException {
         Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
@@ -160,86 +367,6 @@ public class AuthorsWebTest extends WebTestBase {
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
         assertThat(acceptInvitationButton(), isPresent());
         assertThat(rejectInvitationButton(), isPresent());
-    }
-
-    @Test
-    public void accepting_invitation_to_normal_initiative_as_verified_author_with_valid_municipality() {
-
-        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
-
-        vetumaLogin("111111-1111", HELSINKI);
-        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-
-        acceptInvitationButton().get().click();
-        clickDialogButton("Hyväksy ja tallenna tiedot");
-
-        assertInvitationPageIsGone(invitation);
-
-        assertTotalEmailsInQueue(1);
-
-    }
-
-    @Test
-    public void accepting_invitation_to_normal_initiative_as_verified_author_requires_membership_selection_if_municipality_mismatch() {
-
-        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
-
-        vetumaLogin("111111-1111", VANTAA);
-        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        acceptInvitationButton().get().click();
-
-        assertThat(getElemContaining("Ei mitään näistä", "span").isDisplayed(), is(true));
-        clickDialogButton("Hyväksy ja tallenna tiedot");
-        assertPageHasValidationErrors();
-
-        getElemContaining("Nimenkirjoitusoikeus yhteisössä", "span").click();
-        clickDialogButton("Hyväksy ja tallenna tiedot");
-
-        assertInvitationPageIsGone(invitation);
-        assertTotalEmailsInQueue(1);
-    }
-
-    @Test
-    public void accepting_invitation_to_normal_initiative_as_verified_author_requires_has_municipality_pre_selected() {
-
-        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
-
-        vetumaLogin("111111-1111", null);
-        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        acceptInvitationButton().get().click();
-
-        clickDialogButton("Hyväksy ja tallenna tiedot");
-
-        assertInvitationPageIsGone(invitation);
-        assertTotalEmailsInQueue(1);
-
-    }
-
-    @Test
-    public void accepting_invitation_to_normal_initiative_as_verified_author_allows_change_of_municipality_if_not_received_from_vetuma_and_requires_membershipType_if_selected_municipality_mismatch() {
-
-        Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
-
-        vetumaLogin("111111-1111", null);
-        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        acceptInvitationButton().get().click();
-
-        getElement(By.className("chzn-single")).click();
-        getElemContaining(VANTAA, "li").click();
-
-        assertThat(getElemContaining("Ei mitään näistä", "span").isDisplayed(), is(true));
-        clickDialogButton("Hyväksy ja tallenna tiedot");
-        assertPageHasValidationErrors();
-
-        getElemContaining("Nimenkirjoitusoikeus yhteisössä", "span").click();
-        clickDialogButton("Hyväksy ja tallenna tiedot");
-
-        assertInvitationPageIsGone(invitation);
-        assertTotalEmailsInQueue(1);
     }
 
     @Test
@@ -257,13 +384,10 @@ public class AuthorsWebTest extends WebTestBase {
 
         assertInvitationPageIsGone(invitation);
         assertTotalEmailsInQueue(1);
-
-
     }
 
     @Test
     public void accepting_verified_author_invitation_shows_warning_and_hides_buttons_if_already_author() {
-
         AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
 
         vetumaLogin(VERIFIED_USER_AUTHOR_SSN, HELSINKI);
@@ -306,57 +430,10 @@ public class AuthorsWebTest extends WebTestBase {
 
         getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
         getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
-        // Email should be prefilled
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
         assertSuccessMessage("Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
         assertTotalEmailsInQueue(1);
-
-    }
-
-    private Maybe<WebElement> rejectInvitationButton() {
-        return getOptionalElemContaining("Hylkää kutsu", "span");
-    }
-
-    private Maybe<WebElement> acceptInvitationButton() {
-        return getOptionalElemContaining("Hyväksy kutsu", "span");
-    }
-
-    @Test
-    public void accepting_verified_author_invitation_when_unknown_municipality_from_vetuma_preselects_initiatives_municipality_and_allows_accepting(){
-        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
-        vetumaLogin("111111-1111", null);
-        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-
-        acceptInvitationButton().get().click();
-
-        getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
-        getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
-        // Email should be prefilled
-
-        assertThat(findElementWhenClickable(By.id("homeMunicipality_chzn")).getText(), is(HELSINKI));
-
-        clickDialogButton("Hyväksy ja tallenna tiedot");
-        assertSuccessMessage("Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
-        assertTotalEmailsInQueue(1);
-    }
-
-    @Test
-    public void accepting_verified_author_invitation_when_unknown_municipality_prevents_accepting_if_user_selects_wrong_municipality() throws InterruptedException {
-
-        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
-        vetumaLogin("111111-1111", null);
-
-
-        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-
-        acceptInvitationButton().get().click();
-
-        clickLink(HELSINKI); // Chosen select box default value. Expects helsinki to be selected by default.
-        getElemContaining(VANTAA, "li").click();
-
-        assertTextContainedByClass("msg-warning", "Et ole aloitteen kunnan jäsen");
-
     }
 
     @Test
@@ -372,29 +449,27 @@ public class AuthorsWebTest extends WebTestBase {
 
         assertInvitationPageIsGone(invitation);
         assertTotalEmailsInQueue(0);
-
     }
-    
+
     @Test
     public void author_removes_participant(){
         Long publishedInitiativeId = testHelper.createWithAuthor(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        
+
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(publishedInitiativeId, HELSINKI_ID));
-        
+
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.management(publishedInitiativeId));
-        
+
         clickLink("Osallistujahallinta");
         clickLink("Poista osallistuja");
-        
+
         // NOTE: We could assert that modal has correct Participant details,
         //       but as DOM is updated after the modal is loaded we would need a tiny delay for that
-        
+
         getElemContaining("Poista", "button").click();
-        
+
         assertSuccessMessage("Osallistuja poistettu");
         assertTotalEmailsInQueue(0);
-        
     }
 
     @Test
@@ -422,18 +497,18 @@ public class AuthorsWebTest extends WebTestBase {
     @Test
     public void author_removes_author(){
         testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(normalInitiativeId, HELSINKI_ID));
-        
+
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.management(normalInitiativeId));
-        
+
         clickLink("Ylläpidä vastuuhenkilöitä");
         clickLink("Poista vastuuhenkilö");
-        
+
         // NOTE: We could assert that modal has correct Author details,
         //       but as DOM is updated after the modal is loaded we would need a tiny delay for that
-        
+
         getElemContaining("Poista vastuuhenkilö", "button").click();
-        
+
         assertSuccessMessage("Vastuuhenkilö poistettu");
         assertTotalEmailsInQueue(2);
     }
@@ -447,6 +522,14 @@ public class AuthorsWebTest extends WebTestBase {
 
         open(urls.frontpage());
         assertLoginLinkIsVisibleAtHeader();
+    }
+
+    private Maybe<WebElement> rejectInvitationButton() {
+        return getOptionalElemContaining("Hylkää kutsu", "span");
+    }
+
+    private Maybe<WebElement> acceptInvitationButton() {
+        return getOptionalElemContaining("Hyväksy kutsu", "span");
     }
 
     private void assertInvitationPageIsGone(AuthorInvitation invitation) {

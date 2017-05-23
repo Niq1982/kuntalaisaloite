@@ -56,7 +56,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         );
     }
 
-    // Email -> normal initiative -> another municipality -> public name
+    // Email -> normal initiative -> same municipality -> public name
     @Test
     public void participate_to_normal_initiative_with_public_name() {
         open(urls.view(normalInitiativeHelsinki));
@@ -83,7 +83,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertTextContainedByClass("public-names", "1 nimi julkaistu palvelussa"); //TODO
     }
 
-    // Email -> normal initiative -> another municipality -> private name
+    // Email -> normal initiative -> same municipality -> private name
     @Test
     public void participate_to_normal_initiative_with_private_name_and_select_membership_type() throws InterruptedException {
         overrideDriverToFirefox(true); // Municipality select need firefox driver
