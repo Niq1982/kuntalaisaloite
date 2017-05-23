@@ -686,7 +686,10 @@ var municipalitySelection = (function() {
 		}
 
         preventContinuing(true, 'mask', $('.toggle-disable'));
-		if ($('#form-participate').data('verified') == "" || $('#form-invitation').data('verified') == "" || $('#form-preparation').data('verified') == "") {
+		if ($('#form-preparation').length > 0) {
+            preventContinuing(true, 'mask-send', $('.toggle-disable-send'));
+		}
+		if ($('#form-participate').data('verified') == "" || $('#form-invitation').data('verified') == "") {
             preventContinuing(true, 'mask-send', $('.toggle-disable-send'));
 		}
 
@@ -698,12 +701,6 @@ var municipalitySelection = (function() {
 			toggleMembershipRadios();
 		}
 
-		// Does not work properly
-		/*if (!equalMunicipalitys() && !$("input[name=municipalMembership]").is(':checked')){
-			disableSubmit(true);
-		} else {
-			disableSubmit(false);
-		}*/
 		if (typeof userMunicipalityVerifiedByVetuma !== 'undefined' && typeof userMunicipalityMatchesInitiativeMunicipality !== 'undefined') {
 			userMunicipalityVerifiedByVetuma ? showMembership(!userMunicipalityMatchesInitiativeMunicipality) : showMembership(!equalMunicipalitys());
 
