@@ -13,7 +13,7 @@
      * Set current municipality
 
     <#if currentMunicipality.present>
-        <#assign pageTitle><@u.message "iframe.initiatives" /> ${currentMunicipality.value.getName(locale)}</#assign>
+        <#assign pageTitle><@u.message "iframe.initiatives" /> ${currentMunicipality.get().getName(locale)}</#assign>
     <#else>
 
     </#if>

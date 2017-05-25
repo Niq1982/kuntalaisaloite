@@ -8,11 +8,11 @@ import com.mysema.query.types.expr.DateTimeExpression;
 import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.sql.QEmail;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.dao.Mappings.assertSingleAffection;
 
@@ -52,19 +52,19 @@ public class JdbcEmailDao implements EmailDao {
     }
 
     @Override
-    public Maybe<EmailDto> popUntriedEmailForUpdate() {
-        Maybe<EmailDto> emailDtoMaybe = Maybe.fromNullable(queryFactory.from(QEmail.email)
+    public Optional<EmailDto> popUntriedEmailForUpdate() {
+        Optional<EmailDto> emailDtoOptional = Optional.ofNullable(queryFactory.from(QEmail.email)
                 .where(QEmail.email.tried.eq(false))
                 .forUpdate()
                 .singleResult(emailMapping));
 
-        if (emailDtoMaybe.isPresent()) {
+        if (emailDtoOptional.isPresent()) {
             assertSingleAffection(queryFactory.update(QEmail.email)
-                    .where(QEmail.email.id.eq(emailDtoMaybe.get().getEmailId()))
+                    .where(QEmail.email.id.eq(emailDtoOptional.get().getEmailId()))
                     .set(QEmail.email.tried, true)
                     .execute());
         }
-        return emailDtoMaybe;
+        return emailDtoOptional;
     }
 
     @Override

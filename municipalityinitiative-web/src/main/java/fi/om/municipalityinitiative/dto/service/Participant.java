@@ -1,9 +1,10 @@
 package fi.om.municipalityinitiative.dto.service;
 
 import fi.om.municipalityinitiative.service.id.Id;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.LocalDate;
+
+import java.util.Optional;
 
 public abstract class Participant<E extends Id> {
     private String name;
@@ -13,7 +14,7 @@ public abstract class Participant<E extends Id> {
     private boolean isMunicipalityVerified;
     private Membership membership;
     private boolean showName;
-    private Maybe<Municipality> homeMunicipality;
+    private Optional<Municipality> homeMunicipality;
 
     public abstract boolean isVerified();
 
@@ -25,11 +26,11 @@ public abstract class Participant<E extends Id> {
         this.membership = membership;
     }
 
-    public Maybe<Municipality> getHomeMunicipality() {
+    public Optional<Municipality> getHomeMunicipality() {
         return homeMunicipality;
     }
 
-    public void setHomeMunicipality(Maybe<Municipality> homeMunicipality) {
+    public void setHomeMunicipality(Optional<Municipality> homeMunicipality) {
         this.homeMunicipality = homeMunicipality;
     }
 

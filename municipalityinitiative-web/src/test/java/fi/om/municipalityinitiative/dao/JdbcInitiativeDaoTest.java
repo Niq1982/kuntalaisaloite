@@ -11,7 +11,10 @@ import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
-import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.util.FixState;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -24,9 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.Matchers.*;
@@ -747,7 +751,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
 
-        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Maybe.<List<Long>>of(new ArrayList<Long>()), InitiativeSearch.Type.all);
+        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Optional.<List<Long>>of(new ArrayList<Long>()), InitiativeSearch.Type.all);
         assertThat(counts.fix, is(1L));
         assertThat(counts.review, is(2L));
         assertThat(counts.accepted, is(3L));
@@ -809,7 +813,7 @@ public class JdbcInitiativeDaoTest {
 
         ArrayList<Long> municipalities = new ArrayList<>();
         municipalities.add(testMunicipality.getId());
-        InitiativeCounts initiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.<List<Long>>of(municipalities), InitiativeSearch.Type.all);
+        InitiativeCounts initiativeCounts = initiativeDao.getPublicInitiativeCounts(Optional.<List<Long>>of(municipalities), InitiativeSearch.Type.all);
 
         assertThat(initiativeCounts.getCollecting(), is(1L));
     }
@@ -955,8 +959,8 @@ public class JdbcInitiativeDaoTest {
         assertThat(all.getAll(), is(5L));
     }
 
-    private Maybe<List<Long>> emptyMunicipalityList() {
-        return Maybe.<List<Long>>of(new ArrayList<Long>());
+    private Optional<List<Long>> emptyMunicipalityList() {
+        return Optional.<List<Long>>of(new ArrayList<Long>());
     }
 
     @Test
@@ -1086,19 +1090,19 @@ public class JdbcInitiativeDaoTest {
 
         Initiative initiative = initiativeDao.get(published);
 
-        assertThat(initiative.getDecision().getValue(), is(DECISION_TEXT));
+        assertThat(initiative.getDecision().get(), is(DECISION_TEXT));
 
         initiativeDao.updateInitiativeDecision(published, NEW_DECISION_TEXT);
 
         initiative = initiativeDao.get(published);
 
-        assertThat(initiative.getDecision().getValue(), is(NEW_DECISION_TEXT));
+        assertThat(initiative.getDecision().get(), is(NEW_DECISION_TEXT));
 
         initiativeDao.updateInitiativeDecisionModifiedDate(published);
 
         initiative = initiativeDao.get(published);
 
-        assertThat(initiative.getDecision().getValue(), is(NEW_DECISION_TEXT));
+        assertThat(initiative.getDecision().get(), is(NEW_DECISION_TEXT));
 
     }
 
@@ -1109,7 +1113,7 @@ public class JdbcInitiativeDaoTest {
         Initiative initiative = initiativeDao.get(withVideo);
 
         assertThat(initiative.getVideoUrl().isPresent(), is(true));
-        assertThat(initiative.getVideoUrl().getValue(), is(VIDEO_URL));
+        assertThat(initiative.getVideoUrl().get(), is(VIDEO_URL));
 
 
     }
@@ -1123,7 +1127,7 @@ public class JdbcInitiativeDaoTest {
 
         Initiative initiative = initiativeDao.get(withVideo);
         assertThat(initiative.getVideoUrl().isPresent(), is(true));
-        assertThat(initiative.getVideoUrl().getValue(), is(VIDEO_URL));
+        assertThat(initiative.getVideoUrl().get(), is(VIDEO_URL));
 
 
     }

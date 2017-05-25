@@ -17,9 +17,7 @@ import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
-import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.apache.commons.io.FileUtils;
 import org.aspectj.util.FileUtil;
 import org.joda.time.DateTime;
@@ -35,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.CoreMatchers.*;
@@ -114,9 +113,9 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             assertThat(initiative.getDecisionDate().isPresent(), is(true));
 
-            assertThat(initiative.getDecisionModifiedDate().isNotPresent(), is(true));
+            assertThat(!initiative.getDecisionModifiedDate().isPresent(), is(true));
 
-            assertThat(initiative.getDecisionText().getValue(), is(DECISION_DESCRIPTION));
+            assertThat(initiative.getDecisionText().get(), is(DECISION_DESCRIPTION));
 
 
         }
@@ -219,7 +218,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
-            assertThat(initiative.getDecisionModifiedDate().isNotPresent(), is(true));
+            assertThat(!initiative.getDecisionModifiedDate().isPresent(), is(true));
         }
     }
     @Test
@@ -231,7 +230,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             createDefaultMunicipalityDecisionWithAttachment(initiativeId);
 
-            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build(Maybe.of("Edited text"));
+            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build(Optional.of("Edited text"));
 
             municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)), new Locale("fi"));
 
@@ -241,7 +240,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
-            assertThat(initiative.getDecisionText().getValue(), is("Edited text"));
+            assertThat(initiative.getDecisionText().get(), is("Edited text"));
 
             assertThat(initiative.getDecisionModifiedDate().isPresent(), is(true));
 
@@ -257,7 +256,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             createDefaultMunicipalityDecisionWithAttachment(initiativeId);
 
-            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build(Maybe.of("Edited text"));
+            MunicipalityDecisionDto editedDecision = MunicipalityDecisionDto.build(Optional.of("Edited text"));
 
             municipalityDecisionService.setDecision(editedDecision, initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId + 1)), new Locale("fi"));
 
@@ -267,9 +266,9 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
-            assertThat(initiative.getDecisionText().getValue(), is(DECISION_DESCRIPTION));
+            assertThat(initiative.getDecisionText().get(), is(DECISION_DESCRIPTION));
 
-            assertThat(initiative.getDecisionModifiedDate().isNotPresent(), is(true));
+            assertThat(!initiative.getDecisionModifiedDate().isPresent(), is(true));
         }
     }
     @Test
@@ -289,7 +288,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
-            assertThat(initiative.getDecisionText().getValue(), is(DECISION_DESCRIPTION));
+            assertThat(initiative.getDecisionText().get(), is(DECISION_DESCRIPTION));
 
             assertThat(initiative.getDecisionModifiedDate().isPresent(), is(true));
 
@@ -316,9 +315,9 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
-            assertThat(initiative.getDecisionText().getValue(), is(DECISION_DESCRIPTION));
+            assertThat(initiative.getDecisionText().get(), is(DECISION_DESCRIPTION));
 
-            assertThat(initiative.getDecisionModifiedDate().isNotPresent(), is(true));
+            assertThat(!initiative.getDecisionModifiedDate().isPresent(), is(true));
 
             AttachmentUtil.Attachments decisionAttachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
 
@@ -341,7 +340,7 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
 
-            assertThat(initiative.getDecisionModifiedDate().isNotPresent(), is(true));
+            assertThat(!initiative.getDecisionModifiedDate().isPresent(), is(true));
 
             AttachmentUtil.Attachments decisionAttachments = municipalityDecisionService.getDecisionAttachments(initiativeId);
 
@@ -355,9 +354,9 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
     public void decision_absent_if_decision_not_present() {
         Long initiativeId = createSentVerifiedInitiativeWithAuthor();
 
-        Maybe<MunicipalityDecisionInfo> decisionDtoMaybe = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
+        Optional<MunicipalityDecisionInfo> decisionDtoOptional = municipalityDecisionService.getMunicipalityDecisionInfoOptional(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
 
-        assertThat(decisionDtoMaybe.isNotPresent(), is(true));
+        assertThat(!decisionDtoOptional.isPresent(), is(true));
     }
 
     @Test
@@ -370,9 +369,9 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
             MunicipalityDecisionDto decision = createDefaultMunicipalityDecisionWithAttachment(initiativeId);
 
         } catch (Exception e ) {
-            Maybe<MunicipalityDecisionInfo> decisionDtoMaybe = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
+            Optional<MunicipalityDecisionInfo> decisionDtoOptional = municipalityDecisionService.getMunicipalityDecisionInfoOptional(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
 
-            assertThat(decisionDtoMaybe.isPresent(), is(true));
+            assertThat(decisionDtoOptional.isPresent(), is(true));
         }
     }
 
@@ -385,16 +384,16 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
 
             MunicipalityDecisionDto decision = createDefaultMunicipalityDecisionWithAttachment(initiativeId);
 
-            MunicipalityDecisionDto emptyDecision = MunicipalityDecisionDto.build(Maybe.of(""));
+            MunicipalityDecisionDto emptyDecision = MunicipalityDecisionDto.build(Optional.of(""));
 
             municipalityDecisionService.saveAttachments(emptyDecision.getFiles(), initiativeId);
 
             initiativeDao.updateInitiativeDecision(initiativeId, emptyDecision.getDescription());
 
         } catch (Exception e ) {
-            Maybe<MunicipalityDecisionInfo> decisionDtoMaybe = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
+            Optional<MunicipalityDecisionInfo> decisionDtoOptional = municipalityDecisionService.getMunicipalityDecisionInfoOptional(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
 
-            assertThat(decisionDtoMaybe.isNotPresent(), is(true));
+            assertThat(!decisionDtoOptional.isPresent(), is(true));
         }
     }
     @Test
@@ -407,9 +406,9 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
             initiativeDao.createInitiativeDecision(initiativeId, "some text");
 
         } catch (Exception e ) {
-            Maybe<MunicipalityDecisionInfo> decisionDtoMaybe = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
+            Optional<MunicipalityDecisionInfo> decisionDtoOptional = municipalityDecisionService.getMunicipalityDecisionInfoOptional(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
 
-            assertThat(decisionDtoMaybe.isPresent(), is(true));
+            assertThat(decisionDtoOptional.isPresent(), is(true));
         }
     }
 
@@ -428,11 +427,11 @@ public class MunicipalityDecisionServiceIntegrationTest extends ServiceIntegrati
             initiativeDao.updateInitiativeDecision(initiativeId, decision.getDescription());
 
         } catch (Exception e ) {
-            Maybe<MunicipalityDecisionInfo> decisionDtoMaybe = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
+            Optional<MunicipalityDecisionInfo> decisionDtoOptional = municipalityDecisionService.getMunicipalityDecisionInfoOptional(InitiativeViewInfo.parse(initiativeDao.get(initiativeId)));
 
-            assertThat(decisionDtoMaybe.isPresent(), is(true));
+            assertThat(decisionDtoOptional.isPresent(), is(true));
 
-            assertThat(decisionDtoMaybe.getValue().getDecisionText(), nullValue());
+            assertThat(decisionDtoOptional.get().getDecisionText(), nullValue());
         }
     }
 

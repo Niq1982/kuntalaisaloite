@@ -9,7 +9,7 @@
 <#escape x as x?html> 
 
 <#assign verifiedUserMunicipalityOk = user.isVerifiedUser()
-    && (!initiative.verifiable || (initiative.verifiable && (!user.homeMunicipality.present || user.homeMunicipality.present && user.homeMunicipality.value.id == initiative.municipality.id))) />
+    && (!initiative.verifiable || (initiative.verifiable && (!user.homeMunicipality.present || user.homeMunicipality.present && user.homeMunicipality.get().id == initiative.municipality.id))) />
 <#assign showInvitation = (!user.hasRightToInitiative(initiative.id) && verifiedUserMunicipalityOk && RequestParameters['show-invitation']??) />
 
 
@@ -45,7 +45,7 @@
                     
                     <p><@u.message "invitation.view.description" /></p>
 
-                    <#if initiative.verifiable && (!user.isVerifiedUser() || (user.homeMunicipality.present && user.homeMunicipality.value.id != initiative.municipality.id))>
+                    <#if initiative.verifiable && (!user.isVerifiedUser() || (user.homeMunicipality.present && user.homeMunicipality.get().id != initiative.municipality.id))>
                         <#if user.isVerifiedUser()>
                             <@u.systemMessage path="warning.verifiedAuthor.notMember" type="warning" />
                         <#else>
@@ -122,7 +122,7 @@
 
                     <#assign formSelectionVisible=user.isVerifiedUser() || RequestParameters['formError']??/>
                     <#assign hasVerifiedMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present)/>
-                    <#assign hasVerifiedSameMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present && user.homeMunicipality.value.id?c == initiative.municipality.id?c)/>
+                    <#assign hasVerifiedSameMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present && user.homeMunicipality.get().id?c == initiative.municipality.id?c)/>
 
                     <#if !user.isVerifiedUser()>
                         <label id="vetuma-authentication-button" class="authentication verified <#if !formSelectionVisible>selected</#if>"><@u.message "authentication.selection.verified" /></label>
@@ -309,9 +309,9 @@
             var userMunicipalityVerifiedByVetuma = false;
             var userMunicipalityMatchesInitiativeMunicipality = false;
 
-            <#if user.isVerifiedUser() && user.homeMunicipality?? && user.homeMunicipality.isPresent()>
+            <#if user.isVerifiedUser() && user.homeMunicipality?? && user.homeMunicipality.present>
             userMunicipalityVerifiedByVetuma = true;
-                <#if user.homeMunicipality.value.id == initiative.municipality.id>
+                <#if user.homeMunicipality.get().id == initiative.municipality.id>
                 userMunicipalityMatchesInitiativeMunicipality = true;
                 </#if>
             </#if>

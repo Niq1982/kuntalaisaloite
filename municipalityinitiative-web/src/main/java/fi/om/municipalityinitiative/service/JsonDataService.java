@@ -20,16 +20,15 @@ import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.controller.ApiController;
 import org.joda.time.LocalDate;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class JsonDataService {
 
@@ -85,7 +84,7 @@ public class JsonDataService {
     public static List<InitiativeListJson> createInitiativeListJsonObject() {
         InitiativeListInfo initiative = new InitiativeListInfo();
         initiative.setMunicipality(ApiController.TAMPERE);
-        initiative.setSentTime(Maybe.of(new LocalDate(2012, 12, 24)));
+        initiative.setSentTime(Optional.of(new LocalDate(2012, 12, 24)));
         initiative.setCollaborative(true);
         initiative.setStateTime(new LocalDate(2012, 12, 1));
         initiative.setId(1L);
@@ -106,7 +105,7 @@ public class JsonDataService {
         NormalParticipant participant = new NormalParticipant();
         participant.setParticipateDate(new LocalDate(2010, 1, 1));
         participant.setName("Teemu Teekkari");
-        participant.setHomeMunicipality(Maybe.of(ApiController.TAMPERE));
+        participant.setHomeMunicipality(Optional.of(ApiController.TAMPERE));
 
         publicParticipants.add(participant);
 
@@ -115,7 +114,7 @@ public class JsonDataService {
         initiativeInfo.setName("Tämä on esimerkkialoitteen otsikko");
         initiativeInfo.setProposal("Tämä on esimerkkialoitteen sisältö");
         initiativeInfo.setMunicipality(ApiController.TAMPERE);
-        initiativeInfo.setSentTime(Maybe.<LocalDate>fromNullable(null));
+        initiativeInfo.setSentTime(Optional.<LocalDate>ofNullable(null));
         initiativeInfo.setStateTime(new LocalDate(2010, 1, 1));
 
         initiativeInfo.setType(InitiativeType.COLLABORATIVE);
@@ -136,14 +135,14 @@ public class JsonDataService {
         contactInfo1.setName("Teemu Teekkari");
         contactInfo1.setShowName(true);
         author1.setContactInfo(contactInfo1);
-        author1.setMunicipality(Maybe.of(ApiController.TAMPERE));
+        author1.setMunicipality(Optional.of(ApiController.TAMPERE));
         authors.add(author1);
 
         Author author2 = new NormalAuthor();
         ContactInfo contactInfo2 = new ContactInfo();
         contactInfo2.setShowName(false);
         author2.setContactInfo(contactInfo2);
-        author2.setMunicipality(Maybe.of(ApiController.TAMPERE));
+        author2.setMunicipality(Optional.of(ApiController.TAMPERE));
         authors.add(author2);
 
         return authors;

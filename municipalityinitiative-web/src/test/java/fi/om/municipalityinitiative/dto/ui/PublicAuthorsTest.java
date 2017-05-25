@@ -4,10 +4,10 @@ import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -24,7 +24,7 @@ public class PublicAuthorsTest {
         publicAuthor.setContactInfo(new ContactInfo());
         publicAuthor.getContactInfo().setName("Public Name");
         publicAuthor.getContactInfo().setShowName(true);
-        publicAuthor.setMunicipality(Maybe.of(new Municipality(1L, null, null, false)));
+        publicAuthor.setMunicipality(Optional.of(new Municipality(1L, null, null, false)));
         authorList.add(publicAuthor);
 
         Author privateAuthor = new NormalAuthor();

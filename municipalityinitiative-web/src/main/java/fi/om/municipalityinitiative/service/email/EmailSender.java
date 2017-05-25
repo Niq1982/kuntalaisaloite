@@ -4,14 +4,11 @@ import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dao.EmailDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
-import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.pdf.ParticipantToPdfExporter;
-import fi.om.municipalityinitiative.service.id.Id;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +23,9 @@ import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class EmailSender {
 
@@ -50,7 +47,7 @@ public class EmailSender {
     private EnvironmentSettings environmentSettings;
 
     @Transactional(readOnly = false)
-    public Maybe<EmailDto> popUntriedEmail() {
+    public Optional<EmailDto> popUntriedEmail() {
         return emailDao.popUntriedEmailForUpdate();
     }
 

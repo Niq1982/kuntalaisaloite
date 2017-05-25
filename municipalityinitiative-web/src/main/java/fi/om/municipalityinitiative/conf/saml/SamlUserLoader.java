@@ -1,11 +1,12 @@
 package fi.om.municipalityinitiative.conf.saml;
 
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.SsnValidator;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
+
+import java.util.Optional;
 
 
 public class SamlUserLoader implements SAMLUserDetailsService {
@@ -45,9 +46,9 @@ public class SamlUserLoader implements SAMLUserDetailsService {
         String address = streetAddress + " " + postalCode + " " + postOffice;
         String fullName = firstName + " " + lastName;
 
-        Maybe<Municipality> municipality = municipalityNumber != null
-                ? Maybe.of(new Municipality(Long.valueOf(municipalityNumber), municipalityName, municipalityNameSv, true))
-                : Maybe.absent();
+        Optional<Municipality> municipality = municipalityNumber != null
+                ? Optional.of(new Municipality(Long.valueOf(municipalityNumber), municipalityName, municipalityNameSv, true))
+                : Optional.empty();
 
         return new SamlUser(fullName, SsnValidator.validateSsn(ssn), address, municipality);
     }

@@ -1,9 +1,15 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
-import fi.om.municipalityinitiative.dto.service.*;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
+import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.sql.QParticipant;
-import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Membership;
+import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,10 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.Membership.community;
 import static fi.om.municipalityinitiative.util.Membership.none;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static fi.om.municipalityinitiative.web.Urls.MAX_PARTICIPANT_LIST_LIMIT;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -72,7 +79,7 @@ public class JdbcParticipantDaoTest {
 
         Participant participant = allParticipants.get(0);
         assertThat(participant.getName(), is(PARTICIPANTS_NAME));
-        Maybe<Municipality> homeMunicipality = participant.getHomeMunicipality();
+        Optional<Municipality> homeMunicipality = participant.getHomeMunicipality();
         assertThat(homeMunicipality.get().getId(), is(otherMunicipalityId));
         assertThat(participant.getParticipateDate(), is(notNullValue()));
         assertThat(participant.getEmail(), is(PARTICIPANT_EMAIL));
@@ -373,7 +380,7 @@ public class JdbcParticipantDaoTest {
         List<Participant> participants = participantDao.findAllParticipants(testInitiativeId,false, 0, MAX_PARTICIPANT_LIST_LIMIT);
 
         Participant participant = participants.get(0);
-        Maybe<Municipality> homeMunicipality = participant.getHomeMunicipality();
+        Optional<Municipality> homeMunicipality = participant.getHomeMunicipality();
         assertThat(homeMunicipality, isPresent());
 
         assertThat(homeMunicipality.get().getNameFi(), is("Some other Municipality"));
@@ -391,7 +398,7 @@ public class JdbcParticipantDaoTest {
         assertThat(participants, hasSize(1));
 
         Participant participant = participants.get(0);
-        Maybe<Municipality> homeMunicipality = participant.getHomeMunicipality();
+        Optional<Municipality> homeMunicipality = participant.getHomeMunicipality();
         assertThat(homeMunicipality, isPresent());
         assertThat(homeMunicipality.get().getNameFi(), is("Some other Municipality"));
         assertThat(homeMunicipality.get().getNameSv(), is("Some other Municipality sv"));

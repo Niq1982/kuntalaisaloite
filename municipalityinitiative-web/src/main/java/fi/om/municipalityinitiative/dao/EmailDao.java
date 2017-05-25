@@ -2,9 +2,9 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
-import fi.om.municipalityinitiative.util.Maybe;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EmailDao {
 
@@ -17,7 +17,7 @@ public interface EmailDao {
                   String replyTo,
                   EmailAttachmentType attachmentType);
 
-    Maybe<EmailDto> popUntriedEmailForUpdate();
+    Optional<EmailDto> popUntriedEmailForUpdate();
 
     List<EmailDto> findUntriedEmails();
 

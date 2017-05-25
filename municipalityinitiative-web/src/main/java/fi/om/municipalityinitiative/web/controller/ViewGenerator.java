@@ -8,7 +8,6 @@ import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.service.AttachmentUtil;
 import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.service.ui.NotificationEditDto;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReviewHistoryDiff;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Views;
@@ -17,6 +16,7 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.web.Views.*;
 
@@ -46,7 +46,7 @@ public final class ViewGenerator {
                                                   FollowInitiativeDto followInitiativeDto,
                                                   AuthorUIMessage authorUIMessage,
                                                   String supportCountData,
-                                                  Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo) {
+                                                  Optional<MunicipalityDecisionInfo> municipalityDecisionInfo) {
         return new ViewGenerator(Views.PUBLIC_COLLECT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiative.initiative)
@@ -67,7 +67,7 @@ public final class ViewGenerator {
     public static ViewGenerator searchView(InitiativeListPageInfo info,
                                            InitiativeSearch currentSearch,
                                            SearchParameterQueryString queryString,
-                                           Maybe<ArrayList<MunicipalityInfoDto>> currentMunicipalities) {
+                                           Optional<ArrayList<MunicipalityInfoDto>> currentMunicipalities) {
         return new ViewGenerator(SEARCH_VIEW,
                 new AttributeBuilder()
                         .add("initiatives", info.initiatives)
@@ -110,12 +110,12 @@ public final class ViewGenerator {
                 .build());
     }
 
-    public static ViewGenerator iframeSearch(List<InitiativeListInfo> initiatives, Maybe<List<Municipality>> municipalities, SearchParameterQueryString searchParameterQueryString) {
+    public static ViewGenerator iframeSearch(List<InitiativeListInfo> initiatives, Optional<List<Municipality>> municipalities, SearchParameterQueryString searchParameterQueryString) {
         return new ViewGenerator(IFRAME_VIEW,
                 new AttributeBuilder()
                         .add("initiatives", initiatives)
                         .add("municipalities", municipalities)
-                        .add("municipalitiesSize", municipalities.isPresent() ? municipalities.getValue().size() : 0)
+                        .add("municipalitiesSize", municipalities.isPresent() ? municipalities.get().size() : 0)
                         .add("queryString", searchParameterQueryString)
                         .build()
         );
@@ -136,7 +136,7 @@ public final class ViewGenerator {
         return new ViewGenerator(GRAPH_IFRAME_GENERATOR_VIEW, new AttributeBuilder().build());
     }
 
-    public static ViewGenerator singleView(InitiativePageInfo initiativePageView, FollowInitiativeDto followInitiativeDto, Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo) {
+    public static ViewGenerator singleView(InitiativePageInfo initiativePageView, FollowInitiativeDto followInitiativeDto, Optional<MunicipalityDecisionInfo> municipalityDecisionInfo) {
         return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativePageView.initiative)
@@ -148,7 +148,7 @@ public final class ViewGenerator {
                         .build());
     }
 
-    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentUtil.Attachments allAttachments, List<ReviewHistoryRow> reviewHistory, Maybe<ReviewHistoryDiff> reviewHistoryDiff, List<Location> locations, Maybe<MunicipalityDecisionInfo> decisionInfo) {
+    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentUtil.Attachments allAttachments, List<ReviewHistoryRow> reviewHistory, Optional<ReviewHistoryDiff> reviewHistoryDiff, List<Location> locations, Optional<MunicipalityDecisionInfo> decisionInfo) {
         return new ViewGenerator(MODERATION_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -165,13 +165,13 @@ public final class ViewGenerator {
 
     public static ViewGenerator municipalityDecisionView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings,
                                                          MunicipalityDecisionDto decisionDraft,
-                                                         Maybe<MunicipalityDecisionInfo> decisionInfoMaybe, boolean showDecisionForm, boolean editAttachments){
+                                                         Optional<MunicipalityDecisionInfo> decisionInfoOptional, boolean showDecisionForm, boolean editAttachments){
         return new ViewGenerator("municipality-decision-view",
                 new AttributeBuilder()
                     .add("initiative", initiativeInfo)
                     .add("managementSettings", managementSettings)
                     .add("decision", decisionDraft)
-                    .add("decisionInfo", decisionInfoMaybe)
+                    .add("decisionInfo", decisionInfoOptional)
                     .add("showDecisionForm", showDecisionForm)
                     .add("editAttachments", editAttachments)
                         .build()

@@ -2,9 +2,9 @@ package fi.om.municipalityinitiative.dto.service;
 
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.Maybe;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 public class VerifiedUserDbDetails {
 
@@ -13,9 +13,9 @@ public class VerifiedUserDbDetails {
     private final ContactInfo contactInfo;
     private final HashSet<Long> initiativesWithManagementRight;
     private final HashSet<Long> initiativesWithParticipation;
-    private final Maybe<Municipality> homeMunicipality;
+    private final Optional<Municipality> homeMunicipality;
 
-    public VerifiedUserDbDetails(VerifiedUserId verifiedUserId, String hash, ContactInfo contactInfo, HashSet<Long> initiativesWithManagementRight, HashSet<Long> initiativesWithParticipation, Maybe<Municipality> homeMunicipality) {
+    public VerifiedUserDbDetails(VerifiedUserId verifiedUserId, String hash, ContactInfo contactInfo, HashSet<Long> initiativesWithManagementRight, HashSet<Long> initiativesWithParticipation, Optional<Municipality> homeMunicipality) {
         this.verifiedUserId = verifiedUserId;
         this.hash = hash;
         this.contactInfo = contactInfo;
@@ -44,7 +44,7 @@ public class VerifiedUserDbDetails {
         return initiativesWithParticipation;
     }
 
-    public Maybe<Municipality> getHomeMunicipality() {
+    public Optional<Municipality> getHomeMunicipality() {
         return homeMunicipality;
     }
 }

@@ -25,7 +25,9 @@ import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
-import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.util.FixState;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import org.apache.commons.lang.mutable.MutableInt;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -37,6 +39,7 @@ import org.springframework.cache.annotation.Cacheable;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
@@ -68,7 +71,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setName(row.get(municipalityInitiative.name));
                     info.setMunicipality(Mappings.parseMunicipality(row));
                     info.setCollaborative(InitiativeType.isCollaborative(row.get(municipalityInitiative.type)));
-                    info.setSentTime(Mappings.maybeLocalDate(row.get(municipalityInitiative.sent)));
+                    info.setSentTime(Mappings.OptionalLocalDate(row.get(municipalityInitiative.sent)));
                     info.setParticipantCount(Mappings.nullToZero(row.get(municipalityInitiative.participantCount)) + Mappings.nullToZero(row.get(municipalityInitiative.externalparticipantcount)));
                     info.setType(row.get(municipalityInitiative.type));
                     info.setState(row.get(municipalityInitiative.state));
@@ -89,7 +92,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setMunicipality(Mappings.parseMunicipality(row));
                     info.setType(row.get(municipalityInitiative.type));
                     info.setProposal(row.get(municipalityInitiative.proposal));
-                    info.setSentTime(Mappings.maybeLocalDate(row.get(municipalityInitiative.sent)));
+                    info.setSentTime(Mappings.OptionalLocalDate(row.get(municipalityInitiative.sent)));
                     info.setState(row.get(municipalityInitiative.state));
                     info.setStateTime(row.get(municipalityInitiative.stateTimestamp).toLocalDate());
                     info.setExtraInfo(row.get(municipalityInitiative.extraInfo));
@@ -102,21 +105,21 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setParticipantCountPublic(Mappings.nullToZero(row.get(municipalityInitiative.participantCountPublic)));
                     info.setLastEmailReportTime(row.get(municipalityInitiative.lastEmailReportTime));
                     info.setLastEmailReportType(row.get(municipalityInitiative.lastEmailReportType));
-                    Long maybeYouthInitiativeID = row.get(municipalityInitiative.youthInitiativeId);
-                    if (maybeYouthInitiativeID != null) {
-                        info.setYouthInitiativeId(maybeYouthInitiativeID);
+                    Long OptionalYouthInitiativeID = row.get(municipalityInitiative.youthInitiativeId);
+                    if (OptionalYouthInitiativeID != null) {
+                        info.setYouthInitiativeId(OptionalYouthInitiativeID);
                     }
-                    String maybeDecision = row.get(municipalityInitiative.municipalityDecision);
-                    if (maybeDecision != null && !maybeDecision.equals("")) {
-                        info.setDecision(maybeDecision);
+                    String OptionalDecision = row.get(municipalityInitiative.municipalityDecision);
+                    if (OptionalDecision != null && !OptionalDecision.equals("")) {
+                        info.setDecision(OptionalDecision);
                     }
-                    DateTime maybeDecisionDate = row.get(municipalityInitiative.municipalityDecisionDate);
-                    if(maybeDecisionDate != null) {
-                        info.setDecisionDate(maybeDecisionDate);
+                    DateTime OptionalDecisionDate = row.get(municipalityInitiative.municipalityDecisionDate);
+                    if(OptionalDecisionDate != null) {
+                        info.setDecisionDate(OptionalDecisionDate);
                     }
-                    DateTime maybeDecisionModifiedDate = row.get(municipalityInitiative.municipalityDecisionModifiedDate);
-                    if(maybeDecisionModifiedDate != null) {
-                        info.setDecisionModifiedDate(maybeDecisionModifiedDate);
+                    DateTime OptionalDecisionModifiedDate = row.get(municipalityInitiative.municipalityDecisionModifiedDate);
+                    if(OptionalDecisionModifiedDate != null) {
+                        info.setDecisionModifiedDate(OptionalDecisionModifiedDate);
                     }
                     String videoUrl = row.get(municipalityInitiative.videoUrl);
                     if (videoUrl != null) {
@@ -153,7 +156,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         filterByState(query, search);
         filterByType(query, search.getType());
         filterByTitle(query, search.getSearch());
-        filterByMunicipality(query, Maybe.fromNullable(search.getMunicipalities()));
+        filterByMunicipality(query, Optional.ofNullable(search.getMunicipalities()));
         orderBy(query, search.getOrderBy());
         long rows = query.count();
         restrictResults(query, search);
@@ -319,9 +322,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
         }
     }
 
-    private static void filterByMunicipality(PostgresQuery query, Maybe<List<Long>> municipalityIds) {
-        if (municipalityIds.isPresent() && !municipalityIds.getValue().isEmpty()) {
-            query.where(municipalityInitiative.municipalityId.in(municipalityIds.getValue()));
+    private static void filterByMunicipality(PostgresQuery query, Optional<List<Long>> municipalityIds) {
+        if (municipalityIds.isPresent() && !municipalityIds.get().isEmpty()) {
+            query.where(municipalityInitiative.municipalityId.in(municipalityIds.get()));
         }
     }
 
@@ -404,7 +407,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Cacheable(value = "initiativeCount")
-    public InitiativeCounts getPublicInitiativeCounts(Maybe<List<Long>> municipalities, InitiativeSearch.Type initiativeType) {
+    public InitiativeCounts getPublicInitiativeCounts(Optional<List<Long>> municipalities, InitiativeSearch.Type initiativeType) {
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(municipalityInitiative.sent.isNull())
                 .then(new ConstantImpl<>(InitiativeSearch.Show.collecting.name()))
@@ -418,22 +421,22 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         filterByType(from, initiativeType);
 
-        if (municipalities.isPresent() && !(municipalities.getValue()).isEmpty()) {
-            from.where(municipalityInitiative.municipalityId.in(municipalities.getValue()));
+        if (municipalities.isPresent() && !(municipalities.get()).isEmpty()) {
+            from.where(municipalityInitiative.municipalityId.in(municipalities.get()));
         }
 
-        MaybeHoldingHashMap<String, Long> map = new MaybeHoldingHashMap<>(from
+        Map<String, Long> map = from
                 .groupBy(simpleExpression)
-                .map(simpleExpression, municipalityInitiative.count()));
+                .map(simpleExpression, municipalityInitiative.count());
 
         InitiativeCounts counts = new InitiativeCounts();
-        counts.sent = map.get(InitiativeSearch.Show.sent.name()).or(0L);
-        counts.collecting = map.get(InitiativeSearch.Show.collecting.name()).or(0L);
+        counts.sent = map.getOrDefault(InitiativeSearch.Show.sent.name(), 0L);
+        counts.collecting = map.getOrDefault(InitiativeSearch.Show.collecting.name(), 0L);
         return counts;
     }
 
     @Override
-    public InitiativeCounts getAllInitiativeCounts(Maybe<List<Long>> municipalities, InitiativeSearch.Type initiativeType) {
+    public InitiativeCounts getAllInitiativeCounts(Optional<List<Long>> municipalities, InitiativeSearch.Type initiativeType) {
         String unknownStateFound = "unknownStateFound";
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(STATE_IS_COLLECTING)
@@ -456,24 +459,24 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         filterByType(from, initiativeType);
 
-        if (municipalities.isPresent() && !(municipalities.getValue()).isEmpty()) {
-            from.where(municipalityInitiative.municipalityId.in(municipalities.getValue()));
+        if (municipalities.isPresent() && !(municipalities.get()).isEmpty()) {
+            from.where(municipalityInitiative.municipalityId.in(municipalities.get()));
         }
 
-        MaybeHoldingHashMap<String, Long> map = new MaybeHoldingHashMap<>(from
+        Map<String, Long> map = from
                 .groupBy(showCategory)
-                .map(showCategory, municipalityInitiative.count()));
+                .map(showCategory, municipalityInitiative.count());
 
         InitiativeCounts counts = new InitiativeCounts();
-        counts.sent = map.get(InitiativeSearch.Show.sent.name()).or(0L);
-        counts.collecting = map.get(InitiativeSearch.Show.collecting.name()).or(0L);
-        counts.draft = map.get(InitiativeState.DRAFT.name()).or(0L);
-        counts.accepted = map.get(InitiativeState.ACCEPTED.name()).or(0L);
-        counts.review = map.get(InitiativeState.REVIEW.name()).or(0L);
-        counts.fix = map.get(FixState.FIX.name()).or(0L);
+        counts.sent = map.getOrDefault(InitiativeSearch.Show.sent.name(), 0L);
+        counts.collecting = map.getOrDefault(InitiativeSearch.Show.collecting.name(), 0L);
+        counts.draft = map.getOrDefault(InitiativeState.DRAFT.name(), 0L);
+        counts.accepted = map.getOrDefault(InitiativeState.ACCEPTED.name(), 0L);
+        counts.review = map.getOrDefault(InitiativeState.REVIEW.name(), 0L);
+        counts.fix = map.getOrDefault(FixState.FIX.name(), 0L);
 
-        if (map.get(unknownStateFound).isPresent()) {
-            log.error("Initiatives found with unknown state: " + map.get(unknownStateFound).get());
+        if (map.containsKey(unknownStateFound)) {
+            log.error("Initiatives found with unknown state: " + map.get(unknownStateFound));
         }
         return counts;
     }

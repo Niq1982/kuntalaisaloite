@@ -4,9 +4,9 @@ import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.Maybe;
 
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.Set;
 
 public abstract class User implements Serializable {
@@ -23,7 +23,7 @@ public abstract class User implements Serializable {
         return new NormalLoginUser(authorId, authorsInitiatives);
     }
 
-    public static VerifiedUser verifiedUser(VerifiedUserId verifiedUserId, String hash, ContactInfo contactInfo, Set<Long> initiatives, Set<Long> initiativesWithParticipation, Maybe<Municipality> homeMunicipality, int age) {
+    public static VerifiedUser verifiedUser(VerifiedUserId verifiedUserId, String hash, ContactInfo contactInfo, Set<Long> initiatives, Set<Long> initiativesWithParticipation, Optional<Municipality> homeMunicipality, int age) {
         return new VerifiedUser(verifiedUserId, hash, contactInfo, initiatives, initiativesWithParticipation, homeMunicipality, age);
     }
 

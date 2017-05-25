@@ -6,9 +6,11 @@ import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.YouthInitiativeCreateDto;
-import fi.om.municipalityinitiative.dto.service.*;
+import fi.om.municipalityinitiative.dto.service.EmailDto;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
 import fi.om.municipalityinitiative.web.Urls;
@@ -21,9 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isPresent;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -99,7 +102,7 @@ public class YouthInitiativeServiceTest {
         assertThat(normalAllParticipants, hasSize(1));
 
         assertThat(normalAllParticipants.get(0).getEmail(), is(editDto.getContactInfo().getEmail()));
-        Maybe<Municipality> homeMunicipality = normalAllParticipants.get(0).getHomeMunicipality();
+        Optional<Municipality> homeMunicipality = normalAllParticipants.get(0).getHomeMunicipality();
         assertThat(homeMunicipality.get().getId(), is(editDto.getContactInfo().getMunicipality()));
         assertThat(normalAllParticipants.get(0).getName(), is(editDto.getContactInfo().getName()));
         assertThat(normalAllParticipants.get(0).getMembership(), is(Membership.none));

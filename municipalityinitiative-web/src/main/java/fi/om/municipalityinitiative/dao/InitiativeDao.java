@@ -11,12 +11,12 @@ import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface InitiativeDao {
 
@@ -24,7 +24,7 @@ public interface InitiativeDao {
 
     Initiative get(Long initiativeId);
 
-    InitiativeCounts getPublicInitiativeCounts(Maybe<List<Long>> municipalities, InitiativeSearch.Type all);
+    InitiativeCounts getPublicInitiativeCounts(Optional<List<Long>> municipalities, InitiativeSearch.Type all);
 
     Long prepareInitiative(Long municipalityId);
 
@@ -52,7 +52,7 @@ public interface InitiativeDao {
 
     void updateInitiativeDecisionModifiedDate(Long initiativeId);
 
-    InitiativeCounts getAllInitiativeCounts(Maybe<List<Long>> municipalities, InitiativeSearch.Type initiativeTypeMaybe);
+    InitiativeCounts getAllInitiativeCounts(Optional<List<Long>> municipalities, InitiativeSearch.Type initiativeTypeOptional);
 
     boolean isVerifiableInitiative(Long initiativeId);
 

@@ -29,7 +29,7 @@ public class YouthInitiativeWebServiceNotifier {
     }
 
     private String uri(Initiative initiative) {
-        return youthInitiativeUrl + "/api/kua/1.0/initiative/" + initiative.getYouthInitiativeId().getValue().toString() + "/status/create/";
+        return youthInitiativeUrl + "/api/kua/1.0/initiative/" + initiative.getYouthInitiativeId().get().toString() + "/status/create/";
     }
 
     public void informInitiativeSentToMunicipality(Initiative initiative) {

@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.web.controller;
 
-import com.google.common.base.Optional;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.json.InitiativeJson;
 import fi.om.municipalityinitiative.dto.json.InitiativeListJson;
@@ -21,6 +20,7 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.WebConstants.JSON;
@@ -68,7 +68,7 @@ public class ApiController extends BaseController {
                                             @RequestParam(value = JSON_MUNICIPALITY, required = false) Long municipality,
                                             @RequestParam(value = JSON_ORDER_BY, required = false) InitiativeSearch.OrderBy orderBy) {
 
-        int limit = Optional.fromNullable(givenLimit).or(DEFAULT_INITIATIVE_JSON_RESULT_COUNT);
+        int limit = Optional.ofNullable(givenLimit).orElse(DEFAULT_INITIATIVE_JSON_RESULT_COUNT);
 
         InitiativeSearch search = new InitiativeSearch();
         search.setLimit(Math.min(MAX_INITIATIVE_JSON_RESULT_COUNT, limit));

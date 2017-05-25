@@ -3,12 +3,13 @@ package fi.om.municipalityinitiative.dto;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.service.id.Id;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
+
+import java.util.Optional;
 
 public abstract class Author<E extends Id> {
 
-    private Maybe<Municipality> municipality;
+    private Optional<Municipality> municipality;
     private ContactInfo contactInfo;
     private LocalDate createTime;
     private E id;
@@ -23,11 +24,11 @@ public abstract class Author<E extends Id> {
 
     public abstract boolean isVerified();
 
-    public Maybe<Municipality> getMunicipality() {
+    public Optional<Municipality> getMunicipality() {
         return municipality;
     }
 
-    public void setMunicipality(Maybe<Municipality> municipality) {
+    public void setMunicipality(Optional<Municipality> municipality) {
         this.municipality = municipality;
     }
 

@@ -14,7 +14,6 @@ import fi.om.municipalityinitiative.exceptions.AuthenticationRequiredException;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 import java.util.Set;
 
 public class UserService {
@@ -68,10 +68,10 @@ public class UserService {
     @Transactional(readOnly = true)
     public Long authorLogin(String managementHash, HttpServletRequest request) {
         // TODO: Merge these to one call
-        Maybe<NormalAuthorId> authorId = authorDao.getAuthorId(managementHash);
+        Optional<NormalAuthorId> authorId = authorDao.getAuthorId(managementHash);
         Set<Long> initiativeIds = authorDao.getAuthorsInitiatives(managementHash);
 
-        if (authorId.isNotPresent() || initiativeIds.size() == 0) {
+        if (!authorId.isPresent() || initiativeIds.size() == 0) {
             throw new InvalidLoginException("Invalid login credentials");
         }
 
@@ -81,9 +81,9 @@ public class UserService {
     }
 
     public LoginUserHolder getRequiredLoginUserHolder(HttpServletRequest request) {
-        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request);
+        Optional<LoginUserHolder> loginUserHolder = parseLoginUser(request);
 
-        if (loginUserHolder.isNotPresent()) {
+        if (!loginUserHolder.isPresent()) {
             throw new AccessDeniedException("Not logged in as author");
         }
 
@@ -92,9 +92,9 @@ public class UserService {
 
     public OmLoginUserHolder getRequiredOmLoginUserHolder(HttpServletRequest request) {
 
-        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request);
+        Optional<LoginUserHolder> loginUserHolder = parseLoginUser(request);
 
-        if (loginUserHolder.isNotPresent()) {
+        if (!loginUserHolder.isPresent()) {
             throw new AuthenticationRequiredException();
         }
         loginUserHolder.get().assertOmUser();
@@ -103,17 +103,17 @@ public class UserService {
     }
 
     public boolean hasManagementRightForInitiative(Long initiativeId, HttpServletRequest request) {
-        Maybe<LoginUserHolder> loginUserHolderMaybe = parseLoginUser(request);
-        return loginUserHolderMaybe.isPresent()
-                && loginUserHolderMaybe.get().hasManagementRightsForInitiative(initiativeId);
+        Optional<LoginUserHolder> loginUserHolderOptional = parseLoginUser(request);
+        return loginUserHolderOptional.isPresent()
+                && loginUserHolderOptional.get().hasManagementRightsForInitiative(initiativeId);
     }
 
-    private static Maybe<LoginUserHolder> parseLoginUser(HttpServletRequest request) {
+    private static Optional<LoginUserHolder> parseLoginUser(HttpServletRequest request) {
 
-        Maybe<User> user = getOptionalLoginUser(request);
+        Optional<User> user = getOptionalLoginUser(request);
 
-        if (user.isNotPresent()) {
-            return Maybe.absent();
+        if (!user.isPresent()) {
+            return Optional.empty();
         }
 
         if (user.get().isNotOmUser()) {
@@ -122,7 +122,7 @@ public class UserService {
             // as long as it's session is valid even that author is deleted.
         }
 
-        return Maybe.of(new LoginUserHolder(user.get()));
+        return Optional.of(new LoginUserHolder(user.get()));
     }
 
     public static void logout(HttpServletRequest request) {
@@ -132,20 +132,20 @@ public class UserService {
         }
     }
 
-    public static Maybe<User> getOptionalLoginUser(HttpServletRequest request) {
+    public static Optional<User> getOptionalLoginUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null)
-            return Maybe.absent();
+            return Optional.empty();
 
         User user = (User) session.getAttribute(LOGIN_USER_PARAMETER);
         if (user == null)
-            return Maybe.absent();
+            return Optional.empty();
 
-        return Maybe.of(user);
+        return Optional.of(user);
     }
 
     public User getUser(HttpServletRequest request) {
-        Maybe<User> optionalLoginUser = getOptionalLoginUser(request);
+        Optional<User> optionalLoginUser = getOptionalLoginUser(request);
         if (optionalLoginUser.isPresent()) {
             return optionalLoginUser.get();
         }
@@ -162,13 +162,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = false)
-    public void login(String hash, String fullName, String address, Maybe<Municipality> vetumaMunicipality, HttpServletRequest request, int age) {
+    public void login(String hash, String fullName, String address, Optional<Municipality> vetumaMunicipality, HttpServletRequest request, int age) {
 
         ContactInfo contactInfo;
         Set<Long> initiativesWithManagementRight;
         Set<Long> initiativesWithParticipation;
         VerifiedUserId verifiedUserId;
-        Maybe<VerifiedUserDbDetails> verifiedUser = userDao.getVerifiedUser(hash);
+        Optional<VerifiedUserDbDetails> verifiedUser = userDao.getVerifiedUser(hash);
         if (verifiedUser.isPresent()) {
             userDao.updateUserInformation(hash, fullName, vetumaMunicipality);
             verifiedUser = userDao.getVerifiedUser(hash);
@@ -186,11 +186,11 @@ public class UserService {
             verifiedUserId = null; // FIXME: This is bad.
         }
 
-        Maybe<Municipality> municipality;
+        Optional<Municipality> municipality;
         if (vetumaMunicipality.isPresent()) { // If got municipality from vetuma, replace with municipalitydata stored in our own database
-            municipality = Maybe.fromNullable(municipalityDao.getMunicipality(vetumaMunicipality.get().getId()));
+            municipality = Optional.ofNullable(municipalityDao.getMunicipality(vetumaMunicipality.get().getId()));
 
-            if (municipality.isNotPresent()) {
+            if (!municipality.isPresent()) {
                 log.error("Got municipality from vetuma that was not found from own database: "
                         + vetumaMunicipality.get().getId() + ", "
                         + vetumaMunicipality.get().getNameFi() + ", "
@@ -198,7 +198,7 @@ public class UserService {
             }
         }
         else {
-            municipality = Maybe.absent();
+            municipality = Optional.empty();
         }
 
         storeLoggedInUserSession(request, User.verifiedUser(verifiedUserId, hash, contactInfo, initiativesWithManagementRight, initiativesWithParticipation, municipality, age));
@@ -217,7 +217,7 @@ public class UserService {
         User user = (User) session.getAttribute(LOGIN_USER_PARAMETER);
 
         if (user instanceof VerifiedUser) {
-            Maybe<VerifiedUserDbDetails> dbVerifiedUser = userDao.getVerifiedUser(((VerifiedUser) user).getHash());
+            Optional<VerifiedUserDbDetails> dbVerifiedUser = userDao.getVerifiedUser(((VerifiedUser) user).getHash());
             if (dbVerifiedUser.isPresent()) {
 
                 VerifiedUser refreshedUser = User.verifiedUser(
@@ -236,9 +236,9 @@ public class UserService {
 
     public MunicipalityUserHolder getRequiredMunicipalityUserHolder(HttpServletRequest request, Long initiativeId) {
 
-        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request);
+        Optional<LoginUserHolder> loginUserHolder = parseLoginUser(request);
 
-        if (loginUserHolder.isNotPresent()) {
+        if (!loginUserHolder.isPresent()) {
             throw new AuthenticationRequiredException();
         }
         loginUserHolder.get().assertMunicipalityLoginUser(initiativeId);

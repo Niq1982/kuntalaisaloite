@@ -15,7 +15,6 @@ import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
 import fi.om.municipalityinitiative.web.Urls;
@@ -28,6 +27,7 @@ import org.junit.rules.ExpectedException;
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import java.util.List;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.CoreMatchers.is;
@@ -358,7 +358,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
 
     }
 
-    private Maybe<VerifiedUserDbDetails> refreshVerifiedUser() {
+    private Optional<VerifiedUserDbDetails> refreshVerifiedUser() {
         return userDao.getVerifiedUser(TestHelper.lastLoggedInVerifiedUserHolder.getVerifiedUser().getHash());
     }
 

@@ -3,10 +3,10 @@ package fi.om.municipalityinitiative.dto.service;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
@@ -90,7 +90,7 @@ public class ManagementSettingsTest {
 
         final Initiative initiative = new Initiative();
 
-        initiative.setSentTime(Maybe.of(new LocalDate(2010, 1, 1)));
+        initiative.setSentTime(Optional.of(new LocalDate(2010, 1, 1)));
 
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
@@ -132,7 +132,7 @@ public class ManagementSettingsTest {
     @Test
     public void never_able_to_send_to_municipality_if_already_sent() throws Exception {
         final Initiative initiative = new Initiative();
-        initiative.setSentTime(Maybe.of(new LocalDate(2010, 1, 1)));
+        initiative.setSentTime(Optional.of(new LocalDate(2010, 1, 1)));
 
         initiative.setType(InitiativeType.UNDEFINED);
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
@@ -207,7 +207,7 @@ public class ManagementSettingsTest {
     @Test
     public void is_allow_to_participate_only_if_initiative_state_is_published() throws Exception {
         final Initiative initiative = new Initiative();
-        initiative.setSentTime(Maybe.<LocalDate>absent());
+        initiative.setSentTime(Optional.<LocalDate>empty());
         initiative.setType(InitiativeType.COLLABORATIVE);
         initiative.setFixState(FixState.OK);
 
@@ -227,7 +227,7 @@ public class ManagementSettingsTest {
         initiative.setFixState(FixState.OK);
 
         precondition(ManagementSettings.of(initiative).isAllowParticipation(), is(true));
-        initiative.setSentTime(Maybe.of(new LocalDate(2010, 1, 1)));
+        initiative.setSentTime(Optional.of(new LocalDate(2010, 1, 1)));
 
         assertThat(ManagementSettings.of(initiative).isAllowParticipation(), is(false));
     }
@@ -283,7 +283,7 @@ public class ManagementSettingsTest {
         sentInitiative.setFixState(FixState.OK);
 
         precondition(ManagementSettings.of(sentInitiative).isAllowInviteAuthors(), is(true));
-        sentInitiative.setSentTime(Maybe.of(new LocalDate()));
+        sentInitiative.setSentTime(Optional.of(new LocalDate()));
         assertThat(ManagementSettings.of(sentInitiative).isAllowInviteAuthors(), is(false));
     }
 
@@ -292,10 +292,10 @@ public class ManagementSettingsTest {
         final Initiative notSentInitiative = new Initiative();
         notSentInitiative.setFixState(FixState.OK);
         notSentInitiative.setState(InitiativeState.PUBLISHED);
-        notSentInitiative.setSentTime(Maybe.of(new LocalDate()));
+        notSentInitiative.setSentTime(Optional.of(new LocalDate()));
 
         assertThat(ManagementSettings.of(notSentInitiative).isAllowInviteAuthors(), is(false));
-        notSentInitiative.setSentTime(Maybe.<LocalDate>absent());
+        notSentInitiative.setSentTime(Optional.<LocalDate>empty());
         assertThat(ManagementSettings.of(notSentInitiative).isAllowInviteAuthors(), is(true));
     }
 
@@ -330,7 +330,7 @@ public class ManagementSettingsTest {
     public void not_allowed_to_send_initiative_back_for_fixing_if_initiative_sent() throws Exception {
         final Initiative sentInitiative = new Initiative();
         sentInitiative.setState(InitiativeState.PUBLISHED);
-        sentInitiative.setSentTime(Maybe.of(new LocalDate()));
+        sentInitiative.setSentTime(Optional.of(new LocalDate()));
 
         assertThat(ManagementSettings.of(sentInitiative).isAllowOmSendBackForFixing(), is(false));
     }

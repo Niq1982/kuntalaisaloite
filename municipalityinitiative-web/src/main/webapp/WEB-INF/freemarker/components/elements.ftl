@@ -27,7 +27,7 @@
                 window.participantGraph = {
                     votes : <#noescape>${data}</#noescape>,
                     startDate : <#if initiative.stateTime??>'${initiative.stateTime}'<#else>null</#if>,
-                    endDate : <#if initiative.sentTime.present>'${initiative.sentTime.value}'<#else>null</#if>,
+                    endDate : <#if initiative.sentTime.present>'${initiative.sentTime.get()}'<#else>null</#if>,
                     lang : {
                         btnCumul: '<@u.message key="graph.btnCumul" />',
                         btnDaily : '<@u.message key="graph.btnDaily" />',
@@ -52,7 +52,7 @@
 <#macro initiativeView initiative>
     <#assign pageIsConfirmParticipation = currentRequestUri?ends_with("show-participate")/>
     <#assign showMap = locations?? && locations?size gt 0 && !pageIsConfirmParticipation && googleMapsEnabled />
-    <#assign showVideo = initiative.videoUrl.isPresent() && initiative.videoUrl.getValue()?has_content && videoEnabled/>
+    <#assign showVideo = initiative.videoUrl.present && initiative.videoUrl.get()?has_content && videoEnabled/>
 
     <h2><@u.message "initiative.proposal.title" /></h2>
 
@@ -88,7 +88,7 @@
     <#if (initiative.youthInitiativeId.present)>
         <h2><@u.message "initiative.youthInitiative.title" /></h2>
         <div class="initiative-content-row last">
-            <@u.message "initiative.youthInitiative.link" /> <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}</a>
+            <@u.message "initiative.youthInitiative.link" /> <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.get())}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.get())}</a>
         </div>
     </#if>
 
@@ -133,7 +133,7 @@
 -->
 <#macro initiativeViewManage initiative>
     <#assign showMap = locations?? && locations?size gt 0 && googleMapsEnabled />
-    <#assign showVideo = initiative.videoUrl.isPresent() && videoEnabled/>
+    <#assign showVideo = initiative.videoUrl.present && videoEnabled/>
 
     <h2><@u.message "initiative.proposal.title" /></h2>
 
@@ -175,7 +175,7 @@
     <#if (initiative.youthInitiativeId.present)>
         <h2><@u.message "initiative.youthInitiative.title" /></h2>
             <div class="initiative-content-row last">
-            <@u.message "initiative.youthInitiative.link" /> <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}</a>
+            <@u.message "initiative.youthInitiative.link" /> <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.get())}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.get())}</a>
             </div>
     </#if>
 
@@ -465,7 +465,7 @@
                 <#if user.isVerifiedUser()>
                     <#if !user.hasParticipatedToInitiative(initiative.id)
                     && !user.tooYoungForVerifiedParticipation()
-                    && (user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
+                    && (!user.homeMunicipality.present || (user.homeMunicipality.get().id == initiative.municipality.id))>
                         <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
                     </#if>
                 <#else>
@@ -527,8 +527,8 @@
     <div class="view-block first cf">
         <div class="initiative-content-row last">
             <h2><@u.message "municipality.decision" /></h2>
-            <#if decisionInfo.getDecisionText().isPresent()>
-                <@u.text decisionInfo.getDecisionText().value />
+            <#if decisionInfo.getDecisionText().present>
+                <@u.text decisionInfo.getDecisionText().get() />
             </#if>
             <#if manage>
                 <a class="small-button edit-decision" href="${urls.openDecisionForEdit(initiative.id)}"><span class="small-icon edit"><@u.message "municipality.decision.editDecision" /> </span></a>
@@ -543,8 +543,8 @@
 
 <#macro video manage=false>
     <div>
-        <#if initiative.videoUrl.isPresent() && initiative.videoUrl.getValue()?? && initiative.videoUrl.getValue() != "">
-            <iframe src="${initiative.videoUrl.value}" width="90%" height="400px"></iframe>
+        <#if initiative.videoUrl.present && initiative.videoUrl.get()?? && initiative.videoUrl.get() != "">
+            <iframe src="${initiative.videoUrl.get()}" width="90%" height="400px"></iframe>
         </#if>
     </div>
 </#macro>

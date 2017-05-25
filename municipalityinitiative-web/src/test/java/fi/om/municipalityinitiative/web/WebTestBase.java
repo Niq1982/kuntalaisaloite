@@ -7,7 +7,6 @@ import fi.om.municipalityinitiative.conf.WebTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.service.email.EmailSenderScheduler;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TestUtil;
 import fi.om.municipalityinitiative.validation.NotTooFastSubmitValidator;
 import mockit.Mocked;
@@ -31,6 +30,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -341,16 +341,16 @@ public abstract class WebTestBase {
 
     protected WebElement getElemContaining(String containing, String tagName) {
 
-        Maybe<WebElement> maybeElement = getOptionalElemContaining(containing, tagName);
+        Optional<WebElement> OptionalElement = getOptionalElemContaining(containing, tagName);
 
-        if (maybeElement.isNotPresent()) {
+        if (!OptionalElement.isPresent()) {
             throw new NullPointerException("Tag not found with text: " + containing);
         }
 
-        return maybeElement.get();
+        return OptionalElement.get();
     }
 
-    protected Maybe<WebElement> getOptionalElemContaining(String containing, String tagName) {
+    protected Optional<WebElement> getOptionalElemContaining(String containing, String tagName) {
 
         List<WebElement> htmlElements = driver.findElements(By.tagName(tagName));
 
@@ -358,11 +358,11 @@ public abstract class WebTestBase {
 
         for (WebElement e : htmlElements) {
             if (e.getText().contains(containing)) {
-                return Maybe.of(e);
+                return Optional.of(e);
             }
         }
 
-        return Maybe.absent();
+        return Optional.empty();
     }
 
 

@@ -2,10 +2,10 @@ package fi.om.municipalityinitiative.dto.ui;
 
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
+import java.util.Optional;
 
 public class VideoCreateDto {
 
@@ -13,12 +13,12 @@ public class VideoCreateDto {
 
     }
 
-    public VideoCreateDto(Maybe<String> videoUrl, Maybe<String> name) {
+    public VideoCreateDto(Optional<String> videoUrl, Optional<String> name) {
         if (videoUrl.isPresent()) {
-            this.videoUrl = videoUrl.getValue();
+            this.videoUrl = videoUrl.get();
         }
         if (name.isPresent()) {
-            this.videoName = name.getValue();
+            this.videoName = name.get();
         }
     }
 

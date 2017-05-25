@@ -30,8 +30,8 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;

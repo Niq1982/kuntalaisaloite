@@ -4,18 +4,20 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-public abstract class MaybeMatcher extends TypeSafeMatcher<Maybe<?>> {
+import java.util.Optional;
 
-    public static Matcher<? super Maybe<?>> isPresent() {
-            return new MaybeMatcher() {
+public abstract class OptionalMatcher extends TypeSafeMatcher<Optional<?>> {
+
+    public static Matcher<? super Optional<?>> isPresent() {
+            return new OptionalMatcher() {
 
                 @Override
-                protected boolean matchesSafely(Maybe<?> item) {
-                    return isMaybeObject(item) && item.isPresent();
+                protected boolean matchesSafely(Optional<?> item) {
+                    return isOptionalObject(item) && item.isPresent();
                 }
 
                 @Override
-                protected void describeMismatchSafely(Maybe<?> item, Description mismatchDescription) {
+                protected void describeMismatchSafely(Optional<?> item, Description mismatchDescription) {
                     mismatchDescription.appendText("was isNotPresent()");
                 }
 
@@ -26,11 +28,11 @@ public abstract class MaybeMatcher extends TypeSafeMatcher<Maybe<?>> {
             };
         }
 
-    public static Matcher<? super Maybe<?>> isNotPresent() {
-        return new MaybeMatcher() {
+    public static Matcher<? super Optional<?>> isNotPresent() {
+        return new OptionalMatcher() {
             @Override
-            protected boolean matchesSafely(Maybe<?> item) {
-                return isMaybeObject(item) && item.isNotPresent();
+            protected boolean matchesSafely(Optional<?> item) {
+                return isOptionalObject(item) && !item.isPresent();
             }
 
             @Override
@@ -39,13 +41,13 @@ public abstract class MaybeMatcher extends TypeSafeMatcher<Maybe<?>> {
             }
 
             @Override
-            protected void describeMismatchSafely(Maybe<?> item, Description mismatchDescription) {
+            protected void describeMismatchSafely(Optional<?> item, Description mismatchDescription) {
                 mismatchDescription.appendText("was isPresent()");
             }
         };
     }
 
-    private static boolean isMaybeObject(Maybe<?> item) {
+    private static boolean isOptionalObject(Optional<?> item) {
         return item != null;
     }
 }

@@ -3,12 +3,12 @@ package fi.om.municipalityinitiative.web;
 import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Maybe;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.util.Locales.LOCALE_FI;
 import static fi.om.municipalityinitiative.util.Locales.LOCALE_SV;
@@ -637,10 +637,10 @@ public final class Urls {
         return getLocalizedPageUrl(PREPARE_FI, PREPARE_SV);
     }
 
-    public String prepare(Maybe<List<Municipality>> municipalities) {
+    public String prepare(Optional<List<Municipality>> municipalities) {
         String url = getLocalizedPageUrl(PREPARE_FI, PREPARE_SV);
-        if (municipalities.isPresent() && municipalities.getValue().size() == 1) {
-            url+="?" + SINGLE_MUNICIPALITY + "=" + municipalities.getValue().get(0).getId();
+        if (municipalities.isPresent() && municipalities.get().size() == 1) {
+            url+="?" + SINGLE_MUNICIPALITY + "=" + municipalities.get().get(0).getId();
         }
         return url;
     }

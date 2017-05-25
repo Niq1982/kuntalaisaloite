@@ -14,12 +14,12 @@ import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Locale;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
 
@@ -172,27 +172,27 @@ public class VerifiedInitiativeService {
         participantDao.increaseParticipantCountFor(initiativeId, createDto.getShowName(), homeMunicipalityId.equals(initiative.getMunicipality().getId()));
     }
 
-    private static boolean municipalityMismatch(Long initiativeMunicipality, Long userGivenHomeMunicipality, Maybe<Municipality> vetumaMunicipality) {
+    private static boolean municipalityMismatch(Long initiativeMunicipality, Long userGivenHomeMunicipality, Optional<Municipality> vetumaMunicipality) {
         return vetumaMunicipalityReceivedAndMismatches(vetumaMunicipality, initiativeMunicipality)
                 || vetumaMunicipalityNotReceivedAndUserGivenMismatches(vetumaMunicipality, initiativeMunicipality, userGivenHomeMunicipality);
     }
 
 
-    private static boolean vetumaMunicipalityNotReceivedAndUserGivenMismatches(Maybe<Municipality> vetumaMunicipality, Long initiativeMunicipality, Long userGivenHomeMunicipality) {
-        return vetumaMunicipality.isNotPresent()
+    private static boolean vetumaMunicipalityNotReceivedAndUserGivenMismatches(Optional<Municipality> vetumaMunicipality, Long initiativeMunicipality, Long userGivenHomeMunicipality) {
+        return !vetumaMunicipality.isPresent()
                 && !initiativeMunicipality.equals(userGivenHomeMunicipality);
     }
 
-    private static boolean vetumaMunicipalityReceivedAndMismatches(Maybe<Municipality> vetumaMunicipality, Long initiativeMunicipality) {
+    private static boolean vetumaMunicipalityReceivedAndMismatches(Optional<Municipality> vetumaMunicipality, Long initiativeMunicipality) {
         return vetumaMunicipality.isPresent()
                 && !initiativeMunicipality.equals(vetumaMunicipality.get().getId());
     }
 
-    public VerifiedUserId getVerifiedUserIdAndCreateIfNecessary(String hash, ContactInfo contactInfo, Maybe<Municipality> homeMunicipality) {
+    public VerifiedUserId getVerifiedUserIdAndCreateIfNecessary(String hash, ContactInfo contactInfo, Optional<Municipality> homeMunicipality) {
 
-        Maybe<VerifiedUserId> verifiedUserId = userDao.getVerifiedUserId(hash);
-        if (verifiedUserId.isNotPresent()) {
-            verifiedUserId = Maybe.of(userDao.addVerifiedUser(hash, contactInfo, homeMunicipality));
+        Optional<VerifiedUserId> verifiedUserId = userDao.getVerifiedUserId(hash);
+        if (!verifiedUserId.isPresent()) {
+            verifiedUserId = Optional.of(userDao.addVerifiedUser(hash, contactInfo, homeMunicipality));
         }
         return verifiedUserId.get();
     }

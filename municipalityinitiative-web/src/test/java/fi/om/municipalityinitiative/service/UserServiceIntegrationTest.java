@@ -9,16 +9,16 @@ import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.util.FakeSession;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isPresent;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -96,7 +96,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         String name = "Full Name";
         String address = "Address";
-        userService.login("anyHash", name, address, Maybe.of(municipality), requestMock, 20);
+        userService.login("anyHash", name, address, Optional.of(municipality), requestMock, 20);
 
         LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(requestMock);
 
@@ -113,7 +113,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void vetuma_login_sets_municipality_absent_if_not_found() {
-        userService.login("anyHash", "Full Name", "Address", Maybe.<Municipality>absent(), requestMock, 20);
+        userService.login("anyHash", "Full Name", "Address", Optional.<Municipality>empty(), requestMock, 20);
         LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(requestMock);
         assertThat(loginUserHolder.getVerifiedUser().getHomeMunicipality(), isNotPresent());
 
@@ -133,7 +133,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
         Municipality newMunicipality = new Municipality(newMunicipalityId, "anyNameFromVetuma", "anyNameFromVetuma", true);
 
         String newName = "New Users Name";
-        userService.login(userSsnHash, newName, "New address which will not be saved", Maybe.of(newMunicipality), requestMock, 20);
+        userService.login(userSsnHash, newName, "New address which will not be saved", Optional.of(newMunicipality), requestMock, 20);
 
         VerifiedUserDbDetails verifiedUser = userDao.getVerifiedUser(userSsnHash).get();
         assertThat(verifiedUser.getContactInfo().getName(), is(newName));
@@ -152,7 +152,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
         String userSsnHash = testHelper.getPreviousUserSsnHash();
 
         String newName = "New Users Name";
-        userService.login(userSsnHash, newName, "New address which will not be saved", Maybe.<Municipality>absent(), requestMock, 20);
+        userService.login(userSsnHash, newName, "New address which will not be saved", Optional.<Municipality>empty(), requestMock, 20);
 
         VerifiedUserDbDetails verifiedUser = userDao.getVerifiedUser(userSsnHash).get();
         assertThat(verifiedUser.getContactInfo().getName(), is(newName));
@@ -173,7 +173,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
         String userSsnHash = testHelper.getPreviousUserSsnHash();
 
         String newName = "New Users Name";
-        userService.login(userSsnHash, newName, "New address which will not be saved", Maybe.<Municipality>absent(), requestMock, 20);
+        userService.login(userSsnHash, newName, "New address which will not be saved", Optional.<Municipality>empty(), requestMock, 20);
 
         VerifiedUser verifiedUser = (VerifiedUser) userService.getUser(requestMock);
         assertThat(verifiedUser.getContactInfo().getName(), is(newName));

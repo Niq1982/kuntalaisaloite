@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.dto.service;
 
-import com.google.common.base.Optional;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
@@ -15,12 +14,16 @@ import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.service.YouthInitiativeService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Membership;
+import fi.om.municipalityinitiative.util.TestDataTemplates;
 import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 import java.util.Random;
 
 public class TestDataService {
@@ -51,7 +54,7 @@ public class TestDataService {
     @Transactional(readOnly = false)
     public Long createTestMunicipalityInitiative(TestDataTemplates.InitiativeTemplate template, LoginUserHolder<User> loginUserHolder) {
 
-        this.previousHash = Optional.absent();
+        this.previousHash = Optional.empty();
 
         if (template.getInitiative().getType().isNotVerifiable()) {
 
@@ -102,8 +105,8 @@ public class TestDataService {
 
     private Long createVerifiableInitiative(TestDataTemplates.InitiativeTemplate template, VerifiedUser currentVerifiedUser) {
         Long initiativeId = initiativeDao.prepareInitiative(template.getInitiative().getMunicipality().getId(), template.getInitiative().getType());
-        Maybe<VerifiedUserDbDetails> userMaybe = userDao.getVerifiedUser(currentVerifiedUser.getHash());
-        if (userMaybe.isNotPresent()) {
+        Optional<VerifiedUserDbDetails> userOptional = userDao.getVerifiedUser(currentVerifiedUser.getHash());
+        if (!userOptional.isPresent()) {
             ContactInfo contactInfo = currentVerifiedUser.getContactInfo();
             contactInfo.setEmail(template.getAuthor().getContactInfo().getEmail());
             userDao.addVerifiedUser(currentVerifiedUser.getHash(), contactInfo, currentVerifiedUser.getHomeMunicipality());
@@ -161,7 +164,7 @@ public class TestDataService {
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setEmail(participantUICreateDto.getParticipantEmail());
         contactInfo.setName(participantUICreateDto.getParticipantName());
-        VerifiedUserId verifiedUserId = userDao.addVerifiedUser(RandomHashGenerator.randomString(30), contactInfo, Maybe.<Municipality>absent());
+        VerifiedUserId verifiedUserId = userDao.addVerifiedUser(RandomHashGenerator.randomString(30), contactInfo, Optional.<Municipality>empty());
 
         participantDao.addVerifiedParticipant(initiativeId,
                 verifiedUserId,

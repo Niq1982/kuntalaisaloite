@@ -4,9 +4,10 @@ import com.mysema.commons.lang.Assert;
 import com.mysema.query.Tuple;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.sql.QMunicipality;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+
+import java.util.Optional;
 
 public class Mappings {
 
@@ -17,12 +18,12 @@ public class Mappings {
         return integer;
     }
 
-    public static Maybe<Municipality> parseMaybeMunicipality(Tuple row) {
+    public static Optional<Municipality> parseOptionalMunicipality(Tuple row) {
         Long municipalityId = row.get(QMunicipality.municipality.id);
         if (municipalityId == null) {
-            return Maybe.absent();
+            return Optional.empty();
         }
-        return Maybe.of(new Municipality(
+        return Optional.of(new Municipality(
                 municipalityId,
                 row.get(QMunicipality.municipality.name),
                 row.get(QMunicipality.municipality.nameSv),
@@ -37,11 +38,11 @@ public class Mappings {
                 row.get(QMunicipality.municipality.active));
     }
 
-    public static Maybe<LocalDate> maybeLocalDate(DateTime sentTime) {
+    public static Optional<LocalDate> OptionalLocalDate(DateTime sentTime) {
         if (sentTime != null) {
-            return Maybe.of(sentTime.toLocalDate());
+            return Optional.of(sentTime.toLocalDate());
         }
-        return Maybe.absent();
+        return Optional.empty();
     }
 
     public static void assertSingleAffection(long affectedRows) {

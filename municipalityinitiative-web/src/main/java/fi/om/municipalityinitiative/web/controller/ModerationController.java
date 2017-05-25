@@ -12,19 +12,22 @@ import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import fi.om.municipalityinitiative.service.ui.Notification;
 import fi.om.municipalityinitiative.service.ui.NotificationEditDto;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReviewHistoryDiff;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -61,9 +64,9 @@ public class ModerationController extends BaseController{
 
         List<ReviewHistoryRow> reviewHistory = moderationService.findReviewHistory(loginUserHolder, initiativeId);
 
-        Maybe<ReviewHistoryDiff> reviewHistoryDiff = Maybe.absent();
+        Optional<ReviewHistoryDiff> reviewHistoryDiff = Optional.empty();
         if (historyItemId != null) {
-            reviewHistoryDiff = Maybe.of(ReviewHistoryDiff.from(reviewHistory, historyItemId));
+            reviewHistoryDiff = Optional.of(ReviewHistoryDiff.from(reviewHistory, historyItemId));
         }
         InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
@@ -74,7 +77,7 @@ public class ModerationController extends BaseController{
                 reviewHistory,
                 reviewHistoryDiff,
                 locationService.getLocations(initiativeId),
-                municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiative)
+                municipalityDecisionService.getMunicipalityDecisionInfoOptional(initiative)
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 

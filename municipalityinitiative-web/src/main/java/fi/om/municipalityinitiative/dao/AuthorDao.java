@@ -7,10 +7,10 @@ import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.Maybe;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public interface AuthorDao {
@@ -37,7 +37,7 @@ public interface AuthorDao {
 
     Set<Long> getAuthorsInitiatives(String managementHash);
 
-    Maybe<NormalAuthorId> getAuthorId(String managementHash);
+    Optional<NormalAuthorId> getAuthorId(String managementHash);
 
     NormalAuthor getNormalAuthor(NormalAuthorId authorId);
 

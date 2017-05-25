@@ -1,11 +1,12 @@
 package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.util.Maybe;
+
+import java.util.Optional;
 
 public class AuthorInfo {
     private String name;
-    private Maybe<Municipality> municipality;
+    private Optional<Municipality> municipality;
 
     public String getName() {
         return name;
@@ -15,11 +16,11 @@ public class AuthorInfo {
         this.name = name;
     }
 
-    public Maybe<Municipality> getMunicipality() {
+    public Optional<Municipality> getMunicipality() {
         return municipality;
     }
 
-    public void setMunicipality(Maybe<Municipality> municipality) {
+    public void setMunicipality(Optional<Municipality> municipality) {
         this.municipality = municipality;
     }
 

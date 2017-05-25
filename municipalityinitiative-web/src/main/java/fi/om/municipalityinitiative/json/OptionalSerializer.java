@@ -3,19 +3,19 @@ package fi.om.municipalityinitiative.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import fi.om.municipalityinitiative.util.Maybe;
 
 import java.io.IOException;
+import java.util.Optional;
 
-public class MaybeSerializer extends JsonSerializer<Maybe> {
+public class OptionalSerializer extends JsonSerializer<Optional> {
 
     @Override
-    public void serialize(Maybe value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+    public void serialize(Optional value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
         if (value.isPresent()) {
             jgen.writeString(value.get().toString());
         }
         else {
-            jgen.writeString("absent");
+            jgen.writeString("empty");
         }
     }
 

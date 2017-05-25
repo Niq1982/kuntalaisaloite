@@ -14,9 +14,9 @@
 
  <#macro emailTime emailDto>
    <#if emailDto.succeeded.present>
-        <@dateTime emailDto.succeeded.value/>
+        <@dateTime emailDto.succeeded.get()/>
     <#elseif emailDto.lastFailed.present>
-        <@dateTime emailDto.lastFailed.value/>
+        <@dateTime emailDto.lastFailed.get()/>
    <#else>
         UNKNOWN
    </#if>

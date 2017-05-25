@@ -67,7 +67,7 @@ public class FileImageFinderTest {
     }
 
     @Test
-    // XXX: Some of the files are not really image files - maybe should be fixed or then not?
+    // XXX: Some of the files are not really image files - Optional should be fixed or then not?
     public void get_file_succeeds_if_valid_file_name_and_contentType() throws IOException {
         FileImageFinder imageFinder = new FileImageFinder(appPropertiesImageDirectory, TEST_BASEURL);
 

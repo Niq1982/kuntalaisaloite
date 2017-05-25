@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isPresent;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;

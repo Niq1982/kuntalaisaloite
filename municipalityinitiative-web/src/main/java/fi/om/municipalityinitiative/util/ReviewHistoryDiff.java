@@ -9,10 +9,11 @@ import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class ReviewHistoryDiff {
-    private Maybe<List<String>> oldText;
+    private Optional<List<String>> oldText;
     private List<String> newText;
     private List<DiffLine> diff;
 
@@ -38,7 +39,7 @@ public class ReviewHistoryDiff {
     private static ReviewHistoryDiff reviewHistory(ReviewHistoryRow newRow, ReviewHistoryRow oldRow) {
         ReviewHistoryDiff reviewHistoryDiff = new ReviewHistoryDiff();
         reviewHistoryDiff.newText = split(newRow.getSnapshot().get());
-        reviewHistoryDiff.oldText = Maybe.of(split(oldRow.getSnapshot().get()));
+        reviewHistoryDiff.oldText = Optional.of(split(oldRow.getSnapshot().get()));
         reviewHistoryDiff.diff = getSomeDiff(DiffUtils.diff(reviewHistoryDiff.oldText.get(), reviewHistoryDiff.newText), reviewHistoryDiff.oldText.get());
         return reviewHistoryDiff;
     }
@@ -56,7 +57,7 @@ public class ReviewHistoryDiff {
         reviewHistoryDiff.newText = split(s);
         reviewHistoryDiff.diff = Lists.newArrayList();
         addDiffLines(reviewHistoryDiff.diff, Delta.TYPE.INSERT, reviewHistoryDiff.newText);
-        reviewHistoryDiff.oldText = Maybe.absent();
+        reviewHistoryDiff.oldText = Optional.empty();
         return reviewHistoryDiff;
     }
 
@@ -74,7 +75,7 @@ public class ReviewHistoryDiff {
         return diff;
     }
 
-    public Maybe<List<String>> getOldText() {
+    public Optional<List<String>> getOldText() {
         return oldText;
     }
 
@@ -138,20 +139,20 @@ public class ReviewHistoryDiff {
     }
 
     public static class DiffLine {
-        final Maybe<Delta.TYPE> modificationType;
+        final Optional<Delta.TYPE> modificationType;
         final String line;
 
         public DiffLine(Delta.TYPE modificationType, String line) {
-            this.modificationType = Maybe.of(modificationType);
+            this.modificationType = Optional.of(modificationType);
             this.line = line;
         }
 
         public DiffLine(String line) {
-            this.modificationType = Maybe.absent();
+            this.modificationType = Optional.empty();
             this.line = line;
         }
 
-        public Maybe<Delta.TYPE> getModificationType() {
+        public Optional<Delta.TYPE> getModificationType() {
             return modificationType;
         }
 

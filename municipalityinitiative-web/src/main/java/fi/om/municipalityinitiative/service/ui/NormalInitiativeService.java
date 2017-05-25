@@ -6,24 +6,22 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.ui.*;
+import fi.om.municipalityinitiative.dto.ui.AuthorUIMessage;
+import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
+import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
-import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
-import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
-import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Locale;
+import java.util.Optional;
 
 
 public class NormalInitiativeService {
@@ -123,10 +121,10 @@ public class NormalInitiativeService {
     @Transactional(readOnly = true)
     public InitiativeCounts getInitiativeCounts(InitiativeSearch search, LoginUserHolder loginUserHolder) {
         if (loginUserHolder.getUser().isNotOmUser()) {
-            return initiativeDao.getPublicInitiativeCounts(Maybe.fromNullable(search.getMunicipalities()), search.getType());
+            return initiativeDao.getPublicInitiativeCounts(Optional.ofNullable(search.getMunicipalities()), search.getType());
         }
         else {
-            return initiativeDao.getAllInitiativeCounts(Maybe.fromNullable(search.getMunicipalities()), search.getType());
+            return initiativeDao.getAllInitiativeCounts(Optional.ofNullable(search.getMunicipalities()), search.getType());
         }
     }
 

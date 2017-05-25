@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isPresent;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

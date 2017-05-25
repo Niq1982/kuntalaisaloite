@@ -23,9 +23,11 @@ import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
-import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Membership;
+import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
-import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Rule;
@@ -35,9 +37,9 @@ import org.junit.rules.ExpectedException;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.service.ui.AuthorService.AuthorInvitationConfirmViewData;
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -534,7 +536,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         assertThat(author.getContactInfo().getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
         assertThat(author.getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
         assertThat(author.getContactInfo().isShowName(), is(TestHelper.DEFAULT_PUBLIC_NAME));
-        assertThat(author.getMunicipality(), (Matcher<? super Maybe>) isPresent());
+        assertThat(author.getMunicipality().isPresent(), is(true));
         assertThat(author.getCreateTime(), is(notNullValue()));
         assertThat(author.getId(), is(notNullValue()));
     }
@@ -598,7 +600,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         contactInfo.setName(NAME);
         contactInfo.setShowName(SHOW_NAME);
 
-        return new LoginUserHolder(User.verifiedUser(new VerifiedUserId(-1L), "hash", contactInfo, Collections.singleton(initiativeId), Collections.singleton(initiativeId), Maybe.of(new Municipality(testMunicipality, "nameFi", "nameSv", true)), 20));
+        return new LoginUserHolder(User.verifiedUser(new VerifiedUserId(-1L), "hash", contactInfo, Collections.singleton(initiativeId), Collections.singleton(initiativeId), Optional.of(new Municipality(testMunicipality, "nameFi", "nameSv", true)), 20));
     }
 
 }

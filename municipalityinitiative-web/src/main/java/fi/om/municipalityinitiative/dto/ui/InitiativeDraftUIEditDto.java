@@ -59,7 +59,7 @@ public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformati
         editDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
         editDto.setLocations(locations);
         if (initiative.getVideoUrl().isPresent()) {
-            editDto.setVideoUrl(initiative.getVideoUrl().getValue());
+            editDto.setVideoUrl(initiative.getVideoUrl().get());
         }
         return editDto;
     }

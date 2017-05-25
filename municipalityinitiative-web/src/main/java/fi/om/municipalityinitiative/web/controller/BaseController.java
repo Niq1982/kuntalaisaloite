@@ -10,7 +10,10 @@ import fi.om.municipalityinitiative.service.MunicipalityDecisionService;
 import fi.om.municipalityinitiative.service.NotificationHolder;
 import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.service.ui.Notification;
-import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.util.FixState;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.UrlHelper;
 import fi.om.municipalityinitiative.validation.NormalInitiativeEmailUser;
 import fi.om.municipalityinitiative.validation.NormalInitiativeVerifiedUser;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
@@ -24,10 +27,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import static fi.om.municipalityinitiative.web.Views.contextRelativeRedirect;
 
@@ -56,7 +56,7 @@ public class BaseController {
     
     private final String resourcesVersion;
 
-    private final Maybe<Integer> omPiwicId;
+    private final Optional<Integer> omPiwicId;
 
     private UrlHelper urlHelper = new UrlHelper();
 
@@ -67,10 +67,10 @@ public class BaseController {
     protected MunicipalityDecisionService municipalityDecisionService;
     
     public BaseController(boolean optimizeResources, String resourcesVersion) {
-        this(optimizeResources, resourcesVersion, Maybe.<Integer>absent());
+        this(optimizeResources, resourcesVersion, Optional.<Integer>empty());
     }
     
-    public BaseController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> omPiwicId) {
+    public BaseController(boolean optimizeResources, String resourcesVersion, Optional<Integer> omPiwicId) {
         this.optimizeResources = optimizeResources;
         this.resourcesVersion = resourcesVersion;
         this.omPiwicId = omPiwicId;
@@ -159,7 +159,7 @@ public class BaseController {
     protected void addPiwicIdIfNotAuthenticated(Model model, HttpServletRequest request) {
 
         if (!userService.getLoginUserHolder(request).isVerifiedUser()) {
-            model.addAttribute(OM_PICIW_ID, omPiwicId.orNull());
+            model.addAttribute(OM_PICIW_ID, omPiwicId.orElse(null));
         }
     }
 

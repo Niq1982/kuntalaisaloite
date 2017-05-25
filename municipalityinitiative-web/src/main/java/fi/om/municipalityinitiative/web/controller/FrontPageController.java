@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.service.CachedInitiativeFinder;
 import fi.om.municipalityinitiative.service.MunicipalityService;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -13,6 +12,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.INDEX_VIEW;
@@ -26,7 +26,7 @@ public class FrontPageController extends BaseController {
     @Resource
     private MunicipalityService municipalityService;
     
-    public FrontPageController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> omPiwicId) {
+    public FrontPageController(boolean optimizeResources, String resourcesVersion, Optional<Integer> omPiwicId) {
         super(optimizeResources, resourcesVersion, omPiwicId);
     }
     

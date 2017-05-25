@@ -70,7 +70,7 @@
                     <#elseif !initiative.sentTime.present>
                         <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span>
                     <#else>
-                        <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>
+                        <#assign sentTime><@u.localDate initiative.sentTime.get()!"" /></#assign>
                         <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
                     </#if>
                     <span class="bull">&bull;</span>

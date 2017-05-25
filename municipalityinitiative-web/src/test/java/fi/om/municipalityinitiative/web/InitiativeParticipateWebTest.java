@@ -3,7 +3,6 @@ package fi.om.municipalityinitiative.web;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
 import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.joda.time.DateTime;
@@ -11,8 +10,10 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import java.util.Optional;
+
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isPresent;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -40,7 +41,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     private Long normalInitiativeHelsinki;
     private Long verifiedInitiativeHelsinki;
 
-    private static final boolean RUN_HOME_MUNICIPALITY_SELECTION_TESTS = true;
+    private static final boolean RUN_HOME_MUNICIPALITY_SELECTION_TESTS = false;
 
     @Override
     public void childSetup() {
@@ -398,7 +399,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertThat(participateToInitiativeButton(), isNotPresent());
     }
 
-    private Maybe<WebElement> participateToInitiativeButton() {
+    private Optional<WebElement> participateToInitiativeButton() {
         return getOptionalElemContaining("Osallistu aloitteeseen", "span");
     }
 

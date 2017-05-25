@@ -102,9 +102,9 @@
 
     <div class="input-block-content hide" id="home-municipality-select">
         <#if user.isVerifiedUser() && user.homeMunicipality.present>
-            <input type="hidden" name="homeMunicipality" value="${user.homeMunicipality.value.id}" />
+            <input type="hidden" name="homeMunicipality" value="${user.homeMunicipality.get().id}" />
             <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
-            <div id="verifiedHomeMunicipality" class="input-placeholder" data-initiative-municipality="${user.homeMunicipality.value.id}"><@u.solveMunicipality user.homeMunicipality /></div>
+            <div id="verifiedHomeMunicipality" class="input-placeholder" data-initiative-municipality="${user.homeMunicipality.get().id}"><@u.solveMunicipality user.homeMunicipality /></div>
         </#if>
         <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality multiple=false/>
     </div>

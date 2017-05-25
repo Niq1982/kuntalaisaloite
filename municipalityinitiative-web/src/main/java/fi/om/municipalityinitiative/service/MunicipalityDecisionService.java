@@ -21,7 +21,6 @@ import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.util.ImageModifier;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -37,6 +36,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 
 public class MunicipalityDecisionService {
@@ -97,7 +97,7 @@ public class MunicipalityDecisionService {
     public void updateAttachments(Long initiativeId, List<MunicipalityDecisionDto.FileWithName> files, MunicipalityUserHolder user) throws FileUploadException, InvalidAttachmentException {
         user.assertMunicipalityLoginUser(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
-        if (initiative.getDecisionDate().isNotPresent()) {
+        if (!initiative.getDecisionDate().isPresent()) {
             throw new InvalidAttachmentException("Can't attach files to decision that doesn't exist");
         }
 
@@ -143,15 +143,15 @@ public class MunicipalityDecisionService {
     }
 
     @Transactional(readOnly = true)
-    public Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(InitiativeViewInfo initiative) {
+    public Optional<MunicipalityDecisionInfo> getMunicipalityDecisionInfoOptional(InitiativeViewInfo initiative) {
 
-        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
+        Optional<MunicipalityDecisionInfo> municipalityDecisionInfo = Optional.empty();
         if (initiative.getDecisionDate().isPresent()) {
             AttachmentUtil.Attachments attachments = getDecisionAttachments(initiative.getId());
             if (decisionPresent(initiative, attachments)) {
-                municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(
+                municipalityDecisionInfo = Optional.of(MunicipalityDecisionInfo.build(
                         initiative.getDecisionText(),
-                        initiative.getDecisionDate().getValue(),
+                        initiative.getDecisionDate().get(),
                         initiative.getDecisionModifiedDate(),
                         attachments));
             }

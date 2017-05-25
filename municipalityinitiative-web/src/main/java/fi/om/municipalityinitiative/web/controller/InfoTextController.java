@@ -6,7 +6,6 @@ import fi.om.municipalityinitiative.service.FileImageFinder;
 import fi.om.municipalityinitiative.service.ImageFinder;
 import fi.om.municipalityinitiative.service.InfoTextService;
 import fi.om.municipalityinitiative.util.InfoTextCategory;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.HelpPage;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -27,6 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.*;
@@ -43,7 +43,7 @@ public class InfoTextController extends BaseController {
     @Resource
     ImageFinder imageFinder;
 
-    public InfoTextController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> omPiwicId) {
+    public InfoTextController(boolean optimizeResources, String resourcesVersion, Optional<Integer> omPiwicId) {
         super(optimizeResources, resourcesVersion, omPiwicId);
     }
 

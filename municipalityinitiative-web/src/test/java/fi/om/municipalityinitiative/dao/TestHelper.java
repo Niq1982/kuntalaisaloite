@@ -283,12 +283,12 @@ public class TestHelper {
         }
 
         if (initiativeDraft.videoUrl.isPresent()) {
-            insert.set(municipalityInitiative.videoUrl, initiativeDraft.videoUrl.getValue());
+            insert.set(municipalityInitiative.videoUrl, initiativeDraft.videoUrl.get());
         }
 
 
         if (initiativeDraft.decisionDate.isPresent()) {
-            insert.set(municipalityInitiative.municipalityDecisionDate, initiativeDraft.decisionDate.getValue());
+            insert.set(municipalityInitiative.municipalityDecisionDate, initiativeDraft.decisionDate.get());
         }
 
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
@@ -344,7 +344,7 @@ public class TestHelper {
     @Transactional(readOnly = false)
     public Long createVerifiedAuthorAndParticipant(AuthorDraft authorDraft) {
         SQLInsertClause insertVerifiedUser = queryFactory.insert(QVerifiedUser.verifiedUser)
-                .set(QVerifiedUser.verifiedUser.hash, authorDraft.userSsn.isNotPresent() ? createUserSsnHash() : encryptionService.registeredUserHash(authorDraft.userSsn.get()))
+                .set(QVerifiedUser.verifiedUser.hash, !authorDraft.userSsn.isPresent() ? createUserSsnHash() : encryptionService.registeredUserHash(authorDraft.userSsn.get()))
                 .set(QVerifiedUser.verifiedUser.address, authorDraft.authorAddress)
                 .set(QVerifiedUser.verifiedUser.phone, authorDraft.authorPhone)
                 .set(QVerifiedUser.verifiedUser.email, authorDraft.participantEmail)
@@ -352,7 +352,7 @@ public class TestHelper {
 
         if (authorDraft.verifiedAuthorMunicipality != null) {
             if (authorDraft.verifiedAuthorMunicipality.isPresent()) {
-                insertVerifiedUser.set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.verifiedAuthorMunicipality.getValue());
+                insertVerifiedUser.set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.verifiedAuthorMunicipality.get());
             }
             else {
                 insertVerifiedUser.setNull(QVerifiedUser.verifiedUser.municipalityId);
@@ -391,11 +391,11 @@ public class TestHelper {
         contactInfo.setShowName(true);
 
         this.lastVerifiedUserId = verifiedUserId;
-        Maybe<Municipality> participantMunicipality;
+        Optional<Municipality> participantMunicipality;
         if (authorDraft.participantMunicipality == null) {
-            participantMunicipality = Maybe.absent();
+            participantMunicipality = Optional.empty();
         } else {
-            participantMunicipality = Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true));
+            participantMunicipality = Optional.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true));
         }
         authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId), previousUserSsnHash, contactInfo,
                 Collections.singleton(authorDraft.initiativeId),
@@ -510,7 +510,7 @@ public class TestHelper {
         Long id = queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
                 .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.showName)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
-                .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, authorDraft.verifiedUserId.getValue())
+                .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, authorDraft.verifiedUserId.get())
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
                 .set(QVerifiedParticipant.verifiedParticipant.participateTime, authorDraft.participateDate)
@@ -561,7 +561,7 @@ public class TestHelper {
     public VerifiedUser getVerifiedUser() {
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setName("Paavo Paavolainen");
-        return User.verifiedUser(new VerifiedUserId(123L), "ffafdsf", contactInfo, null, null, Maybe.of(new Municipality(1, "Oulu", "Åbo", true)), 20);
+        return User.verifiedUser(new VerifiedUserId(123L), "ffafdsf", contactInfo, null, null, Optional.of(new Municipality(1, "Oulu", "Åbo", true)), 20);
     }
 
     @Transactional(readOnly = false)
@@ -823,7 +823,7 @@ public class TestHelper {
 
         public Long initiativeId;
 
-        public final Maybe<InitiativeDraft> initiativeDraftMaybe;
+        public final Optional<InitiativeDraft> initiativeDraftOptional;
         public Long participantMunicipality;
         public boolean verifiedParticipantMunicipalityVerified = true;
         public Membership municipalityMembership = Membership.none;
@@ -832,19 +832,19 @@ public class TestHelper {
         public boolean showName = DEFAULT_PUBLIC_NAME;
         public String authorAddress = DEFAULT_AUTHOR_ADDRESS;
         public String authorPhone = DEFAULT_AUTHOR_PHONE;
-        public Maybe<String> userSsn = Maybe.absent();
-        public Maybe<Long> verifiedUserId = Maybe.absent();
-        public Maybe<Long> verifiedAuthorMunicipality;
+        public Optional<String> userSsn = Optional.empty();
+        public Optional<Long> verifiedUserId = Optional.empty();
+        public Optional<Long> verifiedAuthorMunicipality;
         public LocalDate participateDate = LocalDate.now();
 
         public AuthorDraft(Long initiativeId, Long participantMunicipality) {
             this.initiativeId = initiativeId;
-            this.initiativeDraftMaybe = Maybe.absent();
+            this.initiativeDraftOptional = Optional.empty();
             this.participantMunicipality = participantMunicipality;
         }
 
         private AuthorDraft(InitiativeDraft initiativeDraft, Long participantMunicipality) {
-            this.initiativeDraftMaybe = Maybe.of(initiativeDraft);
+            this.initiativeDraftOptional = Optional.of(initiativeDraft);
             this.participantMunicipality = participantMunicipality;
         }
 
@@ -890,7 +890,7 @@ public class TestHelper {
         }
 
         public InitiativeDraft toInitiativeDraft() {
-            return initiativeDraftMaybe.get();
+            return initiativeDraftOptional.get();
         }
 
         public AuthorDraft withInitiativeId(Long lastInitiativeId) {
@@ -898,12 +898,12 @@ public class TestHelper {
             return this;
         }
         public AuthorDraft withVerifiedUserId(Long verifiedUserId) {
-            this.verifiedUserId = Maybe.of(verifiedUserId);
+            this.verifiedUserId = Optional.of(verifiedUserId);
             return this;
         }
 
         public AuthorDraft withVerifiedAuthorMunicipality(Long municipalityId) {
-            this.verifiedAuthorMunicipality = Maybe.fromNullable(municipalityId);
+            this.verifiedAuthorMunicipality = Optional.ofNullable(municipalityId);
             return this;
         }
 
@@ -929,7 +929,7 @@ public class TestHelper {
         public DateTime stateTime = DEFAULT_STATE_TIME;
         public Integer participantCount = 0;
 
-        public Maybe<AuthorDraft> authorDraft = Maybe.absent();
+        public Optional<AuthorDraft> authorDraft = Optional.empty();
         public FixState fixState = FixState.OK;
         public String moderatorComment;
         public Integer externalParticipantCount = DEFAULT_EXTERNAL_PARTICIPANT_COUNT;
@@ -937,19 +937,19 @@ public class TestHelper {
         public DateTime emailReportDateTime;
         public String supporCountData;
         public List<Location> locations = new ArrayList<>();
-        private Maybe<String> videoUrl = Maybe.absent();
-        private Maybe<String> videoName = Maybe.absent();
-        private Maybe<DateTime> decisionDate = Maybe.absent();
+        private Optional<String> videoUrl = Optional.empty();
+        private Optional<String> videoName = Optional.empty();
+        private Optional<DateTime> decisionDate = Optional.empty();
 
 
         public AuthorDraft applyAuthor() {
-            this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
+            this.authorDraft = Optional.of(new AuthorDraft(this, municipalityId));
             return this.authorDraft.get();
         }
 
         public AuthorDraft applyAuthor(String userSsn) {
-            this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
-            this.authorDraft.get().userSsn = Maybe.of(userSsn);
+            this.authorDraft = Optional.of(new AuthorDraft(this, municipalityId));
+            this.authorDraft.get().userSsn = Optional.of(userSsn);
 
             return this.authorDraft.get();
         }
@@ -1039,17 +1039,17 @@ public class TestHelper {
         }
 
         public InitiativeDraft withVideoUrl(String url) {
-            this.videoUrl = Maybe.of(url);
+            this.videoUrl = Optional.of(url);
             return this;
         }
 
         public InitiativeDraft withVideoName(String videoname) {
-            this.videoName = Maybe.of(videoname);
+            this.videoName = Optional.of(videoname);
             return this;
         }
 
         public InitiativeDraft withDecisionDate(DateTime dateTime){
-            this.decisionDate = Maybe.of(dateTime);
+            this.decisionDate = Optional.of(dateTime);
             return this;
         }
     }

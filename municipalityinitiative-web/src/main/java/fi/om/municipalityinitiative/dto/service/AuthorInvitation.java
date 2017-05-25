@@ -1,9 +1,10 @@
 package fi.om.municipalityinitiative.dto.service;
 
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+
+import java.util.Optional;
 
 public class AuthorInvitation {
 
@@ -14,7 +15,7 @@ public class AuthorInvitation {
     private String name;
     private String email;
     private DateTime invitationTime;
-    private Maybe<DateTime> rejectTime;
+    private Optional<DateTime> rejectTime;
 
     public Long getInitiativeId() {
         return initiativeId;
@@ -60,7 +61,7 @@ public class AuthorInvitation {
         return invitationTime.isBefore(new DateTime().minus(INVITATION_EXPIRE_TIME));
     }
 
-    public void setRejectTime(Maybe<DateTime> rejectTime) {
+    public void setRejectTime(Optional<DateTime> rejectTime) {
         this.rejectTime = rejectTime;
     }
 
@@ -68,7 +69,7 @@ public class AuthorInvitation {
         return rejectTime.isPresent();
     }
 
-    public Maybe<DateTime> getRejectTime() {
+    public Optional<DateTime> getRejectTime() {
         return rejectTime;
     }
 

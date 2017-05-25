@@ -12,7 +12,6 @@ import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -21,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.io.OutputStream;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class ParticipantToPdfExporter {
 
@@ -155,7 +155,7 @@ public class ParticipantToPdfExporter {
     }
 
     private boolean hasCorrectHomeMunicipality(Participant p) {
-        Maybe<Municipality> homeMunicipality = p.getHomeMunicipality();
+        Optional<Municipality> homeMunicipality = p.getHomeMunicipality();
         return homeMunicipality.isPresent() && homeMunicipality.get().getId().equals(initiative.getMunicipality().getId());
     }
 

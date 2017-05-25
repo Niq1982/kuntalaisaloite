@@ -13,11 +13,11 @@ import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
-import fi.om.municipalityinitiative.util.Maybe;
 
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.dao.Mappings.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QVerifiedUser.verifiedUser;
@@ -46,16 +46,16 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     // TODO: Argh. Improve usage of QueryDSL
-    public Maybe<VerifiedUserDbDetails> getVerifiedUser(String hash) {
+    public Optional<VerifiedUserDbDetails> getVerifiedUser(String hash) {
 
         class VerifiedUserDataWrapper {
 
             ContactInfo contactInfo;
-            Maybe<Municipality> municipalityMaybe;
+            Optional<Municipality> municipalityOptional;
             VerifiedUserId verifiedUserId;
         }
 
-        Maybe<VerifiedUserDataWrapper> userDataMaybe = Maybe.fromNullable(
+        Optional<VerifiedUserDataWrapper> userDataOptional = Optional.ofNullable(
                 queryFactory.from(verifiedUser)
                         .leftJoin(verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
                         .where(verifiedUser.hash.eq(hash))
@@ -74,9 +74,9 @@ public class JdbcUserDao implements UserDao {
                                 verifiedUserDataWrapper.contactInfo.setPhone(row.get(QVerifiedUser.verifiedUser.phone));
                                 verifiedUserDataWrapper.verifiedUserId = new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id));
                                 if (row.get(QVerifiedUser.verifiedUser.municipalityId) == null) {
-                                    verifiedUserDataWrapper.municipalityMaybe = Maybe.absent();
+                                    verifiedUserDataWrapper.municipalityOptional = Optional.empty();
                                 } else {
-                                    verifiedUserDataWrapper.municipalityMaybe = Maybe.of(new Municipality(
+                                    verifiedUserDataWrapper.municipalityOptional = Optional.of(new Municipality(
                                             row.get(QMunicipality.municipality.id),
                                             row.get(QMunicipality.municipality.name),
                                             row.get(QMunicipality.municipality.nameSv),
@@ -89,8 +89,8 @@ public class JdbcUserDao implements UserDao {
                             }
                         }));
 
-        if (userDataMaybe.isNotPresent()) {
-            return Maybe.absent();
+        if (!userDataOptional.isPresent()) {
+            return Optional.empty();
         }
 
 
@@ -110,11 +110,11 @@ public class JdbcUserDao implements UserDao {
 
         HashSet<Long> participations = new HashSet<>(initiativesWithParticipation);
         HashSet<Long> ownInitiatives = new HashSet<>(initiatives);
-        return Maybe.of(new VerifiedUserDbDetails(userDataMaybe.get().verifiedUserId, hash, userDataMaybe.get().contactInfo, ownInitiatives, participations, userDataMaybe.get().municipalityMaybe));
+        return Optional.of(new VerifiedUserDbDetails(userDataOptional.get().verifiedUserId, hash, userDataOptional.get().contactInfo, ownInitiatives, participations, userDataOptional.get().municipalityOptional));
     }
 
     @Override
-    public VerifiedUserId addVerifiedUser(String hash, ContactInfo contactInfo, Maybe<Municipality> homeMunicipality) {
+    public VerifiedUserId addVerifiedUser(String hash, ContactInfo contactInfo, Optional<Municipality> homeMunicipality) {
         SQLInsertClause insert = queryFactory.insert(verifiedUser)
                 .set(verifiedUser.hash, hash)
                 .set(verifiedUser.address, contactInfo.getAddress())
@@ -133,15 +133,15 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public Maybe<VerifiedUserId> getVerifiedUserId(String hash) {
-        Long maybeVerifiedUserId = queryFactory.from(verifiedUser)
+    public Optional<VerifiedUserId> getVerifiedUserId(String hash) {
+        Long OptionalVerifiedUserId = queryFactory.from(verifiedUser)
                 .where(verifiedUser.hash.eq(hash))
                 .uniqueResult(verifiedUser.id);
 
-        if (maybeVerifiedUserId == null) {
-            return Maybe.absent();
+        if (OptionalVerifiedUserId == null) {
+            return Optional.empty();
         }
-        return Maybe.of(new VerifiedUserId(maybeVerifiedUserId));
+        return Optional.of(new VerifiedUserId(OptionalVerifiedUserId));
 
     }
 
@@ -157,7 +157,7 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public void updateUserInformation(String hash, String fullName, Maybe<Municipality> vetumaMunicipality) {
+    public void updateUserInformation(String hash, String fullName, Optional<Municipality> vetumaMunicipality) {
         SQLUpdateClause updateClause = queryFactory.update(verifiedUser)
                 .set(verifiedUser.name, fullName)
                 .where(verifiedUser.hash.eq(hash));

@@ -5,19 +5,20 @@ import fi.om.municipalityinitiative.dto.service.VerifiedUserDbDetails;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.Maybe;
+
+import java.util.Optional;
 
 public interface UserDao {
 
     User getAdminUser(String userName, String password);
 
-    Maybe<VerifiedUserDbDetails> getVerifiedUser(String hash);
+    Optional<VerifiedUserDbDetails> getVerifiedUser(String hash);
 
-    VerifiedUserId addVerifiedUser(String hash, ContactInfo contactInfo, Maybe<Municipality> homeMunicipality);
+    VerifiedUserId addVerifiedUser(String hash, ContactInfo contactInfo, Optional<Municipality> homeMunicipality);
 
-    Maybe<VerifiedUserId> getVerifiedUserId(String hash);
+    Optional<VerifiedUserId> getVerifiedUserId(String hash);
 
     void updateUserInformation(String hash, ContactInfo contactInfo);
 
-    void updateUserInformation(String hash, String fullName, Maybe<Municipality> vetumaMunicipality);
+    void updateUserInformation(String hash, String fullName, Optional<Municipality> vetumaMunicipality);
 }

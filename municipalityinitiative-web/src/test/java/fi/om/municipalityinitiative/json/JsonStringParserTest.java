@@ -8,7 +8,6 @@ import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
@@ -16,6 +15,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class JsonStringParserTest {
 
@@ -39,7 +39,7 @@ public class JsonStringParserTest {
         initiative.setProposal("Kakkaa on joka paikassa");
         initiative.setMunicipality(TAMPERE);
         initiative.setType(InitiativeType.UNDEFINED);
-        initiative.setSentTime(Maybe.of(new LocalDate(2010, 5, 5))); // Cannot be absent at this point, mapper tries to get it's value
+        initiative.setSentTime(Optional.of(new LocalDate(2010, 5, 5))); // Cannot be absent at this point, mapper tries to get it's value
         initiative.setCreateTime(new LocalDate(2010, 1, 1));
 
         InitiativeJson initiativeJson = InitiativeJson.from(initiative, participantCount, null);
@@ -58,7 +58,7 @@ public class JsonStringParserTest {
         NormalParticipant participant = new NormalParticipant();
         participant.setParticipateDate(new LocalDate(2010, 1, 1));
         participant.setName(name);
-        participant.setHomeMunicipality(Maybe.of(TAMPERE));
+        participant.setHomeMunicipality(Optional.of(TAMPERE));
         participant.setMembership(Membership.community);
         return participant;
     }

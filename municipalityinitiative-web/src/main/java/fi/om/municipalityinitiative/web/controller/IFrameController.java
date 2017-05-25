@@ -3,7 +3,6 @@ package fi.om.municipalityinitiative.web.controller;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.service.CachedInitiativeFinder;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
@@ -15,6 +14,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -54,7 +54,7 @@ public class IFrameController extends BaseController {
 
         return ViewGenerator.iframeSearch(
                 cachedInitiativeFinder.findIframeInitiatives(search),
-                cachedInitiativeFinder.getMunicipalities(Maybe.fromNullable(search.getMunicipalities())),
+                cachedInitiativeFinder.getMunicipalities(Optional.ofNullable(search.getMunicipalities())),
                 new SearchParameterQueryString(new InitiativeSearch())
         ).view(model, urls.alt().iframe());
     }

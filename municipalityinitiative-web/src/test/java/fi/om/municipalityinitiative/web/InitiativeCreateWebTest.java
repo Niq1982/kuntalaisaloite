@@ -27,7 +27,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String CONTACT_ADDRESS = "Osoitekatu 1 A, 00000 Helsinki";
     private static final String USER_SSN = "010190-0000";
 
-    private static final boolean RUN_HOME_MUNICIPALITY_SELECTION_TESTS = true;
+    private static final boolean RUN_HOME_MUNICIPALITY_SELECTION_TESTS = false;
 
     @Override
     public void childSetup() {

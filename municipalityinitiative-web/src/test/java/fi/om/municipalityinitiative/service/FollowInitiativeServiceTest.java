@@ -12,7 +12,6 @@ import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -22,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -99,7 +99,7 @@ public class FollowInitiativeServiceTest extends ServiceIntegrationTestBase {
         assertThat(sentEmail.getBodyHtml(), containsString(Urls.get(Locales.LOCALE_FI).unsubscribe(id, followers.get(FOLLOWER_EMAIL))));
 
         try {
-            municipalityDecisionService.setDecision(MunicipalityDecisionDto.build(Maybe.of("Päätös teksti")), id, new MunicipalityUserHolder(User.municipalityLoginUser(id)), new Locale("fi"));
+            municipalityDecisionService.setDecision(MunicipalityDecisionDto.build(Optional.of("Päätös teksti")), id, new MunicipalityUserHolder(User.municipalityLoginUser(id)), new Locale("fi"));
         } catch (FileUploadException e) {
             e.printStackTrace();
         } catch (InvalidAttachmentException e) {

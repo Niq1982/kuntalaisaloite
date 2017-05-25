@@ -4,14 +4,15 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import java.util.Optional;
+
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isPresent;
 import static fi.om.municipalityinitiative.web.InitiativeParticipateWebTest.OTHER_USER_SSN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -44,7 +45,7 @@ public class AuthorsWebTest extends WebTestBase {
     private Long normalInitiativeId;
     private Long verifiedInitiativeId;
 
-    private static final boolean RUN_HOME_MUNICIPALITY_SELECTION_TESTS = true;
+    private static final boolean RUN_HOME_MUNICIPALITY_SELECTION_TESTS = false;
 
     @Override
     public void childSetup() {
@@ -531,22 +532,11 @@ public class AuthorsWebTest extends WebTestBase {
         assertTotalEmailsInQueue(2);
     }
 
-    @Test
-    public void login_when_under_aged_gives_error_and_does_not_log_user_in() {
-        vetumaLogin("010110A0000", "Helsinki");
-
-        assertTitle("Tunnistautuminen epäonnistui - Kuntalaisaloitepalvelu");
-        assertThat(getElement(By.tagName("h1")).getText(), containsString("olet alaikäinen"));
-
-        open(urls.frontpage());
-        assertLoginLinkIsVisibleAtHeader();
-    }
-
-    private Maybe<WebElement> rejectInvitationButton() {
+    private Optional<WebElement> rejectInvitationButton() {
         return getOptionalElemContaining("Hylkää kutsu", "span");
     }
 
-    private Maybe<WebElement> acceptInvitationButton() {
+    private Optional<WebElement> acceptInvitationButton() {
         return getOptionalElemContaining("Hyväksy kutsu", "span");
     }
 

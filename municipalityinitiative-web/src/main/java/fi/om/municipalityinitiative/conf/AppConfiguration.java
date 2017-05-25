@@ -14,7 +14,6 @@ import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.email.*;
 import fi.om.municipalityinitiative.service.ui.*;
 import fi.om.municipalityinitiative.util.ImageModifier;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
 import fi.om.municipalityinitiative.validation.LocalValidatorFactoryBeanFix;
 import fi.om.municipalityinitiative.web.*;
@@ -49,6 +48,7 @@ import javax.servlet.SessionCookieConfig;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -427,7 +427,7 @@ public class AppConfiguration {
         boolean testSendModeratorEmailsToAuthor = env.getRequiredProperty(PropertyNames.testEmailSendModeratorEmailsToAuthor, Boolean.class);
 
         return new EnvironmentSettings(defaultReplyTo,
-                Maybe.fromNullable(Strings.emptyToNull(testSendTo)),
+                Optional.ofNullable(Strings.emptyToNull(testSendTo)),
                 testConsoleOutput,
                 moderatorSendTo,
                 testSendMunicipalityEmailsToAuthor,

@@ -14,7 +14,6 @@ import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 
 import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
@@ -113,8 +113,8 @@ public class ParticipantService {
 
     @Transactional(readOnly = false)
     public Long confirmParticipation(Long participantId, String confirmationCode) {
-        Maybe<Long> initiativeId = participantDao.getInitiativeIdByParticipant(participantId);
-        if (initiativeId.isNotPresent()) {
+        Optional<Long> initiativeId = participantDao.getInitiativeIdByParticipant(participantId);
+        if (!initiativeId.isPresent()) {
             throw new InvalidParticipationConfirmationException("No participant with id: " + participantId);
         }
 

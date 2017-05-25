@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +13,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class CachedInitiativeFinder {
 
@@ -40,17 +40,17 @@ public class CachedInitiativeFinder {
     }
 
     @Cacheable("municipality")
-    public Maybe<List<Municipality>> getMunicipalities(Maybe<List<Long>> municipalityIds) {
+    public Optional<List<Municipality>> getMunicipalities(Optional<List<Long>> municipalityIds) {
         List<Municipality> municipalities = new ArrayList<>();
-        if (municipalityIds.isNotPresent()) {
-            return Maybe.absent();
+        if (!municipalityIds.isPresent()) {
+            return Optional.empty();
         }
         for (Municipality o : municipalityService.findAllMunicipalities(Locales.LOCALE_FI)) {
-            if (municipalityIds.getValue().contains(o.getId())) {
+            if (municipalityIds.get().contains(o.getId())) {
                 municipalities.add(o);
             }
         }
-        return Maybe.fromNullable(municipalities);
+        return Optional.ofNullable(municipalities);
     }
 
     @Cacheable("iframe")

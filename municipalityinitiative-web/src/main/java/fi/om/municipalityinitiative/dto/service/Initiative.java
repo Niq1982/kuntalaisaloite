@@ -4,9 +4,10 @@ import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+
+import java.util.Optional;
 
 public class Initiative {
 
@@ -20,7 +21,7 @@ public class Initiative {
 
     private LocalDate createTime;
 
-    private Maybe<LocalDate> sentTime = Maybe.absent();
+    private Optional<LocalDate> sentTime = Optional.empty();
     private InitiativeType type;
     private InitiativeState state;
     private LocalDate stateTime;
@@ -32,19 +33,19 @@ public class Initiative {
     private FixState fixState;
     private DateTime lastEmailReportTime;
     private EmailReportType lastEmailReportType;
-    private Maybe<Long> youthInitiativeId = Maybe.absent();
-    private Maybe<String> decision = Maybe.absent();
-    private Maybe<DateTime> decisionDate = Maybe.absent();
-    private Maybe<DateTime> decisionModifiedDate = Maybe.absent();
-    private Maybe<String> videoUrl = Maybe.absent();
+    private Optional<Long> youthInitiativeId = Optional.empty();
+    private Optional<String> decision = Optional.empty();
+    private Optional<DateTime> decisionDate = Optional.empty();
+    private Optional<DateTime> decisionModifiedDate = Optional.empty();
+    private Optional<String> videoUrl = Optional.empty();
 
 
-    public Maybe<Long> getYouthInitiativeId() {
+    public Optional<Long> getYouthInitiativeId() {
         return youthInitiativeId;
     }
 
     public void setYouthInitiativeId(Long youthInitiativeId) {
-        this.youthInitiativeId = Maybe.of(youthInitiativeId);
+        this.youthInitiativeId = Optional.of(youthInitiativeId);
     }
 
     public String getName() {
@@ -87,11 +88,11 @@ public class Initiative {
         return sentTime.isPresent();
     }
 
-    public Maybe<LocalDate> getSentTime() {
+    public Optional<LocalDate> getSentTime() {
         return sentTime;
     }
 
-    public void setSentTime(Maybe<LocalDate> sentTime) {
+    public void setSentTime(Optional<LocalDate> sentTime) {
         this.sentTime = sentTime;
     }
 
@@ -213,29 +214,29 @@ public class Initiative {
 
 
     public void setDecision(String decision){
-        this.decision = Maybe.of(decision);
+        this.decision = Optional.of(decision);
     }
 
-    public Maybe<String> getDecision() {
+    public Optional<String> getDecision() {
         return decision;
     }
 
-    public void setDecisionDate(DateTime decisionDate) {this.decisionDate = Maybe.of(decisionDate);}
+    public void setDecisionDate(DateTime decisionDate) {this.decisionDate = Optional.of(decisionDate);}
 
-    public Maybe<DateTime> getDecisionDate(){return decisionDate;}
+    public Optional<DateTime> getDecisionDate(){return decisionDate;}
 
-    public Maybe<DateTime> getDecisionModifiedDate() {
+    public Optional<DateTime> getDecisionModifiedDate() {
         return decisionModifiedDate;
     }
     public void setDecisionModifiedDate(DateTime date) {
-        this.decisionModifiedDate = Maybe.of(date);
+        this.decisionModifiedDate = Optional.of(date);
     }
 
     public void setVideoUrl(String videoUrl) {
-        this.videoUrl = Maybe.of(videoUrl);
+        this.videoUrl = Optional.of(videoUrl);
     }
 
-    public Maybe<String> getVideoUrl() {
+    public Optional<String> getVideoUrl() {
         return videoUrl;
     }
 

@@ -19,7 +19,10 @@ import fi.om.municipalityinitiative.service.YouthInitiativeWebServiceNotifier;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.util.FixState;
+import fi.om.municipalityinitiative.util.InitiativeSnapshotCreator;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +30,7 @@ import javax.annotation.Resource;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
 
@@ -139,7 +143,7 @@ public class InitiativeManagementService {
         updateDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
         updateDto.setLocations(locationDao.getLocations(initiativeId));
         if (initiative.getVideoUrl().isPresent()) {
-            updateDto.setVideoUrl(initiative.getVideoUrl().getValue());
+            updateDto.setVideoUrl(initiative.getVideoUrl().get());
         }
         return updateDto;
     }
@@ -160,7 +164,7 @@ public class InitiativeManagementService {
             VerifiedAuthor author = new VerifiedAuthor();
             VerifiedUserDbDetails dbVerifiedUser = userDao.getVerifiedUser(loginUserHolder.getVerifiedUser().getHash()).get();
             author.setContactInfo(dbVerifiedUser.getContactInfo());
-            author.setMunicipality(Maybe.of(initiative.getMunicipality()));
+            author.setMunicipality(Optional.of(initiative.getMunicipality()));
             author.setId(null); // FIXME: Omg
             return author;
         }

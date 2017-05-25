@@ -3,8 +3,9 @@ package fi.om.municipalityinitiative.dto.ui;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
+
+import java.util.Optional;
 
 public class InitiativeListInfo {
     private Long id;
@@ -13,7 +14,7 @@ public class InitiativeListInfo {
     private Municipality municipality;
 
     private boolean collaborative;
-    private Maybe<LocalDate> sentTime;
+    private Optional<LocalDate> sentTime;
     private long participantCount;
     private InitiativeType type;
     private InitiativeState state;
@@ -43,11 +44,11 @@ public class InitiativeListInfo {
         this.collaborative = collaborative;
     }
 
-    public Maybe<LocalDate> getSentTime() {
+    public Optional<LocalDate> getSentTime() {
         return sentTime;
     }
 
-    public void setSentTime(Maybe<LocalDate> sentTime) {
+    public void setSentTime(Optional<LocalDate> sentTime) {
         this.sentTime = sentTime;
     }
 
@@ -71,8 +72,8 @@ public class InitiativeListInfo {
         return type;
     }
 
-    public void setType(InitiativeType typeMaybe) {
-        this.type = typeMaybe;
+    public void setType(InitiativeType typeOptional) {
+        this.type = typeOptional;
     }
 
     public void setState(InitiativeState state) {

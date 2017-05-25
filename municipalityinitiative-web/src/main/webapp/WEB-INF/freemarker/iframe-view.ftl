@@ -36,7 +36,7 @@
     -->
     <#if municipalities.present>
         <#assign pageTitle><@u.message "iframe.initiatives" />
-            <@u.printMunicipalities municipalities.value />
+            <@u.printMunicipalities municipalities.get() />
         </#assign>
     <#else>
         <#assign pageTitle><@u.message "page.iframe" /></#assign>
@@ -104,7 +104,7 @@
     <div id="content-wrapper" class="container">
         <div class="mashup-buttons cf">
             <div class="column col-1of2">
-                <a href="${urls.search()}<#if municipalities.present>${queryString.getWithMunicipalities(municipalities.value)}</#if>"
+                <a href="${urls.search()}<#if municipalities.present>${queryString.getWithMunicipalities(municipalities.get())}</#if>"
                    target="_blank" rel="external" class="small-button"><span class="small-icon next"><@u.message "iframe.browseInitiatives" />
                 </span></a>
                 

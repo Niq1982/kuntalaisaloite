@@ -1,16 +1,17 @@
 package fi.om.municipalityinitiative.dto.service;
 
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReviewHistoryType;
 import org.joda.time.DateTime;
+
+import java.util.Optional;
 
 public class ReviewHistoryRow {
 
     private Long id;
     private ReviewHistoryType type;
     private DateTime created;
-    private Maybe<String> message;
-    private Maybe<String> snapshot;
+    private Optional<String> message;
+    private Optional<String> snapshot;
 
     public Long getId() {
         return id;
@@ -36,19 +37,19 @@ public class ReviewHistoryRow {
         this.created = created;
     }
 
-    public Maybe<String> getMessage() {
+    public Optional<String> getMessage() {
         return message;
     }
 
-    public void setMessage(Maybe<String> message) {
+    public void setMessage(Optional<String> message) {
         this.message = message;
     }
 
-    public Maybe<String> getSnapshot() {
+    public Optional<String> getSnapshot() {
         return snapshot;
     }
 
-    public void setSnapshot(Maybe<String> snapshot) {
+    public void setSnapshot(Optional<String> snapshot) {
         this.snapshot = snapshot;
     }
 }

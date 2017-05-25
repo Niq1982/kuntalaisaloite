@@ -36,7 +36,7 @@ public class ManagementSettings {
     public boolean isAllowSendToMunicipality() {
         return ((initiative.getState().equals(InitiativeState.ACCEPTED) && initiative.getType().isNotVerifiable()) // Only normal initiatives may be sent straight to municipality
                 || initiative.getState().equals(InitiativeState.PUBLISHED))
-                && initiative.getSentTime().isNotPresent()
+                && !initiative.getSentTime().isPresent()
                 && initiative.getFixState() == FixState.OK;
     }
 
@@ -52,13 +52,13 @@ public class ManagementSettings {
     }
 
     public boolean isAllowInviteAuthors() {
-        return initiative.getSentTime().isNotPresent() && initiative.getFixState() == FixState.OK
+        return !initiative.getSentTime().isPresent() && initiative.getFixState() == FixState.OK
                 && (initiative.getState() == InitiativeState.ACCEPTED || initiative.getState() == InitiativeState.PUBLISHED);
     }
 
     public boolean isAllowOmSendBackForFixing() {
         return (initiative.getState() == InitiativeState.PUBLISHED || initiative.getState() == InitiativeState.ACCEPTED)
-                && initiative.getSentTime().isNotPresent()
+                && !initiative.getSentTime().isPresent()
                 && initiative.getFixState() == FixState.OK;
 
     }

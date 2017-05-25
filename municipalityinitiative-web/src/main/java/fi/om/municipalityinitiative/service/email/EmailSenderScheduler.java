@@ -1,12 +1,12 @@
 package fi.om.municipalityinitiative.service.email;
 
 import fi.om.municipalityinitiative.dto.service.EmailDto;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 public class EmailSenderScheduler {
 
@@ -22,12 +22,12 @@ public class EmailSenderScheduler {
     @Scheduled(fixedDelay = FIXED_DELAY)
     public void sendEmails() {
             try {
-                Maybe<EmailDto> lastSentEmail = Maybe.absent();
+                Optional<EmailDto> lastSentEmail = Optional.empty();
                 do {
                     if (lastSentEmail.isPresent()) {
                         Thread.sleep(DELAY_BETWEEN_EMAILS_MILLIS);
                     }
-                    Maybe<EmailDto> currentEmail = emailSender.popUntriedEmail();
+                    Optional<EmailDto> currentEmail = emailSender.popUntriedEmail();
 
                     if (currentEmail.isPresent()) {
                         try {

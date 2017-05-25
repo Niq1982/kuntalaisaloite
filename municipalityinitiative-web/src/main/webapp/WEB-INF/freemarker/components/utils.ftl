@@ -498,7 +498,7 @@
 </#macro>
 
 <#macro solveMunicipality municipality>
-    <#if municipality.present>${municipality.value.getName(locale)}<#else><@message "vtj.missingMunicipalityData" /></#if>
+    <#if municipality.present>${municipality.get().getName(locale)}<#else><@message "vtj.missingMunicipalityData" /></#if>
 </#macro>
 
 

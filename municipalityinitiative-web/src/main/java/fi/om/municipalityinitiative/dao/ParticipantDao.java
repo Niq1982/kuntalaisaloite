@@ -5,10 +5,10 @@ import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ParticipantDao {
 
@@ -28,7 +28,7 @@ public interface ParticipantDao {
 
     List<VerifiedParticipant> findVerifiedAllParticipants(Long initiativeId, int offset, int limit);
 
-    Maybe<Long> getInitiativeIdByParticipant(Long participantId);
+    Optional<Long> getInitiativeIdByParticipant(Long participantId);
 
     void deleteParticipant(Long initiativeId, Long participantId);
 

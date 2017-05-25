@@ -20,12 +20,12 @@ import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationE
 import fi.om.municipalityinitiative.service.id.NormalParticipantId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.LocalDate;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.dao.Mappings.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
@@ -62,8 +62,8 @@ public class JdbcParticipantDao implements ParticipantDao {
             participant.setMembership(row.get(QVerifiedParticipant.verifiedParticipant.membershipType));
             participant.setHomeMunicipality(
                     row.get(QMunicipality.municipality.id) != null
-                            ? Mappings.parseMaybeMunicipality(row)
-                            : Maybe.absent()
+                            ? Mappings.parseOptionalMunicipality(row)
+                            : Optional.empty()
             );
             return participant;
         }
@@ -81,10 +81,10 @@ public class JdbcParticipantDao implements ParticipantDao {
                     par.setMunicipalityVerified(false);
                     par.setShowName(row.get(participant.showName));
                     if (row.get(QMunicipality.municipality.id) != null) {
-                        par.setHomeMunicipality(Maybe.of(Mappings.parseMunicipality(row)));
+                        par.setHomeMunicipality(Optional.of(Mappings.parseMunicipality(row)));
                     }
                     else {
-                        par.setHomeMunicipality(Maybe.<Municipality>absent());
+                        par.setHomeMunicipality(Optional.<Municipality>empty());
                     }
                     par.setId(new NormalParticipantId(row.get(participant.id)));
                     return par;
@@ -295,7 +295,7 @@ public class JdbcParticipantDao implements ParticipantDao {
 
                 participant.setName(row.get(ParticipateUnionRow.name));
                 participant.setEmail(row.get(ParticipateUnionRow.email));
-                participant.setHomeMunicipality(Maybe.fromNullable(
+                participant.setHomeMunicipality(Optional.ofNullable(
                          (row.get(ParticipateUnionRow.municipality_id) != null)
                             ? new Municipality(row.get(ParticipateUnionRow.municipality_id),
                                  row.get(ParticipateUnionRow.municipality_name_fi),
@@ -348,8 +348,8 @@ public class JdbcParticipantDao implements ParticipantDao {
 
 
     @Override
-    public Maybe<Long> getInitiativeIdByParticipant(Long participantId) {
-        return Maybe.fromNullable(queryFactory.from(QParticipant.participant)
+    public Optional<Long> getInitiativeIdByParticipant(Long participantId) {
+        return Optional.ofNullable(queryFactory.from(QParticipant.participant)
                 .where(QParticipant.participant.id.eq(participantId))
                 .singleResult(QParticipant.participant.municipalityInitiativeId));
     }

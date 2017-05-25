@@ -60,8 +60,8 @@
 
     <@prog.progress initiative />
 
-    <#if decisionInfo.isPresent() >
-        <@e.decisionBlock decisionInfo.getValue() />
+    <#if decisionInfo.present >
+        <@e.decisionBlock decisionInfo.get() />
     </#if>
 
     <#-- VIEW BLOCKS -->
@@ -171,7 +171,7 @@
             <@f.cookieWarning springMacroRequestContext.requestUri />
         </div>
             <#assign hasVerifiedMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present)/>
-            <#assign hasVerifiedSameMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present && user.homeMunicipality.value.id?c == initiative.municipality.id?c)/>
+            <#assign hasVerifiedSameMunicipality = (user.isVerifiedUser() && user.homeMunicipality.present && user.homeMunicipality.get().id?c == initiative.municipality.id?c)/>
 
         <form action="${springMacroRequestContext.requestUri}?formError=participate" method="POST" id="form-participate" class="sodirty dirtylisten js-validate <#if hasErrors>has-errors</#if>"
               data-verified=${hasVerifiedSameMunicipality?c} data-homemunicipality=${hasVerifiedMunicipality?c} data-initiativemunicipality=${initiative.municipality.id} novalidate>
@@ -427,9 +427,9 @@
             var userMunicipalityVerifiedByVetuma = false;
             var userMunicipalityMatchesInitiativeMunicipality = false;
 
-            <#if user.isVerifiedUser() && user.homeMunicipality?? && user.homeMunicipality.isPresent()>
+            <#if user.isVerifiedUser() && user.homeMunicipality?? && user.homeMunicipality.present>
                 userMunicipalityVerifiedByVetuma = true;
-                <#if user.homeMunicipality.value.id == initiative.municipality.id>
+                <#if user.homeMunicipality.get().id == initiative.municipality.id>
                     userMunicipalityMatchesInitiativeMunicipality = true;
                 </#if>
             </#if>

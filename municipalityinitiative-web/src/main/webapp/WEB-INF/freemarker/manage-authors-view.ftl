@@ -160,7 +160,7 @@
 
             <div class="invitation">
                 <#if i.rejected>
-                    <span class="status"><span class="icon-small icon-16 rejected"></span> <@u.message "invitation.rejected" /> <@u.localDate i.rejectTime.value /></span>
+                    <span class="status"><span class="icon-small icon-16 rejected"></span> <@u.message "invitation.rejected" /> <@u.localDate i.rejectTime.get() /></span>
                 <#elseif i.expired>
                     <span class="status"><span class="icon-small icon-16 expired"></span> <@u.message "invitation.expired" /></span>
                     <span class="action no-icon"> <@u.message "invitation.sent" /> <@u.localDate i.invitationTime /></span>

@@ -32,7 +32,7 @@
 
     
     <div class="view-block cf">
-        <#assign videoPresent=initiative.videoUrl.isPresent()/>
+        <#assign videoPresent=initiative.videoUrl.present/>
 
         <h2><@u.message "video.attachVideoLink"/></h2>
 

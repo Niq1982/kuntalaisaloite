@@ -2,15 +2,14 @@ package fi.om.municipalityinitiative.dto.vetuma;
 
 import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
 import java.io.StringReader;
+import java.util.Optional;
 
 import static javax.xml.stream.XMLStreamConstants.*;
 
@@ -78,7 +77,7 @@ public class VTJData {
                 }
             }
 
-            if (vtjData.getMunicipality().isNotPresent()) {
+            if (!vtjData.getMunicipality().isPresent()) {
                 log.warn("Missing municipality code" + vtjData.isFinnishCitizen() + ", " + vtjData.getReturnCodeDescription());
             }
 
@@ -150,11 +149,11 @@ public class VTJData {
         this.lastName = lastName;
     }
 
-    public Maybe<Municipality> getMunicipality() {
+    public Optional<Municipality> getMunicipality() {
         if (Strings.isNullOrEmpty(municipalityCode)) {
-            return Maybe.absent();
+            return Optional.empty();
         }
-        return Maybe.of(new Municipality(Long.valueOf(municipalityCode), municipalityNameFi, municipalityNameSv, Boolean.FALSE));
+        return Optional.of(new Municipality(Long.valueOf(municipalityCode), municipalityNameFi, municipalityNameSv, Boolean.FALSE));
     }
 
     public void setMunicipalityCode(String municipalityCode) {

@@ -42,7 +42,7 @@
                 	</span>
                     <div class="info">
                         <#if row.message.present>
-                            <@u.text row.message.value/>
+                            <@u.text row.message.get()/>
                         </#if>
                         <#if row.type = "REVIEW_SENT">
                             <a href="${urls.moderation(initiative.id, row.id)}#diff"><@u.message key="review.history.show.diff"/></a>
@@ -61,10 +61,10 @@
                 	<h3><@u.message key="review.history.show.diff.current"/></h3>
                 	
                     <ul class="diff-list">
-                        <#list reviewHistoryDiff.value.diff as difRow>
-                            <#if difRow.modificationType.present && difRow.modificationType.value== "INSERT">
+                        <#list reviewHistoryDiff.get().diff as difRow>
+                            <#if difRow.modificationType.present && difRow.modificationType.get()== "INSERT">
                                 <li class="diff-prefix diff-insert">
-                            <#elseif difRow.modificationType.present && difRow.modificationType.value == "DELETE">
+                            <#elseif difRow.modificationType.present && difRow.modificationType.get() == "DELETE">
                                 <li class="diff-prefix diff-delete">
                             <#else>
                                 <li class="diff-prefix">
@@ -78,9 +78,9 @@
                 <div class="diff-col right">
                 	<h3><@u.message key="review.history.show.diff.previous"/></h3>
                 	
-                    <#if reviewHistoryDiff.value.oldText.present>
+                    <#if reviewHistoryDiff.get().oldText.present>
                         <ul class="diff-list">
-                        <#list reviewHistoryDiff.value.oldText.value as oldTextLine>
+                        <#list reviewHistoryDiff.get().oldText.get() as oldTextLine>
                             <li>${oldTextLine}&nbsp;</li>
                         </#list>
                         </ul>

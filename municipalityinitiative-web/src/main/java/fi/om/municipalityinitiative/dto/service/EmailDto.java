@@ -4,10 +4,10 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 
 import java.util.List;
+import java.util.Optional;
 
 public class EmailDto {
 
@@ -29,9 +29,9 @@ public class EmailDto {
 
     private String sender;
 
-    private Maybe<DateTime> succeeded;
+    private Optional<DateTime> succeeded;
 
-    private Maybe<DateTime> lastFailed;
+    private Optional<DateTime> lastFailed;
 
     private boolean tried;
 
@@ -93,11 +93,11 @@ public class EmailDto {
     }
 
     public void setSucceeded(DateTime succeeded) {
-        this.succeeded = Maybe.fromNullable(succeeded);
+        this.succeeded = Optional.ofNullable(succeeded);
     }
 
     public void setLastFailed(DateTime lastFailed) {
-        this.lastFailed = Maybe.fromNullable(lastFailed);
+        this.lastFailed = Optional.ofNullable(lastFailed);
     }
 
     public void setTried(boolean tried) {
@@ -140,11 +140,11 @@ public class EmailDto {
         return sender;
     }
 
-    public Maybe<DateTime> getSucceeded() {
+    public Optional<DateTime> getSucceeded() {
         return succeeded;
     }
 
-    public Maybe<DateTime> getLastFailed() {
+    public Optional<DateTime> getLastFailed() {
         return lastFailed;
     }
 

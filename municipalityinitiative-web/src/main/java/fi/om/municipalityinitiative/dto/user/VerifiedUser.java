@@ -3,9 +3,9 @@ package fi.om.municipalityinitiative.dto.user;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.util.Assert;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class VerifiedUser extends User{
@@ -15,7 +15,7 @@ public class VerifiedUser extends User{
     private final Set<Long> initiativesWithManagementRight;
     private final Set<Long> initiativesWithParticipation;
     private final int age;
-    private final Maybe<Municipality> homeMunicipality;
+    private final Optional<Municipality> homeMunicipality;
     private final VerifiedUserId authorId;
 
     VerifiedUser(VerifiedUserId verifiedUserId,
@@ -23,7 +23,7 @@ public class VerifiedUser extends User{
                  ContactInfo contactInfo,
                  Set<Long> initiativesWithManagementRight,
                  Set<Long> initiativesWithParticipation,
-                 Maybe<Municipality> homeMunicipality,
+                 Optional<Municipality> homeMunicipality,
                  int age) {
         this.hash = hash;
         this.authorId = verifiedUserId;
@@ -64,8 +64,8 @@ public class VerifiedUser extends User{
     @Override
     public boolean municipalityOkForVerifiedParticipation(Long initiativeId, Municipality municipality){
         return !hasParticipatedToInitiative(initiativeId)
-                && (homeMunicipality.isPresent() && homeMunicipality.getValue().getId().equals(municipality.getId())
-                || homeMunicipality.isNotPresent());
+                && (homeMunicipality.isPresent() && homeMunicipality.get().getId().equals(municipality.getId())
+                || !homeMunicipality.isPresent());
     }
 
     @Override
@@ -90,7 +90,7 @@ public class VerifiedUser extends User{
         return initiativesWithManagementRight;
     }
 
-    public Maybe<Municipality> getHomeMunicipality() {
+    public Optional<Municipality> getHomeMunicipality() {
         return homeMunicipality;
     }
 

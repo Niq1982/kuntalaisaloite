@@ -6,7 +6,6 @@ import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.LocalDate;
@@ -15,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class ParticipantToPdfExporterTest {
@@ -44,7 +44,7 @@ public class ParticipantToPdfExporterTest {
         initiative.setName("Koirat pois lähiöistä");
         initiative.setType(verified ? InitiativeType.COLLABORATIVE_CITIZEN : InitiativeType.COLLABORATIVE);
         initiative.setMunicipality(municipality);
-        initiative.setSentTime(Maybe.of(new LocalDate()));
+        initiative.setSentTime(Optional.of(new LocalDate()));
         return initiative;
     }
 
@@ -59,7 +59,7 @@ public class ParticipantToPdfExporterTest {
             NormalParticipant participant = new NormalParticipant();
             participant.setParticipateDate(new LocalDate().minusDays(random.nextInt(60)));
             participant.setName(generateName());
-            participant.setHomeMunicipality(Maybe.of(m));
+            participant.setHomeMunicipality(Optional.of(m));
             participant.setMunicipalityVerified(random.nextInt(20) != 1);
 
             switch( m == municipality ? 3 : random.nextInt(3)) {
@@ -96,7 +96,7 @@ public class ParticipantToPdfExporterTest {
             participant.setParticipateDate(new LocalDate());
             participant.setName(generateName());
             participant.setMunicipalityVerified(new Random().nextInt(100) % 10 == 0);
-            participant.setHomeMunicipality(Maybe.of(municipality));
+            participant.setHomeMunicipality(Optional.of(municipality));
             participants.add(participant);
         }
         return participants;

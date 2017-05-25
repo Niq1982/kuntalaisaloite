@@ -36,8 +36,8 @@
     <#--
      * Municipality infos
     -->
-    <#if currentMunicipalities.present && currentMunicipalities.value?size == 1>
-        <@e.initiativeDescription currentMunicipalities.value[0] />
+    <#if currentMunicipalities.present && currentMunicipalities.get()?size == 1>
+        <@e.initiativeDescription currentMunicipalities.get()[0] />
     </#if>
 
     <div>
@@ -155,12 +155,12 @@
 <div class="search-terms">
     <#if currentMunicipalities.present>
             <h2>
-                <#if currentMunicipalities.value?size = 1>
+                <#if currentMunicipalities.get()?size = 1>
                     <@u.message "searchResults.initiativesInMunicipality" />:
-                <#elseif currentMunicipalities.value?size gt 1>
+                <#elseif currentMunicipalities.get()?size gt 1>
                     <@u.message "searchResults.initiativesInMunicipalities" />:
                 </#if>
-                <@u.printMunicipalities currentMunicipalities.value />
+                <@u.printMunicipalities currentMunicipalities.get() />
             </h2>
     </#if>
 </div>
@@ -202,7 +202,7 @@
                     <#elseif !initiative.sentTime.present>
                         <span class="state"><@u.message "initiative.state.collecting" /></span>
                     <#else>
-                        <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>
+                        <#assign sentTime><@u.localDate initiative.sentTime.get()!"" /></#assign>
                         <span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
                     </#if>
                     <span class="bull">&bull;</span>

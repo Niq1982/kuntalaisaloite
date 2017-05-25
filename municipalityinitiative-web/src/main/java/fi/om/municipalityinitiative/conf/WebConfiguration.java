@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebDevConfiguration;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebProdConfiguration;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginRequest;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.JsonpMessageConverter;
 import fi.om.municipalityinitiative.web.URILocaleResolver;
 import fi.om.municipalityinitiative.web.controller.*;
@@ -29,6 +28,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.dto.vetuma.VetumaRequest.Action.EXTAUTH;
 import static fi.om.municipalityinitiative.dto.vetuma.VetumaRequest.Type.LOGIN;
@@ -85,13 +85,13 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         return env.getProperty(PropertyNames.appVersion, "<no version>");
     }
 
-    public static Maybe<Integer> omPiwicId(Environment env) {
+    public static Optional<Integer> omPiwicId(Environment env) {
         String piwicId = env.getProperty(PropertyNames.omPiwicId);
         if (Strings.isNullOrEmpty(piwicId)) {
-            return Maybe.absent();
+            return Optional.empty();
         }
         else {
-            return Maybe.of(Integer.valueOf(piwicId));
+            return Optional.of(Integer.valueOf(piwicId));
         }
     }
 

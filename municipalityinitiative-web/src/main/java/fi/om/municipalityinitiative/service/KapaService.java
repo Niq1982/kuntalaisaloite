@@ -8,11 +8,11 @@ import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.json.InitiativeListJson;
 import fi.om.municipalityinitiative.dto.service.VerifiedUserDbDetails;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,7 +31,7 @@ public class KapaService {
     @Transactional(readOnly = true)
     public KapaInitiativeResult findInitiativesForUser(String ssn) {
 
-        Maybe<VerifiedUserDbDetails> verifiedUser = userDao.getVerifiedUser(encryptionService.registeredUserHash(ssn));
+        Optional<VerifiedUserDbDetails> verifiedUser = userDao.getVerifiedUser(encryptionService.registeredUserHash(ssn));
 
         if (verifiedUser.isPresent()) {
 

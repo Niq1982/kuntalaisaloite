@@ -1,10 +1,11 @@
 package fi.om.municipalityinitiative.conf;
 
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+
+import java.util.Optional;
 
 @Configuration
 @Import(IntegrationTestConfiguration.class)
@@ -28,7 +29,7 @@ public class IntegrationTestFakeEmailConfiguration {
     @Bean
     public EnvironmentSettings environmentSettings() {
         return new EnvironmentSettings(EMAIL_DEFAULT_REPLY_TO,
-                Maybe.<String>absent(),
+                Optional.<String>empty(),
                 false,
                 EMAIL_DEFAULT_OM,
                 false,

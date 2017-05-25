@@ -9,8 +9,8 @@
 <#macro mobileSearch >
     <div class="open-filters"><b><@u.message "mobile.open.search.filters" /></b> <span class="arrow"></span> </br>
         <@u.message "mobile.filters.selected"/>&nbsp;
-        <#if currentMunicipalities?? && currentMunicipalities.present && currentMunicipalities.value?size gt 0>
-            <@u.printMunicipalities currentMunicipalities.value />
+        <#if currentMunicipalities?? && currentMunicipalities.present && currentMunicipalities.get()?size gt 0>
+            <@u.printMunicipalities currentMunicipalities.get() />
         <#else>
             <@u.message "mobile.allMunicipalities" />
         </#if>
@@ -193,7 +193,7 @@
                 <#elseif !initiative.sentTime.present>
                     <span class="state"><@u.message "initiative.state.collecting" /></span>
                 <#else>
-                    <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>
+                    <#assign sentTime><@u.localDate initiative.sentTime.get()!"" /></#assign>
                     <span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
                 </#if>
                 <span class="title"><span class="name"><@u.limitStringLength initiative.name!"" 150 /></span></span>

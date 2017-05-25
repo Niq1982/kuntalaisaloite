@@ -16,7 +16,6 @@ import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 
 import javax.annotation.Resource;
@@ -48,7 +47,7 @@ public class JdbcAuthorDao implements AuthorDao {
                     author.setId(new NormalAuthorId(row.get(QAuthor.author.participantId)));
                     author.setCreateTime(row.get(QParticipant.participant.participateTime));
                     author.setContactInfo(contactInfo);
-                    author.setMunicipality(Maybe.of(Mappings.parseMunicipality(row)));
+                    author.setMunicipality(Optional.of(Mappings.parseMunicipality(row)));
 
                     return author;
 
@@ -74,7 +73,7 @@ public class JdbcAuthorDao implements AuthorDao {
             author.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
             author.setCreateTime(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
 
-            author.setMunicipality(Mappings.parseMaybeMunicipality(row));
+            author.setMunicipality(Mappings.parseOptionalMunicipality(row));
 
             return author;
         }
@@ -92,7 +91,7 @@ public class JdbcAuthorDao implements AuthorDao {
                     authorInvitation.setEmail(row.get(QAuthorInvitation.authorInvitation.email));
                     authorInvitation.setInvitationTime(row.get(QAuthorInvitation.authorInvitation.invitationTime));
                     authorInvitation.setName(row.get(QAuthorInvitation.authorInvitation.name));
-                    authorInvitation.setRejectTime(Maybe.fromNullable(row.get(QAuthorInvitation.authorInvitation.rejectTime)));
+                    authorInvitation.setRejectTime(Optional.ofNullable(row.get(QAuthorInvitation.authorInvitation.rejectTime)));
 
                     return authorInvitation;
 
@@ -194,7 +193,7 @@ public class JdbcAuthorDao implements AuthorDao {
     @Override
     public List<Author> findAllAuthors(Long initiativeId) {
 
-        // TODO: Would be lovely to do this with sql union, but have no clue on how to do this with querydsl. Maybe later.
+        // TODO: Would be lovely to do this with sql union, but have no clue on how to do this with querydsl. Optional later.
         return new ArrayList<Author>() {{
             addAll(findNormalAuthors(initiativeId));
             addAll(findVerifiedAuthors(initiativeId));
@@ -218,14 +217,14 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public Maybe<NormalAuthorId> getAuthorId(String managementHash) {
+    public Optional<NormalAuthorId> getAuthorId(String managementHash) {
         Long id = queryFactory.from(QAuthor.author)
                 .where(QAuthor.author.managementHash.eq(managementHash))
                 .uniqueResult(QAuthor.author.participantId);
         if (id == null) {
-            return Maybe.absent();
+            return Optional.empty();
         }
-        return Maybe.of(new NormalAuthorId(id));
+        return Optional.of(new NormalAuthorId(id));
     }
 
     @Override

@@ -10,11 +10,12 @@ import org.junit.Test;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static difflib.Delta.TYPE.DELETE;
 import static difflib.Delta.TYPE.INSERT;
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -314,7 +315,7 @@ public class ReviewHistoryDiffTest {
         reviewHistoryRow.setId((long) i);
         reviewHistoryRow.setType(type);
         reviewHistoryRow.setCreated(localDate.toDateTime(new LocalTime(0, 0)));
-        reviewHistoryRow.setSnapshot(Maybe.of(s));
+        reviewHistoryRow.setSnapshot(Optional.of(s));
         return reviewHistoryRow;
     }
 

@@ -16,6 +16,7 @@ import org.joda.time.LocalDateTime;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -94,8 +95,8 @@ public class ReflectionTestUtils {
         if (type.equals(DateTime.class)) {
             return new DateTime(randomInt());
         }
-        if (type.equals(Maybe.class)) {
-            return Maybe.absent(); // TODO: find out the type of the optional object and recursively generate a random non-absent value
+        if (type.equals(Optional.class)) {
+            return Optional.empty(); // TODO: find out the type of the optional object and recursively generate a random non-absent value
         }
 
         if (type.equals(ContactInfo.class)) {

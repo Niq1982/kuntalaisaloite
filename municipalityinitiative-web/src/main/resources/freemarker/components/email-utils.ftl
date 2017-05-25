@@ -178,7 +178,7 @@
 </#macro>
 
 <#macro solveMunicipality municipality>
-    <#if municipality.present>${municipality.value.nameFi} / ${municipality.value.nameSv}<#else>Ei kuntaa / SV Ei kuntaa</#if>
+    <#if municipality.present>${municipality.get().nameFi} / ${municipality.get().nameSv}<#else>Ei kuntaa / SV Ei kuntaa</#if>
 </#macro>
 
 </#escape> 

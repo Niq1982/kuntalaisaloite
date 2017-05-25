@@ -1,16 +1,17 @@
 package fi.om.municipalityinitiative.conf.saml;
 
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.util.Maybe;
+
+import java.util.Optional;
 
 public class SamlUser {
 
     private final String fullName;
     private final String ssn;
     private final String address;
-    private final Maybe<Municipality> municipality;
+    private final Optional<Municipality> municipality;
 
-    public SamlUser(String fullName, String ssn, String address, Maybe<Municipality> municipality) {
+    public SamlUser(String fullName, String ssn, String address, Optional<Municipality> municipality) {
         this.fullName = fullName;
         this.ssn = ssn;
         this.address = address;
@@ -29,7 +30,7 @@ public class SamlUser {
         return address;
     }
 
-    public Maybe<Municipality> getMunicipality() {
+    public Optional<Municipality> getMunicipality() {
         return municipality;
     }
 }

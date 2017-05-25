@@ -26,8 +26,8 @@
 
     <@prog.progress initiative />
 
-    <#if decisionInfo.isPresent() >
-        <@e.decisionBlock decisionInfo.getValue() />
+    <#if decisionInfo.present >
+        <@e.decisionBlock decisionInfo.get() />
     </#if>
 
     <#-- VIEW BLOCKS -->

@@ -17,11 +17,11 @@
 
 <@l.main page="page.moderation" pageTitle=initiative.name!"">
 
-    <#if decisionInfo.isPresent() && !showDecisionForm && !editAttachments>
+    <#if decisionInfo.present && !showDecisionForm && !editAttachments>
         <div class="msg-block cf">
-            <h2><@u.message "municipality.decision.published" /> <@u.localDate decisionInfo.getValue().getDate() />
-                <#if decisionInfo.getValue().getModifiedDate().isPresent()>
-                    (<@u.message "municipality.decision.modified"/> <@u.localDate decisionInfo.getValue().getModifiedDate().value />)
+            <h2><@u.message "municipality.decision.published" /> <@u.localDate decisionInfo.get().date />
+                <#if decisionInfo.get().modifiedDate.present>
+                    (<@u.message "municipality.decision.modified"/> <@u.localDate decisionInfo.get().modifiedDate.get() />)
                 </#if>
             </h2>
             <p><@u.message "municipality.decision.edit"/></p>
@@ -34,7 +34,7 @@
     -->
     <#if showDecisionForm>
         <div class="msg-block cf">
-            <#if decisionInfo.isPresent()>
+            <#if decisionInfo.present>
                 <h2><@u.message "municipality.decision.editDecision" /></h2>
             <#else>
                 <h2><@u.message "municipality.decision.giveDecision" /></h2>
@@ -54,14 +54,14 @@
 
                     <input type="hidden" name="locale" value="${locale}"/>
 
-                    <#if !decisionInfo.isPresent()>
+                    <#if !decisionInfo.present>
                         <div class="input-block-content">
                             <p><@u.message "decision.allowed.fileTypes" /></p>
                             <@f.uploadField path="decision.files[0].file" cssClass="multi" name="files[0].file" multiple=false/>
                         </div>
                     </#if>
 
-                    <#if decisionInfo.isPresent()>
+                    <#if decisionInfo.present>
                         <div class="input-block-content">
                             <button type="submit" class="small-button"><span class="small-icon save-and-send"><@u.message "decision.edit.submit" /></span></button>
                             <a class="small-button" href="${urls.getMunicipalityDecisionView(initiative.id)}"><@u.message "decision.edit.cancel" /></a>
@@ -83,7 +83,7 @@
         <div class="msg-block cf">
             <h2><@u.message "decision.edit.attachments" /></h2>
             <p><@u.message "decision.allowed.fileTypes" /></p>
-            <@e.municipalityAttachmentsView attachments=decisionInfo.getValue().attachments manage=true/>
+            <@e.municipalityAttachmentsView attachments=decisionInfo.get().attachments manage=true/>
 
             <form action="${urls.openDecisionAttachmentsForEdit(initiative.id)}" method="POST" id="form-accept" class="sodirty" enctype="multipart/form-data">
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
@@ -102,8 +102,8 @@
         </div>
     </#if>
 
-    <#if decisionInfo.isPresent() && !showDecisionForm && !editAttachments>
-        <@e.decisionBlock decisionInfo=decisionInfo.getValue() manage=true/>
+    <#if decisionInfo.present && !showDecisionForm && !editAttachments>
+        <@e.decisionBlock decisionInfo=decisionInfo.get() manage=true/>
     </#if>
 
     <@e.initiativeTitle initiative />

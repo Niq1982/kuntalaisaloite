@@ -8,7 +8,6 @@ import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.MunicipalityDecisionService;
 import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SecurityFilter;
 import fi.om.municipalityinitiative.web.Urls;
@@ -23,6 +22,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -75,7 +75,7 @@ public class MunicipalityDecisionController extends BaseController{
 
         InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
-        return showMunicipalityDecisionView(initiativeId, new MunicipalityDecisionDto(), model, locale, loginUserHolder, false, initiative.getDecisionDate().isNotPresent());
+        return showMunicipalityDecisionView(initiativeId, new MunicipalityDecisionDto(), model, locale, loginUserHolder, false, !initiative.getDecisionDate().isPresent());
 
     }
 
@@ -193,9 +193,9 @@ public class MunicipalityDecisionController extends BaseController{
 
     private String showMunicipalityDecisionView(Long initiativeId,  MunicipalityDecisionDto decision, Model model, Locale locale, MunicipalityUserHolder loginUserHolder, boolean editAttachments, boolean showDecisionForm) {
         InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
-        Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
+        Optional<MunicipalityDecisionInfo> decisionInfo = Optional.empty();
         if (initiative.getDecisionDate().isPresent()) {
-            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().getValue(), initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
+            decisionInfo = Optional.of(MunicipalityDecisionInfo.build(initiative.getDecisionText(), initiative.getDecisionDate().get(), initiative.getDecisionModifiedDate(), municipalityDecisionService.getDecisionAttachments(initiativeId)));
         }
 
         return ViewGenerator.municipalityDecisionView(

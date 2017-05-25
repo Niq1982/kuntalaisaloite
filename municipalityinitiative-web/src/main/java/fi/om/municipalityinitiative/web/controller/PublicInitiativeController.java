@@ -14,7 +14,6 @@ import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.*;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Urls;
@@ -33,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.*;
@@ -79,7 +79,7 @@ public class PublicInitiativeController extends BaseController {
 
 
 
-    public PublicInitiativeController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> piwikId) {
+    public PublicInitiativeController(boolean optimizeResources, String resourcesVersion, Optional<Integer> piwikId) {
         super(optimizeResources, resourcesVersion, piwikId);
     }
 
@@ -96,7 +96,7 @@ public class PublicInitiativeController extends BaseController {
         return ViewGenerator.searchView(pageInfo,
                 search,
                 queryString,
-                solveMunicipalityFromListById(pageInfo.municipalities, Maybe.fromNullable(search.getMunicipalities())))
+                solveMunicipalityFromListById(pageInfo.municipalities, Optional.ofNullable(search.getMunicipalities())))
                 .view(model, Urls.get(locale).alt().search() + queryString.get());
     }
 
@@ -110,7 +110,7 @@ public class PublicInitiativeController extends BaseController {
 
         InitiativePageInfo initiativePageView = publicInitiativeService.getInitiativePageDto(initiativeId, loginUserHolder);
 
-        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageView.initiative);
+        Optional<MunicipalityDecisionInfo> municipalityDecisionInfo = municipalityDecisionService.getMunicipalityDecisionInfoOptional(initiativePageView.initiative);
 
         if (initiativePageView.isCollaborative()) {
 
@@ -221,7 +221,7 @@ public class PublicInitiativeController extends BaseController {
                     new FollowInitiativeDto(),
                     new AuthorUIMessage(),
                     supportCountService.getSupportVotesPerDateJson(initiativeId),
-                    municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(initiativeId));
+                    municipalityDecisionService.getMunicipalityDecisionInfoOptional(initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(initiativeId));
 
         }
         else {
@@ -394,7 +394,7 @@ public class PublicInitiativeController extends BaseController {
                     new FollowInitiativeDto(),
                     authorUIMessage,
                     supportCountService.getSupportVotesPerDateJson(initiativeId),
-                    municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageInfo.initiative)
+                    municipalityDecisionService.getMunicipalityDecisionInfoOptional(initiativePageInfo.initiative)
             ).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
@@ -474,7 +474,7 @@ public class PublicInitiativeController extends BaseController {
                     followInitiativeDto,
                     new AuthorUIMessage(),
                     supportCountService.getSupportVotesPerDateJson(id),
-                    municipalityDecisionService.getMunicipalityDecisionInfoMaybe(initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(id));
+                    municipalityDecisionService.getMunicipalityDecisionInfoOptional(initiativePageInfo.initiative)).view(model, Urls.get(locale).alt().view(id));
 
         }
         followInitiativeService.followInitiative(id, followInitiativeDto.getParticipantEmail(), locale);
@@ -497,15 +497,15 @@ public class PublicInitiativeController extends BaseController {
         response.getOutputStream().write(file.getBytes());
     }
 
-    private static Maybe<ArrayList<MunicipalityInfoDto>> solveMunicipalityFromListById(List<MunicipalityInfoDto> municipalities, Maybe<List<Long>> municipalityIds){
-        if (municipalityIds.isNotPresent()) {
-            return Maybe.absent();
+    private static Optional<ArrayList<MunicipalityInfoDto>> solveMunicipalityFromListById(List<MunicipalityInfoDto> municipalities, Optional<List<Long>> municipalityIds){
+        if (!municipalityIds.isPresent()) {
+            return Optional.empty();
         }
         ArrayList<MunicipalityInfoDto> currentMunicipalities = new ArrayList<>();
         for (MunicipalityInfoDto municipality : municipalities) {
             if ((municipalityIds.get().contains(municipality.getId())))
                 currentMunicipalities.add(municipality);
         }
-        return Maybe.of(currentMunicipalities);
+        return Optional.of(currentMunicipalities);
     }
 }

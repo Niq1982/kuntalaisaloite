@@ -7,7 +7,6 @@ import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.mail.MailException;
@@ -15,13 +14,14 @@ import org.springframework.mail.MailException;
 import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
-import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.OptionalMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -181,7 +181,7 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
     private EmailDao popNextEmailFailingEmailDao() {
         return new ReplicatedEmailDao() {
             @Override
-            public Maybe<EmailDto> popUntriedEmailForUpdate() {
+            public Optional<EmailDto> popUntriedEmailForUpdate() {
                 throw new RuntimeException("Dummy exception on popUntriedEmailForUpdate()");
             }
         };
@@ -194,7 +194,7 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
         }
 
         @Override
-        public Maybe<EmailDto> popUntriedEmailForUpdate() {
+        public Optional<EmailDto> popUntriedEmailForUpdate() {
             return emailDao.popUntriedEmailForUpdate();
         }
 

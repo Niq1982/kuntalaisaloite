@@ -1,11 +1,12 @@
 package fi.om.municipalityinitiative.conf;
 
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
+
+import java.util.Optional;
 
 public class EnvironmentSettings {
 
-    private final Maybe<String> testSendTo;
+    private final Optional<String> testSendTo;
     private final String defaultReplyTo;
     private final boolean testConsoleOutput;
     private final boolean testSendMunicipalityEmailsToAuthor;
@@ -23,7 +24,7 @@ public class EnvironmentSettings {
 
 
     public EnvironmentSettings(String defaultReplyTo,
-                               Maybe<String> testSendTo,
+                               Optional<String> testSendTo,
                                boolean testConsoleOutput,
                                String moderatorEmail,
                                boolean testSendMunicipalityEmailsToAuthor,
@@ -59,7 +60,7 @@ public class EnvironmentSettings {
         return defaultReplyTo;
     }
 
-    public Maybe<String> getTestSendTo() {
+    public Optional<String> getTestSendTo() {
         return testSendTo;
     }
 
