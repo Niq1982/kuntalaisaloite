@@ -142,7 +142,7 @@ public class AuthorService {
                 invitation.assertNotRejectedOrExpired();
 
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
-                String managementHash = createAuthorAndParticipant(initiativeId, confirmDto);
+                String managementHash = createAuthorAndParticipant(initiative, confirmDto);
                 emailService.sendAuthorConfirmedInvitation(initiativeId, invitation.getEmail(), managementHash, locale);
                 participantDao.increaseParticipantCountFor(
                         initiativeId,
@@ -155,11 +155,21 @@ public class AuthorService {
         throw new NotFoundException("Invitation with ", "initiative: " + initiativeId + ", invitation: " + confirmDto.getConfirmCode());
     }
 
-    private String createAuthorAndParticipant(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
-        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(confirmDto, initiativeId);
+    private String createAuthorAndParticipant(Initiative initiative, AuthorInvitationUIConfirmDto confirmDto) {
+
+        MunicipalMembershipSolver municipalMembershipSolver = new MunicipalMembershipSolver(User.anonym(), initiative.getMunicipality().getId(), confirmDto);
+
+        municipalMembershipSolver.assertMunicipalityOrMembershipForNormalInitiative();
+
+        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(confirmDto, initiative.getId());
         String managementHash = RandomHashGenerator.longHash();
-        Long participantId = participantDao.prepareConfirmedParticipant(initiativeId, confirmDto.getHomeMunicipality(), participantCreateDto.getEmail(), participantCreateDto.getMunicipalMembership(), confirmDto.getContactInfo().isShowName());
-        NormalAuthorId authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
+        Long participantId = participantDao.prepareConfirmedParticipant(
+                initiative.getId(),
+                municipalMembershipSolver.getHomeMunicipality(),
+                participantCreateDto.getEmail(),
+                municipalMembershipSolver.getMunicipalMembership(),
+                confirmDto.getContactInfo().isShowName());
+        NormalAuthorId authorId = authorDao.createAuthor(initiative.getId(), participantId, managementHash);
         authorDao.updateAuthorInformation(authorId, confirmDto.getContactInfo());
         return managementHash;
     }

@@ -14,6 +14,7 @@ import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
@@ -123,7 +124,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         testHelper.denormalizeParticipantCount(initiativeId);
 
-        precondition(countAllNormalAuthors(), is(1L)); // XXX: This does not care if the authors does not belong to this initiative
+        precondition(currentAuthors(initiativeId).size(), is(1));
         precondition(participantCountOfInitiative(initiativeId), is(1));
 
         authorService.confirmAuthorInvitation(initiativeId, createDto, null);
@@ -145,9 +146,28 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         assertThat(participantCountOfInitiative(initiativeId), is(2));
     }
 
-    @Test
-    public void confirm_verified_author_invitation_adds_new_author_with_given_information() {
-        // TODO: Implement
+    @Test(expected = InvalidHomeMunicipalityException.class)
+    public void confirm_author_invitation_rejects_if_invalid_homeMunicipality_and_membership() {
+
+        Long authorsMunicipality = testHelper.createTestMunicipality("name");
+        Long initiativeId = testHelper.createCollaborativeAccepted(authorsMunicipality);
+        AuthorInvitation invitation = createInvitation(initiativeId);
+
+        AuthorInvitationUIConfirmDto createDto = new AuthorInvitationUIConfirmDto();
+        createDto.setContactInfo(new ContactInfo());
+        createDto.assignInitiativeMunicipality(testMunicipality);
+        createDto.getContactInfo().setName("name");
+        createDto.getContactInfo().setAddress("address");
+        createDto.getContactInfo().setEmail("email");
+        createDto.getContactInfo().setPhone("phone");
+        createDto.getContactInfo().setShowName(true);
+        createDto.setConfirmCode(invitation.getConfirmationCode());
+        createDto.setMunicipalMembership(Membership.community); //XXX: Not tested
+        createDto.setHomeMunicipality(testHelper.createTestMunicipality("asd"));
+        createDto.setMunicipalMembership(Membership.none);
+
+
+        authorService.confirmAuthorInvitation(initiativeId, createDto, Locales.LOCALE_FI);
     }
 
     private List<? extends Author> currentAuthors(Long initiativeId) {

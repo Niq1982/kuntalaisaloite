@@ -54,7 +54,7 @@ public class MunicipalMembershipSolver {
 
     public void assertMunicipalityOrMembershipForNormalInitiative() {
         if (!homeMunicipalityMatches() && userGivenMembership.orElse(Membership.none).equals(Membership.none)) {
-            throw new InvalidHomeMunicipalityException("Unable to create initiative for another municipality without membership.");
+            throw new InvalidHomeMunicipalityException("Unable to create/participate initiative for another municipality without membership.");
         }
     }
 

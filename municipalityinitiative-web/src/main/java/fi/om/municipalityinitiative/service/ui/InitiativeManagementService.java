@@ -149,7 +149,8 @@ public class InitiativeManagementService {
     }
 
     @Transactional(readOnly = true)
-    // TODO: Tests?
+    // XXX: This is something strange. When getting normal author, we get it from the initiative in the db,
+    // but if verified, then we get it from verified_user table?
     public Author getAuthorInformation(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);

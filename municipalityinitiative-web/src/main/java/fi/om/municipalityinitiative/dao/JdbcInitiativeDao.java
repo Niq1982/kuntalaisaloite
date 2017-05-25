@@ -482,14 +482,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public Long prepareInitiative(Long municipalityId) {
-        return queryFactory.insert(municipalityInitiative)
-                .set(municipalityInitiative.municipalityId, municipalityId)
-                .set(municipalityInitiative.type, InitiativeType.UNDEFINED)
-                .executeWithKey(municipalityInitiative.id);
-    }
-
-    @Override
     public void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto) {
         SQLUpdateClause query = queryFactory.update(municipalityInitiative);
         query.set(municipalityInitiative.name, editDto.getName())

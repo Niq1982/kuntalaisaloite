@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
 
 
-public class NormalInitiativeEmailUserServiceIntegrationTest extends ServiceIntegrationTestBase {
+public class NormalInitiativeServiceTest extends ServiceIntegrationTestBase {
 
     @Resource
     private NormalInitiativeService service;
@@ -80,6 +80,7 @@ public class NormalInitiativeEmailUserServiceIntegrationTest extends ServiceInte
         PrepareInitiativeUICreateDto prepareInitiativeUICreateDto = new PrepareInitiativeUICreateDto();
         prepareInitiativeUICreateDto.setMunicipality(testMunicipality.getId());
         prepareInitiativeUICreateDto.setHomeMunicipality(participantMunicipality.getId());
+        prepareInitiativeUICreateDto.setMunicipalMembership(Membership.community);
         prepareInitiativeUICreateDto.setParticipantEmail("authorEmail@example.com");
         Long initiativeId = service.prepareInitiativeWithEmail(prepareInitiativeUICreateDto, Locales.LOCALE_FI);
 
@@ -174,6 +175,7 @@ public class NormalInitiativeEmailUserServiceIntegrationTest extends ServiceInte
         Long initiativesAtFirst = testHelper.countAll(QMunicipalityInitiative.municipalityInitiative);
         PrepareInitiativeUICreateDto createDto = new PrepareInitiativeUICreateDto();
         createDto.setMunicipality(testMunicipality.getId());
+        createDto.setHomeMunicipality(testMunicipality.getId());
         try {
             service.prepareInitiativeWithEmail(createDto, Locales.LOCALE_FI);
             fail("Should have thrown exception");

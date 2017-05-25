@@ -15,7 +15,7 @@ import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
-import fi.om.municipalityinitiative.util.Membership;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,19 +80,24 @@ public class NormalInitiativeService {
 
         assertMunicipalityActive(createDto.getMunicipality());
 
-        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality());
+        MunicipalMembershipSolver municipalMembershipSolver = new MunicipalMembershipSolver(User.anonym(), createDto.getMunicipality(), createDto);
+
+        municipalMembershipSolver.assertMunicipalityOrMembershipForNormalInitiative();
+
+        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), InitiativeType.UNDEFINED);
         boolean showName = true;
         Long participantId = participantDao.prepareConfirmedParticipant(
                 initiativeId,
-                createDto.getHomeMunicipality(),
+                municipalMembershipSolver.getHomeMunicipality(),
                 createDto.getParticipantEmail(),
-                createDto.hasMunicipalMembership() ? createDto.getMunicipalMembership() : Membership.none,
+                createDto.getMunicipalMembership(),
                 showName);
         String managementHash = RandomHashGenerator.longHash();
         NormalAuthorId authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
 
         participantDao.increaseParticipantCountFor(initiativeId,
-                showName, createDto.getMunicipality().equals(createDto.getHomeMunicipality()));
+                showName, municipalMembershipSolver.homeMunicipalityMatches());
+
         emailService.sendPrepareCreatedEmail(initiativeId, authorId, managementHash, locale);
 
         return initiativeId;

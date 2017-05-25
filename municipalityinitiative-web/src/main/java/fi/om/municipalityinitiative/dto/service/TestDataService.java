@@ -74,7 +74,7 @@ public class TestDataService {
 
         this.previousHash = Optional.of(managementHash);
 
-        Long initiativeId = initiativeDao.prepareInitiative(template.initiative.getMunicipality().getId());
+        Long initiativeId = initiativeDao.prepareInitiative(template.initiative.getMunicipality().getId(), InitiativeType.UNDEFINED);
         Long participantId = participantDao.prepareConfirmedParticipant(initiativeId, template.initiative.getMunicipality().getId(), null, Membership.community, template.getAuthor().getContactInfo().isShowName());
         NormalAuthorId authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
 

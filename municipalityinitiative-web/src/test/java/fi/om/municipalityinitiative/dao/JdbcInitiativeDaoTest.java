@@ -117,7 +117,7 @@ public class JdbcInitiativeDaoTest {
         Long initiativeMunicipalityId = testHelper.createTestMunicipality("Initiative municipality");
 
 
-        Long initiativeId = initiativeDao.prepareInitiative(initiativeMunicipalityId);
+        Long initiativeId = initiativeDao.prepareInitiative(initiativeMunicipalityId, InitiativeType.UNDEFINED);
 
         InitiativeDraftUIEditDto initiativeEdit = new InitiativeDraftUIEditDto();
         initiativeEdit.setName(INITIATOR_NAME);

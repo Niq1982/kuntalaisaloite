@@ -26,8 +26,6 @@ public interface InitiativeDao {
 
     InitiativeCounts getPublicInitiativeCounts(Optional<List<Long>> municipalities, InitiativeSearch.Type all);
 
-    Long prepareInitiative(Long municipalityId);
-
     Long prepareInitiative(Long municipalityId, InitiativeType initiativeType);
 
     void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
