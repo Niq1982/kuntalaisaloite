@@ -32,7 +32,8 @@ import java.util.List;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
 
 public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBase{
 
@@ -250,33 +251,6 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
 
         Initiative updated = testHelper.getInitiative(initiativeId);
         assertThat(updated.getParticipantCount(), is(2));
-        assertThat(updated.getParticipantCountPublic(), is(0));
-    }
-
-
-
-    @Test
-    public void delete_verified_participant_decreases_participant_count_council() {
-        Long initiativeId = testHelper.createVerifiedInitiative(
-                new TestHelper.InitiativeDraft(testMunicipalityId)
-                        .withState(InitiativeState.PUBLISHED)
-                        .withType(InitiativeType.COLLABORATIVE_CITIZEN)
-                        .applyAuthor().withShowName(false)
-                        .toInitiativeDraft()
-        );
-        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withShowName(true));
-        testHelper.denormalizeParticipantCount(initiativeId);
-
-        Initiative initiative = testHelper.getInitiative(initiativeId);
-        precondition(initiative.getParticipantCountPublic(), is(1));
-        precondition(initiative.getParticipantCount(), is(2));
-
-        assertParticipantListSize(initiativeId, 2);
-        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId(), true);
-        assertParticipantListSize(initiativeId, 1);
-
-        Initiative updated = testHelper.getInitiative(initiativeId);
-        assertThat(updated.getParticipantCount(), is(1));
         assertThat(updated.getParticipantCountPublic(), is(0));
     }
 

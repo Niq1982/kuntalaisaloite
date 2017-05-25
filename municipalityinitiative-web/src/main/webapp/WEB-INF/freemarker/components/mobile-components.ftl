@@ -40,7 +40,6 @@
 
                 <@f.mobileCheckBox path=currentSearch.type  prefix="type.all" name="type" value="all" id="all"  />
                 <@f.mobileCheckBox path=currentSearch.type  prefix="type.normal" name="type" value="normal" id="normal"  />
-                <@f.mobileCheckBox path=currentSearch.type  prefix="type.council" name="type" value="council" id="council"  />
                 <@f.mobileCheckBox path=currentSearch.type  prefix="type.citizen" name="type" value="citizen" id="citizen"  />
                 <br/>
                 <h3><@u.message "mobile.show"/></h3>

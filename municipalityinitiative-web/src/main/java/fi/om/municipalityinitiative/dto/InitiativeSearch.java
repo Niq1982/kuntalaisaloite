@@ -130,7 +130,6 @@ public class InitiativeSearch {
     public enum Type {
         all,
         normal,
-        council,
         citizen
     }
 

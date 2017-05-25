@@ -148,12 +148,6 @@ public class SearchParameterQueryStringTest {
     }
 
     @Test
-    public void get_with_type_council() {
-        String parameters = new SearchParameterQueryString(initiativeSearch).getWithTypeCouncil();
-        assertThat(parameters, is("?orderBy=latest&show=collecting&municipalities=1&type=council"));
-    }
-
-    @Test
     public void get_with_type_citizen() {
         String parameters = new SearchParameterQueryString(initiativeSearch).getWithTypeCitizen();
         assertThat(parameters, is("?orderBy=latest&show=collecting&municipalities=1&type=citizen"));

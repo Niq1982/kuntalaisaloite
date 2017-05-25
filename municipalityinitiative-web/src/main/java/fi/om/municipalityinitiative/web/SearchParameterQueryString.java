@@ -207,10 +207,4 @@ public class SearchParameterQueryString {
                 .setType(InitiativeSearch.Type.citizen));
     }
 
-    public String getWithTypeCouncil() {
-        return generateParameters(new InitiativeSearch()
-                .setShow(original.getShow())
-                .setMunicipalities(original.getMunicipalities())
-                .setType(InitiativeSearch.Type.council));
-    }
 }
