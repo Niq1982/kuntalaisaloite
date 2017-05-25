@@ -149,14 +149,12 @@ public class PublicInitiativeController extends BaseController {
                               Locale locale,
                               HttpServletRequest request) {
 
-        System.out.println("GOT: " + verifiedSelected);
-
         Urls urls = Urls.get(locale);
         LoginUserHolder loginUserHolder = userService.getLoginUserHolder(request);
 
         if (verifiedSelected && !loginUserHolder.isVerifiedUser()) {
             return contextRelativeRedirect(urls.login(
-                    (locale == Locales.LOCALE_FI ? PREPARE_FI : PREPARE_SV) + "?municipality=" + initiative.getMunicipality()
+                    (locale == Locales.LOCALE_FI ? PREPARE_FI : PREPARE_SV)
             ));
         }
 
@@ -165,14 +163,12 @@ public class PublicInitiativeController extends BaseController {
                     .view(model, urls.alt().prepare());
         }
 
-        // TODO: New initiative creation:
-
         if (InitiativeType.isVerifiable(initiative.getInitiativeType())) {
 
             if (loginUserHolder.isVerifiedUser()) {
                 long initiativeId;
                 try {
-                    initiativeId = verifiedInitiativeService.prepareVerifiedInitiative(loginUserHolder, PrepareSafeInitiativeUICreateDto.parse(initiative));
+                    initiativeId = verifiedInitiativeService.prepareVerifiedInitiative(loginUserHolder.getVerifiedUser(), PrepareSafeInitiativeUICreateDto.parse(initiative));
                 } catch (InvalidHomeMunicipalityException e) {
                     return redirectWithMessage(urls.prepare(), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
                 }

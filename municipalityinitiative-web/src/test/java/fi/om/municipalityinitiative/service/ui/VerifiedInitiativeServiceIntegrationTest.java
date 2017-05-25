@@ -99,7 +99,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     public void preparing_sets_participant_count_to_one_when_adding_new_safe_initiative() {
-        long initiativeId = service.prepareVerifiedInitiative(verifiedLoginUserHolder, prepareSafeUICreateDto());
+        long initiativeId = service.prepareVerifiedInitiative(verifiedLoginUserHolder.getVerifiedUser(), prepareSafeUICreateDto());
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
     }
 
@@ -117,7 +117,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     public void preparing_creates_user_with_given_information_if_not_yet_created() {
         precondition(testHelper.countAll(QVerifiedUser.verifiedUser), is(0L));
 
-        service.prepareVerifiedInitiative(verifiedLoginUserHolder, prepareSafeUICreateDto());
+        service.prepareVerifiedInitiative(verifiedLoginUserHolder.getVerifiedUser(), prepareSafeUICreateDto());
 
         assertThat(testHelper.countAll(QVerifiedUser.verifiedUser), is(1L));
         VerifiedUserDbDetails created = userDao.getVerifiedUser(HASH).get();
@@ -166,8 +166,8 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     @Test
     public void prepare_does_not_create_user_if_already_created() {
         precondition(testHelper.countAll(QVerifiedUser.verifiedUser), is(0L));
-        service.prepareVerifiedInitiative(verifiedLoginUserHolder, prepareSafeUICreateDto());
-        service.prepareVerifiedInitiative(verifiedLoginUserHolder, prepareSafeUICreateDto());
+        service.prepareVerifiedInitiative(verifiedLoginUserHolder.getVerifiedUser(), prepareSafeUICreateDto());
+        service.prepareVerifiedInitiative(verifiedLoginUserHolder.getVerifiedUser(), prepareSafeUICreateDto());
         assertThat(testHelper.countAll(QVerifiedUser.verifiedUser), is(1L));
     }
 
@@ -176,7 +176,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     public void prepare_creates_author_and_participant() {
         precondition(testHelper.countAll(QVerifiedAuthor.verifiedAuthor), is(0L));
         precondition(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(0L));
-        long id = service.prepareVerifiedInitiative(verifiedLoginUserHolder, prepareSafeUICreateDto());
+        long id = service.prepareVerifiedInitiative(verifiedLoginUserHolder.getVerifiedUser(), prepareSafeUICreateDto());
         assertThat(testHelper.countAll(QVerifiedAuthor.verifiedAuthor), is(1L));
         assertThat(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(1L));
 
@@ -244,7 +244,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         thrown.expectMessage(containsString("Municipality is not active"));
 
         LoginUserHolder<VerifiedUser> verifiedLoginUserHolder = verifiedUserHolderWithMunicipalityId(Maybe.of(unactiveMunicipality));
-        service.prepareVerifiedInitiative(verifiedLoginUserHolder, createDto);
+        service.prepareVerifiedInitiative(verifiedLoginUserHolder.getVerifiedUser(), createDto);
     }
 
     @Test
@@ -258,7 +258,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         createDto.setUserGivenHomeMunicipality(municipalityId);
 
         LoginUserHolder<VerifiedUser> verifiedUserLoginUserHolder = verifiedUserHolderWithMunicipalityId(Maybe.<Long>absent());
-        long initiativeId = service.prepareVerifiedInitiative(verifiedUserLoginUserHolder, createDto);
+        long initiativeId = service.prepareVerifiedInitiative(verifiedUserLoginUserHolder.getVerifiedUser(), createDto);
 
         // Update users information with municipality
         userDao.updateUserInformation(
@@ -275,7 +275,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     @Test
     public void preparing_safe_initiative_sets_initiative_type_and_municipality() {
         PrepareSafeInitiativeUICreateDto createDto = prepareSafeUICreateDto();
-        long initiativeId = service.prepareVerifiedInitiative(verifiedLoginUserHolder, createDto);
+        long initiativeId = service.prepareVerifiedInitiative(verifiedLoginUserHolder.getVerifiedUser(), createDto);
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
 
@@ -291,7 +291,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         thrown.expect(InvalidHomeMunicipalityException.class);
 
-        service.prepareVerifiedInitiative(verifiedLoginUserHolder, createDto);
+        service.prepareVerifiedInitiative(verifiedLoginUserHolder.getVerifiedUser(), createDto);
     }
 
     @Test
@@ -303,7 +303,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         thrown.expect(InvalidHomeMunicipalityException.class);
 
-        service.prepareVerifiedInitiative(verifiedUserHolderWithMunicipalityId(Maybe.<Long>absent()), createDto);
+        service.prepareVerifiedInitiative(verifiedUserHolderWithMunicipalityId(Maybe.<Long>absent()).getVerifiedUser(), createDto);
 
     }
 

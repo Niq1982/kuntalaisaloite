@@ -44,14 +44,9 @@ public class VerifiedInitiativeService {
     private AuthorDao authorDao;
 
     @Transactional(readOnly = false)
-    public long prepareVerifiedInitiative(LoginUserHolder loginUserHolder, PrepareSafeInitiativeUICreateDto uiCreateDto) {
+    public long prepareVerifiedInitiative(VerifiedUser verifiedUser, PrepareSafeInitiativeUICreateDto uiCreateDto) {
 
-        VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
-
-        if (municipalityMismatch(uiCreateDto.getMunicipality(), uiCreateDto.getUserGivenHomeMunicipality(), verifiedUser.getHomeMunicipality())) {
-            return municipalityException(uiCreateDto.getMunicipality());
-        }
-
+        requireCorrectHomeMunicipality(verifiedUser, uiCreateDto.getMunicipality(), uiCreateDto.getUserGivenHomeMunicipality());
         assertMunicipalityIsActive(uiCreateDto.getMunicipality());
 
         Long initiativeId = initiativeDao.prepareInitiative(uiCreateDto.getMunicipality(), uiCreateDto.getInitiativeType());

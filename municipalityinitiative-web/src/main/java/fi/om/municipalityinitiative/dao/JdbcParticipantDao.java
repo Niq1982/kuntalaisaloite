@@ -10,7 +10,10 @@ import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.Path;
 import com.mysema.query.types.expr.DslExpression;
-import com.mysema.query.types.path.*;
+import com.mysema.query.types.path.BooleanPath;
+import com.mysema.query.types.path.DatePath;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.StringPath;
 import com.mysema.query.types.query.ListSubQuery;
 import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationException;
@@ -369,14 +372,14 @@ public class JdbcParticipantDao implements ParticipantDao {
 
 
     @Override
-    public void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName, boolean verifiedMunicipality, Long homeMunicipalityId, Membership municipalMembership) {
+    public void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName, boolean verifiedMunicipality, Long homeMunicipality, Membership municipalMembership) {
 
         assertSingleAffection(queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, userId.toLong())
                 .set(QVerifiedParticipant.verifiedParticipant.showName, showName)
                 .set(QVerifiedParticipant.verifiedParticipant.verified, verifiedMunicipality)
-                .set(QVerifiedParticipant.verifiedParticipant.municipalityId, homeMunicipalityId)
+                .set(QVerifiedParticipant.verifiedParticipant.municipalityId, homeMunicipality)
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, municipalMembership == null ? Membership.none : municipalMembership)
                 .execute());
 
