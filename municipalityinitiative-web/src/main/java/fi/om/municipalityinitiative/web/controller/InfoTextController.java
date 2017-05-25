@@ -51,11 +51,23 @@ public class InfoTextController extends BaseController {
     public String help(Model model, Locale locale, HttpServletRequest request) {
 
         Urls urls = Urls.get(locale);
+        Map<String, List<InfoTextSubject>> publicSubjectList = infoTextService.getPublicSubjectList(locale);
 
         model.addAttribute(ALT_URI_ATTR, urls.alt().help(""));
-        model.addAttribute("helpPage", "");
-        model.addAttribute("categoryLinksMap", infoTextService.getPublicSubjectList(locale));
-        model.addAttribute("content", null);
+
+        model.addAttribute("categoryLinksMap", publicSubjectList);
+
+        InfoTextSubject firstUnderMain = publicSubjectList.get("MAIN").get(0);
+
+        if (firstUnderMain != null) {
+            model.addAttribute("content", infoTextService.getPublished(firstUnderMain.getUri()));
+            model.addAttribute("helpPage", firstUnderMain.getUri());
+        }
+        else {
+            model.addAttribute("content", null);
+            model.addAttribute("helpPage", "");
+        }
+
         model.addAttribute("omUser", userService.getUser(request).isOmUser());
 
         addPiwicIdIfNotAuthenticated(model, request);
@@ -76,12 +88,7 @@ public class InfoTextController extends BaseController {
         model.addAttribute(ALT_URI_ATTR, urls.alt().help(""));
         model.addAttribute("helpPage", localizedPageName);
         model.addAttribute("categoryLinksMap", infoTextService.getPublicSubjectList(locale));
-        if (urls.isShortlyPage(localizedPageName)) {
-            model.addAttribute("showInfoGraph", true);
-        }
-        else {
-            model.addAttribute("content", infoTextService.getPublished(localizedPageName));
-        }
+        model.addAttribute("content", infoTextService.getPublished(localizedPageName));
 
         model.addAttribute("omUser", userService.getUser(request).isOmUser());
 

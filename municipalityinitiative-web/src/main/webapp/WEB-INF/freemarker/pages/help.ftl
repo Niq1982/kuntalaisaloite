@@ -24,15 +24,12 @@
 -->
 <#macro navigation map titleKey="" cssClass="">
     <#if cssClass == "box">
-        <a href="${urls.helpIndex()}" class="${(helpPage == "lyhyesti" || helpPage == "")?string("active","")} ${cssClass}">
-            <span class="help-nav-icon icon-info"><@u.message "infoGraph.title" /></span>
-        </a>
         <#list map as link>
             <a href="${urls.help(link.uri)}" class="${(link.uri == helpPage)?string("active","")} ${cssClass} ${link_has_next?string("","last")}">
                 <#-- NOTE: we could also use urls (fi/sv) to determine the class -->
-                <#if link_index == 0>
+                <#if link_index == 1>
                     <#assign iconClass="author" />
-                <#elseif link_index == 1>
+                <#elseif link_index == 2>
                     <#assign iconClass="participants" />
                 <#else>
                     <#assign iconClass="info" />
@@ -53,15 +50,12 @@
 
 <#macro navigationMobile map titleKey="" cssClass="">
     <#if cssClass == "box-mobile">
-        <a href="${urls.helpInitiativeGraphMobile()}" class="${cssClass}">
-            <span class="help-nav-icon icon-info"><@u.message "infoGraph.title" /></span>
-        </a>
         <#list map as link>
         <a href="${urls.help(link.uri)}" class="${cssClass} ${link_has_next?string("","last")}">
         <#-- NOTE: we could also use urls (fi/sv) to determine the class -->
-            <#if link_index == 0>
+            <#if link_index == 1>
                 <#assign iconClass="author" />
-            <#elseif link_index == 1>
+            <#elseif link_index == 2>
                 <#assign iconClass="participants" />
             <#else>
                 <#assign iconClass="info" />
@@ -90,13 +84,9 @@
 
 <#macro helpNavigationMobile>
     <div class="navigation-mobile" >
-        <#if content?? || (showInfoGraph?? && showInfoGraph)>
-            <a href="${urls.helpIndex()}" class="back-link"> <@u.message "mobile.help.frontpage"/> </a>
-        <#else>
-            <@navigationMobile categoryLinksMap['MAIN'] "" "box-mobile" />
+        <@navigationMobile categoryLinksMap['MAIN'] "" "box-mobile" />
             <@navigationMobile categoryLinksMap['KUNTALAISALOITE_FI'] "help.service.title" />
             <@navigationMobile categoryLinksMap['KUNTALAISALOITE'] "help.general.title" />
-        </#if>
     </div>
 </#macro>
 <#--
@@ -118,9 +108,25 @@
             </div>
         </#if>
 
-        <#-- Static content for the info graph -->
-        <#include "include_help_content.ftl" />
-        <#include "include_help_content_mobile.ftl" />
+        <#-- InfoText content -->
+
+        <div class="column col-3of4 last">
+            <#if content??>
+                <div class="help-text-content">
+                    <h1>${content.subject!""}</h1>
+                    <#noescape>${content.content!""}</#noescape>
+                </div>
+            </#if>
+        </div>
+
+
+        <#-- InfoText content mobile -->
+        <#if content??>
+            <div class="help-text-content-mobile bread-text">
+                <h1>${content.subject!""}</h1>
+                <#noescape>${content.content!""}</#noescape>
+            </div>
+        </#if>
 
     </div>
 

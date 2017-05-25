@@ -126,10 +126,6 @@ public final class Urls {
 
     public static final String HISTORY_ITEM_PARAMETER = "historyItem";
 
-    public static final String HELP_SHORTLY_FI = "lyhyesti";
-
-    public static final String HELP_SHORTLY_SV = "kort";
-
     public static Urls FI = null;
     
     public static Urls SV = null;
@@ -408,9 +404,6 @@ public final class Urls {
         this.superSearchBaseUrl =  superSearchBaseUrl;
     }
 
-    public boolean isShortlyPage(String localizedPageName) {
-        return HELP_SHORTLY_FI.equals(localizedPageName) || HELP_SHORTLY_SV.equals(localizedPageName);
-    }
 
     public String getBaseUrl() {
         return baseUrl;
@@ -435,10 +428,6 @@ public final class Urls {
 
     public String help(String localizedPageName) {
         return getLocalizedPageUrl(HELP_FI, HELP_SV).replace(HELP_PAGE_PARAMETER, localizedPageName);
-    }
-
-    public String helpInitiativeGraphMobile() {
-        return getLocalizedPageUrl(HELP_FI, HELP_SV).replace(HELP_PAGE_PARAMETER, getLocalizedParameter(HELP_SHORTLY_FI, HELP_SHORTLY_SV));
     }
 
     public String getLocalizedParameter(String parameterFi, String parameterSv) {
