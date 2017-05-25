@@ -5,16 +5,20 @@ import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.service.VerifiedUserDbDetails;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.NormalLoginUser;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.hash.PreviousHashGetter;
 import fi.om.municipalityinitiative.web.Urls;
@@ -23,6 +27,7 @@ import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
@@ -355,6 +360,60 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount + 1));
         assertThat(getSingleInitiativeInfo().getParticipantCountPublic(), is(originalParticipantCountPublic +1));
         assertThat(getSingleInitiativeInfo().getParticipantCountCitizen(), is(originalParticipantCountCitizen));
+
+    }
+
+    @Test
+    public void create_participant_is_not_allowed_if_municipality_mismatch() {
+
+        Long initiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId)
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE));
+
+        ParticipantUICreateDto participant = new ParticipantUICreateDto() {{
+            assignInitiativeMunicipality(testMunicipalityId); // YNGH wuut
+            setMunicipalMembership(Membership.none);
+            setShowName(true);
+            setHomeMunicipality(anotherMunicipality);
+            setParticipantEmail("some@example.com");
+        }};
+
+        expectedException.expect(InvalidHomeMunicipalityException.class);
+        participantService.createParticipant(participant, initiative, Locales.LOCALE_FI);
+
+    }
+
+    @Test
+    @Transactional
+    public void create_participant_adds_membership_and_verified_info() {
+
+        Long initiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId)
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE));
+
+        ParticipantUICreateDto participant = new ParticipantUICreateDto() {{
+            assignInitiativeMunicipality(testMunicipalityId); // YNGH wuut
+            setMunicipalMembership(Membership.community);
+            setShowName(true);
+            setHomeMunicipality(anotherMunicipality);
+            setParticipantEmail("some@example.com");
+        }};
+
+
+        precondition(participantDao.findAllParticipants(initiative, false, 0, Integer.MAX_VALUE), hasSize(0));
+
+        Long participantId = participantService.createParticipant(participant, initiative, Locales.LOCALE_FI);
+        participantService.confirmParticipation(participantId, PreviousHashGetter.get());
+
+        List<Participant> allParticipants = participantDao.findAllParticipants(initiative, false, 0, Integer.MAX_VALUE);
+
+        assertThat(allParticipants, hasSize(1));
+        Participant theParticipant = allParticipants.get(0);
+
+        assertThat(theParticipant.getMembership(), is(Membership.community));
+        assertThat(theParticipant.isMunicipalityVerified(), is(false));
+        assertThat(theParticipant.isVerified(), is(false));
+        assertThat(((Municipality) theParticipant.getHomeMunicipality().get()).getId(), is(anotherMunicipality));
 
     }
 

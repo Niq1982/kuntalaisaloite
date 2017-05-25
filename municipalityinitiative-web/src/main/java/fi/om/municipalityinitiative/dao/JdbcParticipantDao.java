@@ -15,7 +15,10 @@ import com.mysema.query.types.path.DatePath;
 import com.mysema.query.types.path.NumberPath;
 import com.mysema.query.types.path.StringPath;
 import com.mysema.query.types.query.ListSubQuery;
-import fi.om.municipalityinitiative.dto.service.*;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.NormalParticipant;
+import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationException;
 import fi.om.municipalityinitiative.service.id.NormalParticipantId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
@@ -33,6 +36,9 @@ import static fi.om.municipalityinitiative.sql.QVerifiedParticipant.verifiedPart
 
 @SQLExceptionTranslated
 public class JdbcParticipantDao implements ParticipantDao {
+
+    @Resource
+    PostgresQueryFactory queryFactory;
 
     static final Expression<VerifiedParticipant> verifiedParticipantMapping = new MappingProjection<VerifiedParticipant>(
             VerifiedParticipant.class,
@@ -91,24 +97,21 @@ public class JdbcParticipantDao implements ParticipantDao {
 
                 }
             };
-    @Resource
-    PostgresQueryFactory queryFactory;
 
     @Override
-    public Long create(ParticipantCreateDto createDto, String confirmationCode) {
-
+    public Long create(Long initiativeId, String participantName, Boolean showName, String participantEmail, String confirmationCode, Long homeMunicipality, Membership membership) {
         if (confirmationCode == null) {
             throw new NullPointerException("confirmationCode may not be null");
         }
 
         return queryFactory.insert(participant)
-                .set(participant.municipalityId, createDto.getHomeMunicipality())
-                .set(participant.municipalityInitiativeId, createDto.getMunicipalityInitiativeId())
-                .set(participant.name, createDto.getParticipantName())
-                .set(participant.showName, createDto.isShowName())
-                .set(participant.email, createDto.getEmail())
+                .set(participant.municipalityInitiativeId, initiativeId)
+                .set(participant.municipalityId, homeMunicipality)
+                .set(participant.name, participantName)
+                .set(participant.showName, showName)
+                .set(participant.email, participantEmail)
                 .set(participant.confirmationCode, confirmationCode)
-                .set(participant.membershipType, createDto.getMunicipalMembership())
+                .set(participant.membershipType, membership)
                 .executeWithKey(participant.id);
     }
 

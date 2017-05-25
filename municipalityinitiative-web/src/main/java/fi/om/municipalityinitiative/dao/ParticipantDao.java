@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.Participant;
-import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Membership;
@@ -14,7 +13,7 @@ public interface ParticipantDao {
 
     Long prepareConfirmedParticipant(Long initiativeId, Long homeMunicipality, String email, Membership membership, boolean showName);
 
-    Long create(ParticipantCreateDto createDto, String confirmationCode);
+    Long create(Long initiativeId, String participantName, Boolean showName, String participantEmail, String confirmationCode, Long homeMunicipality, Membership membership);
 
     NormalParticipant confirmParticipation(Long participantId, String confirmationCode);
 

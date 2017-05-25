@@ -9,10 +9,12 @@ import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationException;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
+import fi.om.municipalityinitiative.service.ui.MunicipalMembershipSolver;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
@@ -122,7 +124,8 @@ public class ParticipantService {
         assertAllowance("Confirm participation", ManagementSettings.of(initiative).isAllowParticipation());
         NormalParticipant normalParticipant = participantDao.confirmParticipation(participantId, confirmationCode);
 
-        participantDao.increaseParticipantCountFor(initiativeId.get(), normalParticipant.isShowName(),
+        participantDao.increaseParticipantCountFor(initiativeId.get(),
+                normalParticipant.isShowName(),
                 normalParticipant.getHomeMunicipality().isPresent() && normalParticipant.getHomeMunicipality().get().getId().equals(initiative.getMunicipality().getId())
                 );
 
@@ -132,14 +135,25 @@ public class ParticipantService {
     @Transactional(readOnly = false)
     public Long createParticipant(ParticipantUICreateDto participant, Long initiativeId, Locale locale) {
 
-        assertAllowance("Allowed to participate", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipation());
+        Initiative initiative = initiativeDao.get(initiativeId);
+        assertAllowance("Allowed to participate", ManagementSettings.of(initiative).isAllowParticipation());
+
+        MunicipalMembershipSolver municipalMembershipSolver = new MunicipalMembershipSolver(User.anonym(), initiative.getMunicipality().getId(), participant);
+
+        municipalMembershipSolver.assertMunicipalityOrMembershipForNormalInitiative();
 
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant, initiativeId);
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
 
-
         String confirmationCode = RandomHashGenerator.shortHash();
-        Long participantId = participantDao.create(participantCreateDto, confirmationCode);
+
+        Long participantId = participantDao.create(initiative.getId(),
+                participant.getParticipantName(),
+                participant.getShowName(),
+                participant.getParticipantEmail(),
+                confirmationCode,
+                municipalMembershipSolver.getHomeMunicipality(),
+                municipalMembershipSolver.getMunicipalMembership());
 
         emailService.sendParticipationConfirmation(
                 initiativeId,

@@ -154,8 +154,12 @@ public class TestDataService {
 
     @Transactional(readOnly = false)
     public void createTestParticipant(Long initiativeId, ParticipantUICreateDto createDto) {
-        Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId), "confirmationCode");
-        participantDao.confirmParticipation(participantId, "confirmationCode");
+
+        String confirmationCode = "confirmationCode";
+        Long participant = participantDao.create(initiativeId,
+                createDto.getParticipantName(), createDto.getShowName(), createDto.getParticipantEmail(), confirmationCode, createDto.getHomeMunicipality(), createDto.getMunicipalMembership());
+
+        participantDao.confirmParticipation(participant, confirmationCode);
     }
 
     @Transactional(readOnly = false)

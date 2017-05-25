@@ -27,6 +27,7 @@ import static fi.om.municipalityinitiative.util.Membership.none;
 import static fi.om.municipalityinitiative.util.OptionalMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static fi.om.municipalityinitiative.web.Urls.MAX_PARTICIPANT_LIST_LIMIT;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -62,17 +63,18 @@ public class JdbcParticipantDaoTest {
     }
 
     @Test
-    public void adds_new_participants() {
-        precondition(testHelper.countAll(QParticipant.participant), is(0L));
-        participantDao.confirmParticipation(participantDao.create(participantCreateDto(), CONFIRMATION_CODE), CONFIRMATION_CODE);
-        assertThat(testHelper.countAll(QParticipant.participant), is(1L));
-    }
-
-    @Test
     public void participant_information_is_saved() {
         precondition(participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE), hasSize(0));
 
-        participantDao.confirmParticipation(participantDao.create(participantCreateDto(), CONFIRMATION_CODE), CONFIRMATION_CODE);
+        participantDao.confirmParticipation(participantDao.create(
+                testInitiativeId,
+                PARTICIPANTS_NAME,
+                true,
+                PARTICIPANT_EMAIL,
+                CONFIRMATION_CODE,
+                otherMunicipalityId,
+                PARTICIPANT_MEMBERSHIP),
+        CONFIRMATION_CODE);
         List<Participant> allParticipants = participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE);
 
         assertThat(allParticipants, hasSize(1));
@@ -81,6 +83,7 @@ public class JdbcParticipantDaoTest {
         assertThat(participant.getName(), is(PARTICIPANTS_NAME));
         Optional<Municipality> homeMunicipality = participant.getHomeMunicipality();
         assertThat(homeMunicipality.get().getId(), is(otherMunicipalityId));
+        assertThat(participant.isShowName(), is(true));
         assertThat(participant.getParticipateDate(), is(notNullValue()));
         assertThat(participant.getEmail(), is(PARTICIPANT_EMAIL));
         assertThat(participant.getMembership(), is(PARTICIPANT_MEMBERSHIP));
@@ -351,18 +354,33 @@ public class JdbcParticipantDaoTest {
 
     @Test
     public void findAllParticipants_returns_only_confirmed_participants() {
-        ParticipantCreateDto newParticipant = participantCreateDto();
 
         precondition(participantDao.findAllParticipants(testInitiativeId, false, 0, MAX_PARTICIPANT_LIST_LIMIT), hasSize(0));
 
-        Long unconfirmedParticipant = participantDao.create(newParticipant, CONFIRMATION_CODE);
+        Long unconfirmedParticipant = participantDao.create(
+                testInitiativeId,
+                PARTICIPANTS_NAME,
+                true,
+                PARTICIPANT_EMAIL,
+                randomAlphabetic(10),
+                otherMunicipalityId,
+                PARTICIPANT_MEMBERSHIP);
 
         assertThat(participantDao.findAllParticipants(testInitiativeId, false, 0, MAX_PARTICIPANT_LIST_LIMIT), hasSize(0));
 
         String confirmedParticipantName = "Some Confirmed Participant";
-        newParticipant.setParticipantName(confirmedParticipantName);
-        Long confirmedParticipant = participantDao.create(newParticipant, CONFIRMATION_CODE);
-        participantDao.confirmParticipation(confirmedParticipant, CONFIRMATION_CODE);
+        String confirmationCode = "121212212";
+        Long confirmedParticipant =
+                participantDao.create(
+                        testInitiativeId,
+                        confirmedParticipantName,
+                        true,
+                        PARTICIPANT_EMAIL,
+                        confirmationCode,
+                        otherMunicipalityId,
+                        PARTICIPANT_MEMBERSHIP);
+
+        participantDao.confirmParticipation(confirmedParticipant, confirmationCode);
 
         List<Participant> allParticipants = participantDao.findAllParticipants(testInitiativeId, false, 0, MAX_PARTICIPANT_LIST_LIMIT);
 
@@ -417,16 +435,37 @@ public class JdbcParticipantDaoTest {
 
         int originalParticipantCount = participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE).size();
 
+        // First participant
         String participantConfirmationCode = "someConfirmationCode";
-        ParticipantCreateDto createDto = participantCreateDto();
-        createDto.setShowName(true);
-        Long participantId = participantDao.create(createDto, participantConfirmationCode);
+        Long participantId = participantDao.create(
+                testInitiativeId,
+                "First participant",
+                true,
+                "some@example.com",
+                participantConfirmationCode,
+                testMunicipalityId,
+                none
+        );
 
-        participantDao.create(participantCreateDto(), CONFIRMATION_CODE); // Some other unconfirmed participant
+        // Second participant
+        String participantConfirmationCode2 = "confirmationCode2";
+        Long participant2 = participantDao.create(
+                testInitiativeId,
+                "First participant",
+                true,
+                "some@example.com",
+                participantConfirmationCode2,
+                testMunicipalityId,
+                none
+        );
+
         assertThat(participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE), hasSize(originalParticipantCount));
 
         participantDao.confirmParticipation(participantId, participantConfirmationCode);
         assertThat(participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE), hasSize(originalParticipantCount + 1));
+
+        participantDao.confirmParticipation(participant2, participantConfirmationCode2);
+        assertThat(participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE), hasSize(originalParticipantCount + 2));
     }
 
     @Test
@@ -453,7 +492,14 @@ public class JdbcParticipantDaoTest {
         participantCreateDto.setHomeMunicipality(homeMunicipality);
         participantCreateDto.setShowName(publicName);
         participantCreateDto.setMunicipalMembership(PARTICIPANT_MEMBERSHIP);
-        Long participantId = participantDao.create(participantCreateDto, CONFIRMATION_CODE);
+        Long participantId = participantDao.create(
+                initiativeId,
+                participantName,
+                publicName,
+                null, // ??
+                CONFIRMATION_CODE,
+                homeMunicipality,
+                PARTICIPANT_MEMBERSHIP);
         participantDao.confirmParticipation(participantId, CONFIRMATION_CODE);
         return participantId;
     }
