@@ -227,7 +227,7 @@ public class PublicInitiativeController extends BaseController {
         else {
             if (initiativePageInfo.isVerifiable() || loginUserHolder.isVerifiedUser()) {
                 try {
-                    verifiedInitiativeService.createParticipant(participant, initiativeId, loginUserHolder);
+                    verifiedInitiativeService.createParticipant(participant, initiativeId, loginUserHolder.getVerifiedUser());
                     userService.refreshUserData(request);
                 } catch (InvalidHomeMunicipalityException e) {
                     return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
@@ -338,7 +338,7 @@ public class PublicInitiativeController extends BaseController {
 
         if (initiativeInfo.isVerifiable() || loginUserHolder.isVerifiedUser()) {
             try {
-                verifiedInitiativeService.confirmVerifiedAuthorInvitation(loginUserHolder, initiativeId, confirmDto, locale);
+                verifiedInitiativeService.confirmVerifiedAuthorInvitation(loginUserHolder.getVerifiedUser(), initiativeId, confirmDto, locale);
                 userService.refreshUserData(request);
                 return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.CONFIRM_INVITATION_ACCEPTED, request);
             } catch (InvalidHomeMunicipalityException e) {

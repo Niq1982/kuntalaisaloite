@@ -6,10 +6,8 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
-import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
@@ -99,13 +97,8 @@ public class VerifiedInitiativeService {
 
     }
 
-    private static long municipalityException(Long municipality) {
-        throw new InvalidHomeMunicipalityException("Unable to create initiative for municipality with id " + municipality);
-    }
-
     @Transactional(readOnly = false)
-    public void confirmVerifiedAuthorInvitation(LoginUserHolder loginUserHolder, Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale) {
-        VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
+    public void confirmVerifiedAuthorInvitation(VerifiedUser verifiedUser, Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale) {
         Initiative initiative = initiativeDao.get(initiativeId);
 
         MunicipalMembershipSolver municipalMembershipSolver = new MunicipalMembershipSolver(verifiedUser, initiative.getMunicipality().getId(), confirmDto);
@@ -151,40 +144,35 @@ public class VerifiedInitiativeService {
 
     }
 
-    private static void requireCorrectHomeMunicipality(VerifiedUser verifiedUser, Long municipality, Long homeMunicipality) {
-        if (municipalityMismatch(municipality, homeMunicipality, verifiedUser.getHomeMunicipality())) {
-            municipalityException(municipality);
-        }
-    }
-
     @Transactional(readOnly = false)
-    public void createParticipant(ParticipantUICreateDto createDto, Long initiativeId, LoginUserHolder loginUserHolder) {
-        VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
-
-        Long homeMunicipalityId = verifiedUser.getHomeMunicipality().isPresent() ? verifiedUser.getHomeMunicipality().get().getId() : createDto.getHomeMunicipality();
+    public void createParticipant(ParticipantUICreateDto createDto, Long initiativeId, VerifiedUser verifiedUser) {
 
         Initiative initiative = initiativeDao.get(initiativeId);
+
+        MunicipalMembershipSolver municipalMembershipSolver = new MunicipalMembershipSolver(verifiedUser, initiative.getMunicipality().getId(), createDto);
+
         if (initiative.getType().isVerifiable()) {
-            requireCorrectHomeMunicipality(verifiedUser, createDto.getMunicipality(), homeMunicipalityId);
+            municipalMembershipSolver.assertMunicipalityForVerifiedInitiative();
+        }
+        else {
+            municipalMembershipSolver.assertMunicipalityOrMembershipForNormalInitiative();
         }
 
         assertAllowance("Participate to initiative", ManagementSettings.of(initiative).isAllowParticipation());
 
         VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
-        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, createDto.getShowName(), verifiedUser.getHomeMunicipality().isPresent(), homeMunicipalityId, createDto.getMunicipalMembership());
-        participantDao.increaseParticipantCountFor(initiativeId, createDto.getShowName(), homeMunicipalityId.equals(initiative.getMunicipality().getId()));
+        participantDao.addVerifiedParticipant(initiativeId,
+                verifiedUserId,
+                createDto.getShowName(),
+                municipalMembershipSolver.isHomeMunicipalityVerified(),
+                municipalMembershipSolver.getHomeMunicipality(),
+                createDto.getMunicipalMembership()
+        );
+        participantDao.increaseParticipantCountFor(initiativeId, createDto.getShowName(), municipalMembershipSolver.homeMunicipalityMatches());
     }
 
-    private static boolean municipalityMismatch(Long initiativeMunicipality,
-                                                Long userGivenHomeMunicipality,
-                                                Optional<Municipality> verifiedMunicipality) {
-        return !verifiedMunicipality.map(Municipality::getId)
-                .orElse(userGivenHomeMunicipality)
-                .equals(initiativeMunicipality);
-    }
 
-
-    public VerifiedUserId getVerifiedUserIdAndCreateIfNecessary(String hash, ContactInfo contactInfo, Optional<Municipality> homeMunicipality) {
+    private VerifiedUserId getVerifiedUserIdAndCreateIfNecessary(String hash, ContactInfo contactInfo, Optional<Municipality> homeMunicipality) {
 
         Optional<VerifiedUserId> verifiedUserId = userDao.getVerifiedUserId(hash);
         if (!verifiedUserId.isPresent()) {

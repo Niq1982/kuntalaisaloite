@@ -39,7 +39,7 @@ public class MunicipalMembershipSolver {
 
     public void assertMunicipalityForVerifiedInitiative() {
         if (!homeMunicipalityMatches()) {
-            throw new InvalidHomeMunicipalityException("Unable to create initiative for municipality with id " + initiativeMunicipality);
+            throw new InvalidHomeMunicipalityException("Unable to create/participate initiative for municipality " + initiativeMunicipality + ", homeMunicipality: " + getHomeMunicipality());
         }
     }
 

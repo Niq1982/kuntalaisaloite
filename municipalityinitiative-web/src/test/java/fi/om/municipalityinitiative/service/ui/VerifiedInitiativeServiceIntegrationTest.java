@@ -54,7 +54,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     private Municipality testMunicipality;
 
-    public static LoginUserHolder<VerifiedUser> verifiedLoginUserHolder;
+    private LoginUserHolder<VerifiedUser> verifiedLoginUserHolder;
 
     private static final String EMAIL = "email@example.com";
     private static final String ADDRESS = "Some address whatsoever";
@@ -80,11 +80,11 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         ContactInfo contactInfo = contactInfo();
 
         verifiedLoginUserHolder = new LoginUserHolder<>(
-                User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo, Collections.<Long>emptySet(), Collections.<Long>emptySet(), Optional.of(testMunicipality), 20)
+                User.verifiedUser(null, HASH, contactInfo, Collections.<Long>emptySet(), Collections.<Long>emptySet(), Optional.of(testMunicipality), 20)
         );
 
         anotherVerifiedLoginUserHolder = new LoginUserHolder<>(
-                User.verifiedUser(new VerifiedUserId(-1L), HASH + "2", contactInfo, Collections.<Long>emptySet(), Collections.<Long>emptySet(), Optional.of(anotherMunicipality), 20)
+                User.verifiedUser(null, HASH + "2", contactInfo, Collections.<Long>emptySet(), Collections.<Long>emptySet(), Optional.of(anotherMunicipality), 20)
         );
 
 
@@ -308,7 +308,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         ParticipantUICreateDto createDto = participantCreateDto();
         createDto.setMunicipalMembership(Membership.community);
 
-        service.createParticipant(createDto, id, anotherVerifiedLoginUserHolder);
+        service.createParticipant(createDto, id, anotherVerifiedLoginUserHolder.getVerifiedUser());
 
         List<VerifiedParticipant> verifiedParticipants = participantDao.findVerifiedAllParticipants(id, 0, 100);
         assertThat(verifiedParticipants, hasSize(1));
@@ -329,8 +329,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         thrown.expect(AccessDeniedException.class);
         thrown.expectMessage(containsString("Municipality is not active"));
 
-        LoginUserHolder<VerifiedUser> verifiedLoginUserHolder = verifiedUserHolderWithMunicipalityId(Optional.of(unactiveMunicipality));
-        service.prepareVerifiedInitiative(verifiedLoginUserHolder.getVerifiedUser(), createDto);
+        service.prepareVerifiedInitiative(verifiedUserForMunicipality(Optional.of(unactiveMunicipality)), createDto);
     }
 
     @Test
@@ -343,8 +342,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         createDto.setMunicipality(municipalityId);
         createDto.setUserGivenHomeMunicipality(municipalityId);
 
-        LoginUserHolder<VerifiedUser> verifiedUserLoginUserHolder = verifiedUserHolderWithMunicipalityId(Optional.<Long>empty());
-        long initiativeId = service.prepareVerifiedInitiative(verifiedUserLoginUserHolder.getVerifiedUser(), createDto);
+        long initiativeId = service.prepareVerifiedInitiative(verifiedUserForMunicipality(Optional.<Long>empty()), createDto);
 
         VerifiedParticipant theParticipant = participantDao.findVerifiedAllParticipants(initiativeId, 0, Urls.MAX_PARTICIPANT_LIST_LIMIT).get(0);
 
@@ -384,7 +382,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         thrown.expect(InvalidHomeMunicipalityException.class);
 
-        service.prepareVerifiedInitiative(verifiedUserHolderWithMunicipalityId(Optional.<Long>empty()).getVerifiedUser(), createDto);
+        service.prepareVerifiedInitiative(verifiedUserForMunicipality(Optional.empty()), createDto);
 
     }
 
@@ -396,7 +394,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         createDto.assignInitiativeMunicipality(testHelper.createTestMunicipality("other municipality")); // This should not matter
         thrown.expect(InvalidHomeMunicipalityException.class);
 
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderWithMunicipalityId(Optional.of(anotherMunicipality.getId())), initiativeId, createDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForMunicipality(Optional.of(anotherMunicipality.getId())), initiativeId, createDto, Locales.LOCALE_FI);
     }
 
     @Test
@@ -414,7 +412,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         confirmDto.setHomeMunicipality(anotherMunicipality.getId());
         confirmDto.setMunicipalMembership(Membership.community);
 
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderWithMunicipalityId(Optional.empty()), initiative, confirmDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForMunicipality(Optional.empty()), initiative, confirmDto, Locales.LOCALE_FI);
 
         Participant participant = participantDao.findAllParticipants(initiative, false, 0, Integer.MAX_VALUE).get(0);
 
@@ -434,7 +432,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         createDto.setHomeMunicipality(createDto.getMunicipality()+1);
         thrown.expect(InvalidHomeMunicipalityException.class);
 
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderWithMunicipalityId(Optional.<Long>empty()), initiativeId, createDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForMunicipality(Optional.<Long>empty()), initiativeId, createDto, Locales.LOCALE_FI);
     }
 
     @Test
@@ -451,8 +449,8 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         AuthorInvitationUIConfirmDto confirmDto = authorInvitationConfirmDto();
         confirmDto.setHomeMunicipality(testMunicipality.getId());
 
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(firstInitiative), firstInitiative, confirmDto, Locales.LOCALE_FI);
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(secondInitiative), secondInitiative, confirmDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForInitiative(firstInitiative), firstInitiative, confirmDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForInitiative(secondInitiative), secondInitiative, confirmDto, Locales.LOCALE_FI);
 
         assertThat(testHelper.countAll(QVerifiedUser.verifiedUser), is(1L));
         assertThat(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(2L));
@@ -471,13 +469,14 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.ACCEPTED).applyAuthor().toInitiativeDraft());
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()));
 
-        LoginUserHolder<VerifiedUser> loginUserHolder = new LoginUserHolder<>(
-                User.verifiedUser(new VerifiedUserId(testHelper.getLastVerifiedUserId()), testHelper.getPreviousUserSsnHash(), new ContactInfo(), Collections.<Long>emptySet(), Collections.<Long>emptySet(), Optional.<Municipality>empty(), 20)
-        );
 
         testHelper.addAuthorInvitation(authorInvitation(initiativeId), false);
 
-        service.confirmVerifiedAuthorInvitation(loginUserHolder, initiativeId, authorInvitationConfirmDto(), Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(
+                User.verifiedUser(new VerifiedUserId(testHelper.getLastVerifiedUserId()), testHelper.getPreviousUserSsnHash(), new ContactInfo(), Collections.<Long>emptySet(), Collections.<Long>emptySet(), Optional.<Municipality>empty(), 20),
+                initiativeId,
+                authorInvitationConfirmDto(),
+                Locales.LOCALE_FI);
     }
 
     @Test
@@ -487,12 +486,12 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         AuthorInvitationUIConfirmDto confirmDto = authorInvitationConfirmDto();
 
         testHelper.addAuthorInvitation(authorInvitation(initiativeId), false);
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
 
         thrown.expect(DuplicateKeyException.class);
 
         testHelper.addAuthorInvitation(authorInvitation(initiativeId), false);
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
     }
 
     @Test
@@ -507,7 +506,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         thrown.expect(NotFoundException.class);
         thrown.expectMessage(containsString(AuthorInvitation.class.getName()));
 
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
     }
 
     @Test
@@ -519,7 +518,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         precondition(testHelper.countAll(QAuthorInvitation.authorInvitation), is(1L));
 
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
 
         assertThat(testHelper.countAll(QAuthorInvitation.authorInvitation), is(0L));
     }
@@ -531,7 +530,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         precondition(testHelper.getInitiative(initiativeId).getParticipantCount(), is(0));
 
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, authorInvitationConfirmDto(), Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForInitiative(initiativeId), initiativeId, authorInvitationConfirmDto(), Locales.LOCALE_FI);
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCountPublic(), is(1));
@@ -546,7 +545,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         AuthorInvitationUIConfirmDto confirmDto = authorInvitationConfirmDto();
 
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
 
         Optional<VerifiedUserDbDetails> verifiedUser = userDao.getVerifiedUser(HASH);
         assertThat(verifiedUser, isPresent());
@@ -564,7 +563,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         AuthorInvitationUIConfirmDto confirmDto = authorInvitationConfirmDto();
 
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(firstInitiative), firstInitiative, confirmDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForInitiative(firstInitiative), firstInitiative, confirmDto, Locales.LOCALE_FI);
 
         confirmDto.setContactInfo(new ContactInfo());
         confirmDto.getContactInfo().setPhone("new user phone");
@@ -572,7 +571,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         confirmDto.getContactInfo().setEmail("new user email");
         confirmDto.getContactInfo().setAddress("new user address");
 
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(secondInitiative), secondInitiative, confirmDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForInitiative(secondInitiative), secondInitiative, confirmDto, Locales.LOCALE_FI);
 
         ContactInfo updatedContactInfo = userDao.getVerifiedUser(HASH).get().getContactInfo();
         assertThat(updatedContactInfo.getName(), is(VERIFIED_AUTHOR_NAME)); // Name is not updated
@@ -588,7 +587,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         testHelper.addAuthorInvitation(authorInvitation(initiativeId), false);
 
         thrown.expect(OperationNotAllowedException.class);
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, authorInvitationConfirmDto(), Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForInitiative(initiativeId), initiativeId, authorInvitationConfirmDto(), Locales.LOCALE_FI);
     }
 
 
@@ -600,8 +599,8 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         precondition(testHelper.countAll(QVerifiedUser.verifiedUser), is(0L));
         precondition(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(0L));
 
-        service.createParticipant(participantCreateDto(), firstInitiative, verifiedLoginUserHolder);
-        service.createParticipant(participantCreateDto(), secondInitiative, verifiedLoginUserHolder);
+        service.createParticipant(participantCreateDto(), firstInitiative, verifiedLoginUserHolder.getVerifiedUser());
+        service.createParticipant(participantCreateDto(), secondInitiative, verifiedLoginUserHolder.getVerifiedUser());
 
         assertThat(testHelper.countAll(QVerifiedUser.verifiedUser), is(1L));
         assertThat(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(2L));
@@ -614,8 +613,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         thrown.expect(InvalidHomeMunicipalityException.class);
 
-        LoginUserHolder<VerifiedUser> loginUserHolder = verifiedUserHolderWithMunicipalityId(Optional.of(testHelper.createTestMunicipality("Other Municipality")));
-        service.createParticipant(participantCreateDto(), initiativeId, loginUserHolder);
+        service.createParticipant(participantCreateDto(), initiativeId, verifiedUserForMunicipality(Optional.of(testHelper.createTestMunicipality("Other Municipality"))));
     }
 
     @Test
@@ -627,7 +625,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         ParticipantUICreateDto createDto = participantCreateDto();
         createDto.setHomeMunicipality(testHelper.createTestMunicipality("Some other municipality"));
 
-        service.createParticipant(createDto, initiativeId, verifiedUserHolderWithMunicipalityId(Optional.<Long>empty()));
+        service.createParticipant(createDto, initiativeId, verifiedUserForMunicipality(Optional.empty()));
     }
 
     @Test
@@ -638,7 +636,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
                 .toInitiativeDraft());
 
         thrown.expect(OperationNotAllowedException.class);
-        service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder);
+        service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder.getVerifiedUser());
     }
 
     @Test
@@ -647,7 +645,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         Long initiativeId = createVerifiedCollaborative();
         precondition(testHelper.getInitiative(initiativeId).getParticipantCount(), is(0));
 
-        service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder);
+        service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder.getVerifiedUser());
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCountCitizen(), is(1));
@@ -661,7 +659,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         ParticipantUICreateDto createDto = participantCreateDto();
         createDto.setShowName(true);
-        service.createParticipant(createDto, initiativeId, verifiedLoginUserHolder);
+        service.createParticipant(createDto, initiativeId, verifiedLoginUserHolder.getVerifiedUser());
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCountPublic(), is(1));
@@ -675,7 +673,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         ParticipantUICreateDto createDto = participantCreateDto();
         createDto.setShowName(false);
-        service.createParticipant(createDto, initiativeId, verifiedLoginUserHolder);
+        service.createParticipant(createDto, initiativeId, verifiedLoginUserHolder.getVerifiedUser());
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCountPublic(), is(0));
@@ -684,10 +682,10 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     @Test
     public void participating_if_already_participated_throws_exception() {
         Long initiativeId = createVerifiedCollaborative();
-        service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder);
+        service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder.getVerifiedUser());
 
         thrown.expect(DuplicateKeyException.class);
-        service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder);
+        service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder.getVerifiedUser());
     }
 
     @Test
@@ -704,9 +702,31 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         confirmDto.setConfirmCode(invitation.getConfirmationCode());
 
         int originalPublicParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCountPublic();
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderWithMunicipalityId(Optional.of(testMunicipality.getId())), initiativeId, confirmDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserForMunicipality(Optional.of(testMunicipality.getId())), initiativeId, confirmDto, Locales.LOCALE_FI);
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCountPublic(), is(originalPublicParticipantCount + 1));
+
+    }
+
+    @Test
+    @Transactional
+    public void participating_as_verified_initiative_adds_verified_info_and_membership() {
+
+        Long initiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE));
+
+        ParticipantUICreateDto createDto = participantCreateDto();
+        createDto.setHomeMunicipality(anotherMunicipality.getId());
+        createDto.setMunicipalMembership(Membership.community);
+        service.createParticipant(createDto, initiative, verifiedUserForMunicipality(Optional.empty()));
+
+        Participant participant = participantDao.findAllParticipants(initiative, false, 0, Integer.MAX_VALUE).get(0);
+
+        assertThat(participant.getMembership(), is(Membership.community));
+        assertThat(participant.isVerified(), is(true));
+        assertThat(participant.isMunicipalityVerified(), is(false));
+        assertThat(((Municipality) participant.getHomeMunicipality().get()).getId(), is(anotherMunicipality.getId()));
 
     }
 
@@ -739,7 +759,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         return createDto;
     }
 
-    private static LoginUserHolder<VerifiedUser> verifiedUserHolderWithMunicipalityId(Optional<Long> OptionalMunicipality) {
+    private static VerifiedUser verifiedUserForMunicipality(Optional<Long> OptionalMunicipality) {
         Optional<Municipality> municipality;
         if (OptionalMunicipality.isPresent()) {
             municipality = Optional.of(new Municipality(OptionalMunicipality.get(), "", "", false));
@@ -747,11 +767,11 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         else {
             municipality = Optional.empty();
         }
-        return new LoginUserHolder<>(User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo(), Collections.<Long>emptySet(), Collections.<Long>emptySet(), municipality, 20));
+        return User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo(), Collections.<Long>emptySet(), Collections.<Long>emptySet(), municipality, 20);
     }
 
-    private static LoginUserHolder<VerifiedUser> verifiedUserHolderForInitiative(Long initiativeId) {
-        return new LoginUserHolder<>(User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo(), Collections.singleton(initiativeId), Collections.singleton(initiativeId), Optional.<Municipality>empty(), 20));
+    private static VerifiedUser verifiedUserForInitiative(Long initiativeId) {
+        return User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo(), Collections.singleton(initiativeId), Collections.singleton(initiativeId), Optional.<Municipality>empty(), 20);
     }
 
     private PrepareSafeInitiativeUICreateDto prepareSafeUICreateDto() {
