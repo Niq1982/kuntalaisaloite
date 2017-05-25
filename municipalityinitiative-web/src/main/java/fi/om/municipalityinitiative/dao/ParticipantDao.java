@@ -36,7 +36,7 @@ public interface ParticipantDao {
 
     void updateVerifiedParticipantShowName(Long initiativeId, String hash, boolean showName);
 
-    void addVerifiedParticipant(Long initiativeId, VerifiedUserId verifiedUserId, boolean showName, boolean present, Long homeMunicipality, Membership municipalMembership);
+    void addVerifiedParticipant(Long initiativeId, VerifiedUserId verifiedUserId, boolean showName, boolean verifiedMunicipality, Long homeMunicipality, Membership municipalMembership);
 
     List<Participant> findAllParticipants(Long initiativeId, boolean requireShowName, int offset, int limit);
 }

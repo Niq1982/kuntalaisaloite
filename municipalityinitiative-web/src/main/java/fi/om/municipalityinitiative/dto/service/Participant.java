@@ -26,7 +26,7 @@ public abstract class Participant<E extends Id> {
         this.membership = membership;
     }
 
-    public Optional<Municipality> getHomeMunicipality() {
+    public final Optional<Municipality> getHomeMunicipality() {
         return homeMunicipality;
     }
 

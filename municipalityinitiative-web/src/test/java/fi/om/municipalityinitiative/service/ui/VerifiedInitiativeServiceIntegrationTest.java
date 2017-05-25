@@ -19,6 +19,7 @@ import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.sql.QVerifiedUser;
 import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
 import org.junit.Rule;
 import org.junit.Test;
@@ -106,7 +107,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     public void preparing_sets_participant_count_to_one_when_adding_normal_initiative_with_authentication() {
-        long initiativeId = service.prepareNormalInitiative(verifiedLoginUserHolder, prepareNormalUiCreateDto());
+        long initiativeId = service.prepareNormalInitiative(verifiedLoginUserHolder.getVerifiedUser(), prepareNormalUiCreateDto());
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCountCitizen(), is(1));
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCountPublic(), is(1));
@@ -193,21 +194,105 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     @Transactional(readOnly = false)
-    public void prepare_normal_initiative_with_verified_user_creates_author_and_participant() {
+    public void prepare_normal_initiative_with_verified_user_and_same_verified_homeMunicipality_creates_author_and_participant() {
         precondition(testHelper.countAll(QVerifiedAuthor.verifiedAuthor), is(0L));
         precondition(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(0L));
-        Long id = service.prepareNormalInitiative(verifiedLoginUserHolder, prepareNormalUiCreateDto());
+
+        Long id = service.prepareNormalInitiative(verifiedLoginUserHolder.getVerifiedUser(), prepareNormalUiCreateDto());
+
         assertThat(testHelper.countAll(QVerifiedAuthor.verifiedAuthor), is(1L));
         assertThat(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(1L));
 
         List<VerifiedParticipant> verifiedParticipants = participantDao.findVerifiedAllParticipants(id, 0, 100);
         assertThat(verifiedParticipants, hasSize(1));
 
+        VerifiedParticipant theParticipant = verifiedParticipants.get(0);
 
-        assertThat(verifiedParticipants.get(0).getEmail(), is(EMAIL));
-        assertThat(verifiedParticipants.get(0).getName(), is(VERIFIED_AUTHOR_NAME));
-        assertThat(verifiedParticipants.get(0).getHomeMunicipality().get().getId(), is(testMunicipality.getId()));
-        assertThat(verifiedParticipants.get(0).getMembership(), is(Membership.none));
+        assertThat(theParticipant.getEmail(), is(EMAIL));
+        assertThat(theParticipant.isVerified(), is(true));
+        assertThat(theParticipant.isMunicipalityVerified(), is(true));
+        assertThat(theParticipant.getName(), is(VERIFIED_AUTHOR_NAME));
+        assertThat(theParticipant.getHomeMunicipality().get().getId(), is(testMunicipality.getId()));
+        assertThat(theParticipant.getMembership(), is(Membership.none));
+
+    }
+
+    @Test
+    @Transactional
+    public void prepare_normal_initiative_with_verified_user_and_unknown_verified_homeMunicipality_creates_author_and_participant_for_same_municipality_if_given() {
+
+        PrepareInitiativeUICreateDto createDto = prepareNormalUiCreateDto();
+        createDto.setHomeMunicipality(testMunicipality.getId());
+
+        Long initiative = service.prepareNormalInitiative(
+                testHelper.newVerifiedUser(Optional.empty(), "", 20),
+                createDto
+        );
+
+        Participant participant = participantDao.findAllParticipants(initiative, false, 0, Integer.MAX_VALUE).get(0);
+
+        assertThat(participant.isVerified(), is(true));
+        assertThat(participant.isMunicipalityVerified(), is(false));
+        assertThat(((Municipality) participant.getHomeMunicipality().get()).getId(), is(testMunicipality.getId()));
+        assertThat(participant.getMembership(), is(Membership.none));
+
+    }
+
+    @Test
+    @Transactional
+    public void prepare_normal_initiative_with_verified_user_and_known_verified_homeMunicipality_creates_author_and_participant_for_different_municipality_if_verified_municipality_mismatches() {
+
+        PrepareInitiativeUICreateDto createDto = prepareNormalUiCreateDto();
+        createDto.setHomeMunicipality(anotherMunicipality.getId());
+        createDto.setMunicipalMembership(Membership.service);
+
+        Long initiative = service.prepareNormalInitiative(
+                testHelper.newVerifiedUser(Optional.empty(), "", 20),
+                createDto
+        );
+
+        Participant participant = participantDao.findAllParticipants(initiative, false, 0, Integer.MAX_VALUE).get(0);
+
+        assertThat(participant.isVerified(), is(true));
+        assertThat(participant.isMunicipalityVerified(), is(false));
+        assertThat(((Municipality) participant.getHomeMunicipality().get()).getId(), is(anotherMunicipality.getId()));
+        assertThat(participant.getMembership(), is(Membership.service));
+
+    }
+
+    @Test(expected = InvalidHomeMunicipalityException.class)
+    public void prepare_normal_initiative_with_invalid_municipalities_throws_exception() {
+
+        PrepareInitiativeUICreateDto createDto = prepareNormalUiCreateDto();
+        createDto.setHomeMunicipality(anotherMunicipality.getId());
+        createDto.setMunicipalMembership(Membership.none);
+
+        Long initiative = service.prepareNormalInitiative(
+                testHelper.newVerifiedUser(Optional.of(anotherMunicipality.getId()), "", 20),
+                createDto
+        );
+
+    }
+
+    @Test
+    @Transactional
+    public void prepare_normal_initiative_as_verified_user_with_same_homeMunicipality_does_not_set_membership_even_if_given_by_user() {
+
+        PrepareInitiativeUICreateDto createDto = prepareNormalUiCreateDto();
+        createDto.setHomeMunicipality(anotherMunicipality.getId());
+        createDto.setMunicipalMembership(Membership.service);
+
+        Long initiative = service.prepareNormalInitiative(
+                testHelper.newVerifiedUser(Optional.of(testMunicipality.getId()), "", 20),
+                createDto
+        );
+
+        Participant participant = participantDao.findAllParticipants(initiative, false, 0, Integer.MAX_VALUE).get(0);
+
+        assertThat(participant.isVerified(), is(true));
+        assertThat(participant.isMunicipalityVerified(), is(true));
+        assertThat(((Municipality) participant.getHomeMunicipality().get()).getId(), is(testMunicipality.getId()));
+        assertThat(participant.getMembership(), is(Membership.none));
 
     }
 
@@ -250,7 +335,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     @Transactional
-    public void preparing_initiative_with_secure_identity_leaves_participants_municipality_null() {
+    public void preparing_verified_initiative_with_turvakielto_leaves_verified_flag_to_false() {
 
         // Creating initiative to municipality, homeMunicipality not verified from vetuma
         Long municipalityId = testHelper.createTestMunicipality("Municipality", true);
@@ -261,15 +346,10 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         LoginUserHolder<VerifiedUser> verifiedUserLoginUserHolder = verifiedUserHolderWithMunicipalityId(Optional.<Long>empty());
         long initiativeId = service.prepareVerifiedInitiative(verifiedUserLoginUserHolder.getVerifiedUser(), createDto);
 
-        // Update users information with municipality
-        userDao.updateUserInformation(
-                verifiedUserLoginUserHolder.getVerifiedUser().getHash(),
-                "New Name from vetuma",
-                Optional.of(new Municipality(municipalityId, "a", "b", true))
-        );
+        VerifiedParticipant theParticipant = participantDao.findVerifiedAllParticipants(initiativeId, 0, Urls.MAX_PARTICIPANT_LIST_LIMIT).get(0);
 
-        // Assert that participants municipality is still absent
-        assertThat(participantDao.findVerifiedAllParticipants(initiativeId, 0, fi.om.municipalityinitiative.web.Urls.MAX_PARTICIPANT_LIST_LIMIT).get(0).isMunicipalityVerified(), is(false));
+        assertThat(theParticipant.getHomeMunicipality().get().getId(), is(municipalityId));
+        assertThat(theParticipant.isMunicipalityVerified(), is(false));
 
     }
 
@@ -313,10 +393,36 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
 
         AuthorInvitationUIConfirmDto createDto = authorInvitationConfirmDto();
-        createDto.assignInitiativeMunicipality(testHelper.createTestMunicipality("other municipality"));
+        createDto.assignInitiativeMunicipality(testHelper.createTestMunicipality("other municipality")); // This should not matter
         thrown.expect(InvalidHomeMunicipalityException.class);
 
-        service.confirmVerifiedAuthorInvitation(verifiedLoginUserHolder, initiativeId, createDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserHolderWithMunicipalityId(Optional.of(anotherMunicipality.getId())), initiativeId, createDto, Locales.LOCALE_FI);
+    }
+
+    @Test
+    @Transactional
+    public void accepting_invitation_to_initiative_as_verified_adds_verified_flag_and_membership() {
+
+        Long initiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.ACCEPTED)
+                .withType(InitiativeType.COLLABORATIVE));
+
+        AuthorInvitation invitation = testHelper.createInvitation(initiative, "some name", "email@example.com");
+
+        AuthorInvitationUIConfirmDto confirmDto = authorInvitationConfirmDto();
+        confirmDto.setConfirmCode(invitation.getConfirmationCode());
+        confirmDto.setHomeMunicipality(anotherMunicipality.getId());
+        confirmDto.setMunicipalMembership(Membership.community);
+
+        service.confirmVerifiedAuthorInvitation(verifiedUserHolderWithMunicipalityId(Optional.empty()), initiative, confirmDto, Locales.LOCALE_FI);
+
+        Participant participant = participantDao.findAllParticipants(initiative, false, 0, Integer.MAX_VALUE).get(0);
+
+        assertThat(participant.getMembership(), is(Membership.community));
+        assertThat(participant.isVerified(), is(true));
+        assertThat(participant.isMunicipalityVerified(), is(false));
+        assertThat(((Municipality) participant.getHomeMunicipality().get()).getId(), is(anotherMunicipality.getId()));
+
     }
 
     @Test

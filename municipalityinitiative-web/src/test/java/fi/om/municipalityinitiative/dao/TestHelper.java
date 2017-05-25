@@ -558,10 +558,15 @@ public class TestHelper {
         return aLong;
     }
 
-    public VerifiedUser getVerifiedUser() {
-        ContactInfo contactInfo = new ContactInfo();
-        contactInfo.setName("Paavo Paavolainen");
-        return User.verifiedUser(new VerifiedUserId(123L), "ffafdsf", contactInfo, null, null, Optional.of(new Municipality(1, "Oulu", "Åbo", true)), 20);
+    public VerifiedUser newVerifiedUser(Optional<Long> homeMunicipality, String fullName, int age) {
+        return User.verifiedUser(
+                null,
+                randomString(),
+                new ContactInfo() {{setName(fullName);}},
+                null,
+                null,
+                homeMunicipality.map(id -> new Municipality(id, "m", "m", true)),
+                age);
     }
 
     @Transactional(readOnly = false)

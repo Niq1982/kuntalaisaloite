@@ -186,7 +186,7 @@ public class PublicInitiativeController extends BaseController {
         else {
 
             if (loginUserHolder.isVerifiedUser()) {
-                Long initiativeId = verifiedInitiativeService.prepareNormalInitiative(loginUserHolder, initiative);
+                Long initiativeId = verifiedInitiativeService.prepareNormalInitiative(loginUserHolder.getVerifiedUser(), initiative);
                 userService.refreshUserData(request);
                 return contextRelativeRedirect(urls.management(initiativeId));
             }
