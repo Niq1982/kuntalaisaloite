@@ -46,14 +46,33 @@
         padding-left: 1rem;
         padding-right: 1rem;
 
+        @media @xs-small-mobile {
+            font-size: 14px;
+        }
+
+        &.verified {
+            padding-left: 8.5%;
+            padding-right: 8.4%;
+        }
+
         &.selected {
             background-color: white;
             border-bottom: 0;
         }
+
         &:not(.selected) {
             border: 1px solid @borderGray;
+            border-top: none;
             cursor: pointer;
             .gradient (#fff, #f1f1f1);
+        }
+
+        &:not(.selected).verified {
+            border-left: none;
+        }
+
+        &:not(.selected).email {
+            border-right: none;
         }
 
         .boxSizing(border-box);
@@ -61,7 +80,6 @@
         .transition(opacity, 0.1s, ease-in);
 
     }
-
 }
 
 // Input fields

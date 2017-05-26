@@ -247,5 +247,62 @@ a.block-link {
 }
 
 .prepare-auth {
+    padding: 0!important;
+    background: #ffffff!important;
     margin-bottom: 32px;
+    display: flex;
+    width: auto!important;
+    @media @mobile {
+        display: block;
+    }
+    .left-wrap {
+        padding: 0 18px 30px 5%;
+        width: 70%;
+        @media @tablet {
+            width: 60%;
+        }
+        @media @mobile {
+            width: auto;
+        }
+        display: inline-block;
+        .auth-div {
+            width: 90%;
+        }
+        .form-introduction {
+            display: inline-block;
+        }
+        .authentication-selection {
+            width: auto;
+        }
+    }
+}
+
+.prepare-auth, #form-participate {
+    input, .input-block-content input[type="text"].large {
+        padding: 6px;
+    }
+}
+
+#form-participate {
+    .send-button-block {
+        button {
+            margin-right: 1em;
+        }
+        .send-button-cancel {
+            margin-top: 1em;
+            display: inline-block;
+        }
+        .mask-div {
+            padding-right: 1em;
+            display: inline-block;
+        }
+    }
+    .send-button-block button, .mask-div .mask-send {
+        width: 184px;
+        margin: 0;
+    }
+
+    #home-municipality-select, #participation-criterion {
+        margin-top: 1em;
+    }
 }

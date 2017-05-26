@@ -162,6 +162,9 @@
     </#if>
 
     <#if enabled>
+        <#if verifiable == true>
+        <div id="verified-initiative-block">
+        </#if>
         <label class="initiative-type enabled ${(spring.stringStatusValue == type)?string("selected","")}" data-verifiable="${verifiable?string}">
     <#else>
         <label class="initiative-type trigger-tooltip" title="<@u.message "initiative.initiativeType.disabled.tooltip."+type />">
@@ -208,7 +211,9 @@
             </span>
         </#if>
     </label>
-
+    <#if verifiable == true>
+    </div>
+    </#if>
 </#macro>
 
 <#--

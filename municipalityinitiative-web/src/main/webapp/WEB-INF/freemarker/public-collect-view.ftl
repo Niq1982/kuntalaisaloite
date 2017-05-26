@@ -265,7 +265,7 @@
                 <@f.formCheckbox path="participant.showName" checked=true />
             </div>
 
-            <div class="input-block-content">
+            <div class="input-block-content send-button-block">
                 <#if user.isVerifiedUser()>
                     <div class="toggle-disable-send mask-div">
                         <button id="participate" type="submit" name="save" value="true" class="small-button"><span
@@ -279,7 +279,7 @@
                     </div>
                 </#if>
 
-                <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+                <a href="${springMacroRequestContext.requestUri}" class="send-button-cancel"><@u.message "action.cancel" /></a>
             </div>
 
         </form>

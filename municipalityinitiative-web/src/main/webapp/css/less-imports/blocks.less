@@ -79,13 +79,28 @@
 
     .input-block-extra-content {
         position: relative;
-
         p {
             margin: 0px 0px 1em 0px;
         }
     }
     @media @mobile {
         display: none;
+    }
+}
+
+.prepare-auth {
+    .input-block-extra {
+        margin: 0;
+        background: #e2e2e2 none;
+        @media @tablet {
+            width: 34%;
+        }
+        width: 30%;
+        font-size: 90%;
+        color: #787878;
+        .input-block-extra-content {
+            padding: 2em 12% 30px 8%;
+        }
     }
 }
 
@@ -139,12 +154,17 @@
     margin-top:1em;
     width:100%; // IE7
 
+    display: flex;
+    @media @mobile {
+        display: block;
+    }
+
     .disable-mask {
         position:absolute;
         top:0;
         right:0;
         bottom:0;
-        left:33%;
+        left:0;
         z-index:9999;
 
         // Fix for IE - lte IE8 for opacity is defined in -ie.less
@@ -157,7 +177,6 @@
         float:left;
 
         @margin-right: 0.5%;
-        width: (floor((100 - unit(@margin-right))/2))*1%;
         margin-right: @margin-right;
 
         border:1px solid @borderGray;
@@ -182,18 +201,9 @@
             }
         }
 
-        &.selected {
-
-        }
-
-        /*&.unselected {
-            opacity:@dimmed;
-        }*/
-
         .inner {
             display:block;
 
-            height: 8em;
             @media @mobile {
                 height: auto;
             }
@@ -203,7 +213,6 @@
         .type {
             display:inline-block;
             width:200px;
-            //margin:0 -1em 0 0.7em;
             margin:0.15em -1em 0 0.7em;
             font-size:1.17em;
         }
@@ -247,6 +256,10 @@
             }
         }
 
+    }
+    #verified-initiative-block {
+        display: inline-block;
+        position: relative;
     }
 }
 

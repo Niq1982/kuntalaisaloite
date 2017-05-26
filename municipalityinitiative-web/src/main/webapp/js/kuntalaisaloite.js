@@ -491,6 +491,7 @@ $(document).ready(function () {
 */
 var initiativeType = (function() {
 	var type =			$('.initiative-type.enabled'),
+		verifiableTypeBlock = $('#verified-initiative-block'),
 		cbClass =		'.checkbox',
 		cb =			type.find(cbClass),
 		choose =		type.find('span[data-choose]'),
@@ -520,7 +521,7 @@ var initiativeType = (function() {
 			disable = true;
 		}
 		if (disable) {
-			$('.initiative-types').append(mask);
+            verifiableTypeBlock.append(mask);
 			verifiable.find('.action').addClass(hideClass);
             verifiable.find('.disabledNotCitizen').removeClass(hideClass);
 			verifiable.find('input[type="radio"]').removeAttr('checked');
@@ -579,6 +580,7 @@ var initiativeType = (function() {
 	}
 
 	type.click(function(){
+		console.log("KLICK");
 		var thisObj = $(this);
 
 		if(!thisObj.hasClass('selected')) {

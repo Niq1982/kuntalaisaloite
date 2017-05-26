@@ -40,60 +40,61 @@
 
         <div class="form-block-container">
             <#if !user.isVerifiedUser()>
-            <div class="input-block cf prepare-auth" >
+                <div class="input-block cf prepare-auth">
 
-                <div class="form-introduction">
-                    <@u.message "prepare.form.introduction"/>
-                </div>
+                    <div class="left-wrap">
+                        <div class="form-introduction">
+                            <@u.message "prepare.form.introduction"/>
+                        </div>
 
-                <div class="input-block-extra">
-                    <div class="input-block-extra-content">
-                        <@f.helpText "help.authenticationSelection" />
-                    </div>
+                        <div class="input-block-content auth-div">
 
-                </div>
+                            <div class="authentication-selection">
 
-                <div class="input-block-content">
+                                <#assign formSelectionVisible=initiative.participantEmail?? && initiative.participantEmail?length != 0/>
 
-                    <div class="authentication-selection">
+                                <#if !user.isVerifiedUser()>
+                                    <label id="vetuma-authentication-button"
+                                           class="authentication verified <#if !formSelectionVisible>selected</#if>"><@u.message "authentication.selection.verified" /></label>
+                                    <label id="email-authentication-button"
+                                           class="authentication email <#if formSelectionVisible>selected</#if>"><@u.message "authentication.selection.email"/></label>
+                                </#if>
 
-                        <#assign formSelectionVisible=initiative.participantEmail?? && initiative.participantEmail?length != 0/>
+                                <div class="participation-vetuma-login-container"
+                                     <#if formSelectionVisible>style="display:none"</#if>>
 
-                        <#if !user.isVerifiedUser()>
-                            <label id="vetuma-authentication-button" class="authentication verified <#if !formSelectionVisible>selected</#if>"><@u.message "authentication.selection.verified" /></label>
-                            <label id="email-authentication-button" class="authentication email <#if formSelectionVisible>selected</#if>"><@u.message "authentication.selection.email"/></label>
-                        </#if>
+                                    <form class="sodirty dirtylisten js-validate">
+                                        <div class="input-block-content">
+                                            <@u.systemMessage path="authentication.selection.verified.description" type="info" />
+                                        </div>
+                                    </form>
+                                    <div class="input-block-content">
+                                        <@edit.buttons type="verify" class="small-button"/>
+                                    </div>
+                                </div>
 
-                            <div class="participation-vetuma-login-container" <#if formSelectionVisible>style="display:none"</#if>
 
-                        <form class="sodirty dirtylisten js-validate">
-                            <div class="input-block-content">
-                                <@u.systemMessage path="authentication.selection.verified.description" type="info" />
+                                <div id="email-auth-container" class="participation-authentication-container"
+                                     <#if !formSelectionVisible>style="display:none"</#if>>
+
+
+                                    <@edit.authorEmailBlock />
+
+                                    <div class="input-block-content no-top-margin">
+                                        <@edit.buttons type="continue" class="small-button email-auth-btn"/>
+                                    </div>
+
+                                </div>
                             </div>
-                        </form>
-                        <div class="input-block-content">
-                            <@edit.buttons type="verify" class="small-button"/>
                         </div>
-
                     </div>
-
-
-                    <div id="email-auth-container" class="participation-authentication-container" <#if !formSelectionVisible>style="display:none"</#if>>
-
-
-                        <@edit.authorEmailBlock />
-
-                        <div class="input-block-content no-top-margin">
-                            <@edit.buttons type="continue" class="small-button email-auth-btn"/>
+                    <div class="input-block-extra">
+                        <div class="input-block-extra-content">
+                            <@f.helpText "help.authenticationSelection" />
                         </div>
-
                     </div>
-
                 </div>
-
-            </div>
             </#if>
-
         </div>
 
         <div class="prepare-content <#if !user.isVerifiedUser()>hide</#if>">
@@ -108,7 +109,7 @@
                     <@edit.chooseInitiativeType />
                 </div>
             </div>
-            <div class="form-block-container input-block">
+            <div class="form-block-container input-block send-button-block">
                 <div class="input-block-content float-init">
                     <div class="toggle-disable-send mask-div"><@edit.buttons type="send" class="small-button" /></div>
                 </div>
