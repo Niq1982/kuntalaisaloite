@@ -168,7 +168,7 @@ public class PublicInitiativeController extends BaseController {
             if (loginUserHolder.isVerifiedUser()) {
                 long initiativeId;
                 try {
-                    initiativeId = verifiedInitiativeService.prepareVerifiedInitiative(loginUserHolder.getVerifiedUser(), PrepareSafeInitiativeUICreateDto.parse(initiative));
+                    initiativeId = verifiedInitiativeService.prepareVerifiedInitiative(loginUserHolder.getVerifiedUser(), PrepareVerifiedInitiativeUICreateDto.parse(initiative));
                 } catch (InvalidHomeMunicipalityException e) {
                     return redirectWithMessage(urls.prepare(), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
                 }

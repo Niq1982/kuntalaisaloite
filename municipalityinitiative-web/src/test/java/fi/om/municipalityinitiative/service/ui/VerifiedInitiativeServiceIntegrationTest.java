@@ -323,7 +323,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     @Test
     public void trying_to_prepare_safe_initiative_to_non_active_municipality_is_forbidden() {
         Long unactiveMunicipality = testHelper.createTestMunicipality("Some Unactive Municipality", false);
-        PrepareSafeInitiativeUICreateDto createDto = new PrepareSafeInitiativeUICreateDto();
+        PrepareVerifiedInitiativeUICreateDto createDto = new PrepareVerifiedInitiativeUICreateDto();
         createDto.setMunicipality(unactiveMunicipality);
 
         thrown.expect(AccessDeniedException.class);
@@ -338,7 +338,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         // Creating initiative to municipality, homeMunicipality not verified from vetuma
         Long municipalityId = testHelper.createTestMunicipality("Municipality", true);
-        PrepareSafeInitiativeUICreateDto createDto = prepareSafeUICreateDto();
+        PrepareVerifiedInitiativeUICreateDto createDto = prepareSafeUICreateDto();
         createDto.setMunicipality(municipalityId);
         createDto.setUserGivenHomeMunicipality(municipalityId);
 
@@ -353,7 +353,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     public void preparing_safe_initiative_sets_initiative_type_and_municipality() {
-        PrepareSafeInitiativeUICreateDto createDto = prepareSafeUICreateDto();
+        PrepareVerifiedInitiativeUICreateDto createDto = prepareSafeUICreateDto();
         long initiativeId = service.prepareVerifiedInitiative(verifiedLoginUserHolder.getVerifiedUser(), createDto);
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
@@ -364,7 +364,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     public void preparing_safe_initiative_throws_exception_if_wrong_municipality_from_vetuma() {
-        PrepareSafeInitiativeUICreateDto createDto = prepareSafeUICreateDto();
+        PrepareVerifiedInitiativeUICreateDto createDto = prepareSafeUICreateDto();
 
         createDto.setMunicipality(testHelper.createTestMunicipality("Other municipality"));
 
@@ -375,7 +375,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     public void preparing_safe_initiative_throws_exception_if_wrong_homeMunicipality_given_by_user_when_vetuma_gives_null_municipality() {
-        PrepareSafeInitiativeUICreateDto createDto = prepareSafeUICreateDto();
+        PrepareVerifiedInitiativeUICreateDto createDto = prepareSafeUICreateDto();
 
         createDto.setMunicipality(testHelper.createTestMunicipality("Other municipality"));
         createDto.setUserGivenHomeMunicipality(testMunicipality.getId());
@@ -774,8 +774,8 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         return User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo(), Collections.singleton(initiativeId), Collections.singleton(initiativeId), Optional.<Municipality>empty(), 20);
     }
 
-    private PrepareSafeInitiativeUICreateDto prepareSafeUICreateDto() {
-        PrepareSafeInitiativeUICreateDto createDto = new PrepareSafeInitiativeUICreateDto();
+    private PrepareVerifiedInitiativeUICreateDto prepareSafeUICreateDto() {
+        PrepareVerifiedInitiativeUICreateDto createDto = new PrepareVerifiedInitiativeUICreateDto();
         createDto.setMunicipality(testMunicipality.getId());
         createDto.setInitiativeType(InitiativeType.COLLABORATIVE_CITIZEN);
         return createDto;

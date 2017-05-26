@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.util.InitiativeType;
 
-public class PrepareSafeInitiativeUICreateDto {
+public class PrepareVerifiedInitiativeUICreateDto {
 
     private InitiativeType initiativeType;
 
@@ -34,8 +34,8 @@ public class PrepareSafeInitiativeUICreateDto {
         return userGivenHomeMunicipality;
     }
 
-    public static PrepareSafeInitiativeUICreateDto parse(PrepareInitiativeUICreateDto prepareDataForVetuma) {
-        PrepareSafeInitiativeUICreateDto uiCreateDto = new PrepareSafeInitiativeUICreateDto();
+    public static PrepareVerifiedInitiativeUICreateDto parse(PrepareInitiativeUICreateDto prepareDataForVetuma) {
+        PrepareVerifiedInitiativeUICreateDto uiCreateDto = new PrepareVerifiedInitiativeUICreateDto();
         uiCreateDto.setInitiativeType(prepareDataForVetuma.getInitiativeType());
         uiCreateDto.setMunicipality(prepareDataForVetuma.getMunicipality());
         uiCreateDto.setUserGivenHomeMunicipality(prepareDataForVetuma.getHomeMunicipality());

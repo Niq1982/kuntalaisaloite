@@ -9,7 +9,6 @@ import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.NormalLoginUser;
@@ -161,12 +160,11 @@ public class AuthorService {
 
         municipalMembershipSolver.assertMunicipalityOrMembershipForNormalInitiative();
 
-        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(confirmDto, initiative.getId());
         String managementHash = RandomHashGenerator.longHash();
         Long participantId = participantDao.prepareConfirmedParticipant(
                 initiative.getId(),
                 municipalMembershipSolver.getHomeMunicipality(),
-                participantCreateDto.getEmail(),
+                confirmDto.getContactInfo().getEmail(),
                 municipalMembershipSolver.getMunicipalMembership(),
                 confirmDto.getContactInfo().isShowName());
         NormalAuthorId authorId = authorDao.createAuthor(initiative.getId(), participantId, managementHash);

@@ -5,7 +5,10 @@ import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
-import fi.om.municipalityinitiative.dto.service.*;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.dto.service.NormalParticipant;
+import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
@@ -141,9 +144,6 @@ public class ParticipantService {
         MunicipalMembershipSolver municipalMembershipSolver = new MunicipalMembershipSolver(User.anonym(), initiative.getMunicipality().getId(), participant);
 
         municipalMembershipSolver.assertMunicipalityOrMembershipForNormalInitiative();
-
-        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant, initiativeId);
-        participantCreateDto.setMunicipalityInitiativeId(initiativeId);
 
         String confirmationCode = RandomHashGenerator.shortHash();
 

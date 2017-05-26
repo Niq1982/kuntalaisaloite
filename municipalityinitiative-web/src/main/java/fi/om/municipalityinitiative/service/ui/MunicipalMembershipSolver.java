@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateBase;
-import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
+import fi.om.municipalityinitiative.dto.ui.PrepareVerifiedInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
@@ -24,7 +24,7 @@ public class MunicipalMembershipSolver {
         this(user, initiativeMunicipality, createBase.getHomeMunicipality(), createBase.getMunicipalMembership());
     }
 
-    public MunicipalMembershipSolver(VerifiedUser verifiedUser, Long municipality, PrepareSafeInitiativeUICreateDto uiCreateDto) {
+    public MunicipalMembershipSolver(VerifiedUser verifiedUser, Long municipality, PrepareVerifiedInitiativeUICreateDto uiCreateDto) {
         this(verifiedUser, municipality, uiCreateDto.getUserGivenHomeMunicipality(), null);
     }
 

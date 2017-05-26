@@ -42,7 +42,7 @@ public class VerifiedInitiativeService {
     private AuthorDao authorDao;
 
     @Transactional(readOnly = false)
-    public long prepareVerifiedInitiative(VerifiedUser verifiedUser, PrepareSafeInitiativeUICreateDto uiCreateDto) {
+    public long prepareVerifiedInitiative(VerifiedUser verifiedUser, PrepareVerifiedInitiativeUICreateDto uiCreateDto) {
 
         MunicipalMembershipSolver municipalMembershipSolver = new MunicipalMembershipSolver(verifiedUser, uiCreateDto.getMunicipality(), uiCreateDto);
 

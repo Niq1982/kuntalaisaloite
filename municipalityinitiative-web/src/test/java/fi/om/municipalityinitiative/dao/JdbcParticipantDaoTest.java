@@ -3,7 +3,6 @@ package fi.om.municipalityinitiative.dao;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.Participant;
-import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -486,12 +485,7 @@ public class JdbcParticipantDaoTest {
     }
 
     private Long createConfirmedParticipant(Long initiativeId, Long homeMunicipality, boolean publicName, String participantName) {
-        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
-        participantCreateDto.setMunicipalityInitiativeId(initiativeId);
-        participantCreateDto.setParticipantName(participantName);
-        participantCreateDto.setHomeMunicipality(homeMunicipality);
-        participantCreateDto.setShowName(publicName);
-        participantCreateDto.setMunicipalMembership(PARTICIPANT_MEMBERSHIP);
+
         Long participantId = participantDao.create(
                 initiativeId,
                 participantName,
@@ -505,33 +499,8 @@ public class JdbcParticipantDaoTest {
     }
 
 
-    private Long createConfirmedParticipant(long initiativeId, boolean publicName) {
-        return createConfirmedParticipant(initiativeId, publicName, "Composers name");
-    }
-
     private Long createConfirmedParticipant(long initiativeId, boolean publicName, String participantName) {
         return createConfirmedParticipant(initiativeId, testMunicipalityId, publicName, participantName);
-    }
-
-    private ParticipantCreateDto participantCreateDto() {
-        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
-        participantCreateDto.setMunicipalityInitiativeId(testInitiativeId);
-        participantCreateDto.setParticipantName(PARTICIPANTS_NAME);
-        participantCreateDto.setHomeMunicipality(otherMunicipalityId);
-        participantCreateDto.setEmail(PARTICIPANT_EMAIL);
-        participantCreateDto.setShowName(PARTICIPANT_SHOW_NAME);
-        participantCreateDto.setMunicipalMembership(PARTICIPANT_MEMBERSHIP);
-        return participantCreateDto;
-    }
-
-    private ParticipantCreateDto participantCreateDtoWithoutEmail() {
-        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
-        participantCreateDto.setMunicipalityInitiativeId(testInitiativeId);
-        participantCreateDto.setParticipantName(PARTICIPANTS_NAME);
-        participantCreateDto.setHomeMunicipality(otherMunicipalityId);
-        participantCreateDto.setShowName(PARTICIPANT_SHOW_NAME);
-        participantCreateDto.setMunicipalMembership(PARTICIPANT_MEMBERSHIP);
-        return participantCreateDto;
     }
 
 
