@@ -90,7 +90,7 @@ public class NormalInitiativeService {
                 initiativeId,
                 municipalMembershipSolver.getHomeMunicipality(),
                 createDto.getParticipantEmail(),
-                createDto.getMunicipalMembership(),
+                municipalMembershipSolver.getMunicipalMembership(),
                 showName);
         String managementHash = RandomHashGenerator.longHash();
         NormalAuthorId authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);

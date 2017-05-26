@@ -140,6 +140,25 @@ public class NormalInitiativeServiceTest extends ServiceIntegrationTestBase {
     }
 
     @Test
+    public void preparing_initiative_sets_membership_to_none_if_same_municipality() {
+
+        PrepareInitiativeUICreateDto createDto = new PrepareInitiativeUICreateDto();
+
+        createDto.setMunicipality(testMunicipality.getId());
+        createDto.setHomeMunicipality(testMunicipality.getId());
+        createDto.setParticipantEmail("some@example.com");
+        createDto.setMunicipalMembership(null);
+
+        Long initiativeId = service.prepareInitiativeWithEmail(createDto, Locales.LOCALE_FI);
+
+        NormalParticipant uniqueNormalParticipant = testHelper.getUniqueNormalParticipant(initiativeId);
+
+        assertThat(uniqueNormalParticipant.getMembership(), is(Membership.none));
+        assertThat(uniqueNormalParticipant.getHomeMunicipality().get().getId(), is(testMunicipality.getId()));
+
+    }
+
+    @Test
     public void addAuthorMessage_increases_amount_of_author_messages_and_confirming_deletes() {
         AuthorUIMessage authorUIMessage = authorUIMessage();
 
@@ -175,9 +194,10 @@ public class NormalInitiativeServiceTest extends ServiceIntegrationTestBase {
         Long initiativesAtFirst = testHelper.countAll(QMunicipalityInitiative.municipalityInitiative);
         PrepareInitiativeUICreateDto createDto = new PrepareInitiativeUICreateDto();
         createDto.setMunicipality(testMunicipality.getId());
-        createDto.setHomeMunicipality(testMunicipality.getId());
+        createDto.setHomeMunicipality(-1L);
+        createDto.setMunicipalMembership(Membership.community);
         try {
-            service.prepareInitiativeWithEmail(createDto, Locales.LOCALE_FI);
+            service.prepareInitiativeWithEmail(createDto, null);
             fail("Should have thrown exception");
         } catch (Throwable t) {
             precondition(t, instanceOf(DataIntegrityViolationException.class)); // Creating participant should throw this after the initiative has been created
