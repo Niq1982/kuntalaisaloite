@@ -61,7 +61,9 @@
                                 </#if>
 
                                 <div class="participation-vetuma-login-container"
-                                     <#if formSelectionVisible>style="display:none"</#if>>
+
+                                     <#if formSelectionVisible>style="display:none"</#if>
+
 
                                     <form class="sodirty dirtylisten js-validate">
                                         <div class="input-block-content">
@@ -93,7 +95,6 @@
                             <@f.helpText "help.authenticationSelection" />
                         </div>
                     </div>
-                </div>
             </#if>
         </div>
 
