@@ -125,7 +125,12 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         open(urls.confirmParticipant(testHelper.getLastParticipantId(), PreviousHashGetter.get()));
 
-        assertTextContainedByClass("private-names", "1 kunnan asukas"); //TODO
+        assertThat(totalUserCount(), is("1"));
+        assertTextContainedByClass("private-names", "0 kunnan asukkaita");
+    }
+
+    private String totalUserCount() {
+        return getElement(By.className("test-user-count-total")).getText();
     }
 
     // Email -> normal initiative -> disallow
@@ -219,8 +224,9 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         getElemContaining("Tallenna", "button").click();
 
         assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
-        //open(urls.confirmParticipant(testHelper.getLastParticipantId(), PreviousHashGetter.get())); FAILS
-        //assertTextContainedByClass("public-names", "1 nimi julkaistu palvelussa");
+
+        assertThat(totalUserCount(), is("1"));
+        assertTextContainedByClass("private-names", "0 kunnan asukkaita");
     }
 
     // Vetuma, private municipality -> normal initiative -> disallow
@@ -289,7 +295,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         open(urls.view(normalInitiativeHelsinki));
 
-        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+        Integer originalParticipantCountOnPage = Integer.valueOf(totalUserCount());
 
         assertThat(participateToInitiativeButton(), isPresent());
         participateToInitiativeButton().get().click();
@@ -300,9 +306,10 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         getElemContaining("Tallenna", "button").click();
 
         assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
-        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+        Integer newParticipantCountOnPage = Integer.valueOf(totalUserCount());
 
         assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
+        assertTextContainedByClass("private-names", "1 kunnan asukas");
 
         assertWarningMessage("Olet jo osallistunut tähän aloitteeseen");
         assertThat(participateToInitiativeButton(), isNotPresent());
@@ -313,7 +320,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     public void participate_to_normal_initiative_as_verified_user_by_clicking_authentication_link_on_participate_page() {
         open(urls.view(normalInitiativeHelsinki));
 
-        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+        Integer originalParticipantCountOnPage = Integer.valueOf(totalUserCount());
 
         clickLink(getMessage(MSG_BTN_PARTICIPATE));
         clickLink("Tunnistaudu ja osallistu");
@@ -322,7 +329,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
         clickLink("Jatka kirjautuneena");
 
-        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+        Integer newParticipantCountOnPage = Integer.valueOf(totalUserCount());
         assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
 
     }
@@ -333,7 +340,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         vetumaLogin(OTHER_USER_SSN, VANTAA);
         open(urls.view(normalInitiativeHelsinki));
 
-        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+        Integer originalParticipantCountOnPage = Integer.valueOf(totalUserCount());
 
         assertThat(participateToInitiativeButton(), isPresent());
         participateToInitiativeButton().get().click();
@@ -344,7 +351,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         getElemContaining("Tallenna", "button").click();
 
         assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
-        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+        Integer newParticipantCountOnPage = Integer.valueOf(totalUserCount());
 
         assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
 
@@ -372,7 +379,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         vetumaLogin("111111-1111", HELSINKI);
         open(urls.view(verifiedInitiativeHelsinki));
 
-        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+        Integer originalParticipantCountOnPage = Integer.valueOf(totalUserCount());
 
         assertThat(participateToInitiativeButton(), isPresent());
         participateToInitiativeButton().get().click();
@@ -381,7 +388,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         getElemContaining("Tallenna", "button").click();
 
         assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
-        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("test-user-count-total")).getText());
+        Integer newParticipantCountOnPage = Integer.valueOf(totalUserCount());
 
         assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
 
