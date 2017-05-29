@@ -333,6 +333,32 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     }
 
     @Test
+    public void participating_to_verified_initiative_as_under_aged_throws_exception() {
+
+        Long initiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED));
+
+        VerifiedUser underAgedUser = User.verifiedUser(
+                null,
+                HASH,
+                contactInfo(),
+                Collections.emptySet(),
+                Collections.emptySet(),
+                Optional.of(testMunicipality),
+                12
+        );
+
+        thrown.expect(RuntimeException.class);
+        thrown.expectMessage(containsString("Too young to participate"));
+
+        ParticipantUICreateDto createDto = new ParticipantUICreateDto();
+        createDto.setShowName(true);
+
+        service.createParticipant(createDto, initiative, underAgedUser);
+
+    }
+
+    @Test
     @Transactional
     public void preparing_verified_initiative_with_turvakielto_leaves_verified_flag_to_false() {
 

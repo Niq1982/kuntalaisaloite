@@ -17,6 +17,7 @@ public class MunicipalMembershipSolver {
     private Optional<Long> userGivenHomeMunicipality;
     private Optional<Long> verifiedMunicipality;
     private Optional<Membership> userGivenMembership;
+    private boolean tooYoungForVerifiedParticipation;
 
 
     public MunicipalMembershipSolver(User user, Long initiativeMunicipality,
@@ -29,6 +30,7 @@ public class MunicipalMembershipSolver {
     }
 
     private MunicipalMembershipSolver(User user, Long initiativeMunicipality, Long userGivenHomeMunicipality, Membership userGivenMunicipalMembership) {
+        tooYoungForVerifiedParticipation = user.tooYoungForVerifiedParticipation();
         this.initiativeMunicipality = initiativeMunicipality;
         this.userGivenHomeMunicipality = Optional.ofNullable(userGivenHomeMunicipality);
         this.userGivenMembership = Optional.ofNullable(userGivenMunicipalMembership);
@@ -40,6 +42,9 @@ public class MunicipalMembershipSolver {
     public void assertMunicipalityForVerifiedInitiative() {
         if (!homeMunicipalityMatches()) {
             throw new InvalidHomeMunicipalityException("Unable to create/participate initiative for municipality " + initiativeMunicipality + ", homeMunicipality: " + getHomeMunicipality());
+        }
+        else if (tooYoungForVerifiedParticipation) {
+            throw new RuntimeException("Too young to participate for initiative");
         }
     }
 
