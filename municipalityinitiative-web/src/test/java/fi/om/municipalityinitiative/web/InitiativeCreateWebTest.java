@@ -258,7 +258,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         clickButton("Aloita aloitteen tekeminen");
 
         // Then
-        shows_initiative_creating_page_without_error(); //FAILS homeMunicipality is not defined
+        shows_initiative_creating_page_without_error();
     }
 
     @Test

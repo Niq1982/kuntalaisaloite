@@ -130,7 +130,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     }
 
     private String totalUserCount() {
-        return getElement(By.className("user-count-total")).getText();
+        return getElement(By.className("user-count-total")).getAttribute("innerHTML");
     }
 
     // Email -> normal initiative -> disallow
@@ -331,7 +331,6 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         Integer newParticipantCountOnPage = Integer.valueOf(totalUserCount());
         assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
-
     }
 
     // Vetuma -> normal initiative -> another municipality
