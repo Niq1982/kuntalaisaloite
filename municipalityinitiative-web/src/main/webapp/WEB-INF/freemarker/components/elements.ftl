@@ -441,8 +441,6 @@
         <br class="clear" />
     </#if>
 
-
-
 </#macro>
 
 
