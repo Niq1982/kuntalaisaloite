@@ -47,6 +47,7 @@ public class JdbcParticipantDao implements ParticipantDao {
             QVerifiedParticipant.verifiedParticipant.showName,
             QVerifiedParticipant.verifiedParticipant.membershipType,
             QVerifiedParticipant.verifiedParticipant.municipalityId,
+            QVerifiedParticipant.verifiedParticipant.name,
             QVerifiedUser.verifiedUser.name,
             QVerifiedUser.verifiedUser.email,
             QVerifiedUser.verifiedUser.id,
@@ -63,7 +64,7 @@ public class JdbcParticipantDao implements ParticipantDao {
             participant.setMunicipalityVerified(row.get(QVerifiedParticipant.verifiedParticipant.verified));
             participant.setShowName(row.get(QVerifiedParticipant.verifiedParticipant.showName));
             participant.setParticipateDate(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
-            participant.setName(row.get(QVerifiedUser.verifiedUser.name));
+            participant.setName(row.get(QVerifiedParticipant.verifiedParticipant.name));
             participant.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
             participant.setMembership(row.get(QVerifiedParticipant.verifiedParticipant.membershipType));
             participant.setHomeMunicipality(
@@ -237,7 +238,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
                 .list(QVerifiedUser.verifiedUser.id.as(ParticipateUnionRow.id.getMetadata().getName()),
                         QVerifiedUser.verifiedUser.id.isNotNull().as(ParticipateUnionRow.verified_user.getMetadata().getName()),
-                        QVerifiedUser.verifiedUser.name.as(ParticipateUnionRow.name.getMetadata().getName()),
+                        QVerifiedParticipant.verifiedParticipant.name.as(ParticipateUnionRow.name.getMetadata().getName()),
                         QVerifiedUser.verifiedUser.email.as(ParticipateUnionRow.email.getMetadata().getName()), // XXX: This might be null for verified participants...
                         QVerifiedParticipant.verifiedParticipant.showName.as(ParticipateUnionRow.show_name.getMetadata().getName()),
                         QVerifiedParticipant.verifiedParticipant.verified.as(ParticipateUnionRow.verified.getMetadata().getName()),
@@ -375,12 +376,13 @@ public class JdbcParticipantDao implements ParticipantDao {
 
 
     @Override
-    public void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName, boolean verifiedMunicipality, Long homeMunicipality, Membership municipalMembership) {
+    public void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, String name, boolean showName, boolean verifiedMunicipality, Long homeMunicipality, Membership municipalMembership) {
 
         assertSingleAffection(queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, userId.toLong())
                 .set(QVerifiedParticipant.verifiedParticipant.showName, showName)
+                .set(QVerifiedParticipant.verifiedParticipant.name, name)
                 .set(QVerifiedParticipant.verifiedParticipant.verified, verifiedMunicipality)
                 .set(QVerifiedParticipant.verifiedParticipant.municipalityId, homeMunicipality)
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, municipalMembership == null ? Membership.none : municipalMembership)

@@ -1,14 +1,13 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
+import com.mysema.query.sql.ColumnMetadata;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
 import com.mysema.query.types.path.*;
 
-import com.mysema.query.types.PathMetadata;
 import javax.annotation.Generated;
-import com.mysema.query.types.Path;
 
-import com.mysema.query.sql.ColumnMetadata;
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -26,6 +25,8 @@ public class QVerifiedParticipant extends com.mysema.query.sql.RelationalPathBas
     public final EnumPath<fi.om.municipalityinitiative.util.Membership> membershipType = createEnum("membershipType", fi.om.municipalityinitiative.util.Membership.class);
 
     public final NumberPath<Long> municipalityId = createNumber("municipalityId", Long.class);
+
+    public final StringPath name = createString("name");
 
     public final DatePath<org.joda.time.LocalDate> participateTime = createDate("participateTime", org.joda.time.LocalDate.class);
 
@@ -61,7 +62,8 @@ public class QVerifiedParticipant extends com.mysema.query.sql.RelationalPathBas
     public void addMetadata() {
         addMetadata(initiativeId, ColumnMetadata.named("initiative_id").ofType(-5).withSize(19).notNull());
         addMetadata(membershipType, ColumnMetadata.named("membership_type").ofType(1111).withSize(2147483647).notNull());
-        addMetadata(municipalityId, ColumnMetadata.named("municipality_id").ofType(-5).withSize(19));
+        addMetadata(municipalityId, ColumnMetadata.named("municipality_id").ofType(-5).withSize(19).notNull());
+        addMetadata(name, ColumnMetadata.named("name").ofType(12).withSize(100).notNull());
         addMetadata(participateTime, ColumnMetadata.named("participate_time").ofType(91).withSize(13));
         addMetadata(showName, ColumnMetadata.named("show_name").ofType(-7).withSize(1).notNull());
         addMetadata(verified, ColumnMetadata.named("verified").ofType(-7).withSize(1).notNull());

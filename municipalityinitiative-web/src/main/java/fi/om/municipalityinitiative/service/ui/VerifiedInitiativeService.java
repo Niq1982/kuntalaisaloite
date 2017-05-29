@@ -57,7 +57,7 @@ public class VerifiedInitiativeService {
         participantDao.addVerifiedParticipant(
                 initiativeId,
                 verifiedUserId,
-                showName,
+                verifiedUser.getContactInfo().getName(), showName,
                 municipalMembershipSolver.isHomeMunicipalityVerified(),
                 uiCreateDto.getMunicipality(), // Participants municipality is always initiatives municipality
                 Membership.none);
@@ -84,6 +84,7 @@ public class VerifiedInitiativeService {
         boolean showName = true;
         participantDao.addVerifiedParticipant(initiativeId,
                 verifiedUserId,
+                verifiedUser.getContactInfo().getName(),
                 showName,
                 municipalMembershipSolver.isHomeMunicipalityVerified(),
                 municipalMembershipSolver.getHomeMunicipality(),
@@ -125,7 +126,7 @@ public class VerifiedInitiativeService {
                     participantDao.addVerifiedParticipant(
                             initiativeId,
                             verifiedUserId,
-                            confirmDto.getContactInfo().isShowName(),
+                            verifiedUser.getContactInfo().getName(), confirmDto.getContactInfo().isShowName(),
                             verifiedUser.getHomeMunicipality().isPresent(),
                             municipalMembershipSolver.getHomeMunicipality(),
                             municipalMembershipSolver.getMunicipalMembership()
@@ -163,7 +164,7 @@ public class VerifiedInitiativeService {
         VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
         participantDao.addVerifiedParticipant(initiativeId,
                 verifiedUserId,
-                createDto.getShowName(),
+                verifiedUser.getContactInfo().getName(), createDto.getShowName(),
                 municipalMembershipSolver.isHomeMunicipalityVerified(),
                 municipalMembershipSolver.getHomeMunicipality(),
                 createDto.getMunicipalMembership()

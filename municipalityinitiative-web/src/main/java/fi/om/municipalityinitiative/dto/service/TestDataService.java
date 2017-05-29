@@ -115,7 +115,7 @@ public class TestDataService {
         VerifiedUserId verifiedUserId = userDao.getVerifiedUserId(currentVerifiedUser.getHash()).get();
         participantDao.addVerifiedParticipant(initiativeId,
                 verifiedUserId,
-                template.getAuthor().getContactInfo().isShowName(), true,
+                currentVerifiedUser.getContactInfo().getName(), template.getAuthor().getContactInfo().isShowName(), true,
                 template.getInitiative().getMunicipality().getId(),
                 Membership.none);
         authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
@@ -172,7 +172,7 @@ public class TestDataService {
 
         participantDao.addVerifiedParticipant(initiativeId,
                 verifiedUserId,
-                participantUICreateDto.getShowName(),
+                participantUICreateDto.getParticipantName(), participantUICreateDto.getShowName(),
                 participantUICreateDto.getShowName() && (randomizer.nextInt() % 5 == 0),
                 initiativeDao.get(initiativeId).getMunicipality().getId(),
                 Membership.none

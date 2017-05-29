@@ -381,6 +381,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
                 .set(QVerifiedParticipant.verifiedParticipant.participateTime, authorDraft.participateDate)
+                .set(QVerifiedParticipant.verifiedParticipant.name, authorDraft.participantName)
                 .execute();
 
         ContactInfo contactInfo = new ContactInfo();
@@ -472,6 +473,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
+                .set(QVerifiedParticipant.verifiedParticipant.name, authorDraft.participantName)
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
                 .set(QVerifiedParticipant.verifiedParticipant.participateTime, authorDraft.participateDate)
                 .set(QVerifiedParticipant.verifiedParticipant.municipalityId, authorDraft.participantMunicipality)
@@ -496,6 +498,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
+                .set(QVerifiedParticipant.verifiedParticipant.name, authorDraft.participantName)
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
                 .set(QVerifiedParticipant.verifiedParticipant.participateTime, date)
                 .execute();
@@ -512,8 +515,10 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, authorDraft.verifiedUserId.get())
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.verifiedParticipantMunicipalityVerified)
+                .set(QVerifiedParticipant.verifiedParticipant.name, authorDraft.participantName)
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
                 .set(QVerifiedParticipant.verifiedParticipant.participateTime, authorDraft.participateDate)
+                .set(QVerifiedParticipant.verifiedParticipant.municipalityId, authorDraft.participantMunicipality)
                 .execute();
 
         return id;
