@@ -10,3 +10,4 @@ where verified_participant.verified_user_id = subselect.verified_user_id
       and verified_participant.initiative_id = subselect.initiative_id;
 
 alter table verified_participant alter column municipality_id set not null;
+alter table participant alter column municipality_id set not null;
