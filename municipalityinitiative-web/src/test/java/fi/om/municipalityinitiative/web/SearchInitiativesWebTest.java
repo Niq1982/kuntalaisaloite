@@ -7,12 +7,10 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.StringEndsWith.endsWith;
 
 public class SearchInitiativesWebTest extends WebTestBase {
 
@@ -146,40 +144,6 @@ public class SearchInitiativesWebTest extends WebTestBase {
         open(urls.search() + new SearchParameterQueryString(new InitiativeSearch()).getWithStateSent());
         assertTextContainedByClass("search-results", singleSent);
         assertTextNotContainedByClass("search-results", collaborativeCitizenInitiativeName);
-
-    }
-
-    @Test
-    public void show_info_for_single_municipality() {
-        long municipalityId = testHelper.createTestMunicipality("Akaa", true, "Akaa on hieno paikka", "Akaa är en bra plats");
-
-        overrideDriverToFirefox(true);
-
-        open(urls.search());
-
-        assertThat(this.elementExists(By.className("municipality-email")), is(false));
-
-        clickInput();
-
-        selectNthMunicipality(1);
-
-        WebElement municipalityImgElement =  this.getElement(By.className("municipality-img"));
-        assertThat(municipalityImgElement.getAttribute("src"), endsWith(municipalityId +".gif"));
-
-        String email = "Akaa@example.com";
-        String description = "Akaa on hieno paikka";
-        String descriptionSv = "Akaa är en bra plats";
-
-        assertThat(this.elementExists(By.className("municipality-email")), is(true));
-        assertTextContainedByClass("municipality-email", email);
-        assertTextContainedByClass("municipality-description", description);
-
-        clickElementByClass("language-selection");
-        assertTextContainedByClass("municipality-description", descriptionSv);
-
-        clickInput();
-        selectNthMunicipality(2);
-        assertThat(this.elementExists(By.className("municipality-email")), is(false));
 
     }
 

@@ -33,12 +33,6 @@
 
 
 <div class="view-block search-options cf noprint">
-    <#--
-     * Municipality infos
-    -->
-    <#if currentMunicipalities.present && currentMunicipalities.get()?size == 1>
-        <@e.initiativeDescription currentMunicipalities.get()[0] />
-    </#if>
 
     <div>
         <#--

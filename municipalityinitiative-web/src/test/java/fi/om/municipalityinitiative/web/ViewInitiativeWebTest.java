@@ -4,7 +4,9 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -336,7 +338,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
     @Test
     public void show_graph_iframe_for_initiative() {
-        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        DateTime stateTime = DateTime.now().minusDays(3);
         String title = "Yeah rock rock";
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
                 .withState(InitiativeState.PUBLISHED)
@@ -349,17 +351,27 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, HELSINKI_ID)
                 .withParticipantName(publicName)
+                .withParticipateDate(LocalDate.now().minusDays(1))
                 .withShowName(true));
 
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, HELSINKI_ID)
                 .withParticipantName(privateName)
+                .withParticipateDate(LocalDate.now().minusDays(1))
                 .withShowName(false));
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, VANTAA_ID)
+                .withParticipantName(privateName)
+                .withMunicipalityMembership(Membership.community)
+                .withParticipateDate(LocalDate.now().minusDays(2))
+                .withShowName(true));
+
+        testHelper.denormalizeParticipantCount(initiativeId);
 
         open(urls.graphIFrame(initiativeId));
 
-        assertThat(getElement(By.className("public-names")).getText(), containsString("1 nimi julkaistu palvelussa"));
+        assertThat(getElement(By.className("public-names")).getText(), containsString("2 nimeä julkaistu palvelussa"));
 
-        assertThat(getElement(By.className("private-names")).getText(), containsString("1 nimi ei julkaistu palvelussa"));
+        assertThat(getElement(By.className("private-names")).getText(), containsString("2 kunnan asukkaita"));
     }
     @Test
     public void show_graph_iframe_for_initiative_with_title_and_date() {
