@@ -357,11 +357,7 @@
         </div>
     </#if>
 
-
-
-
-    <@mobile.participantsBlock participantCount/>
-
+    <@mobile.participantsBlock participantCount canFollow showFollowForm/>
 
     <@e.participantInfo />
 
@@ -380,7 +376,7 @@
 
     <#--
      * Public VIEW modals
-     * 
+     *
      * Uses jsRender for templating.
      * Same content is generated for NOSCRIPT and for modals.
      *

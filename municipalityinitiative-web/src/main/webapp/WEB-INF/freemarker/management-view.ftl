@@ -48,7 +48,7 @@
 
     <#if !initiative.single && initiative.state == InitiativeState.PUBLISHED>
         <@e.participantInfo admin=true/>
-        <@mobile.participantsBlock participantCount=participantCount admin=true/>
+        <@mobile.participantsBlock participantCount=participantCount canFollow=false showFollowForm=false admin=true/>
     </#if>
 
     <#if !initiative.single>

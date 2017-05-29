@@ -78,7 +78,7 @@
 
 </#macro>
 
-<#macro participantsBlock participantCount admin=false>
+<#macro participantsBlock participantCount canFollow showFollowForm admin=false>
 
     <div id="participants" class="view-block public participants mobile last">
         <h2><@u.message key="initiative.participation.title" args=[participantCount.total] /></h2>
@@ -101,6 +101,18 @@
 
     <div class="initiative-content-row last">
         <@participantsMobile formHTML=participateFormHTML showForm=showParticipateForm admin=admin />
+        <#if canFollow>
+            <div class="participants-block">
+                <@e.follow />
+            </div>
+            <#noescape><noscript>
+                <#if showFollowForm>
+                    <div id="follow-form" class="form-container cf top-margin">
+                    ${followInitiativeFormHTML!""}
+                    </div>
+                </#if>
+            </noscript></#noescape>
+        </#if>
     </div>
 </div>
 
@@ -170,12 +182,7 @@
         <span><@u.message "participants"/></span>
     </div>
     <div class="participants-block separate">
-            <span class="user-count-sub-total">
-                <span class="total-names-names"><@u.message key="participantCount.thisService" args=[participantCount.total]/></span><br/>
-                <span class="private-names left-padding"><@u.message key="participantCount.citizen" args=[initiative.participantCountCitizen]/></span><br/>
-                <#if (participantCount.publicNames > 0)><span class="public-names left-padding"><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.publicNames] /></a></span><br/></#if>
-                <#if (initiative.externalParticipantCount > 0)><span class="private-names"><@u.message key="participantCount.externalNames" args=[initiative.externalParticipantCount]/></span></#if>
-            </span>
+            <@e.participantCountInformation />
     </div>
 </#macro>
 

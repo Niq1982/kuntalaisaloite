@@ -130,7 +130,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     }
 
     private String totalUserCount() {
-        return getElement(By.className("test-user-count-total")).getText();
+        return getElement(By.className("user-count-total")).getText();
     }
 
     // Email -> normal initiative -> disallow
