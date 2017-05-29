@@ -238,7 +238,7 @@
                             <@f.contactInfo path="authorInvitation.contactInfo" disableEmail=false mode="full" />
                         </div>
 
-                        <div class="input-block-content">
+                        <div class="input-block-content send-button-block">
                             <div class="toggle-disable-send mask-div">
                                 <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INVITATION}"
                                         id="modal-${UrlConstants.ACTION_ACCEPT_INVITATION}"

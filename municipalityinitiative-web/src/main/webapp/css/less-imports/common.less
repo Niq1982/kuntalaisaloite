@@ -277,13 +277,13 @@ a.block-link {
     }
 }
 
-.prepare-auth, #form-participate {
+.prepare-auth, #form-participate, #form-invitation {
     input, .input-block-content input[type="text"].large {
         padding: 6px;
     }
 }
 
-#form-participate {
+#form-participate, #form-invitation {
     .send-button-block {
         button {
             margin-right: 1em;
@@ -300,6 +300,11 @@ a.block-link {
     .send-button-block button, .mask-div .mask-send {
         width: 184px;
         margin: 0;
+    }
+    &#form-invitation {
+        .send-button-block button, .mask-div .mask-send {
+            width: 250px;
+        }
     }
 
     #home-municipality-select, #participation-criterion {
