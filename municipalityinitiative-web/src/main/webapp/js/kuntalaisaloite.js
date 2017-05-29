@@ -780,6 +780,16 @@ var municipalitySelection = (function() {
 		//btnParticipate.disableButton(prevent); // use general form validation
 		mask.remove();
 
+        if ($('#form-invitation').length !== 0 && maskClass == 'mask-send' && !prevent) {
+        	console.log("preventCont, mask-send");
+        	var inputIDs = [];
+        	inputIDs.push("contactInfo.name");
+            inputIDs.push("contactInfo.email");
+            if (!validateMandatoryInputs(inputIDs)) {
+                prevent = true;
+            }
+        }
+
 		if (prevent) {
 			toggleDisableInput.attr('disabled','disabled');
 			toggleDisable.addClass('disabled');
@@ -790,6 +800,19 @@ var municipalitySelection = (function() {
 			toggleDisable.removeClass('disabled');
 		}
 	};
+
+	function validateMandatoryInputs(inputIDs) {
+		var elem;
+		for (var i in inputIDs) {
+			elem = document.getElementById(inputIDs[i]);
+			if (elem.value == "") {
+				console.log("validateMandatory: error");
+				return false;
+			}
+		}
+        console.log("validateMandatory: OK");
+		return true;
+	}
 
 	function disableSubmit(disable){
 	  //$('button#action-send-confirm, button#participate').disableButton(disable);
