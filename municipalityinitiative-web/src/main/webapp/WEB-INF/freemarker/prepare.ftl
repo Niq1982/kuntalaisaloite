@@ -61,15 +61,10 @@
                                 </#if>
 
                                 <div class="participation-vetuma-login-container"
-
-                                     <#if formSelectionVisible>style="display:none"</#if>
-
-
-                                    <form class="sodirty dirtylisten js-validate">
+                                     <#if formSelectionVisible>style="display:none"</#if>>
                                         <div class="input-block-content">
                                             <@u.systemMessage path="authentication.selection.verified.description" type="info" />
                                         </div>
-                                    </form>
                                     <div class="input-block-content">
                                         <@edit.buttons type="verify" class="small-button"/>
                                     </div>
