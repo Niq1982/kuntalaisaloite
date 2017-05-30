@@ -53,6 +53,16 @@
         &.verified {
             padding-left: 8.5%;
             padding-right: 8.4%;
+            @media @xs-small-mobile {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+        &.email {
+            @media @xs-small-mobile {
+                padding-left: 0;
+                padding-right: 0;
+            }
         }
 
         &.selected {
@@ -79,6 +89,12 @@
 
         .transition(opacity, 0.1s, ease-in);
 
+    }
+
+    #action-send-confirm.small-button {
+        @media @xs-small-mobile {
+            width: 100%;
+        }
     }
 }
 
@@ -318,10 +334,28 @@ label  {
         margin: 0;
     }
 
+    .send-button-block {
+        @media @xs-small-mobile {
+            padding-left: 0;
+            padding-right: 0;
+            margin: auto;
+            width: 80%;
+            display: table;
+        }
+    }
+
     .small-button {
         height: 36px;
         width: 250px;
         margin: 0;
+        @media @xs-small-mobile {
+            width: 100%;
+        }
+    }
+    .mask-send {
+        @media @xs-small-mobile {
+            width: 100%;
+        }
     }
     .input-block.form-block-container {
         background: none;
