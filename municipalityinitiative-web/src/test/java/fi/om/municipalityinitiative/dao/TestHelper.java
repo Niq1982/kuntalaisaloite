@@ -501,6 +501,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.name, authorDraft.participantName)
                 .set(QVerifiedParticipant.verifiedParticipant.membershipType, authorDraft.municipalityMembership)
                 .set(QVerifiedParticipant.verifiedParticipant.participateTime, date)
+                .set(QVerifiedParticipant.verifiedParticipant.municipalityId, authorDraft.participantMunicipality)
                 .execute();
 
         this.lastVerifiedUserId = verifiedUserId;
