@@ -585,6 +585,8 @@ public class AuthorsWebTest extends WebTestBase {
             assertThat(getElementByLabel("Sähköpostiosoite", "input").getAttribute("value"), containsString(CONTACT_EMAIL));
         }
 
+        getElement(By.id("homeMunicipality_chzn")).click();
+
         assertThat(getElemContaining("Hyväksy ja tallenna tiedot", "button").isEnabled(), is(true));
     }
 

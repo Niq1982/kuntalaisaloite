@@ -257,8 +257,6 @@ $(document).ready(function () {
 		var btnClicked, firstBtnInForm, $loader, $submitInfo, $submitWarning;
 		btnClicked = $(this);
 
-		console.log($('#homeMunicipality').val());
-
 		if (btnClicked.attr('class').indexOf('email-auth-btn') > 0) {
 			return;
 		}
@@ -279,8 +277,6 @@ $(document).ready(function () {
 			if (!btnClicked.hasClass("clicked")){
 				btnClicked.addClass("disabled clicked");
 				siblingButtons.addClass("disabled clicked");
-                console.log("tääl2");
-                console.log($('#homeMunicipality').val());
 				siblingButtons.click(function(){
 					return false;
 				});
@@ -300,8 +296,6 @@ $(document).ready(function () {
 				}
 
 			} else {
-				console.log("tääl");
-                console.log($('#homeMunicipality').val());
 				return false;
 			}
 		}
@@ -777,17 +771,26 @@ var municipalitySelection = (function() {
 			btnParticipate		= $("button#participate"),
             mask 				= $("." + maskClass);
 
-		//btnParticipate.disableButton(prevent); // use general form validation
 		mask.remove();
 
         if ($('#form-invitation').length !== 0 && maskClass == 'mask-send' && !prevent) {
-        	console.log("preventCont, mask-send");
-        	var inputIDs = [];
-        	inputIDs.push("contactInfo.name");
-            inputIDs.push("contactInfo.email");
-            if (!validateMandatoryInputs(inputIDs)) {
+        	var nameInputValid = validateNameInput($('#contactInfo\\.name'));
+            var emailInputValid = validateEmailInput($('#contactInfo\\.email'));
+        	var mandatoryInputsValid = nameInputValid && emailInputValid;
+            if (!mandatoryInputsValid) {
                 prevent = true;
             }
+        }
+
+        if ($('#form-participate').length !== 0 && maskClass == 'mask-send' && !prevent) {
+        	if ($('#form-participate').data('userverified') === false) {
+                var nameInputValid = validateNameInput($('#participantName'));
+                var emailInputValid = validateEmailInput($('#participantEmail'));
+                var mandatoryInputsValid = nameInputValid && emailInputValid;
+                if (!mandatoryInputsValid) {
+                    prevent = true;
+                }
+			}
         }
 
 		if (prevent) {
@@ -801,17 +804,20 @@ var municipalitySelection = (function() {
 		}
 	};
 
-	function validateMandatoryInputs(inputIDs) {
-		var elem;
-		for (var i in inputIDs) {
-			elem = document.getElementById(inputIDs[i]);
-			if (elem.value == "") {
-				console.log("validateMandatory: error");
-				return false;
-			}
+	function validateNameInput(input) {
+		if (input.length === 0) {
+			//vetuma login
+			return true;
 		}
-        console.log("validateMandatory: OK");
-		return true;
+		var inputVal = input.val();
+		var valid = inputVal.length > 0;
+		return valid;
+	}
+
+	function validateEmailInput(input) {
+		var inputVal = input.val();
+		var valid = inputVal.indexOf("@") >= 0;
+		return valid;
 	}
 
 	function disableSubmit(disable){
@@ -982,6 +988,7 @@ var municipalitySelection = (function() {
 
 
 	$('#participation-criterion').live('change', function() {
+        startListeningMandatoryFields();
 		var otherMunicipalitySelect 	= $("input[value=other-municipality]"),
 			sameMunicipalitySelect	 	= $("input[value=same-municipality]"),
 			radioMunicipalMembership 	= $("input[name=municipalMembership]"),
@@ -1010,6 +1017,65 @@ var municipalitySelection = (function() {
             }
 		}
 	});
+
+    function startListeningMandatoryFields() {
+        var mandatoryName,
+        	mandatoryEmail,
+			formElem;
+
+        if ($('#form-invitation').length !== 0) {
+        	formElem = $('#form-invitation');
+            mandatoryName = $('#contactInfo\\.name');
+            mandatoryEmail = ($('#contactInfo\\.email'));
+        } else if ($('#form-participate').length !== 0) {
+        	formElem = $('#form-participate');
+            mandatoryName = $('#participantName');
+            mandatoryEmail = ($('#participantEmail'));
+        }
+
+        var mandatoryFields = [mandatoryName, mandatoryEmail];
+
+        for(var i in mandatoryFields) {
+            mandatoryFields[i].bind('change', 'input', function () {
+                if (isFormValid()) {
+                    preventContinuing(false, 'mask-send', $('.toggle-disable-send'));
+                } else {
+                    preventContinuing(true, 'mask-send', $('.toggle-disable-send'));
+                }
+            });
+		}
+
+        function isFormValid() {
+            var nameInputValid = validateNameInput(mandatoryName);
+            var emailInputValid = validateEmailInput(mandatoryEmail);
+
+            var mandatoryInputsValid = nameInputValid && emailInputValid;
+
+            if (!mandatoryInputsValid) {
+                return false;
+            }
+            return validateMunicipalitySelection();
+        }
+
+        function validateMunicipalitySelection() {
+            var otherMunicipalitySelect 	= $("input[value=other-municipality]"),
+                sameMunicipalitySelect	 	= $("input[value=same-municipality]"),
+                homeMun 					= $('#homeMunicipality'),
+                munMembsChecked				= $("input[name=municipalMembership]:checked"),
+                isHomeMunChosen				= homeMun.val().length > 0,
+                homeMunIsVerified			= formElem.data('homemunicipality') === true;
+
+            if (sameMunicipalitySelect.prop('checked')) {
+                return true;
+            }
+
+            if (otherMunicipalitySelect.prop('checked') && munMembsChecked.length > 0) {
+                var checkedMuniMembVal = munMembsChecked.val();
+                return checkedMuniMembVal !== "none" && (homeMunIsVerified || isHomeMunChosen);
+            }
+            return false;
+        }
+    }
 
 	$('.email-auth-btn').live('click', function() {
         handleEmailAuthentication();
