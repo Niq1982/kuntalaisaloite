@@ -982,13 +982,7 @@ var municipalitySelection = (function() {
 
 
 	$('#participation-criterion').live('change', function() {
-<<<<<<< HEAD
-        if (($('#form-invitation').length !== 0 || $('#form-participate').length !== 0)) {
-        	startListeningMandatoryFields();
-        }
 
-=======
->>>>>>> parent of 246c0c4d... Validate mandatory fields in participation and author invitation
 		var otherMunicipalitySelect 	= $("input[value=other-municipality]"),
 			sameMunicipalitySelect	 	= $("input[value=same-municipality]"),
 			radioMunicipalMembership 	= $("input[name=municipalMembership]"),
