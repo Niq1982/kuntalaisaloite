@@ -1047,7 +1047,7 @@ var municipalitySelection = (function() {
 		}
 
         for(var i in mandatoryFields) {
-            mandatoryFields[i].bind({
+            mandatoryFields[i].on({
                 keyup: mandatoryFieldListener,
                 change: mandatoryFieldListener
             });
@@ -1092,7 +1092,7 @@ var municipalitySelection = (function() {
 	function handleEmailAuthentication() {
         var prepareContent = $('.prepare-content');
 
-        if (!$('#participantEmail').val()) {
+        if ($('#participantEmail').val().indexOf("@") < 0) {
             return;
         }
 
