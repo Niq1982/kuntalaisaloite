@@ -126,7 +126,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         open(urls.confirmParticipant(testHelper.getLastParticipantId(), PreviousHashGetter.get()));
 
         assertThat(totalUserCount(), is("1"));
-        assertTextContainedByClass("private-names", "0 kunnan asukkaita");
+        assertTextContainedByClass("private-names", "0 kunnan asukasta");
     }
 
     private String totalUserCount() {
@@ -226,7 +226,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
 
         assertThat(totalUserCount(), is("1"));
-        assertTextContainedByClass("private-names", "0 kunnan asukkaita");
+        assertTextContainedByClass("private-names", "0 kunnan asukasta");
     }
 
     // Vetuma, private municipality -> normal initiative -> disallow

@@ -371,7 +371,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         assertThat(getElement(By.className("public-names")).getText(), containsString("2 nimeä julkaistu palvelussa"));
 
-        assertThat(getElement(By.className("private-names")).getText(), containsString("2 kunnan asukkaita"));
+        assertThat(getElement(By.className("private-names")).getText(), containsString("2 kunnan asukasta"));
     }
     @Test
     public void show_graph_iframe_for_initiative_with_title_and_date() {

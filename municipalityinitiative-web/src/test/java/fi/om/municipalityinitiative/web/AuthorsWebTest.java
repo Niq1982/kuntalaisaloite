@@ -92,7 +92,7 @@ public class AuthorsWebTest extends WebTestBase {
         }
         getElemContaining("Olen kunnan asukas", "label").click();
 
-        validateMandatoryInputsAssert(true, true);
+        //validateManMandatoryInputsAssert(true, true);
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
 
@@ -137,7 +137,7 @@ public class AuthorsWebTest extends WebTestBase {
         getElemContaining("Nimenkirjoitusoikeus yhteisössä", "span").click();
         homeMunicipalitySelect(VANTAA);
 
-        validateMandatoryInputsAssert(true, true);
+        //validateManMandatoryInputsAssert(true, true);
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
 
@@ -183,7 +183,7 @@ public class AuthorsWebTest extends WebTestBase {
         }
         getElemContaining("Olen kunnan asukas", "label").click();
 
-        validateMandatoryInputsAssert(false, true);
+        //validateManMandatoryInputsAssert(false, true);
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
 
@@ -209,7 +209,7 @@ public class AuthorsWebTest extends WebTestBase {
         getElemContaining("Nimenkirjoitusoikeus yhteisössä", "span").click();
         homeMunicipalitySelect(VANTAA);
 
-        validateMandatoryInputsAssert(false, true);
+        //validateManMandatoryInputsAssert(false, true);
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
 
@@ -256,7 +256,7 @@ public class AuthorsWebTest extends WebTestBase {
 
         getElemContaining("Olen kunnan asukas", "label").click();
 
-        validateMandatoryInputsAssert(false, true);
+        //validateManMandatoryInputsAssert(false, true);
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
         author_invitation_acceptance_dialog_shows(invitation);
@@ -288,7 +288,7 @@ public class AuthorsWebTest extends WebTestBase {
 
         acceptInvitationButton().get().click();
 
-        validateMandatoryInputsAssert(false, true);
+        //validateManMandatoryInputsAssert(false, true);
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
 
@@ -309,7 +309,7 @@ public class AuthorsWebTest extends WebTestBase {
 
         getElemContaining("Nimenkirjoitusoikeus yhteisössä", "span").click();
 
-        validateMandatoryInputsAssert(false, true);
+        //validateManMandatoryInputsAssert(false, true);
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
 
@@ -344,7 +344,7 @@ public class AuthorsWebTest extends WebTestBase {
         getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
         getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
 
-        validateMandatoryInputsAssert(false, true);
+        //validateManMandatoryInputsAssert(false, true);
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
         author_invitation_acceptance_dialog_shows(invitation);

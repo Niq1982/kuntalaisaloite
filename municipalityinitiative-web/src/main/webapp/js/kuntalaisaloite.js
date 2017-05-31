@@ -988,7 +988,10 @@ var municipalitySelection = (function() {
 
 
 	$('#participation-criterion').live('change', function() {
-        startListeningMandatoryFields();
+        if (($('#form-invitation').length !== 0 || $('#form-participate').length !== 0)) {
+        	startListeningMandatoryFields();
+        }
+
 		var otherMunicipalitySelect 	= $("input[value=other-municipality]"),
 			sameMunicipalitySelect	 	= $("input[value=same-municipality]"),
 			radioMunicipalMembership 	= $("input[name=municipalMembership]"),
@@ -1035,13 +1038,18 @@ var municipalitySelection = (function() {
 
         var mandatoryFields = [mandatoryName, mandatoryEmail];
 
+        function mandatoryFieldListener() {
+            if (isFormValid()) {
+                preventContinuing(false, 'mask-send', $('.toggle-disable-send'));
+            } else {
+                preventContinuing(true, 'mask-send', $('.toggle-disable-send'));
+            }
+		}
+
         for(var i in mandatoryFields) {
-            mandatoryFields[i].bind('change', 'input', function () {
-                if (isFormValid()) {
-                    preventContinuing(false, 'mask-send', $('.toggle-disable-send'));
-                } else {
-                    preventContinuing(true, 'mask-send', $('.toggle-disable-send'));
-                }
+            mandatoryFields[i].bind({
+                keyup: mandatoryFieldListener,
+                change: mandatoryFieldListener
             });
 		}
 
