@@ -52,6 +52,7 @@
                         <p><@u.message "front.hero.description-1" /></p>
                         <p><@u.message "front.hero.description-2" /></p>
                         <p><@u.message "front.hero.description-3" /></p>
+                        <p><@u.message "front.hero.description-4" /></p>
                         
                         <#-- Add later if needed
                         <div class="bottom">
