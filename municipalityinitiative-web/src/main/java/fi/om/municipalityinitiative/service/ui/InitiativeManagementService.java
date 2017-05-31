@@ -100,7 +100,7 @@ public class InitiativeManagementService {
         if (loginUserHolder.isVerifiedUser()) {
             String hash = loginUserHolder.getVerifiedUser().getHash();
             userDao.updateUserInformation(hash, editDto.getContactInfo());
-            participantDao.updateVerifiedParticipantShowName(initiativeId, hash, editDto.getContactInfo().isShowName());
+            participantDao.updateVerifiedParticipantName(initiativeId, hash, editDto.getContactInfo().isShowName(), loginUserHolder.getVerifiedUser().getContactInfo().getName());
             initiativeDao.denormalizeParticipantCounts(initiativeId);
 
             // This is a little strange :)
@@ -186,7 +186,7 @@ public class InitiativeManagementService {
         if (loginUserHolder.isVerifiedUser()) {
             String hash = loginUserHolder.getVerifiedUser().getHash();
             userDao.updateUserInformation(hash, updateDto.getContactInfo());
-            participantDao.updateVerifiedParticipantShowName(initiativeId, hash, updateDto.getContactInfo().isShowName());
+            participantDao.updateVerifiedParticipantName(initiativeId, hash, updateDto.getContactInfo().isShowName(), loginUserHolder.getVerifiedUser().getContactInfo().getName());
         }
         else {
             authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), updateDto.getContactInfo());

@@ -392,13 +392,14 @@ public class JdbcParticipantDao implements ParticipantDao {
 
     @Override
     // TODO: Learn better usage of querydsl so this could be done in single query
-    public void updateVerifiedParticipantShowName(Long initiativeId, String hash, boolean showName) {
+    public void updateVerifiedParticipantName(Long initiativeId, String hash, boolean showName, String name) {
         Long verifiedUserId = queryFactory.from(QVerifiedUser.verifiedUser)
                 .where(QVerifiedUser.verifiedUser.hash.eq(hash))
                 .uniqueResult(QVerifiedUser.verifiedUser.id);
 
         assertSingleAffection(queryFactory.update(QVerifiedParticipant.verifiedParticipant)
                 .set(QVerifiedParticipant.verifiedParticipant.showName, showName)
+                .set(QVerifiedParticipant.verifiedParticipant.name, name)
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
                 .where(QVerifiedParticipant.verifiedParticipant.verifiedUserId.eq(verifiedUserId))
                 .execute());

@@ -64,7 +64,7 @@ public class JdbcAuthorDao implements AuthorDao {
 
             ContactInfo contactInfo = new ContactInfo();
             contactInfo.setPhone(row.get(QVerifiedUser.verifiedUser.phone));
-            contactInfo.setName(row.get(QVerifiedUser.verifiedUser.name));
+            contactInfo.setName(row.get(QVerifiedParticipant.verifiedParticipant.name));
             contactInfo.setAddress(row.get(QVerifiedUser.verifiedUser.address));
             contactInfo.setEmail(row.get(QVerifiedUser.verifiedUser.email));
             contactInfo.setShowName(row.get(QVerifiedParticipant.verifiedParticipant.showName)); // currently has not null constraint
