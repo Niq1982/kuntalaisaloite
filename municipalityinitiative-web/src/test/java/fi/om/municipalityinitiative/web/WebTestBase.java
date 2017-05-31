@@ -404,14 +404,6 @@ public abstract class WebTestBase {
         return getElement(By.xpath("//label[contains(normalize-space(text()), '" + labelText + "')]/following-sibling::"+elementTag));
     }
 
-    protected void removeInputValue(String labelText) {
-        getElementByLabel(labelText, "input").clear();
-    }
-
-    protected void setInputValue(String elementId, String inputValue) {
-        ((JavascriptExecutor)driver).executeScript("document.getElementById('" + elementId + "').value = '" + inputValue + "';");
-    }
-
     protected void clickDialogButtonMsg(String localizationKey) {
         clickDialogButton(getMessage(localizationKey));
     }
