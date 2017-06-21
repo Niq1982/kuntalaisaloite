@@ -301,13 +301,125 @@ label  {
 
     }
 }
+#search-form {
+    width: 100%;
+    .chzn-drop {
+        ul {
+            background: none!important;
+        }
+    }
+
+    .search-form-header {
+        float: left;
+        width: 47.5%;
+        display: inline-block;
+        .chzn-container {
+            width: 100%!important;
+        }
+    }
+    .municipality-description {
+        float: right;
+        display: inline-block;
+        width: 47.5%;
+        color: @black;
+        h1 {
+            display: inline-block;
+        }
+        img {
+            float: right;
+        }
+        .show-more {
+            img {
+                float: left;
+                height: 20px;
+            }
+            span {
+                padding-left: 10px;
+            }
+            border-bottom: 1px solid rgb(153, 153, 153);
+            width: 100%;
+            display: inline-block;
+            color: rgb(153, 153, 153);
+            cursor: pointer;
+        }
+    }
+}
+
+#search-page-form .chzn-container-single .chzn-search {
+    display: none;
+}
+
+#search-page-form {
+    .chzn-container-multi .chzn-choices .search-choice {
+        background: none;
+    }
+    color: @mainColor;
+    background: initial;
+    border-left: none;
+    border-bottom: 4px solid @mainColorDark;
+    padding-left: 0;
+    padding-right: 0;
+    .search-parameters-container {
+        margin-left: 0;
+    }
+    .search-parameters-title {
+        width: 100%;
+        margin-left: initial;
+    }
+    .single-search-parameter-container {
+        &:first-child {
+            margin-right: 5%;
+        }
+        width: 30%;
+        display: inline-block;
+        .search-parameters.four-items a, .search-parameters.three-items a {
+            width: 100% !important;
+            float: initial;
+            padding: 0;
+        }
+        .search-parameters {
+            width: 100%;
+            border: none;
+            background: none;
+            .chzn-single {
+                background-color: #feffff;
+            }
+            .chzn-drop {
+                width: 100%!important;
+                box-sizing: content-box;
+            }
+        }
+        .chzn-container {
+            width: 100%!important;
+        }
+        &:last-child {
+            float: right;
+        }
+    }
+    .single-search-parameter-container {
+        &:nth-child(2) {
+            margin: auto;
+            span {
+                margin-left: 5%;
+            }
+        }
+        &:last-child {
+            float: right;
+            span {
+                margin-left: 10%;
+            }
+        }
+    }
+}
+//#EBECEE
 
 //generalize this later
-#form-preparation {
+#form-preparation, #search-page-form {
     .chzn-select {
         width: 100%;
     }
     .chzn-container .chzn-single {
+        color: #393a3c;
         padding: 0 10px;
         div {
             b {
@@ -319,12 +431,39 @@ label  {
             &:hover {
                 background: none;
             }
-
         }
         li {
             padding: 5px 10px;
         }
+        span {
+            text-align: left;
+            margin-left: 10px;
+            margin-right: 33px;
+        }
+        &:nth-child(2) {
+            margin-left: auto;
+            margin-right: auto;
+        }
     }
+
+    .chzn-container.chzn-container-single a {
+        &:hover {
+            background: white none;
+            color: rgb(153, 153, 153);
+        }
+    }
+    .chzn-container-multi {
+        ul {
+            background: #feffff url(http://localhost:8080/img/arrows_down.png?version=${timestamp}) no-repeat 99.3% 50%;
+            background-size: 30px;
+            line-height: 36px;
+            cursor: pointer;
+            input {
+                cursor: pointer;
+            }
+        }
+    }
+
 
     .chzn-container .chzn-single.chzn-single-with-drop div b {
         background: url("@{imagesPath}/arrows_down.png?version=${timestamp}") no-repeat -4px 50%;

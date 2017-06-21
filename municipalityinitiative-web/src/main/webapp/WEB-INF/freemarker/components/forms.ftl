@@ -193,7 +193,7 @@
  * @param preSelected the predefined value for the select
  * @param multiple if allows selecting several munipalities
 -->
-<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true defaultOption="initiative.chooseMunicipality" allowSingleDeselect=false key="" onlyActive=false multiple=false id="">
+<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true defaultOption="initiative.chooseMunicipality" allowSingleDeselect=false key="" onlyActive=false multiple=true id="">
     <@spring.bind path />
     
     <#if showLabel>
