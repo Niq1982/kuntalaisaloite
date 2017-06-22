@@ -138,10 +138,10 @@
                         </#switch>
                         <select name="initiative-state" class="municipality-filter chzn-select"
                                 data-placeholder="<@u.message "searchParameters.withState${statePlaceholder}"/>" onChange="window.location.href=this.value">
-                            <option value=""><@u.message "searchParameters.withStateAll" /></option>
-                            <option value="${urls.search()}${queryString["withStateAll"]}"><@u.message "searchParameters.withStateAll" /> (${initiativeCounts.all})</option>
-                            <option value="${urls.search()}${queryString["withStateCollecting"]}"><@u.message "searchParameters.withStateCollecting" /> (${initiativeCounts.collecting})</option>
-                            <option value="${urls.search()}${queryString["withStateSent"]}"><@u.message "searchParameters.withStateSent" /> (${initiativeCounts.sent})</option>
+                            <option title="<@u.message "searchParameters.withStateAll" />" value=""><@u.message "searchParameters.withStateAll" /></option>
+                            <option title="<@u.message "searchParameters.withStateAll" />" value="${urls.search()}${queryString["withStateAll"]}"><@u.message "searchParameters.withStateAll" /> (${initiativeCounts.all})</option>
+                            <option title="<@u.message "searchParameters.withStateAll" />" value="${urls.search()}${queryString["withStateCollecting"]}"><@u.message "searchParameters.withStateCollecting" /> (${initiativeCounts.collecting})</option>
+                            <option title="<@u.message "searchParameters.withStateAll" />" value="${urls.search()}${queryString["withStateSent"]}"><@u.message "searchParameters.withStateSent" /> (${initiativeCounts.sent})</option>
                         </select>
                     </div>
                     <br class="clear"/>

@@ -394,7 +394,6 @@ label  {
 
 .search-page-form-wrap {
     border-bottom: 4px solid @mainColorDark;
-    height: 100%;
 }
 .search-page-results-wrap {
     padding-top: 2em;
@@ -411,6 +410,9 @@ label  {
     border-left: none;
     padding-left: 0;
     padding-right: 0;
+    .chzn-container .chzn-results .highlighted {
+        background: #949426;
+    }
     .search-parameters-container {
         margin-left: 0;
     }
@@ -480,6 +482,7 @@ label  {
         }
         li {
             padding: 5px 10px;
+            font-size: 15px;
         }
         span {
             text-align: left;
@@ -525,6 +528,11 @@ label  {
     }
     .chzn-container .chzn-results {
         margin: 0;
+        li {
+            text-align: left;
+            padding-left: 10px;
+            font-size: 15px;
+        }
     }
 
     .send-button-block {
