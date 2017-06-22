@@ -182,7 +182,7 @@
                                 <#assign orderPlaceholder = "LeastParticipants" />
                                 <#break>
                             <#default>
-                                <#assign orderPlaceholder = "Lates" />
+                                <#assign orderPlaceholder = "Latest" />
                         </#switch>
                         <select name="initiative-order" class="municipality-filter chzn-select"
                                 data-placeholder="<@u.message "searchParameters.withOrderBy${orderPlaceholder}" />" onChange="window.location.href=this.value">
