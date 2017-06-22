@@ -257,8 +257,6 @@ $(document).ready(function () {
 		var btnClicked, firstBtnInForm, $loader, $submitInfo, $submitWarning;
 		btnClicked = $(this);
 
-		console.log($('#homeMunicipality').val());
-
 		if (btnClicked.attr('class').indexOf('email-auth-btn') > 0) {
 			return;
 		}
@@ -279,8 +277,6 @@ $(document).ready(function () {
 			if (!btnClicked.hasClass("clicked")){
 				btnClicked.addClass("disabled clicked");
 				siblingButtons.addClass("disabled clicked");
-                console.log("tääl2");
-                console.log($('#homeMunicipality').val());
 				siblingButtons.click(function(){
 					return false;
 				});
@@ -300,8 +296,6 @@ $(document).ready(function () {
 				}
 
 			} else {
-				console.log("tääl");
-                console.log($('#homeMunicipality').val());
 				return false;
 			}
 		}
@@ -580,7 +574,6 @@ var initiativeType = (function() {
 	}
 
 	type.click(function(){
-		console.log("KLICK");
 		var thisObj = $(this);
 
 		if(!thisObj.hasClass('selected')) {
@@ -1620,6 +1613,17 @@ $('.municipality-filter').change( function() {
     }
   });
 
+
+  $('#municipality-description-text-wrap').click(function() {
+      var description = $('#municipality-description-text'),
+          oldDescriptionClass = description.attr('class');
+      if (oldDescriptionClass.indexOf('more') >= 0) {
+          description.attr('class', oldDescriptionClass.replace('more', ''));
+      } else {
+          description.attr('class', oldDescriptionClass + 'more');
+      }
+  });
+
 /**
  *
  * Tooltip: jQuery tools - Tooltip
@@ -1891,7 +1895,6 @@ var deleteParticipant = (function() {
       		$('#'+participantNameId).text(participant.data('name'));
 
 			participantInput.val(participant.data("id"));
-            console.log(participant.data);
             isVerified.val(participant.data("verified"));
 
 		}
@@ -3099,7 +3102,6 @@ $(window).on("orientationchange", function(event){
 	if (chosenContainer.length > 0) {
 		chosenContainer.width("100%");
 		chosenContainer.find("*").each(function() {
-			console.log(this);
 			//Dont resize the logo
 			if (!$(this).is("b") && !$(this).children("b").length > 0) {
 				$(this).css({width: "100%",  "box-sizing" : "border-box"});

@@ -22,17 +22,21 @@
 <@l.main "page.find" pageTitle!"">
 
 
-
+<div class="search-page-form-wrap">
 <div class="view-block search-options cf noprint" id="search-page-form">
 
     <div>
         <#--
          * Municipality filter
         -->
-
+            <#if currentMunicipalities.present && currentMunicipalities.get()?size == 1>
+                <#assign oneCurrentMunicipality = true />
+            <#else>
+                <#assign oneCurrentMunicipality = false />
+            </#if>
         <div class="search-parameters-container cf">
             <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
-                <div class="search-form-header">
+                <div class="search-form-header <#if oneCurrentMunicipality?c == "false">full-width</#if>">
                     <h1>
                         <@u.message page />
                         <#if user.isVerifiedUser()>
@@ -46,7 +50,7 @@
                         <@f.municipalitySelect path="currentSearch.municipalities" options=municipalities required="" cssClass="municipality-filter" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true multiple=true />
                     </div>
                 </div>
-                <#if currentMunicipalities.present && currentMunicipalities.get()?size == 1>
+                <#if oneCurrentMunicipality?c == "true">
                     <@e.municipalityDescription currentMunicipalities.get()?first />
                 </#if>
 
@@ -71,25 +75,26 @@
                         for="municipality"><@u.message "searchParameters.type" /></label></span>
                     <div class="search-parameters-container cf buttons">
                         <div class="search-parameters four-items">
+                            <#switch currentSearch.type>
+                                <#case "all">
+                                    <#assign typePlaceholder = "All" />
+                                    <#break>
+                                <#case "normal">
+                                    <#assign typePlaceholder = "Normal" />
+                                    <#break>
+                                <#case "citizen">
+                                    <#assign typePlaceholder = "Citizen" />
+                                    <#break>
+                                <#default>
+                                    <#assign typePlaceholder = "All" />
+                            </#switch>
                             <select name="initiative-type" class="municipality-filter chzn-select"
-                                    data-placeholder="Kunnallinen kansanäänestys">
-                                <option value="">Kunnallinen kansanäänestys</option>
-                                <option value="">Kunnallinen kansanäänestys</option>
-                                <option value="">Kuntalaisaloite</option>
-                            <#--<#list options as option>
-                                <#if !onlyActive || option.active>
-                                    <option value="${option.id}"<@checkSelected option.id preSelected />>${option.getName(locale)}</option>
-                                </#if>
-                            </#list>-->
+                                    data-placeholder="<@u.message "searchParameters.withType${typePlaceholder}"/>" onChange="window.location.href=this.value">
+                                <option value=""><@u.message "searchParameters.withTypeAll" /></option>
+                                <option value="${urls.search()}${queryString["withTypeAll"]}"><@u.message "searchParameters.withTypeAll" /></option>
+                                <option value="${urls.search()}${queryString["withTypeNormal"]}"><@u.message "searchParameters.withTypeNormal" /></option>
+                                <option value="${urls.search()}${queryString["withTypeCitizen"]}"><@u.message "searchParameters.withTypeCitizen" /></option>
                             </select>
-
-
-                        <#--
-                                        <@u.searchLink parameter="withTypeAll" cssClass=(currentSearch.type == "all")?string('active','') tooltip=false />
-                                        <@u.searchLink parameter="withTypeNormal" cssClass=(currentSearch.type == "normal")?string('active','') tooltip=false />
-                                        <@u.searchLink parameter="withTypeCitizen" cssClass=(currentSearch.type == "citizen")?string('active','')  tooltip=false />-->
-
-
                         </div>
                     </div>
                 </div>
@@ -122,16 +127,25 @@
 
                     </#if>
                     <div class="search-parameters three-items">
-                        <select name="initiative-type" class="municipality-filter chzn-select"
-                                data-placeholder="Kerääminen käynnissä">
-                            <option value="">Kerääminen käynnissä</option>
-                            <option value="">Kerääminen käynnissä</option>
-                            <option value="">Lähetetty kuntaan</option>
-                        <#--<#list options as option>
-                            <#if !onlyActive || option.active>
-                                <option value="${option.id}"<@checkSelected option.id preSelected />>${option.getName(locale)}</option>
-                            </#if>
-                        </#list>-->
+                        <#switch currentSearch.show>
+                            <#case "all">
+                                <#assign statePlaceholder = "All" />
+                                <#break>
+                            <#case "collecting">
+                                <#assign statePlaceholder = "Collecting" />
+                                <#break>
+                            <#case "sent">
+                                <#assign statePlaceholder = "Sent" />
+                                <#break>
+                            <#default>
+                                <#assign statePlaceholder = "All" />
+                        </#switch>
+                        <select name="initiative-state" class="municipality-filter chzn-select"
+                                data-placeholder="<@u.message "searchParameters.withState${statePlaceholder}"/>" onChange="window.location.href=this.value">
+                            <option value=""><@u.message "searchParameters.withStateAll" /></option>
+                            <option value="${urls.search()}${queryString["withStateAll"]}"><@u.message "searchParameters.withStateAll" /></option>
+                            <option value="${urls.search()}${queryString["withStateCollecting"]}"><@u.message "searchParameters.withStateCollecting" /></option>
+                            <option value="${urls.search()}${queryString["withStateSent"]}"><@u.message "searchParameters.withStateSent" /></option>
                         </select>
                     <#--
                     <@u.searchLink parameter="withStateAll" cssClass=(currentSearch.show == "all")?string('active','') count=initiativeCounts.all/>
@@ -154,19 +168,30 @@
                 <span class="search-parameters-title filter"><@u.message "searchOptions.sort" /></span>
                 <div class="search-parameters-container buttons">
                     <div class="search-parameters three-items">
-                    <select name="initiative-type" class="municipality-filter chzn-select"
-                            data-placeholder="Uusin ensin">
-                        <option value="">Uusin ensin</option>
-                        <option value="">Uusin ensin</option>
-                        <option value="">Vanhin ensin</option>
-                        <option value="">Osallistujia eniten</option>
-                        <option value="">Osallistujia vähiten</option>
-                    <#--<#list options as option>
-                        <#if !onlyActive || option.active>
-                            <option value="${option.id}"<@checkSelected option.id preSelected />>${option.getName(locale)}</option>
-                        </#if>
-                    </#list>-->
-                    </select>
+                        <#switch currentSearch.orderBy>
+                            <#case "latest">
+                                <#assign orderPlaceholder = "Latest" />
+                                <#break>
+                            <#case "oldest">
+                                <#assign orderPlaceholder = "Oldest" />
+                                <#break>
+                            <#case "mostParticipants">
+                                <#assign orderPlaceholder = "MostParticipants" />
+                                <#break>
+                            <#case "leastParticipants">
+                                <#assign orderPlaceholder = "LeastParticipants" />
+                                <#break>
+                            <#default>
+                                <#assign orderPlaceholder = "Lates" />
+                        </#switch>
+                        <select name="initiative-order" class="municipality-filter chzn-select"
+                                data-placeholder="<@u.message "searchParameters.withOrderBy${orderPlaceholder}" />" onChange="window.location.href=this.value">
+                            <option value=""><@u.message "searchParameters.withOrderByLatest" /></option>
+                            <option value="${urls.search()}${queryString["withOrderByLatest"]}"><@u.message "searchParameters.withOrderByLatest" /></option>
+                            <option value="${urls.search()}${queryString["withOrderByOldest"]}"><@u.message "searchParameters.withOrderByOldest" /></option>
+                            <option value="${urls.search()}${queryString["withOrderByMostParticipants"]}"><@u.message "searchParameters.withOrderByMostParticipants" /></option>
+                            <option value="${urls.search()}${queryString["withOrderByLeastParticipants"]}"><@u.message "searchParameters.withOrderByLeastParticipants" /></option>
+                        </select>
                     </div>
                 <#--
                 <div class="column search-sort">
@@ -202,8 +227,9 @@
         </div>
     </div>
 </div>
-
-<div class="search-page-results">
+</div>
+<div class="search-page-results-wrap">
+<div class="search-page-results" id="search-page-results">
 <@mobile.mobileSearch />
 
 <div class="search-terms">
@@ -281,6 +307,7 @@
 
 <@p.pagination paginationParams "bottom" />
 
+</div>
 </div>
 </@l.main>
 

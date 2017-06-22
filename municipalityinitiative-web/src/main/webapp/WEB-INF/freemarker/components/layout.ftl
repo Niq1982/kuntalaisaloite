@@ -211,8 +211,8 @@
         <a href="${naviItems[3].naviUrl}" accesskey="0"><@u.message "accesskey.help" /></a> |
         <a href="javascript:print()" accesskey="p"><@u.message "accesskey.print" /></a>
     </p>
-
-    <div id="wrapper" <#if page == "page.frontpage">class="front"</#if>>
+        <#assign pageClass = page?replace(".", "-")/>
+    <div id="wrapper" class="${pageClass} <#if page == "page.frontpage">front</#if>">
 
     <#-- NOTE: Extra title for test sites STARTS ----------------------------- -->
     <@r.topRibbon/>
@@ -310,9 +310,8 @@
     <#if page == "page.frontpage">
         <#nested />
     <#else>
-        <div class="container">
+        <div class="container content-container">
             <div id="content">
-
                 <#if requestMessagesON && requestMessages?? >
                     <@u.requestMessage requestMessages />
                 </#if>

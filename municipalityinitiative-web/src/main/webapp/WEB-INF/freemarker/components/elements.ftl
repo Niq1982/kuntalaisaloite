@@ -170,20 +170,21 @@
 </#macro>
 
 <#macro municipalityDescription currentMunicipality >
-    <div class="municipality-description">
+    <div class="municipality-description-wrap">
         <h1>${currentMunicipality.getName(locale)}</h1>
         <img class="municipality-img" src="/img/vaakunat/${currentMunicipality.getId()}.gif" width="30px"
              height="30px"/>
         <#if currentMunicipality.getEmail()??>
             <div><p>${currentMunicipality.getEmail()}</p></div>
         </#if>
+
         <#if currentMunicipality.getLocalizedDescription(locale)??>
-            <div><p>${currentMunicipality.getLocalizedDescription(locale)}</p></div>
-        </#if>
-        <div class="show-more">
+        <div id="municipality-description-text-wrap">
+            <p id="municipality-description-text" class="">${currentMunicipality.getLocalizedDescription(locale)}</p>
             <img src="/img/arrows_down.png"/>
-            <span>näytä lisää</span>
+            <span><@u.message "currentSearch.municipality.description.show.more" /></span>
         </div>
+        </#if>
     </div>
 </#macro>
 
