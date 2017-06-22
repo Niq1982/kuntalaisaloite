@@ -54,8 +54,6 @@
                     <@e.municipalityDescription currentMunicipalities.get()?first />
                 </#if>
 
-
-
                 <#-- Submit button for NOSCRIPT users -->
                 <noscript>
                 <div class="column col">
@@ -121,8 +119,6 @@
                         <@u.searchLink parameter="withStateReview" cssClass=(currentSearch.show == "review")?string('active','') count=initiativeCounts.review />
                         <@u.searchLink parameter="withStateAccepted" cssClass=(currentSearch.show == "accepted")?string('active','') count=initiativeCounts.accepted />
                         <@u.searchLink parameter="withStateFix" cssClass=(currentSearch.show == "fix")?string('active','') count=initiativeCounts.fix />
-
-
                         </div>
 
                     </#if>
@@ -143,16 +139,10 @@
                         <select name="initiative-state" class="municipality-filter chzn-select"
                                 data-placeholder="<@u.message "searchParameters.withState${statePlaceholder}"/>" onChange="window.location.href=this.value">
                             <option value=""><@u.message "searchParameters.withStateAll" /></option>
-                            <option value="${urls.search()}${queryString["withStateAll"]}"><@u.message "searchParameters.withStateAll" /></option>
-                            <option value="${urls.search()}${queryString["withStateCollecting"]}"><@u.message "searchParameters.withStateCollecting" /></option>
-                            <option value="${urls.search()}${queryString["withStateSent"]}"><@u.message "searchParameters.withStateSent" /></option>
+                            <option value="${urls.search()}${queryString["withStateAll"]}"><@u.message "searchParameters.withStateAll" /> (${initiativeCounts.all})</option>
+                            <option value="${urls.search()}${queryString["withStateCollecting"]}"><@u.message "searchParameters.withStateCollecting" /> (${initiativeCounts.collecting})</option>
+                            <option value="${urls.search()}${queryString["withStateSent"]}"><@u.message "searchParameters.withStateSent" /> (${initiativeCounts.sent})</option>
                         </select>
-                    <#--
-                    <@u.searchLink parameter="withStateAll" cssClass=(currentSearch.show == "all")?string('active','') count=initiativeCounts.all/>
-                    <@u.searchLink parameter="withStateCollecting" cssClass=(currentSearch.show == "collecting")?string('active','') count=initiativeCounts.collecting />
-                    <@u.searchLink parameter="withStateSent" cssClass=(currentSearch.show == "sent")?string('active','') count=initiativeCounts.sent/>
--->
-
                     </div>
                     <br class="clear"/>
                 </div>
@@ -193,31 +183,6 @@
                             <option value="${urls.search()}${queryString["withOrderByLeastParticipants"]}"><@u.message "searchParameters.withOrderByLeastParticipants" /></option>
                         </select>
                     </div>
-                <#--
-                <div class="column search-sort">
-
-
-                    <#if currentSearch.show == "sent">
-                        <span class="small-icon icon-search-sort by-date-accepted">&#160;</span>
-                        <div class="switch-buttons">
-                            <@u.searchLink parameter="withOrderByLatestSent" cssClass=(currentSearch.orderBy == "latestSent")?string('active','') tooltip=false />
-                            <@u.searchLink parameter="withOrderByOldestSent" cssClass=(currentSearch.orderBy == "oldestSent")?string('active','') tooltip=false />
-                        </div>
-                    <#else>
-                        <span class="small-icon icon-search-sort by-date-accepted">&#160;</span>
-                        <div class="switch-buttons">
-                            <@u.searchLink parameter="withOrderByLatest" cssClass=(currentSearch.orderBy == "latest")?string('active','') tooltip=false />
-                            <@u.searchLink parameter="withOrderByOldest" cssClass=(currentSearch.orderBy == "oldest")?string('active','') tooltip=false />
-                        </div>
-                    </#if>
-                </div>
-                <div class="column search-sort">
-                    <span class="small-icon icon-search-sort by-support-statements"><span class="text-content"><@u.message "searchOptions.participants" /></span>&#160;</span>
-                    <div class="switch-buttons">
-                        <@u.searchLink parameter="withOrderByMostParticipants" cssClass=(currentSearch.orderBy == "mostParticipants")?string('active','') tooltip=false />
-                        <@u.searchLink parameter="withOrderByLeastParticipants" cssClass=(currentSearch.orderBy == "leastParticipants")?string('active','') tooltip=false />
-                    </div>
-                </div>-->
 
                 <br class="clear"/>
                 </div>
