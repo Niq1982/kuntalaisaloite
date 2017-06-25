@@ -88,17 +88,18 @@ public class PublicInitiativeController extends BaseController {
     public String search(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
 
         LoginUserHolder loginUserHolder = new LoginUserHolder<>(userService.getUser(request));
-        SearchParameterQueryString queryString = new SearchParameterQueryString(search);
 
         addPiwicIdIfNotAuthenticated(model, request);
 
         InitiativeListPageInfo pageInfo = publicInitiativeService.getInitiativeListPageInfo(search, loginUserHolder, locale);
 
+        SearchParameterQueryString queryString = new SearchParameterQueryString(Urls.get(locale), search, pageInfo.municipalities);
+
         return ViewGenerator.searchView(pageInfo,
                 search,
                 queryString,
                 solveMunicipalityFromListById(pageInfo.municipalities, Optional.ofNullable(search.getMunicipalities())))
-                .view(model, Urls.get(locale).alt().search() + queryString.get());
+                .view(model, new SearchParameterQueryString(Urls.get(locale).alt(), search, pageInfo.municipalities).get());
     }
 
     @RequestMapping(value={MUNICIPALITY_FI, MUNICIPALITY_SV}, method=GET)
@@ -108,14 +109,17 @@ public class PublicInitiativeController extends BaseController {
                          HttpServletRequest request,
                          @PathVariable("municipalityName") String municipalityName) {
 
-        Municipality municipality = municipalityService.municipalitiesByName()
-                .get(municipalityName.toLowerCase());
 
-        if (municipality == null) {
-            throw new NotFoundException("Municipality", municipalityName);
+        if (search.getMunicipalities() == null || search.getMunicipalities().size() < 2) {
+            Municipality municipality = municipalityService.municipalitiesByName()
+                    .get(municipalityName.toLowerCase());
+
+            if (municipality == null) {
+                throw new NotFoundException("Municipality", municipalityName);
+            }
+
+            search.setMunicipalities(municipality.getId());
         }
-
-        search.setMunicipalities(municipality.getId());
 
         return search(search, model, locale, request);
 

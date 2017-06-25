@@ -633,6 +633,10 @@ public final class Urls {
         return getLocalizedPageUrl(SEARCH_FI, SEARCH_SV);
     }
 
+    public String municipality(String name) {
+        return getLocalizedPageUrl(MUNICIPALITY_FI, MUNICIPALITY_SV).replace("{municipalityName}", name);
+    }
+
     public String news() {
         return getLocalizedPageUrl(NEWS_FI, NEWS_SV);
     }

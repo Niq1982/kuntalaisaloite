@@ -104,7 +104,7 @@
     <div id="content-wrapper" class="container">
         <div class="mashup-buttons cf">
             <div class="column col-1of2">
-                <a href="${urls.search()}<#if municipalities.present>${queryString.getWithMunicipalities(municipalities.get())}</#if>"
+                <a href="<#if municipalities.present>${queryString.getWithMunicipalities(municipalities.get())}<#else>${urls.search()}</#if>"
                    target="_blank" rel="external" class="small-button"><span class="small-icon next"><@u.message "iframe.browseInitiatives" />
                 </span></a>
                 

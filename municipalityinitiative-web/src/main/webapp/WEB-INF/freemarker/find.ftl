@@ -35,7 +35,7 @@
                 <#assign oneCurrentMunicipality = false />
             </#if>
         <div class="search-parameters-container cf">
-            <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
+            <form action="${urls.search()}" method="GET" id="search-form" class="search-form">
                 <div class="search-form-header <#if oneCurrentMunicipality?c == "false">full-width</#if>">
                     <h1>
                         <@u.message page />
@@ -47,7 +47,7 @@
                     <span class="search-parameters-title filter"><label
                             for="municipality"><@u.message "searchOptions.municipality" /></label></span>
                     <div>
-                        <@f.municipalitySelect path="currentSearch.municipalities" options=municipalities required="" cssClass="municipality-filter" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true multiple=true />
+                        <@f.municipalitySelect path="currentSearch.municipalities" options=municipalities required="" cssClass="" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true multiple=true />
                     </div>
                 </div>
                 <#if oneCurrentMunicipality?c == "true">
@@ -89,9 +89,9 @@
                             <select name="initiative-type" class="municipality-filter chzn-select"
                                     data-placeholder="<@u.message "searchParameters.withType${typePlaceholder}"/>" onChange="window.location.href=this.value">
                                 <option value=""><@u.message "searchParameters.withTypeAll" /></option>
-                                <option value="${urls.search()}${queryString["withTypeAll"]}"><@u.message "searchParameters.withTypeAll" /></option>
-                                <option value="${urls.search()}${queryString["withTypeNormal"]}"><@u.message "searchParameters.withTypeNormal" /></option>
-                                <option value="${urls.search()}${queryString["withTypeCitizen"]}"><@u.message "searchParameters.withTypeCitizen" /></option>
+                                <option value="${queryString.withTypeAll}"><@u.message "searchParameters.withTypeAll" /></option>
+                                <option value="${queryString.withTypeNormal}"><@u.message "searchParameters.withTypeNormal" /></option>
+                                <option value="${queryString.withTypeCitizen}"><@u.message "searchParameters.withTypeCitizen" /></option>
                             </select>
                         </div>
                     </div>
@@ -139,9 +139,9 @@
                         <select name="initiative-state" class="municipality-filter chzn-select"
                                 data-placeholder="<@u.message "searchParameters.withState${statePlaceholder}"/>" onChange="window.location.href=this.value">
                             <option title="<@u.message "searchParameters.withStateAll" />" value=""><@u.message "searchParameters.withStateAll" /></option>
-                            <option title="<@u.message "searchParameters.withStateAll" />" value="${urls.search()}${queryString["withStateAll"]}"><@u.message "searchParameters.withStateAll" /> (${initiativeCounts.all})</option>
-                            <option title="<@u.message "searchParameters.withStateAll" />" value="${urls.search()}${queryString["withStateCollecting"]}"><@u.message "searchParameters.withStateCollecting" /> (${initiativeCounts.collecting})</option>
-                            <option title="<@u.message "searchParameters.withStateAll" />" value="${urls.search()}${queryString["withStateSent"]}"><@u.message "searchParameters.withStateSent" /> (${initiativeCounts.sent})</option>
+                            <option title="<@u.message "searchParameters.withStateAll" />" value="${queryString.withStateAll}"><@u.message "searchParameters.withStateAll" /> (${initiativeCounts.all})</option>
+                            <option title="<@u.message "searchParameters.withStateAll" />" value="${queryString.withStateCollecting}"><@u.message "searchParameters.withStateCollecting" /> (${initiativeCounts.collecting})</option>
+                            <option title="<@u.message "searchParameters.withStateAll" />" value="${queryString.withStateSent}"><@u.message "searchParameters.withStateSent" /> (${initiativeCounts.sent})</option>
                         </select>
                     </div>
                     <br class="clear"/>
@@ -177,10 +177,10 @@
                         <select name="initiative-order" class="municipality-filter chzn-select"
                                 data-placeholder="<@u.message "searchParameters.withOrderBy${orderPlaceholder}" />" onChange="window.location.href=this.value">
                             <option value=""><@u.message "searchParameters.withOrderByLatest" /></option>
-                            <option value="${urls.search()}${queryString["withOrderByLatest"]}"><@u.message "searchParameters.withOrderByLatest" /></option>
-                            <option value="${urls.search()}${queryString["withOrderByOldest"]}"><@u.message "searchParameters.withOrderByOldest" /></option>
-                            <option value="${urls.search()}${queryString["withOrderByMostParticipants"]}"><@u.message "searchParameters.withOrderByMostParticipants" /></option>
-                            <option value="${urls.search()}${queryString["withOrderByLeastParticipants"]}"><@u.message "searchParameters.withOrderByLeastParticipants" /></option>
+                            <option value="${queryString.withOrderByLatest}"><@u.message "searchParameters.withOrderByLatest" /></option>
+                            <option value="${queryString.withOrderByOldest}"><@u.message "searchParameters.withOrderByOldest" /></option>
+                            <option value="${queryString.withOrderByMostParticipants}"><@u.message "searchParameters.withOrderByMostParticipants" /></option>
+                            <option value="${queryString.withOrderByLeastParticipants}"><@u.message "searchParameters.withOrderByLeastParticipants" /></option>
                         </select>
                     </div>
 

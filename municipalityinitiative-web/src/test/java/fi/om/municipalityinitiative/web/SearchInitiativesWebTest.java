@@ -1,16 +1,17 @@
 package fi.om.municipalityinitiative.web;
 
+import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Locales;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class SearchInitiativesWebTest extends WebTestBase {
 
@@ -100,6 +101,8 @@ public class SearchInitiativesWebTest extends WebTestBase {
 
         selectNthMunicipality(1);
 
+        assertThat(driver.getCurrentUrl(), startsWith("http://localhost:8090/fi/kunta/helsinki"));
+
         assertTextContainedByClass("search-results", collaborativeCitizenInitiativeNameHelsinki);
         assertTextNotContainedByClass("search-results", collaborativeCitizenInitiativeNameVantaa);
 
@@ -110,6 +113,8 @@ public class SearchInitiativesWebTest extends WebTestBase {
         assertThat(municipalitiesRawText, containsString(HYVINKAA));
 
         selectNthMunicipality(3);
+
+        assertThat(driver.getCurrentUrl(), startsWith("http://localhost:8090/fi/hae"));
 
         assertTextContainedByClass("search-results", collaborativeCitizenInitiativeNameHelsinki);
         assertTextContainedByClass("search-results", collaborativeCitizenInitiativeNameVantaa);
@@ -137,11 +142,11 @@ public class SearchInitiativesWebTest extends WebTestBase {
                 .withState(InitiativeState.PUBLISHED)
                 .withName(singleSent));
 
-        open(urls.search() + new SearchParameterQueryString(new InitiativeSearch()).getWithTypeCitizen());
+        open(new SearchParameterQueryString(Urls.get(Locales.LOCALE_FI), new InitiativeSearch(), Lists.newArrayList()).getWithTypeCitizen());
         assertTextContainedByClass("search-results", collaborativeCitizenInitiativeName);
         assertTextNotContainedByClass("search-results", singleSent);
 
-        open(urls.search() + new SearchParameterQueryString(new InitiativeSearch()).getWithStateSent());
+        open(new SearchParameterQueryString(Urls.get(Locales.LOCALE_FI), new InitiativeSearch(), Lists.newArrayList()).getWithStateSent());
         assertTextContainedByClass("search-results", singleSent);
         assertTextNotContainedByClass("search-results", collaborativeCitizenInitiativeName);
 

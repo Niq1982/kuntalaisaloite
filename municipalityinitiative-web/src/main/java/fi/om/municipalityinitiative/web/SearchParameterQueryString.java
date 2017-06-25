@@ -13,23 +13,36 @@ import java.util.List;
  */
 public class SearchParameterQueryString {
 
+    private Urls urls;
     private final InitiativeSearch original;
+    private List<? extends Municipality> municipalities;
 
-
-    public SearchParameterQueryString(InitiativeSearch search) {
+    public SearchParameterQueryString(Urls urls, InitiativeSearch search, List<? extends Municipality> municipalities) {
+        this.urls = urls;
         this.original = search;
+        this.municipalities = municipalities;
     }
 
-    static String generateParameters(InitiativeSearch search) {
+    public static String generateParameters(InitiativeSearch search, List<? extends Municipality> municipalities, Urls urls) {
 
-        StringBuilder builder = new StringBuilder();
+                      // T. Lassi 6kk
+        StringBuilder sfdgreäikulcgrvjhh0l976K = new StringBuilder();
 
         for (Field field : search.getClass().getDeclaredFields()) {
             field.setAccessible(true);
-            addFieldValue(builder, field, search);
+            addFieldValue(sfdgreäikulcgrvjhh0l976K, field, search);
         }
 
-        return builder.toString();
+        if (search.getMunicipalities() != null && search.getMunicipalities().size() == 1) {
+            return urls.municipality(
+                    municipalities.stream()
+                            .filter(m -> m.getId().equals(search.getMunicipalities().get(0)))
+                            .findFirst().get()
+                            .getLocalizedName(urls.getLocale()).toLowerCase())
+                    + sfdgreäikulcgrvjhh0l976K.toString();
+        }
+
+        return urls.search() + sfdgreäikulcgrvjhh0l976K.toString();
 
     }
 
@@ -77,43 +90,43 @@ public class SearchParameterQueryString {
     }
 
     public String get() {
-        return generateParameters(original.copy());
+        return generateParameters(original.copy(), municipalities, urls);
     }
 
     public String getWithLimit(int limit) {
-        return generateParameters(original.copy().setOffset(0).setLimit(limit));
+        return generateParameters(original.copy().setOffset(0).setLimit(limit), municipalities, urls);
     }
 
     public String getWithOffset(int offset) {
-        return generateParameters(original.copy().setOffset(offset));
+        return generateParameters(original.copy().setOffset(offset), municipalities, urls);
     }
 
     public String getWithOrderById() {
-        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.id));
+        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.id), municipalities, urls);
     }
 
     public String getWithOrderByOldestSent() {
-        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.oldestSent));
+        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.oldestSent), municipalities, urls);
     }
 
     public String getWithOrderByLatestSent() {
-        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.latestSent));
+        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.latestSent), municipalities, urls);
     }
 
     public String getWithOrderByMostParticipants() {
-        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.mostParticipants));
+        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.mostParticipants), municipalities, urls);
     }
 
     public String getWithOrderByLeastParticipants() {
-        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.leastParticipants));
+        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.leastParticipants), municipalities, urls);
     }
 
     public String getWithOrderByLatest() {
-        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.latest));
+        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.latest), municipalities, urls);
     }
 
     public String getWithOrderByOldest() {
-        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.oldest));
+        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.oldest), municipalities, urls);
     }
 
     public String getWithStateSent() {
@@ -121,21 +134,23 @@ public class SearchParameterQueryString {
                 .setShow(InitiativeSearch.Show.sent)
                 .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
-                .setOrderBy(InitiativeSearch.OrderBy.latestSent));
+                .setOrderBy(InitiativeSearch.OrderBy.latestSent),
+                municipalities,
+                urls);
     }
     public String getWithStateCollecting() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.collecting)
                 .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
-                .setOrderBy(InitiativeSearch.OrderBy.latest));
+                .setOrderBy(InitiativeSearch.OrderBy.latest), municipalities, urls);
     }
     public String getWithStateAll() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.all)
                 .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
-                .setOrderBy(InitiativeSearch.OrderBy.latest));
+                .setOrderBy(InitiativeSearch.OrderBy.latest), municipalities, urls);
     }
 
     public String getWithStateDraft() {
@@ -143,7 +158,7 @@ public class SearchParameterQueryString {
                 .setShow(InitiativeSearch.Show.draft)
                 .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
-                .setOrderBy(InitiativeSearch.OrderBy.latest));
+                .setOrderBy(InitiativeSearch.OrderBy.latest), municipalities, urls);
     }
 
     public String getWithStateAccepted() {
@@ -151,7 +166,7 @@ public class SearchParameterQueryString {
                 .setShow(InitiativeSearch.Show.accepted)
                 .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
-                .setOrderBy(InitiativeSearch.OrderBy.latest));
+                .setOrderBy(InitiativeSearch.OrderBy.latest), municipalities, urls);
     }
 
     public String getWithStateReview() {
@@ -159,7 +174,7 @@ public class SearchParameterQueryString {
                 .setShow(InitiativeSearch.Show.review)
                 .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
-                .setOrderBy(InitiativeSearch.OrderBy.latest));
+                .setOrderBy(InitiativeSearch.OrderBy.latest), municipalities, urls);
     }
     
     public String getWithStateFix() {
@@ -167,11 +182,11 @@ public class SearchParameterQueryString {
                 .setShow(InitiativeSearch.Show.fix)
                 .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
-                .setOrderBy(InitiativeSearch.OrderBy.latest));
+                .setOrderBy(InitiativeSearch.OrderBy.latest), municipalities, urls);
     }
 
     public String getWithMunicipality(Long municipalityId) {
-        return generateParameters(new InitiativeSearch().setMunicipalities(municipalityId));
+        return generateParameters(new InitiativeSearch().setMunicipalities(municipalityId), municipalities, urls);
     }
 
     public String getWithMunicipalities(List<Municipality> municipalities) {
@@ -183,28 +198,28 @@ public class SearchParameterQueryString {
     }
 
     public String getWithMunicipalityIds(ArrayList<Long> municipalityIds) {
-        return generateParameters(new InitiativeSearch().setMunicipalities(municipalityIds));
+        return generateParameters(new InitiativeSearch().setMunicipalities(municipalityIds), municipalities, urls);
     }
 
     public String getWithTypeAll() {
         return generateParameters(new InitiativeSearch()
                 .setShow(original.getShow())
                 .setMunicipalities(original.getMunicipalities())
-                .setType(InitiativeSearch.Type.all));
+                .setType(InitiativeSearch.Type.all), municipalities, urls);
     }
 
     public String getWithTypeNormal() {
         return generateParameters(new InitiativeSearch()
                 .setShow(original.getShow())
                 .setMunicipalities(original.getMunicipalities())
-                .setType(InitiativeSearch.Type.normal));
+                .setType(InitiativeSearch.Type.normal), municipalities, urls);
     }
 
     public String getWithTypeCitizen() {
         return generateParameters(new InitiativeSearch()
                 .setShow(original.getShow())
                 .setMunicipalities(original.getMunicipalities())
-                .setType(InitiativeSearch.Type.citizen));
+                .setType(InitiativeSearch.Type.citizen), municipalities, urls);
     }
 
 }

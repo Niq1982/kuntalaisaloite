@@ -1264,11 +1264,27 @@ $('#externalParticipantCount').blur(function(){
 $('.municipality-filter').change( function() {
 	var thisSelect = $(this);
 
-	// Set a small delay so that focus is correctly fired after chance-event.
-	// Free text search not yet implemented
-	//setTimeout(function () { $('#search').focus(); }, 50);
-
 	$('#search-form').submit();
+
+});
+
+$('.search-form #municipalities').change(function() {
+
+	// Hax go get the pretty url for municipality page
+
+    if ($("#municipalities").val() && $("#municipalities").val().length == 1) {
+
+        var newFormSrc = (window.location.pathname.startsWith("/fi/")
+                ? window.location.protocol + "//" + window.location.host + "/fi/kunta/"
+                : window.location.protocol + "//" + window.location.host + "/sv/kommun/")
+            + $("#municipalities option:selected").text().toLowerCase();
+
+        $('#search-form').attr("action", newFormSrc);
+        window.location.href = newFormSrc;
+    }
+    else {
+        $('#search-form').submit();
+	}
 
 });
 

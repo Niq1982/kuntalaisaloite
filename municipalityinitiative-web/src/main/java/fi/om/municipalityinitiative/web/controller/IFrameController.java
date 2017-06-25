@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.web.controller;
 
+import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.service.CachedInitiativeFinder;
@@ -52,10 +53,14 @@ public class IFrameController extends BaseController {
 
         convertSingleMunipalityToListIfNeeded(search, municipality);
 
+        Optional<List<Municipality>> municipalities = cachedInitiativeFinder.getMunicipalities(Optional.ofNullable(search.getMunicipalities()));
+
+        SearchParameterQueryString queryString = new SearchParameterQueryString(Urls.get(locale), search, municipalities.orElse(Lists.newArrayList()));
+
         return ViewGenerator.iframeSearch(
                 cachedInitiativeFinder.findIframeInitiatives(search),
-                cachedInitiativeFinder.getMunicipalities(Optional.ofNullable(search.getMunicipalities())),
-                new SearchParameterQueryString(new InitiativeSearch())
+                municipalities,
+                queryString
         ).view(model, urls.alt().iframe());
     }
 
