@@ -233,6 +233,10 @@ public final class Urls {
     public static final String SEARCH_FI = "/fi/hae";
 
     public static final String SEARCH_SV = "/sv/sok";
+
+    public static final String MUNICIPALITY_FI = "/fi/kunta/{municipalityName}";
+
+    public static final String MUNICIPALITY_SV = "/sv/kommun/{municipalityName}";
     
     public static final String PREPARE_FI =    "/fi/aloitteen-valmistelu";
 

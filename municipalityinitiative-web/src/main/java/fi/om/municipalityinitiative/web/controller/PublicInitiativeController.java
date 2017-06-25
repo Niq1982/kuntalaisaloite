@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
@@ -99,6 +100,27 @@ public class PublicInitiativeController extends BaseController {
                 solveMunicipalityFromListById(pageInfo.municipalities, Optional.ofNullable(search.getMunicipalities())))
                 .view(model, Urls.get(locale).alt().search() + queryString.get());
     }
+
+    @RequestMapping(value={MUNICIPALITY_FI, MUNICIPALITY_SV}, method=GET)
+    public String search(InitiativeSearch search,
+                         Model model,
+                         Locale locale,
+                         HttpServletRequest request,
+                         @PathVariable("municipalityName") String municipalityName) {
+
+        Municipality municipality = municipalityService.municipalitiesByName()
+                .get(municipalityName.toLowerCase());
+
+        if (municipality == null) {
+            throw new NotFoundException("Municipality", municipalityName);
+        }
+
+        search.setMunicipalities(municipality.getId());
+
+        return search(search, model, locale, request);
+
+    }
+
 
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=GET)
     public String view(@PathVariable("id") Long initiativeId,

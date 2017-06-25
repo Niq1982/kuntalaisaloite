@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityInfoDto;
@@ -8,10 +9,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MunicipalityService {
@@ -35,6 +36,20 @@ public class MunicipalityService {
                         ? Comparator.comparing(Municipality::getNameFi)
                         : Comparator.comparing(Municipality::getNameSv))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    @Cacheable("municipalityUriMap")
+    public Map<String, Municipality> municipalitiesByName() {
+
+        Map<String, Municipality> result = Maps.newHashMap();
+
+        municipalityDao.findMunicipalities(true)
+                .forEach(m -> {
+                    result.put(m.getNameFi().toLowerCase(), m);
+                    result.put(m.getNameSv().toLowerCase(), m);
+                });
+        return result;
     }
 
 }
