@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Freemarker uses this class for generating links with get-parameters at search page.
@@ -34,12 +35,16 @@ public class SearchParameterQueryString {
         }
 
         if (search.getMunicipalities() != null && search.getMunicipalities().size() == 1) {
-            return urls.municipality(
-                    municipalities.stream()
-                            .filter(m -> m.getId().equals(search.getMunicipalities().get(0)))
-                            .findFirst().get()
-                            .getLocalizedName(urls.getLocale()).toLowerCase())
-                    + sfdgreäikulcgrvjhh0l976K.toString();
+            Optional<? extends Municipality> targetMunicipality = municipalities.stream()
+                    .filter(m -> m.getId().equals(search.getMunicipalities().get(0)))
+                    .findFirst();
+
+            if (targetMunicipality.isPresent()) {
+                return urls.municipality(
+                        targetMunicipality.get()
+                                .getLocalizedName(urls.getLocale()).toLowerCase())
+                        + sfdgreäikulcgrvjhh0l976K.toString();
+            }
         }
 
         return urls.search() + sfdgreäikulcgrvjhh0l976K.toString();
