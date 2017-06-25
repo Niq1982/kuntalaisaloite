@@ -113,15 +113,6 @@
                 <span class="search-parameters-title filter"><@u.message "searchOptions.filter" /></span>
                 <div class="search-parameters-container buttons">
 
-                    <#if user.isOmUser()>
-                        <div class="search-parameters four-items">
-                            <@u.searchLink parameter="withStateDraft" cssClass=(currentSearch.show == "draft")?string('active','') count=initiativeCounts.draft/>
-                        <@u.searchLink parameter="withStateReview" cssClass=(currentSearch.show == "review")?string('active','') count=initiativeCounts.review />
-                        <@u.searchLink parameter="withStateAccepted" cssClass=(currentSearch.show == "accepted")?string('active','') count=initiativeCounts.accepted />
-                        <@u.searchLink parameter="withStateFix" cssClass=(currentSearch.show == "fix")?string('active','') count=initiativeCounts.fix />
-                        </div>
-
-                    </#if>
                     <div class="search-parameters three-items">
                         <#switch currentSearch.show>
                             <#case "all">
@@ -133,6 +124,18 @@
                             <#case "sent">
                                 <#assign statePlaceholder = "Sent" />
                                 <#break>
+                            <#case "draft">
+                                <#assign statePlaceholder = "Draft" />
+                                <#break>
+                            <#case "review">
+                                <#assign statePlaceholder = "Review" />
+                                <#break>
+                            <#case "fix">
+                                <#assign statePlaceholder = "Fix" />
+                                <#break>
+                            <#case "accepted">
+                                <#assign statePlaceholder = "Accepted" />
+                                <#break>
                             <#default>
                                 <#assign statePlaceholder = "All" />
                         </#switch>
@@ -140,6 +143,13 @@
                                 data-placeholder="<@u.message "searchParameters.withState${statePlaceholder}"/>" onChange="window.location.href=this.value">
                             <option title="<@u.message "searchParameters.withStateAll" />" value=""><@u.message "searchParameters.withStateAll" /></option>
                             <option title="<@u.message "searchParameters.withStateAll" />" value="${queryString.withStateAll}"><@u.message "searchParameters.withStateAll" /> (${initiativeCounts.all})</option>
+                            <#if user.isOmUser()>
+                                <option title="<@u.message "searchParameters.withStateDraft" />" value="${queryString.withStateDraft}"><@u.message "searchParameters.withStateDraft" /> (${initiativeCounts.draft})</option>
+                                <option title="<@u.message "searchParameters.withStateReview" />" value="${queryString.withStateReview}"><@u.message "searchParameters.withStateReview" /> (${initiativeCounts.review})</option>
+                                <option title="<@u.message "searchParameters.withStateAccepted" />" value="${queryString.withStateAccepted}"><@u.message "searchParameters.withStateAccepted" /> (${initiativeCounts.accepted})</option>
+                                <option title="<@u.message "searchParameters.withStateFix" />" value="${queryString.withStateFix}"><@u.message "searchParameters.withStateFix" /> (${initiativeCounts.fix})</option>
+                            </#if>
+
                             <option title="<@u.message "searchParameters.withStateAll" />" value="${queryString.withStateCollecting}"><@u.message "searchParameters.withStateCollecting" /> (${initiativeCounts.collecting})</option>
                             <option title="<@u.message "searchParameters.withStateAll" />" value="${queryString.withStateSent}"><@u.message "searchParameters.withStateSent" /> (${initiativeCounts.sent})</option>
                         </select>
