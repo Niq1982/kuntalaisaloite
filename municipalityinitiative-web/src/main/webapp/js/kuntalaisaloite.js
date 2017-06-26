@@ -1274,7 +1274,7 @@ $('.search-form #municipalities').change(function() {
 
     if ($("#municipalities").val() && $("#municipalities").val().length == 1) {
 
-        var newFormSrc = (window.location.pathname.startsWith("/fi/")
+        var newFormSrc = (window.location.pathname.substr(0, 4) == "/fi/"
                 ? window.location.protocol + "//" + window.location.host + "/fi/kunta/"
                 : window.location.protocol + "//" + window.location.host + "/sv/kommun/")
             + $("#municipalities option:selected").text().toLowerCase();
