@@ -395,7 +395,7 @@ label  {
 }
 
 .search-page-form-wrap {
-    border-bottom: 4px solid @mainColorDark;
+    border-bottom: 4px solid #808486;
 }
 .search-page-results-wrap {
     padding-top: 2em;
@@ -415,6 +415,9 @@ label  {
     .chzn-container .chzn-results .highlighted {
         background: #949426;
     }
+    .chzn-drop {
+        border: 1px solid @borderGray;
+    }
     .search-parameters-container {
         margin-left: 0;
     }
@@ -432,6 +435,7 @@ label  {
             width: 100% !important;
             float: initial;
             padding: 0;
+            box-sizing: border-box;
         }
         .search-parameters {
             width: 100%;
@@ -442,7 +446,7 @@ label  {
             }
             .chzn-drop {
                 width: 100%!important;
-                box-sizing: content-box;
+                box-sizing: border-box;
             }
         }
         .chzn-container {
