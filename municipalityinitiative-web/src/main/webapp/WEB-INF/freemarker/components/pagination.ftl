@@ -46,7 +46,7 @@
         <#if currOffset == offset>
             <span>${page}</span>
         <#else>
-            <a href="${springMacroRequestContext.requestUri}${queryString.withOffset(currOffset)}">${page}</a>
+            <a href="${queryString.withOffset(currOffset)}">${page}</a>
         </#if>
         
         <#if !page_has_next></span></#if>
@@ -67,12 +67,12 @@
     <#assign prev = params.offset - params.limit />
     <#if (prev >= 0)>
         <#if queryString??>
-            <#assign urlParam = queryString.withOffset(prev) />
+            <#assign targetUrl = queryString.withOffset(prev) />
         <#else>
-            <#assign urlParam = "?offset=" + prev  />
+            <#assign targetUrl = springMacroRequestContext.requestUri + "?offset=" + prev  />
         </#if>
         
-        <a href="${springMacroRequestContext.requestUri}${urlParam}" class="prev"><span class="icon-small arrow-left"></span> <@u.message "pagination.prev" /></a>
+        <a href="${targetUrl}" class="prev"><span class="icon-small arrow-left"></span> <@u.message "pagination.prev" /></a>
         
     <#else>
         <span class="prev"><span class="icon-small arrow-left"></span> <@u.message "pagination.prev" /></span>
@@ -96,12 +96,12 @@
     
     <#if (next < totalPages * params.limit)>
         <#if queryString??>
-            <#assign urlParam = queryString.withOffset(params.offset + params.limit) />
+            <#assign targetUrl = queryString.withOffset(params.offset + params.limit) />
         <#else>
-            <#assign urlParam = "?offset=" + next  />
+            <#assign targetUrl = springMacroRequestContext.requestUri + "?offset=" + next  />
         </#if>
     
-        <a href="${springMacroRequestContext.requestUri}${urlParam}" class="next"><@u.message "pagination.next" /> <span class="icon-small arrow-right"></span></a>
+        <a href="${targetUrl}" class="next"><@u.message "pagination.next" /> <span class="icon-small arrow-right"></span></a>
     <#else>
         <span class="next"><@u.message "pagination.next" /> <span class="icon-small arrow-right"></span></span>
     </#if>
@@ -123,7 +123,7 @@
         <@u.message "pagination.limiter" />
         <#list limits as l>
             <#if l != limit>
-                <a href="${springMacroRequestContext.requestUri}${queryString.withLimit(l)}">${l}</a>
+                <a href="${queryString.withLimit(l)}">${l}</a>
             <#else>
                 <span class="active">${l}</span>
             </#if>
@@ -174,7 +174,7 @@
 -->
 <#macro showMore params>
     <#if params.total gt params.limit>
-        <a class="show-more" href="${springMacroRequestContext.requestUri}${queryString.withLimit(params.limit + 100)}">Näytä lisää</a>
+        <a class="show-more" href="${queryString.withLimit(params.limit + 100)}">Näytä lisää</a>
     </#if>
 </#macro>
  
