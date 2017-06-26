@@ -181,8 +181,10 @@
         <#if currentMunicipality.getLocalizedDescription(locale)??>
         <div id="municipality-description-text-wrap">
             <p id="municipality-description-text" class="">${currentMunicipality.getLocalizedDescription(locale)}</p>
-            <img src="/img/arrows_down.png"/>
-            <span><@u.message "currentSearch.municipality.description.show.more" /></span>
+            <div class="load-more">
+                <img src="/img/arrows_down.png"/>
+                <span><@u.message "currentSearch.municipality.description.show.more" /></span>
+            </div>
         </div>
         </#if>
     </div>
