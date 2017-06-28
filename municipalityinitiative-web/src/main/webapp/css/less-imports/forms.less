@@ -308,6 +308,10 @@ label  {
 }
 #search-form {
     width: 100%;
+
+    .chzn-container {
+        display: flex;
+    }
     .chzn-choices {
         width: 100%;
         display: inline-block;
@@ -353,6 +357,9 @@ label  {
         }
     }
     #municipality-description-text-wrap {
+        .description-more {
+            display: none;
+        }
         img {
             float: left;
             height: 20px;
@@ -361,21 +368,29 @@ label  {
             padding-left: 10px;
             color: rgb(153, 153, 153);
         }
-        .load-more {
+        #load-more {
             cursor: pointer;
         }
         border-bottom: 1px solid rgb(153, 153, 153);
         width: 100%;
         display: inline-block;
     }
+    #municipality-description-text-wrap.more {
+        .description-less {
+            display: none;
+        }
+        .description-more {
+            display: inline;
+        }
+        #municipality-description-text {
+            max-height: 100%;
+        }
+    }
     #municipality-description-text {
         font-size: 14px;
         max-height: 100px;
         text-overflow: ellipsis;
         overflow: hidden;
-        &.more {
-            max-height: 100%;
-        }
     }
 }
 
@@ -482,8 +497,8 @@ label  {
         padding: 0 10px;
         div {
             b {
-                background: url("@{imagesPath}/arrows_down.png?version=${timestamp}") no-repeat -4px 50%;
-                background-size: 30px;
+                background: url("@{imagesPath}/arrows_down_small.png?version=${timestamp}") no-repeat -4px 50%;
+                background-size: 25px;
             }
             border-style: none;
             background: none;
@@ -522,8 +537,8 @@ label  {
 
     .chzn-container-multi {
         ul {
-            background: #feffff url(http://localhost:8080/img/arrows_down.png?version=${timestamp}) no-repeat 99.3% 50%;
-            background-size: 30px;
+            background: #feffff url("@{imagesPath}/arrows_down_small.png?version=${timestamp}") no-repeat 99.3% 50%;
+            background-size: 25px;
             line-height: 36px;
             cursor: pointer;
             input {
@@ -534,8 +549,8 @@ label  {
 
 
     .chzn-container .chzn-single.chzn-single-with-drop div b {
-        background: url("@{imagesPath}/arrows_down.png?version=${timestamp}") no-repeat -4px 50%;
-        background-size: 30px;
+        background: url("@{imagesPath}/arrows_down_small.png?version=${timestamp}") no-repeat -4px 50%;
+        background-size: 25px;
     }
     .chzn-container .chzn-results {
         margin: 0;

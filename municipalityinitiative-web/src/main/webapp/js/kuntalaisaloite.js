@@ -1630,8 +1630,8 @@ $('.search-form #municipalities').change(function() {
   });
 
 
-  $('#municipality-description-text-wrap').click(function() {
-      var description = $('#municipality-description-text'),
+  $('#load-more').click(function() {
+      var description = $('#municipality-description-text-wrap'),
           oldDescriptionClass = description.attr('class');
       if (oldDescriptionClass.indexOf('more') >= 0) {
           description.attr('class', oldDescriptionClass.replace('more', ''));

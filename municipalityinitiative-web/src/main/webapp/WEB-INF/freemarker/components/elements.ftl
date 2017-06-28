@@ -179,11 +179,12 @@
         </#if>
 
         <#if currentMunicipality.getLocalizedDescription(locale)??>
-        <div id="municipality-description-text-wrap">
-            <p id="municipality-description-text" class="">${currentMunicipality.getLocalizedDescription(locale)}</p>
-            <div class="load-more">
+        <div id="municipality-description-text-wrap" class="">
+            <p id="municipality-description-text">${currentMunicipality.getLocalizedDescription(locale)}</p>
+            <div id="load-more">
                 <img src="/img/arrows_down.png"/>
-                <span><@u.message "currentSearch.municipality.description.show.more" /></span>
+                <span class="description-less"><@u.message "currentSearch.municipality.description.show.more" /></span>
+                <span class="description-more"><@u.message "currentSearch.municipality.description.show.less" /></span>
             </div>
         </div>
         </#if>
