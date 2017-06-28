@@ -178,7 +178,7 @@
             <div><p>${currentMunicipality.getEmail()}</p></div>
         </#if>
 
-        <#if currentMunicipality.getLocalizedDescription(locale)??>
+        <#if currentMunicipality.getLocalizedDescription(locale)?? && (currentMunicipality.getLocalizedDescription(locale)?trim?length > 0) >
         <div id="municipality-description-text-wrap" class="">
             <p id="municipality-description-text">${currentMunicipality.getLocalizedDescription(locale)}</p>
             <div id="load-more">
