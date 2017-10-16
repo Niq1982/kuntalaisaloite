@@ -490,6 +490,17 @@ public class PublicInitiativeController extends BaseController {
         return objectMapper.readTree(supportCountService.getSupportVotesPerDateJson(id));
     }
 
+    @RequestMapping(value = KEEPALIVE, method = POST, produces = JSON)
+    public @ResponseBody Boolean keepalivePost(HttpServletRequest request) {
+        User user = userService.getUser(request);
+        try {
+            return Boolean.valueOf(user.isLoggedIn() || user.isVerifiedUser());
+        } catch (RuntimeException e) {
+            log.warn("Keepalive userService.getCurrentUser() threw an exception", e);
+            return Boolean.FALSE;
+        }
+    }
+
     @RequestMapping(value = { VIEW_FI, VIEW_SV }, method = POST, params = "action-follow")
     public String followInitiative(@PathVariable long id, @ModelAttribute("followInitiative") FollowInitiativeDto followInitiativeDto, Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
         if (!validationService.validationSuccessful(followInitiativeDto, bindingResult, model)) {

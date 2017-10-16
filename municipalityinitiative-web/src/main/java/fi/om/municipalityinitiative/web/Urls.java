@@ -358,6 +358,10 @@ public final class Urls {
 
     public static final String STATUS =  "/status";
 
+    public static final String SERVICES = "/services";
+
+    public static final String KEEPALIVE = SERVICES + "/keepalive";
+
     public static final String ATTACHMENT = "/attachment/" + ID_PARAMETER + "/" + FILENAME_PARAMETER;
 
     public static final String ATTACHMENT_THUMBNAIL = "/thumbnail/" + ID_PARAMETER;
