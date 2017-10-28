@@ -526,10 +526,10 @@
             <span class="private-names left-padding"><@u.message key="participantCount.citizen" args=[initiative.participantCountCitizen]/></span><br/>
             <#if (participantCount.publicNames > 0)>
                 <span class="public-names left-padding">
-                    <a class="trigger-tooltip" href="${urls.participantList(initiative.id)}"
-                       title="<@u.message key="participantCount.publicNames.show"/>">
+                <#if showParticipantsLink?c == "true" ><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}"
+                                                          title="<@u.message key="participantCount.publicNames.show"/>"></#if>
                         <@u.message key="participantCount.publicNames" args=[participantCount.publicNames] />
-                    </a>
+                <#if showParticipantsLink?c == "true" ></a></#if>
                 </span><br/>
             </#if>
             <span class="private-names">
@@ -541,10 +541,10 @@
             <span class="private-names"><@u.message key="participantCount.citizen" args=[initiative.participantCountCitizen]/></span><br/>
             <#if (participantCount.publicNames > 0)>
                 <span class="public-names">
-                    <a class="trigger-tooltip" href="${urls.participantList(initiative.id)}"
-                       title="<@u.message key="participantCount.publicNames.show"/>">
+                    <#if ( !showParticipantsLink?? || showParticipantsLink?? && showParticipantsLink?c == "true" )><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}"
+                                                              title="<@u.message key="participantCount.publicNames.show"/>"></#if>
                         <@u.message key="participantCount.publicNames" args=[participantCount.publicNames] />
-                    </a>
+                    <#if ( !showParticipantsLink?? || showParticipantsLink?? && showParticipantsLink?c == "true" )></a></#if>
                 </span><br/>
             </#if>
         </span>

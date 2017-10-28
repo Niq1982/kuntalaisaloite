@@ -1,20 +1,18 @@
 package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
-import fi.om.municipalityinitiative.dto.ui.InitiativeListPageInfo;
-import fi.om.municipalityinitiative.dto.ui.InitiativePageInfo;
-import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.dto.ui.ParticipantsPageInfo;
+import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.LocationService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ParticipantService;
-import org.joda.time.Years;
+import fi.om.municipalityinitiative.web.controller.PublicInitiativeController;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.Locale;
 
 /**
@@ -55,10 +53,20 @@ public class PublicInitiativeService {
     @Transactional(readOnly = true)
     public InitiativePageInfo getInitiativePageDto(Long initiativeId, LoginUserHolder loginUserHolder) {
         InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
+        User user = loginUserHolder.getUser();
+        Boolean doNotShow = !user.isOmUser() && initiative.isSent() &&
+                PublicInitiativeController.hasInitiativeSentYearAgo(initiative.getSentTime());
+        PublicAuthors authors;
+
+        if (doNotShow) {
+            authors = new PublicAuthors(Collections.emptyList());
+        } else {
+            authors = authorService.findPublicAuthors(initiativeId);
+        }
 
         return new InitiativePageInfo(
                 initiative,
-                authorService.findPublicAuthors(initiativeId),
+                authors,
                 attachmentService.findAttachments(initiativeId, loginUserHolder),
                 locationService.getLocations(initiativeId)
         );

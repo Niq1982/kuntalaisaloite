@@ -18,6 +18,7 @@ import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Urls;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -135,6 +136,12 @@ public class PublicInitiativeController extends BaseController {
         addPiwicIdIfNotAuthenticated(model, request);
 
         InitiativePageInfo initiativePageView = publicInitiativeService.getInitiativePageDto(initiativeId, loginUserHolder);
+
+        if (initiativePageView.initiative.isSent() && hasInitiativeSentYearAgo(initiativePageView.initiative.getSentTime())) {
+            model.addAttribute("showParticipantsLink", false);
+        } else {
+            model.addAttribute("showParticipantsLink", true);
+        }
 
         Optional<MunicipalityDecisionInfo> municipalityDecisionInfo = municipalityDecisionService.getMunicipalityDecisionInfoOptional(initiativePageView.initiative);
 
@@ -270,21 +277,24 @@ public class PublicInitiativeController extends BaseController {
 
     }
 
-    @RequestMapping(value={PARTICIPANT_LIST_FI, PARTICIPANT_LIST_SV}, method=GET)
+    @RequestMapping(value = {PARTICIPANT_LIST_FI, PARTICIPANT_LIST_SV}, method = GET)
     public String participantList(@PathVariable("id") Long initiativeId, @RequestParam(defaultValue = "0", value = "offset") int offset,
                                   Model model, Locale locale, HttpServletRequest request) {
-        Urls urls = Urls.get(locale);
-        String alternativeURL = urls.alt().participantList(initiativeId);
-
         LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
         ParticipantsPageInfo initiativeInfo = publicInitiativeService.getInitiativePageInfoWithParticipants(initiativeId, loginUserHolder, offset);
+        //Do not show participation list page if initiative has been sent over a year ago
+        if (initiativeInfo.initiative.isSent() && hasInitiativeSentYearAgo(initiativeInfo.initiative.getSentTime())) {
+            return ERROR_404;
+        }
+
+        Urls urls = Urls.get(locale);
+        String alternativeURL = urls.alt().participantList(initiativeId);
 
         addPiwicIdIfNotAuthenticated(model, request);
 
         if (!initiativeInfo.initiative.isCollaborative()) {
-            throw new NotFoundException("Initiative is not collaborative",initiativeId);
-        }
-        else {
+            throw new NotFoundException("Initiative is not collaborative", initiativeId);
+        } else {
             String previousPageURI = urls.management(initiativeId).equals(request.getHeader("referer"))
                     ? urls.management(initiativeId)
                     : urls.view(initiativeId);
@@ -295,6 +305,15 @@ public class PublicInitiativeController extends BaseController {
                     offset
             ).view(model, alternativeURL);
         }
+    }
+
+    public static Boolean hasInitiativeSentYearAgo(Optional<LocalDate> sentTime) {
+        if (sentTime.isPresent()) {
+            if (new LocalDate().isAfter(sentTime.get().plusYears(1))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @RequestMapping(value = {PARTICIPATING_CONFIRMATION_FI, PARTICIPATING_CONFIRMATION_SV}, method = GET)
