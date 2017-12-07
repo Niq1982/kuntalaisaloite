@@ -175,7 +175,10 @@
         <img class="municipality-img" src="/img/vaakunat/${currentMunicipality.getId()}.gif" width="30px"
              height="30px"/>
         <#if currentMunicipality.getEmail()??>
-            <div><p>${currentMunicipality.getEmail()}</p></div>
+            <div>
+                <p><@u.message "currentSearch.municipality.emailDescription"/></p>
+                <p>${currentMunicipality.getEmail()}</p>
+            </div>
         </#if>
 
         <#if currentMunicipality.getLocalizedDescription(locale)?? && (currentMunicipality.getLocalizedDescription(locale)?trim?length > 0) >
