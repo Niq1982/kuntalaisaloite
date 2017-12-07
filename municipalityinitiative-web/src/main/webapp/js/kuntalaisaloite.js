@@ -1550,15 +1550,18 @@ $('.search-form #municipalities').change(function() {
 	}
 
 	$('.js-renew-management-hash').click(function(){
-		$('.js-renew-management-hash.active').removeClass('active');
-		$(this).addClass('active');
+        var authorVerified = $('.js-renew-management-hash').data("verified");
+        if (!authorVerified) {
+            $('.js-renew-management-hash.active').removeClass('active');
+            $(this).addClass('active');
 
-		try {
-			generateModal(modalData.renewManagementHash(), 'full', renewManagementHash.getAuthor);
-			return false;
-		} catch(e) {
-			console.log(e);
-		}
+            try {
+                generateModal(modalData.renewManagementHash(), 'full', renewManagementHash.getAuthor);
+                return false;
+            } catch(e) {
+                console.log(e);
+            }
+        }
 	});
 
 	$('.js-renew-municipality-management-hash').click(function(){
@@ -1998,6 +2001,7 @@ var renewManagementHash = (function() {
 			selAuthor.html(authorDetails);
 
 			authorInput.val(author.data("id"));
+            //authorVerifiedInput.val(author.data("verified"));
 		}
 	};
 

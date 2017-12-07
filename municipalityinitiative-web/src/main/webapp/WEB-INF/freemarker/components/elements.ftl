@@ -373,16 +373,27 @@
     <br />
 
     <#list authorList as a>
+        <#assign isVerified = a.isVerified() />
         <div class="column author author-list ${((a_index + 1) % 3 == 0)?string("last","")}">
             <p><strong>${a.contactInfo.name!""}</strong>, <@u.solveMunicipality a.municipality/>
             <#if showRenewManagementHash>
-                <a  href="#" class="js-renew-management-hash trigger-tooltip" title="<@u.message "moderator.renewManagementHash.tooltip" />"
+                <a  <#if !isVerified >href="#"</#if>
+                    class="js-renew-management-hash trigger-tooltip"
+                    <#if !isVerified >
+                        title="<@u.message "moderator.renewManagementHash.tooltip" />"
+                    <#else>
+                        title="<@u.message "moderator.renewManagementHash.tooltip.disable" />"
+                    </#if>
                     data-id="${a.id}"
                     data-name="<@u.stripHtmlTags a.contactInfo.name!"" />"
                     data-municipality="<@u.solveMunicipality a.municipality/>"
                     data-address="${a.contactInfo.address!""}"
                     data-email="${a.contactInfo.email!""}"
-                    data-phone="${a.contactInfo.phone!""}"><span class="icon-small icon-16 resend"></span></a>
+                    data-verified="${isVerified?c}"
+                    data-phone="${a.contactInfo.phone!""}"
+                    <#if isVerified >style="cursor: not-allowed"</#if>>
+                    <span class="icon-small icon-16 resend"></span>
+                </a>
             </#if>
             <br />
             <@u.scrambleEmail a.contactInfo.email!"" />
