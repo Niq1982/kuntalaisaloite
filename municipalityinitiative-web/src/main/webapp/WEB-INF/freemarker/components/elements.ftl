@@ -344,7 +344,7 @@
  * @param initiative is initiative
 -->
 <#macro initiativeAuthor publicAuthors>
-    <#if showParticipantsLink >
+    <#if showParticipantsLink?? && showParticipantsLink == true >
         <#if (publicAuthors.publicNameCount > 0)>
             <#list publicAuthors.publicAuthors as publicAuthor>
             <div class="column author-list ${((publicAuthor_index + 1) % 3 == 0)?string("last","")}">
@@ -543,10 +543,10 @@
             <span class="private-names left-padding"><@u.message key="participantCount.citizen" args=[initiative.participantCountCitizen]/></span><br/>
             <#if (participantCount.publicNames > 0)>
                 <span class="public-names left-padding">
-                <#if showParticipantsLink == true ><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}"
+                <#if showParticipantsLink?? && showParticipantsLink == true ><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}"
                                                           title="<@u.message key="participantCount.publicNames.show"/>"></#if>
                         <@u.message key="participantCount.publicNames" args=[participantCount.publicNames] />
-                <#if showParticipantsLink == true ></a></#if>
+                <#if showParticipantsLink?? && showParticipantsLink == true ></a></#if>
                 </span><br/>
             </#if>
             <span class="private-names">
