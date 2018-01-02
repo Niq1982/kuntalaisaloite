@@ -176,7 +176,7 @@
              height="30px"/>
         <#if currentMunicipality.getEmail()??>
             <div>
-                <p><@u.message "currentSearch.municipality.emailDescription"/></p>
+                <p class="muni-email-description"><@u.message "currentSearch.municipality.emailDescription"/></p>
                 <p>${currentMunicipality.getEmail()}</p>
             </div>
         </#if>
@@ -458,8 +458,8 @@
     </#if>
 
     <#if initiative.sentTime.present>
-        <div class="participants-block last noprint">
-            <div class="participate not-allowed">
+        <div class="participants-block last noprint max-width">
+            <div class="participate not-allowed max-width">
                 <@u.systemMessage path="participate.sentToMunicipality" type="info" />
             </div>
         </div>
