@@ -537,16 +537,28 @@
 </#macro>
 
 <#macro participantCountInformation>
+    <#if ( !showParticipantsLink?? || showParticipantsLink?? && showParticipantsLink == true )>
+        <#assign allowParticipantsLink = true />
+        <#assign publicNames = "participantCount.publicNames" />
+    <#else>
+        <#assign allowParticipantsLink = false />
+        <#assign publicNames = "participantCount.publicNames.disabled" />
+    </#if>
+
     <#if (initiative.externalParticipantCount > 0)>
         <span class="user-count-sub-total">
             <span class="total-names-names"><@u.message key="participantCount.thisService" args=[participantCount.total]/></span><br/>
             <span class="private-names left-padding"><@u.message key="participantCount.citizen" args=[initiative.participantCountCitizen]/></span><br/>
             <#if (participantCount.publicNames > 0)>
                 <span class="public-names left-padding">
-                <#if showParticipantsLink?? && showParticipantsLink == true ><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}"
-                                                          title="<@u.message key="participantCount.publicNames.show"/>"></#if>
-                        <@u.message key="participantCount.publicNames" args=[participantCount.publicNames] />
-                <#if showParticipantsLink?? && showParticipantsLink == true ></a></#if>
+                <#if allowParticipantsLink >
+                    <a class="trigger-tooltip" href="${urls.participantList(initiative.id)}"
+                       title="<@u.message key="participantCount.publicNames.show"/>">
+                </#if>
+                <@u.message key="${publicNames}" args=[participantCount.publicNames] />
+                <#if allowParticipantsLink >
+                    </a>
+                </#if>
                 </span><br/>
             </#if>
             <span class="private-names">
@@ -558,10 +570,14 @@
             <span class="private-names"><@u.message key="participantCount.citizen" args=[initiative.participantCountCitizen]/></span><br/>
             <#if (participantCount.publicNames > 0)>
                 <span class="public-names">
-                    <#if ( !showParticipantsLink?? || showParticipantsLink?? && showParticipantsLink == true )><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}"
-                                                              title="<@u.message key="participantCount.publicNames.show"/>"></#if>
-                        <@u.message key="participantCount.publicNames" args=[participantCount.publicNames] />
-                    <#if ( !showParticipantsLink?? || showParticipantsLink?? && showParticipantsLink == true )></a></#if>
+                    <#if allowParticipantsLink >
+                        <a class="trigger-tooltip" href="${urls.participantList(initiative.id)}"
+                           title="<@u.message key="participantCount.publicNames.show"/>">
+                    </#if>
+                    <@u.message key="${publicNames}" args=[participantCount.publicNames] />
+                    <#if allowParticipantsLink >
+                        </a>
+                    </#if>
                 </span><br/>
             </#if>
         </span>
