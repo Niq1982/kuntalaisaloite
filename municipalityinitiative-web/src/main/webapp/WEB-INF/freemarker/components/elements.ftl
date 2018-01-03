@@ -344,7 +344,7 @@
  * @param initiative is initiative
 -->
 <#macro initiativeAuthor publicAuthors>
-    <#if showParticipantsLink?? && showParticipantsLink == true >
+    <#if (!showParticipantsLink?? || showParticipantsLink?? && showParticipantsLink == true) >
         <#if (publicAuthors.publicNameCount > 0)>
             <#list publicAuthors.publicAuthors as publicAuthor>
             <div class="column author-list ${((publicAuthor_index + 1) % 3 == 0)?string("last","")}">

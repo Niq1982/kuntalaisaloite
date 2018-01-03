@@ -277,7 +277,7 @@
         </div>
         <#-- TODO: Maybe show contact info here ?-->
         <div class="initiative-content-row last">
-            <h3><@u.message key="initiative.authors.title" args=[publicAuthors.publicNameCount+publicAuthors.privateNameCount] /></h3>
+            <h2><@u.message key="initiative.authors.title" args=[publicAuthors.publicNameCount+publicAuthors.privateNameCount] /></h2>
             <@e.initiativeAuthor publicAuthors />
         </div>
     </div>
