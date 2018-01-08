@@ -471,7 +471,13 @@
 </#macro>
 
 <#macro solveMunicipality municipality>
-    <#if municipality.present>${municipality.get().getName(locale)}<#else><@message "vtj.missingMunicipalityData" /></#if>
+    <#assign missingHomeMunicipalityMsg><@message "vtj.missingMunicipalityData" /></#assign>
+
+    <#if author?? && !author.isVerified()>
+        ${missingHomeMunicipalityMsg}
+    <#else >
+        <#if municipality.present>${municipality.get().getName(locale)}<#else>${missingHomeMunicipalityMsg}</#if>
+    </#if>
 </#macro>
 
 
