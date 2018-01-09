@@ -165,7 +165,7 @@ public class InitiativeManagementService {
             VerifiedAuthor author = new VerifiedAuthor();
             VerifiedUserDbDetails dbVerifiedUser = userDao.getVerifiedUser(loginUserHolder.getVerifiedUser().getHash()).get();
             author.setContactInfo(dbVerifiedUser.getContactInfo());
-            author.setMunicipality(Optional.of(initiative.getMunicipality()));
+            author.setMunicipality(dbVerifiedUser.getHomeMunicipality());
             author.setId(null); // FIXME: Omg
             return author;
         }
