@@ -1550,7 +1550,7 @@ $('.search-form #municipalities').change(function() {
 	}
 
 	$('.js-renew-management-hash').click(function(){
-        var authorVerified = $('.js-renew-management-hash').data("verified");
+        var authorVerified = $(this).data("verified");
         if (!authorVerified) {
             $('.js-renew-management-hash.active').removeClass('active');
             $(this).addClass('active');
