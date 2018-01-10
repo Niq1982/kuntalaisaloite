@@ -53,6 +53,9 @@ public class ModerationService {
     @Resource
     JdbcNotificationDao notificationDao;
 
+    @Resource
+    private ParticipantDao participantDao;
+
     @Transactional(readOnly = false)
     public void accept(OmLoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment, Locale locale) {
         loginUserHolder.assertOmUser();
@@ -174,6 +177,20 @@ public class ModerationService {
             emailService.sendManagementHashRenewed(initiativeId, newManagementHash, authorId);
         }
     }
+
+    @Transactional(readOnly = false)
+    public void updateEmailForNormalAuthor(LoginUserHolder loginUserHolder, Long initiativeId,
+                                                Long participantId, String newEmail) {
+        loginUserHolder.assertOmUser();
+        //Just double checking
+        Boolean normalAuthorExists = authorDao.normalAuthorExists(initiativeId, participantId);
+        if (!normalAuthorExists) {
+            throw new OperationNotAllowedException("Updating email for normal participant not allowed: cannot find normal author with given initiativeId and participantId");
+        }
+
+        participantDao.updateEmailForNormalParticipant(participantId, newEmail);
+    }
+
 
     @Transactional(readOnly = true)
     public List<ReviewHistoryRow> findReviewHistory(OmLoginUserHolder omLoginUserHolder, Long initiativeId) {

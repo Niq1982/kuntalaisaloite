@@ -128,6 +128,15 @@ public class ModerationController extends BaseController{
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.MANAGEMENT_HASH_RENEWED, request);
     }
 
+    @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_UPDATE_NORMAL_PARTICIPANT_EMAIL)
+    public String updateEmail(@PathVariable("id") Long initiativeId,
+                              @RequestParam("authorId") Long authorId,
+                              @RequestParam("newEmail") String newEmail,
+                              Locale locale, HttpServletRequest request) {
+        //TODO
+        return null;
+    }
+
     @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_RENEW_MUNICIPALITY_MANAGEMENT_HASH)
     public String renewMunicipalityManagementHash(@PathVariable("id") Long initiativeId,
                                                   HttpServletRequest request,

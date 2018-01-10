@@ -139,6 +139,14 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
+    public void updateEmailForNormalParticipant(Long participantId, String newEmail) {
+        assertSingleAffection(queryFactory.update(QParticipant.participant)
+                .set(participant.email, newEmail)
+                .where(QParticipant.participant.id.eq(participantId))
+                .execute());
+    }
+
+    @Override
     public void increaseParticipantCountFor(Long initiativeId, boolean showName, boolean citizen) {
 
         SQLUpdateClause updateClause = queryFactory.update(QMunicipalityInitiative.municipalityInitiative)

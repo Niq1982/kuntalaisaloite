@@ -191,6 +191,18 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
+    public Boolean normalAuthorExists(Long initiativeId, Long participantId) {
+        return queryFactory.from(QAuthor.author)
+                .where(QAuthor.author.initiativeId.eq(initiativeId))
+                .where(QAuthor.author.participantId.eq(participantId))
+                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
+                .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
+                .orderBy(QParticipant.participant.id.asc())
+                .list(normalAuthorMapping)
+                .size() > 0;
+    }
+
+    @Override
     public List<Author> findAllAuthors(Long initiativeId) {
 
         // TODO: Would be lovely to do this with sql union, but have no clue on how to do this with querydsl. Optional later.

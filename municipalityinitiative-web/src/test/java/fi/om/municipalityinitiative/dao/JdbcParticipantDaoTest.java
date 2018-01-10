@@ -79,15 +79,9 @@ public class JdbcParticipantDaoTest {
         assertThat(allParticipants, hasSize(1));
 
         Participant participant = allParticipants.get(0);
-        assertThat(participant.getName(), is(PARTICIPANTS_NAME));
-        Optional<Municipality> homeMunicipality = participant.getHomeMunicipality();
-        assertThat(homeMunicipality.get().getId(), is(otherMunicipalityId));
-        assertThat(participant.isShowName(), is(true));
-        assertThat(participant.getParticipateDate(), is(notNullValue()));
-        assertThat(participant.getEmail(), is(PARTICIPANT_EMAIL));
-        assertThat(participant.getMembership(), is(PARTICIPANT_MEMBERSHIP));
-        assertThat(participant.getId(), is(notNullValue()));
-        ReflectionTestUtils.assertNoNullFields(participant);
+
+        assertParticipantInformations(participant, PARTICIPANTS_NAME, otherMunicipalityId, true,
+                PARTICIPANT_EMAIL, PARTICIPANT_MEMBERSHIP);
     }
 
     @Test
@@ -482,6 +476,50 @@ public class JdbcParticipantDaoTest {
         Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
         Long wrongInitiativeId = testHelper.createCollaborativeReview(testMunicipalityId);
         participantDao.deleteParticipant(wrongInitiativeId, participantId);
+    }
+
+    @Test
+    public void update_email_for_normal_participant() {
+        participantDao.confirmParticipation(participantDao.create(
+                testInitiativeId,
+                PARTICIPANTS_NAME,
+                true,
+                PARTICIPANT_EMAIL,
+                CONFIRMATION_CODE,
+                otherMunicipalityId,
+                PARTICIPANT_MEMBERSHIP),
+                CONFIRMATION_CODE);
+
+        List<Participant> participants = participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE);
+        assertThat(participants, hasSize(1));
+
+        Participant participant = participants.get(0);
+        assertParticipantInformations(participant, PARTICIPANTS_NAME, otherMunicipalityId, true,
+                PARTICIPANT_EMAIL, PARTICIPANT_MEMBERSHIP);
+
+        String newEmail = "new@example.com";
+
+        participantDao.updateEmailForNormalParticipant(participant.getId().toLong(), newEmail);
+        participants = participantDao.findAllParticipants(testInitiativeId, false, 0, Integer.MAX_VALUE);
+        assertThat(participants, hasSize(1));
+
+        participant = participants.get(0);
+        assertParticipantInformations(participant, PARTICIPANTS_NAME, otherMunicipalityId, true,
+                newEmail, PARTICIPANT_MEMBERSHIP);
+    }
+
+    private void assertParticipantInformations(
+            Participant participant, String participantName, Long homeMunicipalityId, Boolean showName,
+            String email, Membership membership) {
+        assertThat(participant.getName(), is(participantName));
+        Optional<Municipality> homeMunicipality = participant.getHomeMunicipality();
+        assertThat(homeMunicipality.get().getId(), is(homeMunicipalityId));
+        assertThat(participant.isShowName(), is(showName));
+        assertThat(participant.getParticipateDate(), is(notNullValue()));
+        assertThat(participant.getEmail(), is(email));
+        assertThat(participant.getMembership(), is(membership));
+        assertThat(participant.getId(), is(notNullValue()));
+        ReflectionTestUtils.assertNoNullFields(participant);
     }
 
     private Long createConfirmedParticipant(Long initiativeId, Long homeMunicipality, boolean publicName, String participantName) {
