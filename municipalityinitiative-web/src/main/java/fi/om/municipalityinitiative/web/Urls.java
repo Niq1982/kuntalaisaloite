@@ -179,6 +179,8 @@ public final class Urls {
     public static final String ACTION_START_COLLECTING = "action-start-collecting";
     
     public static final String ACTION_SEND_TO_MUNICIPALITY = "action-send-to-muninicipality";
+
+    public static final String ACTION_DELETE_INITIATIVE = "action-delete-initiative";
     
     public static final String ACTION_DELETE_AUTHOR = "action-delete-author";
     

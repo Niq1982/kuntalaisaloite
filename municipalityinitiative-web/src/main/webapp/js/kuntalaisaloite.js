@@ -1469,6 +1469,15 @@ $('.search-form #municipalities').change(function() {
 		}
 	});
 
+    // Delete initiative
+    $('.js-delete-initiative').click(function() {
+        try {
+            generateModal(modalData.deleteInitiative(), 'minimal');
+        } catch (e) {
+            console.log(e);
+        }
+    });
+
 	// Send initiative to municipality
 	$('.js-send-to-municipality').click(function(){
 		try {

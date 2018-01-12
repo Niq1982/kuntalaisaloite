@@ -50,6 +50,8 @@ public interface InitiativeDao {
 
     void updateInitiativeDecisionModifiedDate(Long initiativeId);
 
+    void updateInitiativeDeleted(Long initiativeId, boolean deleted);
+
     InitiativeCounts getAllInitiativeCounts(Optional<List<Long>> municipalities, InitiativeSearch.Type initiativeTypeOptional);
 
     boolean isVerifiableInitiative(Long initiativeId);

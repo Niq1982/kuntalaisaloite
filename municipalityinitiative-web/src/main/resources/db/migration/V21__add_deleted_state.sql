@@ -1,0 +1,2 @@
+ALTER TABLE municipality_initiative
+  ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;

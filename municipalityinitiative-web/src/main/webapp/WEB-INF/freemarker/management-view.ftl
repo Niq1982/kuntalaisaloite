@@ -27,6 +27,14 @@
             
             <a class="small-button " href="${urls.edit(initiative.id)}"><span class="small-icon edit"><@u.messageHTML "action.editInitiative" /></span></a>
             <a class="small-button push" href="${urls.view(initiative.id)}"><span class="small-icon document"><@u.messageHTML "action.previewInitiative" /></span></a>
+
+            <span class="action">
+                <span class="icon-small icon-16 cancel"></span>
+                <a class="js-delete-initiative"
+                   data-id="${initiative.id!""}">
+                    Poista aloite
+                </a>
+            </span>
         </div>
     </div>
 
@@ -258,6 +266,20 @@
                 </form>
             </@compress>
         </#assign>
+
+        <#assign deleteInitiative>
+            <@compress single_line=true>
+
+            <p><@u.message "deleteInitiative.confirm.description" /></p>
+            <p><@u.message "deleteInitiative.confirm.description.2" /></p>
+
+            <form action="${springMacroRequestContext.requestUri}" method="POST" >
+                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                <button type="submit" name="${UrlConstants.ACTION_DELETE_INITIATIVE}" id="modal-${UrlConstants.ACTION_DELETE_INITIATIVE}" value="${UrlConstants.ACTION_DELETE_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteInitiative.confirm" /></button>
+                <a href="${managementURL}#delete-initiative" class="push close"><@u.message "action.cancel" /></a>
+            </form>
+            </@compress>
+        </#assign>
     
         <#-- Confirm start collecting for NOSCRIPT-users -->
         <#if startCollectingConfirm>
@@ -427,7 +449,17 @@
                 }]
             };
         </#if>
-        
+
+        <#-- Modal: Delete initiative. -->
+        <#if deleteInitiative??>
+            modalData.deleteInitiative = function() {
+                return [{
+                    title:      '<@u.message "deleteInitiative.title" />',
+                    content:    '<#noescape>${deleteInitiative?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+        </#if>
+
         <#-- Modal: Confirm send to municipality. -->
         <#if sendToMunicipality??>    
             modalData.sendToMunicipality = function() {
