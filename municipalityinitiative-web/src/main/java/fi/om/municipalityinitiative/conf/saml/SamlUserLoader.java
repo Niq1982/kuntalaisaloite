@@ -35,11 +35,8 @@ public class SamlUserLoader implements SAMLUserDetailsService {
         String municipalityNameSv = credential.getAttributeAsString("urn:oid:1.2.246.517.2002.2.20");
         String firstName = credential.getAttributeAsString("urn:oid:2.5.4.42");
         String lastName = credential.getAttributeAsString("urn:oid:2.5.4.4");
-
-        // TODO: What if not finnish citizen?
-        String finnishCitizen = credential.getAttributeAsString("urn:oid:1.2.246.517.2002.2.26");
-
         String ssn = credential.getAttributeAsString("urn:oid:1.2.246.21");
+
         String address = "";
         String fullName = firstName + " " + lastName;
 
