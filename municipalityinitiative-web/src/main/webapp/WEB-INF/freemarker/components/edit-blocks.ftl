@@ -367,10 +367,12 @@
                 <@f.textField path=path+".contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
 
             </div>
+            <#if author.municipality.present >
             <div class="column col-1of3 last">
                 <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
                 <div class="input-placeholder"><@u.solveMunicipality author.municipality/></div>
             </div>
+            </#if>
             <br class="clear" />
             <@f.formCheckbox path=path+".contactInfo.showName" checked=true key="contactInfo.showName" />
         </div>
@@ -420,11 +422,13 @@
                 <label class="input-header"><@u.message "contactInfo.verified.name" /></label>
                 <div class="input-placeholder">${author.contactInfo.name}</div>
             </div>
+            <#if author.municipality.present >
             <div class="column col-1of3 last">
                 <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
 
                 <div class="input-placeholder"><@u.solveMunicipality author.municipality/></div>
             </div>
+            </#if>
             <br class="clear" />
             <@f.formCheckbox path=path+".contactInfo.showName" checked=true key="contactInfo.showName" />
         </div>
