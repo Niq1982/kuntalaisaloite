@@ -1409,6 +1409,30 @@ $('.search-form #municipalities').change(function() {
 
 }());
 
+var modifyAuthorEmail = (function (currEmail) {
+    var emailForm = $('#author-email-form'),
+        details = $('.details'),
+        emailInput = $('#new-email'),
+		modifyAuthorEmailBtn = $("#modify-author-email"),
+        modifyAuthorEmailCancel = $("#modify-author-email-cancel"),
+		managementHashForm = $('#renew-management-hash-form');
+
+
+    modifyAuthorEmailBtn.click(function () {
+        emailInput.val(currEmail);
+        details.hide();
+        emailForm.show();
+        $(this).hide();
+        managementHashForm.hide();
+    });
+
+    modifyAuthorEmailCancel.click(function () {
+    	modifyAuthorEmailBtn.show();
+        details.show();
+        emailForm.hide();
+        managementHashForm.show();
+    });
+});
 
 /**
  *
@@ -1551,17 +1575,24 @@ $('.search-form #municipalities').change(function() {
 
 	$('.js-renew-management-hash').click(function(){
         var authorVerified = $(this).data("verified");
-        if (!authorVerified) {
-            $('.js-renew-management-hash.active').removeClass('active');
-            $(this).addClass('active');
+        $('.js-renew-management-hash.active').removeClass('active');
+        $(this).addClass('active');
 
+        if (!authorVerified) {
             try {
-                generateModal(modalData.renewManagementHash(), 'full', renewManagementHash.getAuthor);
+                generateModal(modalData.renewManagementHash(), 'full', renewManagementHash().getAuthor($(this)));
                 return false;
             } catch(e) {
                 console.log(e);
             }
-        }
+        } else {
+            try {
+                generateModal(modalData.modifyVerifiedAuthorEmail(), 'full', renewManagementHash().getAuthor($(this)));
+                return false;
+            } catch(e) {
+                console.log(e);
+            }
+		}
 	});
 
 	$('.js-renew-municipality-management-hash').click(function(){
@@ -1986,26 +2017,28 @@ var deleteAttachment = (function() {
 * Renew author management hash
 * ============================
 */
-var renewManagementHash = (function() {
+function renewManagementHash() {
 	return {
-		getAuthor: function(){
-			var author =				$('.js-renew-management-hash.active'),
-				form =					$('#delete-author-form'),
-				selAuthor =				$('#selected-author'),
-				authorInput =			$('#authorId'),
-				authorDetails =			'<h4 class="header">'  + author.data("name") + '</h4><div class="contact-info">' +
-										author.data("email") + '<br/>' +
-										author.data("address") + (author.data("address") !== "" ? '<br/>' : '') +
-										author.data("phone") +'</div>';
+		getAuthor: function (author) {
+            return function() {
+                var form = $('#delete-author-form'),
+                    selAuthor = $('#selected-author'),
+                    authorInput = $('#authorId'),
+                    authorInput2 = $('#authorIdEmailUpdate'), //This is ugly selector but better for e2e tests
+                    authorDetails = '<h4 class="header">' + author.data("name") + '</h4><div class="contact-info">' +
+                        author.data("email") + '<br/>' +
+                        author.data("address") + (author.data("address") !== "" ? '<br/>' : '') +
+                        author.data("phone") + '</div>';
 
-			selAuthor.html(authorDetails);
+                selAuthor.html(authorDetails);
 
-			authorInput.val(author.data("id"));
-            //authorVerifiedInput.val(author.data("verified"));
+                authorInput.val(author.data("id"));
+                authorInput2.val(author.data("id"));
+                modifyAuthorEmail(author.data("email"));
+			}
 		}
-	};
-
-}());
+	}
+}
 
 /**
  *  Renew municipality management hash

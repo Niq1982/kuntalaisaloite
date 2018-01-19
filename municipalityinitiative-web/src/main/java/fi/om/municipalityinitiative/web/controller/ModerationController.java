@@ -133,8 +133,11 @@ public class ModerationController extends BaseController{
                               @RequestParam("authorId") Long authorId,
                               @RequestParam("newEmail") String newEmail,
                               Locale locale, HttpServletRequest request) {
+        System.out.println(initiativeId);
+        System.out.println(authorId);
+        System.out.println(newEmail);
         //TODO
-        return null;
+        return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.AUTHOR_EMAIL_UPDATED, request);
     }
 
     @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_RENEW_MUNICIPALITY_MANAGEMENT_HASH)

@@ -365,6 +365,26 @@
     </#if>
 </#macro>
 
+
+<#macro emailUpdate>
+    <form id="author-email-form" class="hide" action="${springMacroRequestContext.requestUri}" method="POST">
+        <input type="hidden" name="authorId" id="authorIdEmailUpdate" value="" />
+        <@f.securityFilters/>
+        <div class="input-block-content no-top-margin">
+            <input id="new-email" name="newEmail" style="width: 70%"
+                   maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"/>
+        </div>
+
+        <div class="input-block-content">
+            <button type="submit" name="${UrlConstants.ACTION_UPDATE_NORMAL_PARTICIPANT_EMAIL}" class="small-button">
+                <span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
+            <a id="modify-author-email-cancel"><@u.message "action.cancel" /></a>
+        </div>
+        <br/><br/>
+    </form>
+    <a id="modify-author-email"><@u.message "moderator.updateAuthorEmail" /></a>
+</#macro>
+
 <#-- 
  * initiativeAuthor
  * 
@@ -381,9 +401,9 @@
     <#list authorList as a>
         <#assign isVerified = a.isVerified() />
         <div class="column author author-list ${((a_index + 1) % 3 == 0)?string("last","")}">
-            <p><strong>${a.contactInfo.name!""}</strong>, <@u.solveMunicipality a.municipality/>
+            <p class="no-bottom-margin"><strong>${a.contactInfo.name!""}</strong>, <@u.solveMunicipality a.municipality/>
             <#if showRenewManagementHash>
-                <a  <#if !isVerified >href="#"</#if>
+                <a  href="#"
                     class="js-renew-management-hash trigger-tooltip"
                     <#if !isVerified >
                         title="<@u.message "moderator.renewManagementHash.tooltip" />"
@@ -396,10 +416,12 @@
                     data-address="${a.contactInfo.address!""}"
                     data-email="${a.contactInfo.email!""}"
                     data-verified="${isVerified?c}"
-                    data-phone="${a.contactInfo.phone!""}"
-                    <#if isVerified >style="cursor: not-allowed"</#if>>
+                    data-phone="${a.contactInfo.phone!""}">
                     <span class="icon-small icon-16 resend"></span>
                 </a>
+            </#if>
+            <#if isVerified >
+                <p class="no-bottom-margin" style="font-size: 15px"><@u.message "moderator.renewManagementHash.tooltip.disable" /></p>
             </#if>
             <br />
             <@u.scrambleEmail a.contactInfo.email!"" />

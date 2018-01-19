@@ -135,9 +135,14 @@
     -->
     <#assign renewManagementHash>
     <@compress single_line=true>
-        <form action="${springMacroRequestContext.requestUri}" method="POST">
-            <@f.securityFilters/>
+
+        <h3><@u.message "moderator.renewManagementHash.confirm.author" /></h3>
+        <div id="selected-author" class="details"></div>
+        <@e.emailUpdate/>
+
+        <form id="renew-management-hash-form" action="${springMacroRequestContext.requestUri}" method="POST">
             <input type="hidden" name="authorId" id="authorId" value="" />
+            <@f.securityFilters/>
 
             <h3><@u.message "moderator.renewManagementHash.confirm.author" /></h3>
 
@@ -149,6 +154,15 @@
             </div>
         </form>
     </@compress>
+    </#assign>
+
+    <#assign updateVerifiedAuthorEmail>
+        <@compress single_line=true>
+
+        <h3><@u.message "moderator.updateAuthorEmail.author" /></h3>
+        <div id="selected-author" class="details"></div>
+        <@e.emailUpdate/>
+        </@compress>
     </#assign>
 
     <#--
@@ -214,6 +228,13 @@
             return [{
                 title:      '<@u.message "moderator.renewManagementHash.confirm.title" />',
                 content:    '<#noescape>${renewManagementHash?replace("'","&#39;")}</#noescape>'
+            }]
+        };
+
+        modalData.modifyVerifiedAuthorEmail = function() {
+            return [{
+                title:      '<@u.message "moderator.updateAuthorEmail.title" />',
+                content:    '<#noescape>${updateVerifiedAuthorEmail?replace("'","&#39;")}</#noescape>'
             }]
         };
 
