@@ -366,17 +366,18 @@
 </#macro>
 
 
-<#macro emailUpdate>
+<#macro emailUpdate verified>
     <form id="author-email-form" class="hide" action="${springMacroRequestContext.requestUri}" method="POST">
         <input type="hidden" name="authorId" id="authorIdEmailUpdate" value="" />
         <@f.securityFilters/>
         <div class="input-block-content no-top-margin">
-            <input id="new-email" name="newEmail" style="width: 70%"
-                   maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"/>
+            <input id="new-email" name="newEmail" style="width: 70%" maxlength="${InitiativeConstants.CONTACT_EMAIL_MAX}"/>
         </div>
 
         <div class="input-block-content">
-            <button type="submit" name="${UrlConstants.ACTION_UPDATE_NORMAL_PARTICIPANT_EMAIL}" class="small-button">
+            <button type="submit"
+                    name="<#if verified >${UrlConstants.ACTION_UPDATE_VERIFIED_AUTHOR_EMAIL}<#else>${UrlConstants.ACTION_UPDATE_NORMAL_AUTHOR_EMAIL}</#if>"
+                    class="small-button">
                 <span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
             <a id="modify-author-email-cancel"><@u.message "action.cancel" /></a>
         </div>

@@ -146,6 +146,14 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
+    public void updateEmailForVerifiedUser(Long verifiedUserId, String newEmail) {
+        assertSingleAffection(queryFactory.update(verifiedUser)
+                .set(verifiedUser.email, newEmail)
+                .where(verifiedUser.id.eq(verifiedUserId))
+                .execute());
+    }
+
+    @Override
     public void updateUserInformation(String hash, ContactInfo contactInfo) {
         assertSingleAffection(queryFactory.update(verifiedUser)
                 .set(verifiedUser.address, contactInfo.getAddress())

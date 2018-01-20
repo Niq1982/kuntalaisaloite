@@ -29,6 +29,8 @@ public interface AuthorDao {
 
     Boolean normalAuthorExists(Long initiativeId, Long participantId);
 
+    Boolean verifiedAuthorExists(Long initiativeId, Long verifiedUserId);
+
     List<Author> findAllAuthors(Long initiativeId);
 
     NormalAuthorId createAuthor(Long initiativeId, Long participantId, String managementHash);

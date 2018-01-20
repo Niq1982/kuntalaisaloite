@@ -128,15 +128,23 @@ public class ModerationController extends BaseController{
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.MANAGEMENT_HASH_RENEWED, request);
     }
 
-    @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_UPDATE_NORMAL_PARTICIPANT_EMAIL)
-    public String updateEmail(@PathVariable("id") Long initiativeId,
-                              @RequestParam("authorId") Long authorId,
+    @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_UPDATE_NORMAL_AUTHOR_EMAIL)
+    public String updateNormalAuthorEmail(@PathVariable("id") Long initiativeId,
+                              @RequestParam("authorId") Long participantId,
                               @RequestParam("newEmail") String newEmail,
                               Locale locale, HttpServletRequest request) {
-        System.out.println(initiativeId);
-        System.out.println(authorId);
-        System.out.println(newEmail);
-        //TODO
+        moderationService.updateEmailForNormalAuthor(userService.getRequiredOmLoginUserHolder(request),
+                initiativeId, participantId, newEmail);
+        return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.AUTHOR_EMAIL_UPDATED, request);
+    }
+
+    @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_UPDATE_VERIFIED_AUTHOR_EMAIL)
+    public String updateVerifiedAuthorEmail(@PathVariable("id") Long initiativeId,
+                                          @RequestParam("authorId") Long verifiedUserId,
+                                          @RequestParam("newEmail") String newEmail,
+                                          Locale locale, HttpServletRequest request) {
+        moderationService.updateEmailForVerifiedAuthor(userService.getRequiredOmLoginUserHolder(request),
+                initiativeId, verifiedUserId, newEmail);
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.AUTHOR_EMAIL_UPDATED, request);
     }
 

@@ -197,8 +197,21 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QAuthor.author.participantId.eq(participantId))
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
-                .orderBy(QParticipant.participant.id.asc())
                 .list(normalAuthorMapping)
+                .size() > 0;
+    }
+
+    @Override
+    public Boolean verifiedAuthorExists(Long initiativeId, Long verifiedUserId) {
+        return queryFactory.from(QVerifiedAuthor.verifiedAuthor)
+                .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorVerifiedUserFk, QVerifiedUser.verifiedUser)
+                .innerJoin(QVerifiedUser.verifiedUser._verifiedParticipantVerifiedUserFk, QVerifiedParticipant.verifiedParticipant)
+                .where(QVerifiedAuthor.verifiedAuthor.initiativeId.eq(initiativeId))
+                .where(QVerifiedAuthor.verifiedAuthor.verifiedUserId.eq(verifiedUserId))
+                .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
+                .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
+                .innerJoin(QMunicipalityInitiative.municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .list(verifiedAuthorMapper)
                 .size() > 0;
     }
 

@@ -107,6 +107,25 @@ public class JdbcAuthorDaoTest {
     }
 
     @Test
+    public void normal_and_verified_author_exists() {
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor()
+                .withParticipantName("Normal").toInitiativeDraft());
+        testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality)
+                .withParticipantName("Verified"));
+
+        List<Author> allAuthors = authorDao.findAllAuthors(initiativeId);
+        assertThat(allAuthors, hasSize(2));
+
+        Author author1 = allAuthors.stream().filter(a -> a.getContactInfo().getName().equals("Normal")).findFirst().get();
+        assertThat(author1.isVerified(), is(false));
+        assertThat(authorDao.normalAuthorExists(initiativeId, author1.getId().toLong()), is(true));
+
+        Author author2 = allAuthors.stream().filter(a -> a.getContactInfo().getName().equals("Verified")).findFirst().get();
+        assertThat(author2.isVerified(), is(true));
+        assertThat(authorDao.verifiedAuthorExists(initiativeId, author2.getId().toLong()), is(true));
+    }
+
+    @Test
     public void login_as_author_returns_authors_initiative() {
         Long collaborativeAccepted = testHelper.createCollaborativeAccepted(testMunicipality);
 

@@ -85,6 +85,17 @@ public class JdbcUserDaoTest {
     }
 
     @Test
+    public void update_email_for_verified_user() {
+        Long verifiedUserId = userDao.addVerifiedUser(HASH, contactInfo(), testMunicipality).toLong();
+
+        String newEmail = "new@example.com";
+        userDao.updateEmailForVerifiedUser(verifiedUserId, newEmail);
+
+        ContactInfo result = userDao.getVerifiedUser(HASH).get().getContactInfo();
+        assertThat(result.getEmail(), is(newEmail));
+    }
+
+    @Test
     public void update_name_and_municipality() {
 
         userDao.addVerifiedUser(HASH, contactInfo(), testMunicipality);

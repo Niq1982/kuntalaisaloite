@@ -18,11 +18,15 @@ import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.hash.RandomHashGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Locale;
+
+import static java.lang.String.format;
 
 public class ModerationService {
 
@@ -54,7 +58,12 @@ public class ModerationService {
     JdbcNotificationDao notificationDao;
 
     @Resource
-    private ParticipantDao participantDao;
+    ParticipantDao participantDao;
+
+    @Resource
+    UserDao userDao;
+
+    private static final Logger log = LoggerFactory.getLogger(ModerationService.class);
 
     @Transactional(readOnly = false)
     public void accept(OmLoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment, Locale locale) {
@@ -185,10 +194,29 @@ public class ModerationService {
         //Just double checking
         Boolean normalAuthorExists = authorDao.normalAuthorExists(initiativeId, participantId);
         if (!normalAuthorExists) {
-            throw new OperationNotAllowedException("Updating email for normal participant not allowed: cannot find normal author with given initiativeId and participantId");
+            log.error(format("Updating email for normal participant not allowed: " +
+                    "cannot find normal author with given initiativeId %d and participantId %d", initiativeId, participantId));
+            throw new OperationNotAllowedException("Updating email for normal participant not allowed: " +
+                    "cannot find normal author with given initiativeId and participantId");
         }
 
         participantDao.updateEmailForNormalParticipant(participantId, newEmail);
+    }
+
+    @Transactional(readOnly = false)
+    public void updateEmailForVerifiedAuthor(LoginUserHolder loginUserHolder, Long initiativeId,
+                                             Long verifiedUserId, String newEmail) {
+        loginUserHolder.assertOmUser();
+        //Just double checking
+        Boolean verifiedAuthorExists = authorDao.verifiedAuthorExists(initiativeId, verifiedUserId);
+        if (!verifiedAuthorExists) {
+            log.error(format("Updating email for verified user not allowed: " +
+                    "cannot find verified author with given initiativeId %d and verifiedUserId %d", initiativeId, verifiedUserId));
+            throw new OperationNotAllowedException("Updating email for verified user not allowed: " +
+                    "cannot find verified author with given initiativeId and verifiedUserId");
+        }
+
+        userDao.updateEmailForVerifiedUser(verifiedUserId, newEmail);
     }
 
 

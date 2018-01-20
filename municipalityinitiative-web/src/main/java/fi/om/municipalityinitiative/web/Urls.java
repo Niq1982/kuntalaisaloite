@@ -156,7 +156,9 @@ public final class Urls {
 
     public static final String ACTION_MODERATOR_ADD_COMMENT = "moderatorComment";
 
-    public static final String ACTION_UPDATE_NORMAL_PARTICIPANT_EMAIL = "update-normal-participant-email";
+    public static final String ACTION_UPDATE_NORMAL_AUTHOR_EMAIL = "update-normal-participant-email";
+
+    public static final String ACTION_UPDATE_VERIFIED_AUTHOR_EMAIL = "update-verified-participant-email";
 
     public static final String ACTION_SAVE = "action-save";
 

@@ -18,6 +18,8 @@ public interface UserDao {
 
     Optional<VerifiedUserId> getVerifiedUserId(String hash);
 
+    void updateEmailForVerifiedUser(Long verifiedUserId, String newEmail);
+
     void updateUserInformation(String hash, ContactInfo contactInfo);
 
     void updateUserInformation(String hash, String fullName, Optional<Municipality> vetumaMunicipality);

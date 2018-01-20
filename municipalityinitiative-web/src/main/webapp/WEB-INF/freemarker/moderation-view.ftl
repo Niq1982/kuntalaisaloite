@@ -138,7 +138,7 @@
 
         <h3><@u.message "moderator.renewManagementHash.confirm.author" /></h3>
         <div id="selected-author" class="details"></div>
-        <@e.emailUpdate/>
+        <@e.emailUpdate verified=false />
 
         <form id="renew-management-hash-form" action="${springMacroRequestContext.requestUri}" method="POST">
             <input type="hidden" name="authorId" id="authorId" value="" />
@@ -161,7 +161,7 @@
 
         <h3><@u.message "moderator.updateAuthorEmail.author" /></h3>
         <div id="selected-author" class="details"></div>
-        <@e.emailUpdate/>
+            <@e.emailUpdate verified=true />
         </@compress>
     </#assign>
 
