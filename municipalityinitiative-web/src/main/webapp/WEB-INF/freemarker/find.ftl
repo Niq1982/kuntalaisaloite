@@ -233,9 +233,10 @@
 <div class="search-results">
 <#if initiatives?? && (initiatives.list?size > 0)>
     <#list initiatives.list as initiative>
+        <#assign initiativeUrl><#if (user.isOmUser()) >${urls.moderation(initiative.id)}<#else>${urls.view(initiative.id)}</#if></#assign>
         <#if initiative_index == 0><ul></#if>
         <li <#if initiative_index == 0>class="first"</#if>>
-            <a href="${urls.view(initiative.id)}" class="search-result">
+            <a href="${initiativeUrl}" class="search-result">
                 <span class="participants">
                     <span class="participants-container">
                         <#if !initiative.public>

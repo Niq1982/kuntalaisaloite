@@ -242,7 +242,13 @@
                                 <li><a href="${urls.municipalityModeration()}"><@u.message "om.municipality.moderation" /></a></li>
                                 <li><a href="${urls.notificationModeration()}"><@u.message "om.notification.moderation" /></a></li>
                                 <#if initiative??>
-                                    <#if initiative.id??><li><a href="${urls.moderation(initiative.id)}"><@u.message "om.initiative.moderation" /></a></li></#if>
+                                    <#if initiative.id??>
+                                        <#if (page == "page.moderation")>
+                                            <li><a href="${urls.view(initiative.id)}"><@u.message "om.initiative.publicView" /></a></li>
+                                        <#else>
+                                            <li><a href="${urls.moderation(initiative.id)}"><@u.message "om.initiative.moderation" /></a></li>
+                                        </#if>
+                                    </#if>
                                 </#if>
                                 <li><a href="${urls.logout()}" id="logout"><@u.message "common.logout"/></a></li>
                             </ul>

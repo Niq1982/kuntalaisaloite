@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.base.Strings;
+import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.RequestMessage;
@@ -54,7 +55,7 @@ public abstract class DefaultLoginController extends BaseLoginController {
 
         userService.adminLogin(u, p, request);
         if (Strings.isNullOrEmpty(target)) {
-            return new RedirectView(Urls.get(locale).frontpage(), false, true, false);
+            return new RedirectView(Urls.get(locale).search() + "?" + InitiativeSearch.latestReviewTypeAllQuery, false, true, false);
         }
         else {
             return new RedirectView(Urls.get(locale).getBaseUrl() + target, false, true, false);

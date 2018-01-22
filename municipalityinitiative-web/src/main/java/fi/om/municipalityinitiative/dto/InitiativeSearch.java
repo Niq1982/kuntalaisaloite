@@ -14,6 +14,8 @@ public class InitiativeSearch {
     private String search;
     private Type type = Type.all;
 
+    public static String latestReviewTypeAllQuery = "orderBy=latest&show=review&type=all";
+
     public List<Long> getMunicipalities() {
         return municipalities;
     }
