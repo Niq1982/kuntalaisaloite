@@ -126,6 +126,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
                         info.setVideoUrl(videoUrl);
                     }
 
+                    info.setDeleted(row.get(municipalityInitiative.deleted));
+
                     return info;
                 }
             };
@@ -151,6 +153,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     private InitiativeListWithCount find(InitiativeSearch search) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
+                .where(municipalityInitiative.deleted.eq(false))
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality);
 
         filterByState(query, search);
@@ -186,6 +189,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .innerJoin(QVerifiedUser.verifiedUser._verifiedAuthorVerifiedUserFk, QVerifiedAuthor.verifiedAuthor)
                 .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .where(municipalityInitiative.deleted.eq(false))
                 .where(QVerifiedUser.verifiedUser.id.eq(verifiedUserId.toLong()))
                 .orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc())
                 .list(initiativeListInfoMapping);
@@ -197,6 +201,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         return queryFactory.from(QVerifiedParticipant.verifiedParticipant)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .where(municipalityInitiative.deleted.eq(false))
                 .where(QVerifiedParticipant.verifiedParticipant.verifiedUserId.eq(authorId.toLong()))
                 .list(initiativeListInfoMapping);
 
@@ -206,6 +211,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public List<Initiative> findAllByStateChangeBefore(InitiativeState accepted, LocalDate date) {
         DateTime dateTimeAtMidnight = date.toDateTime(new LocalTime(0, 0));
         return queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
+                .where(municipalityInitiative.deleted.eq(false))
                 .where(QMunicipalityInitiative.municipalityInitiative.state.eq(accepted))
                 .where(QMunicipalityInitiative.municipalityInitiative.stateTimestamp.before(dateTimeAtMidnight))
                 .innerJoin(QMunicipalityInitiative.municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
@@ -215,6 +221,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     @Override
     public List<Initiative> findAllPublishedNotSent() {
         return queryFactory.from(municipalityInitiative)
+                .where(municipalityInitiative.deleted.eq(false))
                 .where(municipalityInitiative.sent.isNull())
                 .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
@@ -396,6 +403,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .where(municipalityInitiative.deleted.eq(false))
                 .where(municipalityInitiative.id.eq(initiativeId));
 
         Initiative initiative = query.uniqueResult(initiativeInfoMapping);
@@ -416,6 +424,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "showCategory");
 
         PostgresQuery from = queryFactory.from(municipalityInitiative)
+                .where(municipalityInitiative.deleted.eq(false))
                 .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
                 .where(municipalityInitiative.fixState.eq(FixState.OK));
 
@@ -455,7 +464,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         SimpleExpression<String> showCategory = Expressions.as(caseBuilder, "showCategory");
 
-        PostgresQuery from = queryFactory.from(municipalityInitiative).where(STATE_NOT_PREPARE);
+        PostgresQuery from = queryFactory.from(municipalityInitiative)
+                .where(municipalityInitiative.deleted.eq(false))
+                .where(STATE_NOT_PREPARE);
 
         filterByType(from, initiativeType);
 
@@ -583,6 +594,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .execute());
     }
 
+    @Override
+    public void updateInitiativeDeleted(Long initiativeId, boolean deleted) {
+        Mappings.assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.deleted, deleted)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+
 
     @Override
     public Long prepareInitiative(Long municipalityId, InitiativeType initiativeType) {
@@ -595,6 +614,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     @Override
     public boolean isVerifiableInitiative(Long initiativeId) {
         InitiativeType initiativeType = queryFactory.from(municipalityInitiative)
+                .where(municipalityInitiative.deleted.eq(false))
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .uniqueResult(municipalityInitiative.type);
 
@@ -605,6 +625,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public List<Long> getInitiativesThatAreSentAtTheGivenDateOrInFutureOrStillRunning(LocalDate date) {
 
         return queryFactory.from(municipalityInitiative)
+                .where(municipalityInitiative.deleted.eq(false))
                 .where(municipalityInitiative.state.in(InitiativeState.PUBLISHED),
                         municipalityInitiative.sent.goe(date.toLocalDateTime(new LocalTime(0, 0)).toDateTime()).or(municipalityInitiative.sent.isNull())
                         .or(municipalityInitiative.supportCountData.isNull()))
