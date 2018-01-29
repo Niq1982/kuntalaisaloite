@@ -88,7 +88,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     @Test
     public void sending_new_management_hash_contains_all_information() throws Exception {
 
-        emailService.sendManagementHashRenewed(initiativeId(), MANAGEMENT_HASH, authorId());
+        emailService.sendManagementHashRenewed(initiativeId(), false, MANAGEMENT_HASH, authorId());
 
         EmailDto email = testHelper.getSingleQueuedEmail();
 
@@ -477,7 +477,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @Test
     public void verified_initiative_created_contains_all_information() throws Exception {
-        emailService.sendVeritiedInitiativeManagementLink(initiativeId(), Locales.LOCALE_FI);
+        emailService.sendVeritiedInitiativeManagementLink(initiativeId(), false, Locales.LOCALE_FI);
 
         EmailDto email = testHelper.getSingleQueuedEmail();
 

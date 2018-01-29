@@ -223,7 +223,7 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiativeDao.get(original).isDeleted(), is(false));
         boolean isDeleted = true;
         initiativeDao.updateInitiativeDeleted(original, isDeleted);
-        assertThat(initiativeDao.get(original).isDeleted(), is(isDeleted));
+        assertThat(initiativeDao.get(original, true).isDeleted(), is(isDeleted));
     }
 
     @Test
@@ -760,7 +760,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
 
-        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Optional.<List<Long>>of(new ArrayList<Long>()), InitiativeSearch.Type.all);
+        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Optional.<List<Long>>of(new ArrayList<Long>()), InitiativeSearch.Type.all, false);
         assertThat(counts.fix, is(1L));
         assertThat(counts.review, is(2L));
         assertThat(counts.accepted, is(3L));
@@ -803,7 +803,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.COLLABORATIVE_CITIZEN);
         testHelper.createWithAuthor(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
 
-        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.citizen);
+        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.citizen, false);
         assertThat(counts.fix, is(0L));
         assertThat(counts.review, is(1L));
         assertThat(counts.accepted, is(2L));
@@ -837,7 +837,7 @@ public class JdbcInitiativeDaoTest {
         Long otherInitiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
         Long initiativeToFind = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
 
-        List<InitiativeListInfo> initiatives = initiativeDao.findInitiatives(new VerifiedUserId(testHelper.getLastVerifiedUserId()));
+        List<InitiativeListInfo> initiatives = initiativeDao.findInitiatives(new VerifiedUserId(testHelper.getLastVerifiedUserId()), false);
         assertThat(initiatives, hasSize(1));
         assertThat(initiatives.get(0).getId(), is(initiativeToFind));
 

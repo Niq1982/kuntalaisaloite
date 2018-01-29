@@ -30,7 +30,6 @@ import javax.annotation.Resource;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
 
@@ -68,8 +67,13 @@ public class InitiativeManagementService {
 
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
+        return getInitiativeDraftForEdit(initiativeId, loginUserHolder, false);
+    }
+
+    @Transactional(readOnly = true)
+    public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder, Boolean getDeleted) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        Initiative initiative = initiativeDao.get(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId, getDeleted);
         assertAllowance("Edit initiative", ManagementSettings.of(initiative).isAllowEdit());
 
         ContactInfo contactInfo;
@@ -86,9 +90,15 @@ public class InitiativeManagementService {
 
     @Transactional(readOnly = false)
     public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto, Locale locale) throws MalformedURLException, InvalidVideoUrlException {
+        editInitiativeDraft(initiativeId, loginUserHolder, false, editDto, locale);
+    }
+
+    @Transactional(readOnly = false)
+    public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, Boolean getDeleted,
+                                    InitiativeDraftUIEditDto editDto, Locale locale) throws MalformedURLException, InvalidVideoUrlException {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        Initiative initiative = initiativeDao.get(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId, getDeleted);
 
         assertAllowance("Edit initiative", ManagementSettings.of(initiative).isAllowEdit());
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
@@ -101,30 +111,33 @@ public class InitiativeManagementService {
             String hash = loginUserHolder.getVerifiedUser().getHash();
             userDao.updateUserInformation(hash, editDto.getContactInfo());
             participantDao.updateVerifiedParticipantName(initiativeId, hash, editDto.getContactInfo().isShowName(), loginUserHolder.getVerifiedUser().getContactInfo().getName());
-            initiativeDao.denormalizeParticipantCounts(initiativeId);
+            initiativeDao.denormalizeParticipantCounts(initiativeId, getDeleted);
 
             // This is a little strange :)
             // When verified user starts creating a initiative, we'll send the first email after he/she updates
             // the initiative for the first time. But it's better to send it here rather than immediately when he
             // starts creating it from prepare-page.
             if (Strings.isNullOrEmpty(initiative.getName())) {
-                emailService.sendVeritiedInitiativeManagementLink(initiativeId, locale);
+                emailService.sendVeritiedInitiativeManagementLink(initiativeId, getDeleted, locale);
             }
 
         }
         else {
             authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), editDto.getContactInfo());
-            initiativeDao.denormalizeParticipantCounts(initiativeId);
+            initiativeDao.denormalizeParticipantCounts(initiativeId, getDeleted);
         }
-
-
     }
 
     @Transactional(readOnly = true)
     public InitiativeUIUpdateDto getInitiativeForUpdate(Long initiativeId, LoginUserHolder loginUserHolder) {
+        return getInitiativeForUpdate(initiativeId, loginUserHolder, false);
+    }
+
+    @Transactional(readOnly = true)
+    public InitiativeUIUpdateDto getInitiativeForUpdate(Long initiativeId, LoginUserHolder loginUserHolder, Boolean getDeleted) {
 
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        Initiative initiative = initiativeDao.get(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId, getDeleted);
 
         assertAllowance("Update initiative", ManagementSettings.of(initiative).isAllowUpdate());
 
@@ -153,7 +166,6 @@ public class InitiativeManagementService {
     // but if verified, then we get it from verified_user table?
     public Author getAuthorInformation(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        Initiative initiative = initiativeDao.get(initiativeId);
         if (!loginUserHolder.isVerifiedUser()) {
             for (NormalAuthor author : authorDao.findNormalAuthors(initiativeId)) {
                 if (author.getId().equals(loginUserHolder.getNormalLoginUser().getAuthorId())) {
@@ -174,8 +186,13 @@ public class InitiativeManagementService {
 
     @Transactional(readOnly = false)
     public void updateInitiative(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeUIUpdateDto updateDto) throws MalformedURLException, InvalidVideoUrlException {
+        updateInitiative(initiativeId, loginUserHolder, false, updateDto);
+    }
+
+    @Transactional(readOnly = false)
+    public void updateInitiative(Long initiativeId, LoginUserHolder loginUserHolder, Boolean getDeleted, InitiativeUIUpdateDto updateDto) throws MalformedURLException, InvalidVideoUrlException {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        Initiative initiative = initiativeDao.get(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId, getDeleted);
         assertAllowance("Update initiative", ManagementSettings.of(initiative).isAllowUpdate());
 
         initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo(), updateDto.getExternalParticipantCount(), videoService.convertVideoUrl(updateDto.getVideoUrl()));
@@ -191,7 +208,7 @@ public class InitiativeManagementService {
         else {
             authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), updateDto.getContactInfo());
         }
-        initiativeDao.denormalizeParticipantCounts(initiativeId);
+        initiativeDao.denormalizeParticipantCounts(initiativeId, getDeleted);
     }
 
     @Transactional(readOnly = false)
@@ -293,8 +310,13 @@ public class InitiativeManagementService {
 
     @Transactional(readOnly = true)
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, LoginUserHolder loginUserHolder) {
+        return getMunicipalityInitiative(initiativeId, loginUserHolder, false);
+    }
+
+    @Transactional(readOnly = true)
+    public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, LoginUserHolder loginUserHolder, Boolean getDeleted) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        return InitiativeViewInfo.parse(initiativeDao.get(initiativeId));
+        return InitiativeViewInfo.parse(initiativeDao.get(initiativeId, getDeleted));
     }
 
     @Transactional(readOnly = true)
@@ -307,6 +329,6 @@ public class InitiativeManagementService {
             // FIXME: getVerifiedUser().getAuthorId() should not throw exceptions, fix architecture
         }
 
-        return initiativeDao.findInitiatives(authorId);
+        return initiativeDao.findInitiatives(authorId, true);
     }
 }

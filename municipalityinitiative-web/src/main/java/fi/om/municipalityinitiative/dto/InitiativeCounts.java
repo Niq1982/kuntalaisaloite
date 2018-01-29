@@ -7,6 +7,7 @@ public class InitiativeCounts {
     public long accepted = 0;
     public long review = 0;
     public long fix = 0;
+    public long deleted = 0;
 
     public long getCollecting() {
         return collecting;
@@ -35,4 +36,6 @@ public class InitiativeCounts {
     public long getFix() {
         return fix;
     }
+
+    public long getDeleted() { return deleted; }
 }

@@ -96,9 +96,9 @@ public class InitiativeModerationWebTest extends WebTestBase {
         loginAsOmUser();
         open(urls.moderation(initiativeId));
 
-        clickLink("Palauta aloite");
+        clickLink("Palauta muokattavaksi");
         inputTextByCSS("#commentReject","hylkäys kommentti");
-        clickButton("Palauta aloite");
+        clickButton("Palauta muokattavaksi");
 
         assertSuccessMessage("Aloite palautettu korjattavaksi");
         assertThatFirstReviewHistoryElementIs("Palautettu korjattavaksi", "hylkäys kommentti");

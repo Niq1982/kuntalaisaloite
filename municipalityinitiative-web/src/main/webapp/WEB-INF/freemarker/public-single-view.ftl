@@ -22,7 +22,7 @@
         <@u.returnPrevious url=urls.search() + "?orderBy=latestSent&show=sent" labelKey="link.to.searchView" useJsBack=true />
     </#if>
 
-    <@e.initiativeTitle initiative />
+    <@e.initiativeTitle initiative=initiative />
 
     <@prog.progress initiative />
 

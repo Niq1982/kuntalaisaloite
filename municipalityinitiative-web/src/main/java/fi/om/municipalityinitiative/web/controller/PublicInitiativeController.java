@@ -92,7 +92,12 @@ public class PublicInitiativeController extends BaseController {
 
         addPiwicIdIfNotAuthenticated(model, request);
 
-        InitiativeListPageInfo pageInfo = publicInitiativeService.getInitiativeListPageInfo(search, loginUserHolder, locale);
+        boolean getDeleted = false;
+        if (loginUserHolder.getUser().isOmUser()) {
+            getDeleted = true;
+        }
+
+        InitiativeListPageInfo pageInfo = publicInitiativeService.getInitiativeListPageInfo(search, getDeleted, loginUserHolder, locale);
 
         SearchParameterQueryString queryString = new SearchParameterQueryString(Urls.get(locale), search, pageInfo.municipalities);
 

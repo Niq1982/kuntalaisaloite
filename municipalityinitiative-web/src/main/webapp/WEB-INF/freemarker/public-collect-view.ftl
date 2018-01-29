@@ -56,7 +56,7 @@
         <@u.returnPrevious url=urls.search() labelKey="link.to.searchView" useJsBack=true />
     </#if>
 
-    <@e.initiativeTitle initiative />
+    <@e.initiativeTitle initiative=initiative />
 
     <@prog.progress initiative />
 

@@ -16,7 +16,7 @@
 
     <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
 
-    <@e.initiativeTitle initiative />
+    <@e.initiativeTitle initiative=initiative />
     
     <@prog.progress initiative=initiative public=false />
 

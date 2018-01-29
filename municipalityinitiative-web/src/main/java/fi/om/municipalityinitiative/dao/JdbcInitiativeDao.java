@@ -60,6 +60,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
     private static final BooleanExpression STATE_IS_COLLECTING = municipalityInitiative.sent.isNull().and(IS_PUBLIC);
     private static final BooleanExpression STATE_IS_SENT = municipalityInitiative.sent.isNotNull().and(IS_PUBLIC);
     private static final BooleanExpression STATE_IS_FIX = municipalityInitiative.fixState.eq(FixState.FIX);
+    private static final BooleanExpression STATE_IS_DELETED = municipalityInitiative.deleted.eq(true);
+
     static final Expression<InitiativeListInfo> initiativeListInfoMapping =
             new MappingProjection<InitiativeListInfo>(InitiativeListInfo.class,
                     municipalityInitiative.all(),
@@ -76,6 +78,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setType(row.get(municipalityInitiative.type));
                     info.setState(row.get(municipalityInitiative.state));
                     info.setStateTime(row.get(municipalityInitiative.stateTimestamp).toLocalDate());
+                    info.setDeleted(row.get(municipalityInitiative.deleted));
                     return info;
                 }
             };
@@ -140,21 +143,34 @@ public class JdbcInitiativeDao implements InitiativeDao {
     PostgresQueryFactory queryFactory;
 
     @Override
-    public InitiativeListWithCount findUnCached(InitiativeSearch search) {
-        return find(search);
+    public InitiativeListWithCount findUnCached(InitiativeSearch search, boolean findDeleted) {
+        return find(search, findDeleted);
     }
 
     @Override
     @Cacheable(value = "initiativeList")
     public InitiativeListWithCount findCached(InitiativeSearch search) {
-        return find(search);
+        return find(search, false);
     }
 
-    private InitiativeListWithCount find(InitiativeSearch search) {
-        PostgresQuery query = queryFactory
-                .from(municipalityInitiative)
-                .where(municipalityInitiative.deleted.eq(false))
-                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality);
+    @Override
+    @Cacheable(value = "initiativeList")
+    public InitiativeListWithCount findCached(InitiativeSearch search, boolean findDeleted) {
+        return find(search, findDeleted);
+    }
+
+    private InitiativeListWithCount find(InitiativeSearch search, boolean findDeleted) {
+        PostgresQuery query;
+        if (findDeleted) {
+            query = queryFactory
+                    .from(municipalityInitiative)
+                    .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality);
+        } else {
+            query = queryFactory
+                    .from(municipalityInitiative)
+                    .where(municipalityInitiative.deleted.eq(false))
+                    .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality);
+        }
 
         filterByState(query, search);
         filterByType(query, search.getType());
@@ -184,15 +200,26 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public List<InitiativeListInfo> findInitiatives(VerifiedUserId verifiedUserId) {
-        return queryFactory.from(QVerifiedUser.verifiedUser)
-                .innerJoin(QVerifiedUser.verifiedUser._verifiedAuthorVerifiedUserFk, QVerifiedAuthor.verifiedAuthor)
-                .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
-                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
-                .where(municipalityInitiative.deleted.eq(false))
-                .where(QVerifiedUser.verifiedUser.id.eq(verifiedUserId.toLong()))
-                .orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc())
-                .list(initiativeListInfoMapping);
+    public List<InitiativeListInfo> findInitiatives(VerifiedUserId verifiedUserId, Boolean findDeleted) {
+
+        if (findDeleted) {
+            return queryFactory.from(QVerifiedUser.verifiedUser)
+                    .innerJoin(QVerifiedUser.verifiedUser._verifiedAuthorVerifiedUserFk, QVerifiedAuthor.verifiedAuthor)
+                    .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
+                    .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                    .where(QVerifiedUser.verifiedUser.id.eq(verifiedUserId.toLong()))
+                    .orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc())
+                    .list(initiativeListInfoMapping);
+        } else {
+            return queryFactory.from(QVerifiedUser.verifiedUser)
+                    .innerJoin(QVerifiedUser.verifiedUser._verifiedAuthorVerifiedUserFk, QVerifiedAuthor.verifiedAuthor)
+                    .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
+                    .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                    .where(municipalityInitiative.deleted.eq(false))
+                    .where(QVerifiedUser.verifiedUser.id.eq(verifiedUserId.toLong()))
+                    .orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc())
+                    .list(initiativeListInfoMapping);
+        }
     }
 
     @Override
@@ -252,8 +279,13 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void denormalizeParticipantCounts(Long initiativeId) {
+        denormalizeParticipantCounts(initiativeId, false);
+    }
 
-        Long municipalityId = get(initiativeId).getMunicipality().getId();
+    @Override
+    public void denormalizeParticipantCounts(Long initiativeId, boolean getDeleted) {
+
+        Long municipalityId = get(initiativeId, getDeleted).getMunicipality().getId();
 
         final MutableInt allParticipants = new MutableInt(0);
         final MutableInt publicParticipants = new MutableInt(0);
@@ -355,6 +387,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
             // om
 
+            case deleted:
+                query.where(STATE_IS_DELETED);
+                break;
             case draft:
                 query.where(STATE_IS_DRAFT);
                 break;
@@ -414,6 +449,31 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
+    public Initiative get(Long initiativeId, Boolean getDeleted) {
+        PostgresQuery query;
+        if (getDeleted) {
+            query = queryFactory
+                    .from(municipalityInitiative)
+                    .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                    .where(municipalityInitiative.id.eq(initiativeId));
+        } else {
+            query = queryFactory
+                    .from(municipalityInitiative)
+                    .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                    .where(municipalityInitiative.deleted.eq(false))
+                    .where(municipalityInitiative.id.eq(initiativeId));
+        }
+
+
+
+        Initiative initiative = query.uniqueResult(initiativeInfoMapping);
+        if (initiative == null) {
+            throw new NotFoundException("initiative", initiativeId);
+        }
+        return initiative;
+    }
+
+    @Override
     @Cacheable(value = "initiativeCount")
     public InitiativeCounts getPublicInitiativeCounts(Optional<List<Long>> municipalities, InitiativeSearch.Type initiativeType) {
         Expression<String> caseBuilder = new CaseBuilder()
@@ -445,9 +505,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public InitiativeCounts getAllInitiativeCounts(Optional<List<Long>> municipalities, InitiativeSearch.Type initiativeType) {
+    public InitiativeCounts getAllInitiativeCounts(Optional<List<Long>> municipalities, InitiativeSearch.Type initiativeType, boolean getDeleted) {
         String unknownStateFound = "unknownStateFound";
         Expression<String> caseBuilder = new CaseBuilder()
+                .when(STATE_IS_DELETED)
+                .then(new ConstantImpl<>(InitiativeSearch.Show.deleted.name()))
                 .when(STATE_IS_COLLECTING)
                 .then(new ConstantImpl<>(InitiativeSearch.Show.collecting.name()))
                 .when(STATE_IS_SENT)
@@ -464,9 +526,15 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         SimpleExpression<String> showCategory = Expressions.as(caseBuilder, "showCategory");
 
-        PostgresQuery from = queryFactory.from(municipalityInitiative)
-                .where(municipalityInitiative.deleted.eq(false))
-                .where(STATE_NOT_PREPARE);
+        PostgresQuery from;
+        if (getDeleted) {
+            from = queryFactory.from(municipalityInitiative)
+                    .where(STATE_NOT_PREPARE);
+        } else {
+            from = queryFactory.from(municipalityInitiative)
+                    .where(municipalityInitiative.deleted.eq(false))
+                    .where(STATE_NOT_PREPARE);
+        }
 
         filterByType(from, initiativeType);
 
@@ -485,6 +553,10 @@ public class JdbcInitiativeDao implements InitiativeDao {
         counts.accepted = map.getOrDefault(InitiativeState.ACCEPTED.name(), 0L);
         counts.review = map.getOrDefault(InitiativeState.REVIEW.name(), 0L);
         counts.fix = map.getOrDefault(FixState.FIX.name(), 0L);
+
+        if (getDeleted) {
+            counts.deleted = map.getOrDefault(InitiativeSearch.Show.deleted.name(), 0L);
+        }
 
         if (map.containsKey(unknownStateFound)) {
             log.error("Initiatives found with unknown state: " + map.get(unknownStateFound));
@@ -595,7 +667,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public void updateInitiativeDeleted(Long initiativeId, boolean deleted) {
+    public void updateInitiativeDeleted(Long initiativeId, Boolean deleted) {
         Mappings.assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.deleted, deleted)
                 .where(municipalityInitiative.id.eq(initiativeId))

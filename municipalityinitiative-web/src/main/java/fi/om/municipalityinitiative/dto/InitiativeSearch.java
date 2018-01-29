@@ -14,8 +14,6 @@ public class InitiativeSearch {
     private String search;
     private Type type = Type.all;
 
-    public static String latestReviewTypeAllQuery = "orderBy=latest&show=review&type=all";
-
     public List<Long> getMunicipalities() {
         return municipalities;
     }
@@ -93,6 +91,7 @@ public class InitiativeSearch {
     public enum Show {
         collecting(false),
         sent(false),
+        deleted(true),
         all(false),
 
         //om views:

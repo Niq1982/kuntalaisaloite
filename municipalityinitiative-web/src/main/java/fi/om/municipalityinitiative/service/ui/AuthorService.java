@@ -93,9 +93,11 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteInitiative(Long initiativeId, LoginUserHolder loginUserHolder) {
-        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        initiativeDao.updateInitiativeDeleted(initiativeId, true);
+    public void deleteInitiative(Long initiativeId, Boolean delete, LoginUserHolder loginUserHolder) {
+        if (!loginUserHolder.getUser().isOmUser()) {
+            loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+        }
+        initiativeDao.updateInitiativeDeleted(initiativeId, delete);
     }
 
     @Transactional(readOnly = false)

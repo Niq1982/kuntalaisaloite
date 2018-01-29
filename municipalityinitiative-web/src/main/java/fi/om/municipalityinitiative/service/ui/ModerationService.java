@@ -175,7 +175,7 @@ public class ModerationService {
     }
 
     @Transactional(readOnly = false)
-    public void renewManagementHash(OmLoginUserHolder omLoginUserHolder, Long authorId) {
+    public void renewManagementHash(OmLoginUserHolder omLoginUserHolder, Long authorId, Boolean getDeleted) {
         omLoginUserHolder.assertOmUser();
 
         String newManagementHash = RandomHashGenerator.longHash();
@@ -183,7 +183,7 @@ public class ModerationService {
 
         // NOTE: Now actually normal author has only one initiative...
         for (Long initiativeId : authorDao.getAuthorsInitiatives(newManagementHash)) {
-            emailService.sendManagementHashRenewed(initiativeId, newManagementHash, authorId);
+            emailService.sendManagementHashRenewed(initiativeId, getDeleted, newManagementHash, authorId);
         }
     }
 

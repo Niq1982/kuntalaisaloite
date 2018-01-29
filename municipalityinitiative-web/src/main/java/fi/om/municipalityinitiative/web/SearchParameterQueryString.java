@@ -190,6 +190,14 @@ public class SearchParameterQueryString {
                 .setOrderBy(InitiativeSearch.OrderBy.latest), municipalities, urls);
     }
 
+    public String getWithStateDeleted() {
+        return generateParameters(new InitiativeSearch()
+                .setShow(InitiativeSearch.Show.deleted)
+                .setMunicipalities(original.getMunicipalities())
+                .setType(original.getType())
+                .setOrderBy(InitiativeSearch.OrderBy.latest), municipalities, urls);
+    }
+
     public String getWithMunicipality(Long municipalityId) {
         return generateParameters(new InitiativeSearch().setMunicipalities(municipalityId), municipalities, urls);
     }

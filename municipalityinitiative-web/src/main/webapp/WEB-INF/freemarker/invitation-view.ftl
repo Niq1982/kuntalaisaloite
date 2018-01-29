@@ -266,7 +266,7 @@
     </#if>
 
 
-    <@e.initiativeTitle initiative />
+    <@e.initiativeTitle initiative=initiative />
     
     <@prog.progress initiative />
 

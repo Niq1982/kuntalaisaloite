@@ -22,7 +22,11 @@ public interface InitiativeDao {
 
     InitiativeListWithCount findCached(InitiativeSearch search);
 
+    InitiativeListWithCount findCached(InitiativeSearch search, boolean findDeleted);
+
     Initiative get(Long initiativeId);
+
+    Initiative get(Long initiativeId, Boolean getDeleted);
 
     InitiativeCounts getPublicInitiativeCounts(Optional<List<Long>> municipalities, InitiativeSearch.Type all);
 
@@ -50,17 +54,19 @@ public interface InitiativeDao {
 
     void updateInitiativeDecisionModifiedDate(Long initiativeId);
 
-    void updateInitiativeDeleted(Long initiativeId, boolean deleted);
+    void updateInitiativeDeleted(Long initiativeId, Boolean deleted);
 
-    InitiativeCounts getAllInitiativeCounts(Optional<List<Long>> municipalities, InitiativeSearch.Type initiativeTypeOptional);
+    InitiativeCounts getAllInitiativeCounts(Optional<List<Long>> municipalities, InitiativeSearch.Type initiativeTypeOptional, boolean getDeleted);
 
     boolean isVerifiableInitiative(Long initiativeId);
 
-    List<InitiativeListInfo> findInitiatives(VerifiedUserId verifiedUserId);
+    List<InitiativeListInfo> findInitiatives(VerifiedUserId verifiedUserId, Boolean findDeleted);
 
     void denormalizeParticipantCounts(Long initiativeId);
 
-    InitiativeListWithCount findUnCached(InitiativeSearch search);
+    void denormalizeParticipantCounts(Long initiativeId, boolean getDeleted);
+
+    InitiativeListWithCount findUnCached(InitiativeSearch search, boolean findDeleted);
 
     List<Initiative> findAllByStateChangeBefore(InitiativeState accepted, LocalDate date);
 

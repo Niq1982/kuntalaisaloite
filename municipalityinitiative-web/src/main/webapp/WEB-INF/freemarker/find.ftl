@@ -136,6 +136,9 @@
                             <#case "accepted">
                                 <#assign statePlaceholder = "Accepted" />
                                 <#break>
+                            <#case "deleted">
+                                <#assign statePlaceholder = "Deleted" />
+                                <#break>
                             <#default>
                                 <#assign statePlaceholder = "All" />
                         </#switch>
@@ -148,6 +151,7 @@
                                 <option title="<@u.message "searchParameters.withStateReview" />" value="${queryString.withStateReview}"><@u.message "searchParameters.withStateReview" /> (${initiativeCounts.review})</option>
                                 <option title="<@u.message "searchParameters.withStateAccepted" />" value="${queryString.withStateAccepted}"><@u.message "searchParameters.withStateAccepted" /> (${initiativeCounts.accepted})</option>
                                 <option title="<@u.message "searchParameters.withStateFix" />" value="${queryString.withStateFix}"><@u.message "searchParameters.withStateFix" /> (${initiativeCounts.fix})</option>
+                                <option title="<@u.message "searchParameters.withStateDeleted" />" value="${queryString.withStateDeleted}"><@u.message "searchParameters.withStateDeleted" /> (${initiativeCounts.deleted})</option>
                             </#if>
 
                             <option title="<@u.message "searchParameters.withStateAll" />" value="${queryString.withStateCollecting}"><@u.message "searchParameters.withStateCollecting" /> (${initiativeCounts.collecting})</option>
@@ -250,16 +254,25 @@
                 </span>
 
                 <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date."+initiative.state/>" ><@u.localDate initiative.stateTime!"" /></span>
-                <span class="title"><span class="name"><@u.limitStringLength initiative.name!"" 150 /></span></span>
-                <span class="info"><span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span> <span class="bull">&bull;</span>
-
-                    <#if !initiative.public>
-                        <span class="state"><@u.message "searchResults.notPublic" /></span>
-                    <#elseif !initiative.sentTime.present>
-                        <span class="state"><@u.message "initiative.state.collecting" /></span>
+                <span class="title"><span class="name">
+                    <#if initiative.name??>
+                        <@u.limitStringLength initiative.name!"" 150 />
                     <#else>
-                        <#assign sentTime><@u.localDate initiative.sentTime.get()!"" /></#assign>
-                        <span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
+                        <@u.message "initiative.draft" />
+                    </#if>
+                </span></span>
+                <span class="info"><span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span> <span class="bull">&bull;</span>
+                    <#if (initiative.deleted)>
+                        <span class="state"><@u.message "initiative.state.deleted" /></span>
+                    <#else >
+                        <#if !initiative.public>
+                            <span class="state"><@u.message "searchResults.notPublic" /></span>
+                        <#elseif !initiative.sentTime.present>
+                            <span class="state"><@u.message "initiative.state.collecting" /></span>
+                        <#else>
+                            <#assign sentTime><@u.localDate initiative.sentTime.get()!"" /></#assign>
+                            <span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
+                        </#if>
                     </#if>
                     <span class="bull">&bull;</span>
                     <span class="initiative-type">

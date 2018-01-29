@@ -55,7 +55,7 @@ public abstract class DefaultLoginController extends BaseLoginController {
 
         userService.adminLogin(u, p, request);
         if (Strings.isNullOrEmpty(target)) {
-            return new RedirectView(Urls.get(locale).search() + "?" + InitiativeSearch.latestReviewTypeAllQuery, false, true, false);
+            return new RedirectView(Urls.get(locale).search() + "?orderBy=latest&show=review&type=all", false, true, false);
         }
         else {
             return new RedirectView(Urls.get(locale).getBaseUrl() + target, false, true, false);

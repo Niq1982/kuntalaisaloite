@@ -9,6 +9,7 @@
 <#escape x as x?html>
 
 <#assign moderationURL = urls.moderation(initiative.id) />
+<#assign managementURL = urls.getManagement(initiative.id) />
 
 <#--
  * Layout parameters for HTML-title and navigation.
@@ -29,6 +30,22 @@
         </div>
     </#if>
 
+    <#macro deleteInitiative>
+        <#if !(initiative.deleted)>
+            <a class="small-button push js-delete-initiative" data-id="${initiative.id!""}" style="left: 2em">
+                <span class="small-icon icon-16 cancel"><@u.messageHTML "action.deleteInitiative.confirm" /></span>
+            </a>
+        </#if>
+    </#macro>
+
+    <#macro restoreInitiative>
+        <#if (initiative.deleted)>
+        <a class="small-button push js-restore-initiative" data-id="${initiative.id!""}" style="left: 2em">
+            <span class="small-icon icon-16 cancel">Palauta poistettu aloite</span>
+        </a>
+        </#if>
+    </#macro>
+
 
     <#--
      * Show moderation block
@@ -46,6 +63,8 @@
 	            <div class="js-open-block hidden">
 	                <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon save-and-send"><@u.message "action.accept" /></span></a>
 	                <a class="small-button gray push js-btn-open-block" data-open-block="js-block-container-alt" href="#"><span class="small-icon cancel"><@u.message "action.reject" /></span></a>
+                    <@deleteInitiative />
+                    <@restoreInitiative />
 	            </div>
 	
 	            <div class="cf js-block-container js-hide">
@@ -88,6 +107,7 @@
 	                    <br/><br/>
 	                </form>
 	            </div>
+
             </div>
         </div>
     </#if>
@@ -104,6 +124,8 @@
 			<div class="toggle-container">
 	            <div class="js-open-block hidden">
 	                <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon cancel"><@u.message "action.reject" /></span></a>
+                    <@deleteInitiative />
+                    <@restoreInitiative />
 	            </div>
 	
 	            <div class="cf js-block-container js-hide">
@@ -125,6 +147,22 @@
 	                    <br/><br/>
 	                </form>
 	            </div>
+            </div>
+        </div>
+    </#if>
+
+
+    <#if managementSettings.allowEdit >
+        <div class="msg-block">
+            <h2><@u.message "restoreInitiative.title" /></h2>
+            <p><@u.message "restoreInitiative.description" /></p>
+
+
+            <div class="toggle-container">
+                <div class="js-open-block hidden">
+                    <@deleteInitiative />
+                    <@restoreInitiative />
+                </div>
             </div>
         </div>
     </#if>
@@ -186,8 +224,7 @@
     </#assign>
 
 
-
-    <@e.initiativeTitle initiative />
+    <@e.initiativeTitle initiative=initiative initiativeDeleted=initiative.deleted />
 
     <@prog.progress initiative=initiative public=false omOrMunicipality=true />
 
@@ -203,6 +240,35 @@
             <@e.initiativeContactInfo authorList=authors showTitle=false showRenewManagementHash=!initiative.verifiable && !initiative.sent/>
         </div>
     </div>
+
+
+    <#assign deleteInitiative>
+        <@compress single_line=true>
+
+        <p><@u.message "deleteInitiative.confirm.description" /></p>
+        <p><@u.message "deleteInitiative.confirm.description.2" /></p>
+
+        <form action="${managementURL}" method="POST" >
+            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+            <button type="submit" name="${UrlConstants.ACTION_DELETE_INITIATIVE}" id="modal-${UrlConstants.ACTION_DELETE_INITIATIVE}" value="${UrlConstants.ACTION_DELETE_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteInitiative.confirm" /></button>
+            <a class="push close"><@u.message "action.cancel" /></a>
+        </form>
+        </@compress>
+    </#assign>
+
+    <#assign restoreInitiative>
+        <@compress single_line=true>
+
+        <p><@u.message "restoreInitiative.confirm.description" /></p>
+        <p><@u.message "restoreInitiative.confirm.description.2" /></p>
+
+        <form action="${moderationURL}" method="POST" >
+            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+            <button type="submit" name="${UrlConstants.ACTION_RESTORE_INITIATIVE}" id="modal-${UrlConstants.ACTION_RESTORE_INITIATIVE}" value="${UrlConstants.ACTION_RESTORE_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.restoreInitiative.confirm" /></button>
+            <a class="push close"><@u.message "action.cancel" /></a>
+        </form>
+        </@compress>
+    </#assign>
 
     <#--
      * Moderation VIEW modals
@@ -273,6 +339,27 @@
                 content:    '<#noescape>${renewMunicipalityManagementHash?replace("'","&#39;")}</#noescape>'
             }]
         };
+
+        <#-- Modal: Delete initiative. -->
+            <#if deleteInitiative??>
+            modalData.deleteInitiative = function() {
+                return [{
+                    title:      '<@u.message "deleteInitiative.title" />',
+                    content:    '<#noescape>${deleteInitiative?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+            </#if>
+
+        <#-- Modal: Restore initiative. -->
+            <#if restoreInitiative??>
+            modalData.restoreInitiative = function() {
+                return [{
+                    title:      '<@u.message "restoreInitiative.title" />',
+                    content:    '<#noescape>${restoreInitiative?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+            </#if>
+
     </script>
 
 </@l.main>

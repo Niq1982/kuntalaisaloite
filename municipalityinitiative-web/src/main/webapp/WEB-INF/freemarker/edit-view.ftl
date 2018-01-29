@@ -16,6 +16,7 @@
 <#assign page="page.edit" />
 
 <#assign locationSelected = updateData.locations?? && updateData.locations?size gt 0>
+<#assign managementURL = urls.getManagement(initiative.id) />
 
 <@l.main page pageTitle!"">
 
@@ -72,10 +73,29 @@
             <#else>
                 <a href="${previousPageURI}" class="large-button"><span class="large-icon cancel"><@u.messageHTML "action.cancelUpdateInitiative" /></span></a>
             </#if>
+            <#if !(initiative.deleted)>
+                <a class="large-button js-delete-initiative" data-id="${initiative.id!""}">
+                    <span class="large-icon cancel">
+                        <strong>Poista aloite</strong>ja palaa tallentamatta etusivulle
+                    </span>
+                </a>
+            </#if>
         </div>
     </form>
 
+    <#assign deleteInitiative>
+        <@compress single_line=true>
 
+        <p><@u.message "deleteInitiative.confirm.description" /></p>
+        <p><@u.message "deleteInitiative.confirm.description.2" /></p>
+
+        <form action="${managementURL}" method="POST" >
+            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+            <button type="submit" name="${UrlConstants.ACTION_DELETE_INITIATIVE}" id="modal-${UrlConstants.ACTION_DELETE_INITIATIVE}" value="${UrlConstants.ACTION_DELETE_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteInitiative.confirm" /></button>
+            <a class="push close"><@u.message "action.cancel" /></a>
+        </form>
+        </@compress>
+    </#assign>
 
 
 <#--
@@ -113,6 +133,16 @@
             content:    '<#noescape>${edit.mapContainer?replace("'","&#39;")}</#noescape>'
         }]
     };
+
+    <#-- Modal: Delete initiative. -->
+        <#if deleteInitiative??>
+        modalData.deleteInitiative = function() {
+            return [{
+                title:      '<@u.message "deleteInitiative.title" />',
+                content:    '<#noescape>${deleteInitiative?replace("'","&#39;")}</#noescape>'
+            }]
+        };
+        </#if>
 
     modalData.initiaveMunicipality = '${initiative.municipality.getName(locale)}';
 

@@ -21,24 +21,28 @@
     
     <div class="msg-block">
         <div class="system-msg msg-info">
-            <h2><@u.message "management.title" /></h2>
+            <h2 <#if (initiative.deleted)>style="color: red" </#if> >
+                <#if (initiative.deleted)>
+                    <@u.message "management.title.deleted" />
+                <#else >
+                    <@u.message "management.title" />
+                </#if>
+            </h2>
             <p><@u.messageHTML "management.description" /></p>
             <p><@u.messageHTML "management.instruction" /></p>
             
             <a class="small-button " href="${urls.edit(initiative.id)}"><span class="small-icon edit"><@u.messageHTML "action.editInitiative" /></span></a>
             <a class="small-button push" href="${urls.view(initiative.id)}"><span class="small-icon document"><@u.messageHTML "action.previewInitiative" /></span></a>
-
-            <span class="action">
-                <span class="icon-small icon-16 cancel"></span>
-                <a class="js-delete-initiative"
-                   data-id="${initiative.id!""}">
-                    Poista aloite
+            <#if !(initiative.deleted)>
+                <a class="small-button push js-delete-initiative" data-id="${initiative.id!""}" style="left: 2em">
+                    <span class="small-icon icon-16 cancel"><@u.messageHTML "action.deleteInitiative.confirm" />
+                    </span>
                 </a>
-            </span>
+            </#if>
         </div>
     </div>
 
-    <@e.initiativeTitle initiative />
+    <@e.initiativeTitle initiative=initiative />
     
     <@prog.progress initiative=initiative public=false />
     
@@ -266,20 +270,6 @@
                 </form>
             </@compress>
         </#assign>
-
-        <#assign deleteInitiative>
-            <@compress single_line=true>
-
-            <p><@u.message "deleteInitiative.confirm.description" /></p>
-            <p><@u.message "deleteInitiative.confirm.description.2" /></p>
-
-            <form action="${springMacroRequestContext.requestUri}" method="POST" >
-                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                <button type="submit" name="${UrlConstants.ACTION_DELETE_INITIATIVE}" id="modal-${UrlConstants.ACTION_DELETE_INITIATIVE}" value="${UrlConstants.ACTION_DELETE_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteInitiative.confirm" /></button>
-                <a href="${managementURL}#delete-initiative" class="push close"><@u.message "action.cancel" /></a>
-            </form>
-            </@compress>
-        </#assign>
     
         <#-- Confirm start collecting for NOSCRIPT-users -->
         <#if startCollectingConfirm>
@@ -371,6 +361,19 @@
         </#if>
     </#if> <#-- /managementSettings.allowSendFixToReview -->
 
+    <#assign deleteInitiative>
+        <@compress single_line=true>
+
+        <p><@u.message "deleteInitiative.confirm.description" /></p>
+        <p><@u.message "deleteInitiative.confirm.description.2" /></p>
+        <form action="${managementURL}" method="POST" >
+            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+            <button type="submit" name="${UrlConstants.ACTION_DELETE_INITIATIVE}" id="modal-${UrlConstants.ACTION_DELETE_INITIATIVE}" value="${UrlConstants.ACTION_DELETE_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteInitiative.confirm" /></button>
+            <a class="push close"><@u.message "action.cancel" /></a>
+        </form>
+        </@compress>
+    </#assign>
+
     <#--
      * Management VIEW modals
      * 
@@ -390,6 +393,16 @@
     
     <script type="text/javascript">
         var modalData = {};
+
+        <#-- Modal: Delete initiative. -->
+        <#if deleteInitiative??>
+            modalData.deleteInitiative = function () {
+                return [{
+                    title: '<@u.message "deleteInitiative.title" />',
+                    content: '<#noescape>${deleteInitiative?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+        </#if>
         
         <#-- Modal: Request messages. Check for components/utils.ftl -->
         <#if requestMessageModalHTML??>    
@@ -446,16 +459,6 @@
                 return [{
                     title:      '<@u.message "startCollecting.confirm.title" />',
                     content:    '<#noescape>${startCollecting?replace("'","&#39;")}</#noescape>'
-                }]
-            };
-        </#if>
-
-        <#-- Modal: Delete initiative. -->
-        <#if deleteInitiative??>
-            modalData.deleteInitiative = function() {
-                return [{
-                    title:      '<@u.message "deleteInitiative.title" />',
-                    content:    '<#noescape>${deleteInitiative?replace("'","&#39;")}</#noescape>'
                 }]
             };
         </#if>

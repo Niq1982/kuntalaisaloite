@@ -22,7 +22,7 @@
         <@u.returnPrevious urls.view(initiative.id) "link.to.publicView" />
     </#if>
 
-    <@e.initiativeTitle initiative />
+    <@e.initiativeTitle initiative=initiative />
     
     <@prog.progress initiative=initiative />
     

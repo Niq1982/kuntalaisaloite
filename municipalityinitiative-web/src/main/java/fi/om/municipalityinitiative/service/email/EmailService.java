@@ -330,8 +330,8 @@ public class EmailService {
     }
 
 
-    public void sendManagementHashRenewed(Long initiativeId, String managementHash, Long authorId) {
-        HashMap<String, Object> dataMap = toDataMap(dataProvider.get(initiativeId), Locales.LOCALE_FI);
+    public void sendManagementHashRenewed(Long initiativeId, boolean getDeleted, String managementHash, Long authorId) {
+        HashMap<String, Object> dataMap = toDataMap(dataProvider.get(initiativeId, getDeleted), Locales.LOCALE_FI);
         dataMap.put("managementHash", managementHash);
 
         emailMessageConstructor
@@ -402,11 +402,11 @@ public class EmailService {
     }
 
 
-    public void sendVeritiedInitiativeManagementLink(Long initiativeId, Locale locale) {
+    public void sendVeritiedInitiativeManagementLink(Long initiativeId, boolean getDeleted, Locale locale) {
         emailMessageConstructor.fromTemplate(initiativeId, VERIFIED_INITIATIVE_CREATED)
                 .addRecipients(dataProvider.getAuthorEmails(initiativeId))
                 .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_VERIFIED_INITIATIVE_CREATED_SUBJECT, toArray(), locale))
-                .withDataMap(toDataMap(dataProvider.get(initiativeId), locale))
+                .withDataMap(toDataMap(dataProvider.get(initiativeId, getDeleted), locale))
                 .send();
     }
 
