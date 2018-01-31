@@ -236,8 +236,7 @@
     <div class="view-block">
         <div class="initiative-content-row last">
             <h2><@u.message key="initiative.authors.title" args=[authors?size] /></h2>
-
-            <@e.initiativeContactInfo authorList=authors showTitle=false showRenewManagementHash=!initiative.verifiable && !initiative.sent/>
+            <@e.initiativeContactInfo authorList=authors showTitle=false showRenewManagementHash=initiative.id??/>
         </div>
     </div>
 
