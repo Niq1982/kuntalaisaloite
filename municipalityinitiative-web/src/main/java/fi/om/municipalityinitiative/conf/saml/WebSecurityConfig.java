@@ -2,6 +2,8 @@ package fi.om.municipalityinitiative.conf.saml;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+
+import fi.om.initiative.conf.saml.MultiKeyDecrypterSAMLContextProvider;
 import fi.om.municipalityinitiative.conf.FileTemplateMetadataProvider;
 import fi.om.municipalityinitiative.web.Urls;
 import org.apache.velocity.app.VelocityEngine;
@@ -123,7 +125,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // Provider of default SAML Context
     @Bean
     public SAMLContextProviderImpl contextProvider() throws MalformedURLException {
-        SAMLContextProviderLB samlContextProviderLB = new SAMLContextProviderLB();
+        MultiKeyDecrypterSAMLContextProvider samlContextProviderLB = new MultiKeyDecrypterSAMLContextProvider();
 
         // This is here because apparently spring saml expects ../saml/SSO request to use http if server is answering from http
         URL url = new URL(environment.getProperty("app.baseURL"));
