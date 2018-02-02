@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.conf.saml;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 
-import fi.om.initiative.conf.saml.MultiKeyDecrypterSAMLContextProvider;
+import fi.om.municipalityinitiative.conf.saml.MultiKeyDecrypterSAMLContextProvider;
 import fi.om.municipalityinitiative.conf.FileTemplateMetadataProvider;
 import fi.om.municipalityinitiative.web.Urls;
 import org.apache.velocity.app.VelocityEngine;
