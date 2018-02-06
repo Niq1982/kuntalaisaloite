@@ -21,8 +21,6 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public static final QMunicipalityInitiative municipalityInitiative = new QMunicipalityInitiative("municipality_initiative");
 
-    public final BooleanPath deleted = createBoolean("deleted");
-
     public final NumberPath<Integer> externalparticipantcount = createNumber("externalparticipantcount", Integer.class);
 
     public final StringPath extraInfo = createString("extraInfo");
@@ -121,7 +119,6 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
     }
 
     public void addMetadata() {
-        addMetadata(deleted, ColumnMetadata.named("deleted").ofType(-7).withSize(1).notNull());
         addMetadata(externalparticipantcount, ColumnMetadata.named("externalparticipantcount").ofType(4).withSize(10));
         addMetadata(extraInfo, ColumnMetadata.named("extra_info").ofType(12).withSize(10000));
         addMetadata(fixState, ColumnMetadata.named("fix_state").ofType(1111).withSize(2147483647).notNull());

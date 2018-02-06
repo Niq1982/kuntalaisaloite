@@ -38,7 +38,6 @@ public class Initiative {
     private Optional<DateTime> decisionDate = Optional.empty();
     private Optional<DateTime> decisionModifiedDate = Optional.empty();
     private Optional<String> videoUrl = Optional.empty();
-    private boolean deleted;
 
 
     public Optional<Long> getYouthInitiativeId() {
@@ -241,11 +240,4 @@ public class Initiative {
         return videoUrl;
     }
 
-    public Boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
 }

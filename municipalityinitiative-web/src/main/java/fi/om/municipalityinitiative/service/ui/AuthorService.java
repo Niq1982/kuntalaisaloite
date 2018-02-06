@@ -93,12 +93,6 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteInitiative(Long initiativeId, LoginUserHolder loginUserHolder) {
-        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        initiativeDao.updateInitiativeDeleted(initiativeId, true);
-    }
-
-    @Transactional(readOnly = false)
     public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId, boolean targetAuthorIsVerified) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 

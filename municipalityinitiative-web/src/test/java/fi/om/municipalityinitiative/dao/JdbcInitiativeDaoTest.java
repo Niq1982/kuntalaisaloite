@@ -218,15 +218,6 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void update_initiative_deleted() {
-        Long original = testHelper.createEmptyDraft(testMunicipality.getId());
-        assertThat(initiativeDao.get(original).isDeleted(), is(false));
-        boolean isDeleted = true;
-        initiativeDao.updateInitiativeDeleted(original, isDeleted);
-        assertThat(initiativeDao.get(original).isDeleted(), is(isDeleted));
-    }
-
-    @Test
     public void mark_initiative_as_sent_adds_timestamp_and_sentComment() {
         Long original = testHelper.createEmptyDraft(testMunicipality.getId()); // Even drafts may be marked as sent by dao
         Long someOther = testHelper.createEmptyDraft(testMunicipality.getId()); // Even drafts may be marked as sent by dao
