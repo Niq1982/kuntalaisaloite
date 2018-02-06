@@ -233,6 +233,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 Map<String, String> passwords = new HashMap<>();
 
                 passwords.put(keystoreKey, environment.getProperty("keystore.key.password"));
+                passwords.put(environment.getProperty("keystore.newkey"), environment.getProperty("keystore.key.password"));
 
                 KeyStore jceks = KeyStore.getInstance("JCEKS");
 
