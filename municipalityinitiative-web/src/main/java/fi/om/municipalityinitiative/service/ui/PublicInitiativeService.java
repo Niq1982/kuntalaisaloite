@@ -86,11 +86,11 @@ public class PublicInitiativeService {
 
 
     @Transactional(readOnly = true)
-    public InitiativeListPageInfo getInitiativeListPageInfo(InitiativeSearch search, boolean getDeleted, LoginUserHolder loginUserHolder, Locale locale) {
+    public InitiativeListPageInfo getInitiativeListPageInfo(InitiativeSearch search, LoginUserHolder loginUserHolder, Locale locale) {
 
         return new InitiativeListPageInfo(
-                normalInitiativeService.findMunicipalityInitiatives(search, getDeleted, loginUserHolder),
-                normalInitiativeService.getInitiativeCounts(search, getDeleted, loginUserHolder),
+                normalInitiativeService.findMunicipalityInitiatives(search, loginUserHolder),
+                normalInitiativeService.getInitiativeCounts(search, loginUserHolder),
                 municipalityService.findAllMunicipalityInfos(locale)
                 );
     }

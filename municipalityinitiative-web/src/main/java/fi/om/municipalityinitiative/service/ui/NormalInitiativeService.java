@@ -45,7 +45,7 @@ public class NormalInitiativeService {
     private MunicipalityDao municipalityDao;
 
     @Transactional(readOnly = true)
-    public InitiativeListWithCount findMunicipalityInitiatives(InitiativeSearch search, boolean findDeleted, LoginUserHolder loginUserHolder) {
+    public InitiativeListWithCount findMunicipalityInitiatives(InitiativeSearch search, LoginUserHolder loginUserHolder) {
 
         // XXX: This switching from all to omAll is pretty nasty, because value must be set back to original after usage
         // because UI is not prepared to omAll value, it's only for dao actually.
@@ -57,27 +57,22 @@ public class NormalInitiativeService {
             loginUserHolder.assertOmUser();
         }
 
-        InitiativeListWithCount initiativeListInfos = findInitiatives(search, loginUserHolder.getUser().isOmUser(), findDeleted);
+        InitiativeListWithCount initiativeListInfos = findInitiatives(search, loginUserHolder.getUser().isOmUser());
         if (search.getShow() == InitiativeSearch.Show.omAll)
             search.setShow(InitiativeSearch.Show.all);
         return initiativeListInfos;
     }
 
-    private InitiativeListWithCount findInitiatives(InitiativeSearch search, boolean skipCache, boolean findDeleted) {
+    private InitiativeListWithCount findInitiatives(InitiativeSearch search, boolean skipCache) {
         if (skipCache) {
-            return initiativeDao.findUnCached(search, findDeleted);
+            return initiativeDao.findUnCached(search);
         }
-        return initiativeDao.findCached(search, findDeleted);
+        return initiativeDao.findCached(search);
     }
 
     @Transactional(readOnly = false)
     public ManagementSettings getManagementSettings(Long initiativeId) {
         return ManagementSettings.of(initiativeDao.get(initiativeId));
-    }
-
-    @Transactional(readOnly = false)
-    public ManagementSettings getManagementSettings(Long initiativeId, boolean getDeleted) {
-        return ManagementSettings.of(initiativeDao.get(initiativeId, getDeleted));
     }
 
     @Transactional(readOnly = false)
@@ -121,12 +116,7 @@ public class NormalInitiativeService {
 
     @Transactional(readOnly = true)
     public InitiativeViewInfo getInitiative(Long initiativeId, LoginUserHolder loginUserHolder) {
-        return getInitiative(initiativeId, false, loginUserHolder);
-    }
-
-    @Transactional(readOnly = true)
-    public InitiativeViewInfo getInitiative(Long initiativeId, boolean getDeleted, LoginUserHolder loginUserHolder) {
-        Initiative initiative = initiativeDao.get(initiativeId, getDeleted);
+        Initiative initiative = initiativeDao.get(initiativeId);
         if (!initiative.isPublic()) {
             loginUserHolder.assertViewRightsForInitiative(initiative.getId());
         }
@@ -134,11 +124,12 @@ public class NormalInitiativeService {
     }
 
     @Transactional(readOnly = true)
-    public InitiativeCounts getInitiativeCounts(InitiativeSearch search, boolean getDeleted, LoginUserHolder loginUserHolder) {
+    public InitiativeCounts getInitiativeCounts(InitiativeSearch search, LoginUserHolder loginUserHolder) {
         if (loginUserHolder.getUser().isNotOmUser()) {
             return initiativeDao.getPublicInitiativeCounts(Optional.ofNullable(search.getMunicipalities()), search.getType());
-        } else {
-            return initiativeDao.getAllInitiativeCounts(Optional.ofNullable(search.getMunicipalities()), search.getType(), getDeleted);
+        }
+        else {
+            return initiativeDao.getAllInitiativeCounts(Optional.ofNullable(search.getMunicipalities()), search.getType());
         }
     }
 

@@ -106,7 +106,7 @@
         <@e.decisionBlock decisionInfo=decisionInfo.get() manage=true/>
     </#if>
 
-    <@e.initiativeTitle initiative=initiative />
+    <@e.initiativeTitle initiative />
 
     <@prog.progress initiative=initiative public=false omOrMunicipality=true />
 

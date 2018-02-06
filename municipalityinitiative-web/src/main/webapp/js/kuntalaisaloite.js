@@ -1502,15 +1502,6 @@ var modifyAuthorEmail = (function (currEmail) {
         }
     });
 
-    // Restore initiative
-    $('.js-restore-initiative').click(function() {
-        try {
-            generateModal(modalData.restoreInitiative(), 'minimal');
-        } catch (e) {
-            console.log(e);
-        }
-    });
-
 	// Send initiative to municipality
 	$('.js-send-to-municipality').click(function(){
 		try {

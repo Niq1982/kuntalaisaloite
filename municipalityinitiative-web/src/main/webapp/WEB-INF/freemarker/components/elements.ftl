@@ -329,18 +329,10 @@
  *
  * @param initiative is initiative
 -->
-<#macro initiativeTitle initiative initiativeDeleted=false >
+<#macro initiativeTitle initiative>
     <h1 class="name">${initiative.name!""}</h1>
 
-    <div class="municipality">
-        ${initiative.municipality.getName(locale)}
-        <span class="bull">&bull;</span>
-        <@u.message "initiative.initiativeType."+initiative.type />
-        <#if initiativeDeleted >
-            <span class="bull">&bull;</span>
-            <span class="deleted">Poistettu</span>
-        </#if>
-    </div>
+    <div class="municipality">${initiative.municipality.getName(locale)} <span class="bull">&bull;</span> <@u.message "initiative.initiativeType."+initiative.type /></div>
 </#macro>
 
 

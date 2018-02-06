@@ -65,19 +65,14 @@
                     </span>
                 </span>
                 <span class="info">
-                    <#if (initiative.deleted)>
-                        <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.deleted" /></span>
-                    <#else >
-                        <#if !initiative.public>
-                            <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span>
-                        <#elseif !initiative.sentTime.present>
-                            <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span>
-                        <#else>
-                            <#assign sentTime><@u.localDate initiative.sentTime.get()!"" /></#assign>
-                            <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
-                        </#if>
-                    </#if >
-
+                    <#if !initiative.public>
+                        <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span>
+                    <#elseif !initiative.sentTime.present>
+                        <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span>
+                    <#else>
+                        <#assign sentTime><@u.localDate initiative.sentTime.get()!"" /></#assign>
+                        <span class="municipality-search-result">${initiative.municipality.getName(locale)!""}</span><span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
+                    </#if>
                     <span class="bull">&bull;</span>
                     <span class="initiative-type">
                         <@u.message "initiative.initiativeType."+initiative.type />

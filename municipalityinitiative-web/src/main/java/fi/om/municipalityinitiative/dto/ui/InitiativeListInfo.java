@@ -19,7 +19,6 @@ public class InitiativeListInfo {
     private InitiativeType type;
     private InitiativeState state;
     private LocalDate stateTime;
-    private boolean deleted;
 
     public Long getId() {
         return id;
@@ -99,13 +98,5 @@ public class InitiativeListInfo {
 
     public InitiativeState getState() {
         return state;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 }

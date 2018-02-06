@@ -120,9 +120,5 @@ public final class InitiativeViewInfo {
         return initiative.getVideoUrl();
     }
 
-    public boolean getDeleted() {
-        return initiative.isDeleted();
-    }
-
 
 }

@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    <@e.initiativeTitle initiative=initiative />
+    <@e.initiativeTitle initiative />
     
     <div class="view-block public first">
         <div class="initiative-content-row">

@@ -25,7 +25,7 @@
         <p><@u.message "authors.instruction" /></p>
     </div>
 
-    <@e.initiativeTitle initiative=initiative />
+    <@e.initiativeTitle initiative />
     
     <@prog.progress initiative=initiative public=false />
     

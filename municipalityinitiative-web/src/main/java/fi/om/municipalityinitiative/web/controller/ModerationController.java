@@ -3,12 +3,14 @@ package fi.om.municipalityinitiative.web.controller;
 import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.LocationService;
 import fi.om.municipalityinitiative.service.ValidationService;
-import fi.om.municipalityinitiative.service.ui.*;
+import fi.om.municipalityinitiative.service.ui.ModerationService;
+import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
+import fi.om.municipalityinitiative.service.ui.Notification;
+import fi.om.municipalityinitiative.service.ui.NotificationEditDto;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.ReviewHistoryDiff;
 import fi.om.municipalityinitiative.web.RequestMessage;
@@ -49,9 +51,6 @@ public class ModerationController extends BaseController{
     @Resource
     private LocationService locationService;
 
-    @Resource
-    private AuthorService authorService;
-
     public ModerationController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
@@ -60,7 +59,6 @@ public class ModerationController extends BaseController{
     public String moderationView(@PathVariable("id") Long initiativeId,
                                  @RequestParam(value = HISTORY_ITEM_PARAMETER, required = false) Long historyItemId,
                                  Model model, Locale locale, HttpServletRequest request) {
-        boolean getDeleted = true;
 
         OmLoginUserHolder loginUserHolder = userService.getRequiredOmLoginUserHolder(request);
 
@@ -70,10 +68,10 @@ public class ModerationController extends BaseController{
         if (historyItemId != null) {
             reviewHistoryDiff = Optional.of(ReviewHistoryDiff.from(reviewHistory, historyItemId));
         }
-        InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, getDeleted, loginUserHolder);
+        InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
         return ViewGenerator.moderationView(initiative,
-                normalInitiativeService.getManagementSettings(initiativeId, getDeleted),
+                normalInitiativeService.getManagementSettings(initiativeId),
                 moderationService.findAuthors(loginUserHolder, initiativeId),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
                 reviewHistory,
@@ -125,9 +123,8 @@ public class ModerationController extends BaseController{
     public String generateNewManagementHash(@PathVariable("id") Long initiativeId,
                                             @RequestParam("authorId") Long authorId,
                                             Locale locale, HttpServletRequest request) {
-        boolean getDeleted = true;
 
-        moderationService.renewManagementHash(userService.getRequiredOmLoginUserHolder(request), authorId, getDeleted);
+        moderationService.renewManagementHash(userService.getRequiredOmLoginUserHolder(request), authorId);
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.MANAGEMENT_HASH_RENEWED, request);
     }
 
@@ -159,15 +156,6 @@ public class ModerationController extends BaseController{
         moderationService.renewMunicipalityManagementHash(userService.getRequiredOmLoginUserHolder(request), initiativeId, locale);
 
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.MANAGEMENT_HASH_RENEWED, request);
-    }
-
-    @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_RESTORE_INITIATIVE)
-    public String restoreInitiative(@PathVariable("id") Long initiativeId, Locale locale, HttpServletRequest request) {
-        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-
-        authorService.deleteInitiative(initiativeId, false, loginUserHolder);
-
-        return redirectWithMessage(Urls.get(locale).frontpage(), RequestMessage.INITIATIVE_RESTORED, request);
     }
 
     @RequestMapping(value = MUNICIPALITY_MODERATION, method = GET)

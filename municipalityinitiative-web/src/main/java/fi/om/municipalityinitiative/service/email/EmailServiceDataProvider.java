@@ -41,11 +41,7 @@ public class EmailServiceDataProvider {
     FollowInitiativeDao followInitiativeDao;
 
     public Initiative get(Long initiativeId) {
-        return get(initiativeId, false);
-    }
-
-    public Initiative get(Long initiativeId, boolean getDeleted) {
-        return initiativeDao.get(initiativeId, getDeleted);
+        return initiativeDao.get(initiativeId);
     }
 
     public List<? extends Author> findAuthors(Long id) {

@@ -89,12 +89,11 @@ public class InitiativeManagementController extends BaseController {
     @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=GET)
     public String managementView(@PathVariable("id") Long initiativeId,
                                  Model model, Locale locale, HttpServletRequest request) {
-        boolean getDeleted = true;
 
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        InitiativeViewInfo initiativeInfo = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder, getDeleted);
+        InitiativeViewInfo initiativeInfo = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
 
         if (initiativeInfo.isSent()) {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
@@ -105,7 +104,7 @@ public class InitiativeManagementController extends BaseController {
         }
 
         return ViewGenerator.managementView(initiativeInfo,
-                normalInitiativeService.getManagementSettings(initiativeId, getDeleted),
+                normalInitiativeService.getManagementSettings(initiativeId),
                 authorService.findAuthors(initiativeId, loginUserHolder),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
                 initiativeInfo.getParticipantCount(),
@@ -141,18 +140,17 @@ public class InitiativeManagementController extends BaseController {
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
     public String editView(@PathVariable("id") Long initiativeId,
                            Model model, Locale locale, HttpServletRequest request) {
-        boolean getDeleted = true;
 
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        ManagementSettings managementSettings = normalInitiativeService.getManagementSettings(initiativeId, getDeleted);
+        ManagementSettings managementSettings = normalInitiativeService.getManagementSettings(initiativeId);
 
         Urls urls = Urls.get(locale);
         if (managementSettings.isAllowEdit()) {
-            InitiativeDraftUIEditDto initiativeDraft = initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder, getDeleted);
+            InitiativeDraftUIEditDto initiativeDraft = initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder);
             return ViewGenerator.editView(
-                    normalInitiativeService.getInitiative(initiativeId, getDeleted, loginUserHolder),
+                    normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
                     Strings.isNullOrEmpty(initiativeDraft.getName()),
                     initiativeDraft,
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
@@ -172,14 +170,13 @@ public class InitiativeManagementController extends BaseController {
                            @ModelAttribute("updateData") InitiativeDraftUIEditDto editDto,
                            BindingResult bindingResult,
                            Model model, Locale locale, HttpServletRequest request) {
-        boolean getDeleted = true;
 
         Urls urls = Urls.get(locale);
 
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, getDeleted, loginUserHolder);
+        InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
         validateVideoUrl(editDto.getVideoUrl(), bindingResult);
         validationService.validationErrors(editDto, bindingResult, model, loginUserHolder.isVerifiedUser() ? VerifiedInitiative.class : NormalInitiativeEmailUser.class);
@@ -187,7 +184,7 @@ public class InitiativeManagementController extends BaseController {
         if ((bindingResult.hasErrors())) {
             return ViewGenerator.editView(
                     initiative,
-                    Strings.isNullOrEmpty(initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder, getDeleted).getName()),
+                    Strings.isNullOrEmpty(initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder).getName()),
                     editDto,
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     urls.management(initiativeId)
@@ -195,7 +192,7 @@ public class InitiativeManagementController extends BaseController {
         }
 
         try {
-            initiativeManagementService.editInitiativeDraft(initiativeId, loginUserHolder, getDeleted, editDto, locale);
+            initiativeManagementService.editInitiativeDraft(initiativeId, loginUserHolder, editDto, locale);
         } catch (MalformedURLException | InvalidVideoUrlException e) {
             log.warn("Editing initiative draft failed", e);
             return redirectWithMessage(urls.management(initiativeId), RequestMessage.VIDEO_FAILURE, request);
@@ -213,19 +210,18 @@ public class InitiativeManagementController extends BaseController {
     @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=GET)
     public String updateView(@PathVariable("id") Long initiativeId,
                              Model model, Locale locale, HttpServletRequest request) {
-        boolean getDeleted = true;
 
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         Urls urls = Urls.get(locale);
-        ManagementSettings managementSettings = normalInitiativeService.getManagementSettings(initiativeId, getDeleted);
+        ManagementSettings managementSettings = normalInitiativeService.getManagementSettings(initiativeId);
 
         if (managementSettings.isAllowUpdate()) {
 
             return ViewGenerator.updateView(
-                    initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder, getDeleted),
-                    initiativeManagementService.getInitiativeForUpdate(initiativeId, loginUserHolder, getDeleted),
+                    initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
+                    initiativeManagementService.getInitiativeForUpdate(initiativeId, loginUserHolder),
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     authorService.findAuthors(initiativeId, loginUserHolder),
                     locationService.getLocations(initiativeId),
@@ -242,7 +238,6 @@ public class InitiativeManagementController extends BaseController {
                              @ModelAttribute("updateData") InitiativeUIUpdateDto updateDto,
                              BindingResult bindingResult,
                              Model model, Locale locale, HttpServletRequest request) {
-        boolean getDeleted = true;
 
         Urls urls = Urls.get(locale);
 
@@ -254,7 +249,7 @@ public class InitiativeManagementController extends BaseController {
 
         if (bindingResult.hasErrors()) {
 
-            return ViewGenerator.updateView(initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder, getDeleted),
+            return ViewGenerator.updateView(initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
                     updateDto,
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     authorService.findAuthors(initiativeId, loginUserHolder),
@@ -264,7 +259,7 @@ public class InitiativeManagementController extends BaseController {
         }
 
         try {
-            initiativeManagementService.updateInitiative(initiativeId, loginUserHolder, getDeleted, updateDto);
+            initiativeManagementService.updateInitiative(initiativeId, loginUserHolder, updateDto);
         } catch (MalformedURLException | InvalidVideoUrlException e) {
             log.warn("Editing initiative draft failed", e);
             return redirectWithMessage(urls.management(initiativeId), RequestMessage.VIDEO_FAILURE, request);
@@ -435,7 +430,7 @@ public class InitiativeManagementController extends BaseController {
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_DELETE_INITIATIVE)
     public String deleteInitiative(@PathVariable("id") Long initiativeId, Locale locale, HttpServletRequest request) {
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-        authorService.deleteInitiative(initiativeId, true, loginUserHolder);
+        authorService.deleteInitiative(initiativeId, loginUserHolder);
 
         return redirectWithMessage(Urls.get(locale).frontpage(), RequestMessage.INITIATIVE_DELETED, request);
     }

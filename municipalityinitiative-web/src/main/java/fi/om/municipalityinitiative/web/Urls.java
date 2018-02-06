@@ -185,8 +185,6 @@ public final class Urls {
     public static final String ACTION_SEND_TO_MUNICIPALITY = "action-send-to-muninicipality";
 
     public static final String ACTION_DELETE_INITIATIVE = "action-delete-initiative";
-
-    public static final String ACTION_RESTORE_INITIATIVE = "action-restore-initiative";
     
     public static final String ACTION_DELETE_AUTHOR = "action-delete-author";
     

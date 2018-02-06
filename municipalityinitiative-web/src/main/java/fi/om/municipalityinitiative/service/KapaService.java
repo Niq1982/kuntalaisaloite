@@ -39,7 +39,7 @@ public class KapaService {
             VerifiedUserId authorId = verifiedUser.get().getVerifiedUserId();
 
             // Get all users initiatives
-            kapaInitiativeResult.initiatives = initiativeDao.findInitiatives(authorId, false).stream().map(InitiativeListJson::new).collect(Collectors.toList());
+            kapaInitiativeResult.initiatives = initiativeDao.findInitiatives(authorId).stream().map(InitiativeListJson::new).collect(Collectors.toList());
 
             // Get IDS so we can parse them out from supported initiatives
             Set<Long> myInitiativeIds = kapaInitiativeResult.initiatives.stream().map(InitiativeListJson::getId).collect(Collectors.toSet());
