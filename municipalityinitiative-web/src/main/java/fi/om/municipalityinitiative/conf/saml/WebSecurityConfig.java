@@ -238,7 +238,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 KeyStore jceks = KeyStore.getInstance("JCEKS");
 
                 jceks.load(storeFile.getInputStream(), storePass.toCharArray());
-                return new JKSKeyManager(storeFile, storePass, passwords, keystoreKey);
+                return new JKSKeyManager(storeFile, storePass, passwords, environment.getProperty("keystore.newkey"));
 
             } catch (Exception e) {
                 throw new RuntimeException(e);
