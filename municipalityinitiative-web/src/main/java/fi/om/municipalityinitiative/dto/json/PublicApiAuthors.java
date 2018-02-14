@@ -7,10 +7,7 @@ public class PublicApiAuthors {
     private int publicNameCount = 0;
     private int privateNameCount = 0;
 
-
-
     public PublicApiAuthors(List<? extends Author> allAuthors) {
-        //TODO without actual authorlist?
         for (Author author : allAuthors) {
             if (author.getContactInfo().isShowName()) {
                 ++publicNameCount;
