@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.json.InitiativeJson;
 import fi.om.municipalityinitiative.dto.json.InitiativeListJson;
+import fi.om.municipalityinitiative.dto.json.PublicApiAuthors;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
@@ -16,7 +17,6 @@ import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
-import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -67,7 +67,7 @@ public class JsonDataService {
         return InitiativeJson.from(
                 initiativeInfo,
                 participantCount,
-                authorService.findPublicAuthors(id));
+                authorService.findPublicApiAuthors(id));
 
     }
 
@@ -119,7 +119,7 @@ public class JsonDataService {
 
         initiativeInfo.setType(InitiativeType.COLLABORATIVE);
 
-        PublicAuthors authors = new PublicAuthors(createAuthors());
+        PublicApiAuthors authors = new PublicApiAuthors(createAuthors());
 
         InitiativeJson initiativeJson = InitiativeJson.from(initiativeInfo, participantCount, authors);
 
