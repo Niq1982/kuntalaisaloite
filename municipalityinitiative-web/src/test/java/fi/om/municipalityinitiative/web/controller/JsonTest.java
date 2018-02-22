@@ -42,6 +42,17 @@ public class JsonTest {
         assertThat(join, is("{\n" +
                 "\"authors\":{\n" +
                 "\"privateNames\":1,\n" +
+                "\"publicAuthors\":[\n" +
+                "{\n" +
+                "\"municipality\":{\n" +
+                "\"active\":false,\n" +
+                "\"id\":\"http://api.baseUrl/api/v1/municipalities/1\",\n" +
+                "\"nameFi\":\"Tampere\",\n" +
+                "\"nameSv\":\"Tammerfors\"\n" +
+                "},\n" +
+                "\"name\":\"Teemu Teekkari\"\n" +
+                "}]\n" +
+                ",\n" +
                 "\"publicNames\":1\n" +
                 "},\n" +
                 "\"collaborative\":true,\n" +

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
+import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -17,7 +18,7 @@ public class InitiativeJson {
     private final Initiative initiative;
     private final PublicAuthorsJson authors;
 
-    private InitiativeJson(Initiative initiative, PublicApiAuthors authors) {
+    private InitiativeJson(Initiative initiative, PublicAuthors authors) {
         this.initiative = initiative;
         this.authors = new PublicAuthorsJson(authors);
     }
@@ -65,7 +66,7 @@ public class InitiativeJson {
         return authors;
     }
 
-    public static InitiativeJson from(Initiative initiativeInfo, ParticipantCount participantCount, PublicApiAuthors publicAuthors) {
+    public static InitiativeJson from(Initiative initiativeInfo, ParticipantCount participantCount, PublicAuthors publicAuthors) {
         if (initiativeInfo.isCollaborative()) {
             return new CollaborativeInitiativeJson(initiativeInfo, participantCount, publicAuthors);
         }
@@ -81,7 +82,7 @@ public class InitiativeJson {
 
         private CollaborativeInitiativeJson(Initiative initiative,
                                             ParticipantCount participantCount,
-                                            PublicApiAuthors authors) {
+                                            PublicAuthors authors) {
             super(initiative, authors);
             this.participantCount = new ParticipantCountJson(participantCount, initiative.getExternalParticipantCount());
         }

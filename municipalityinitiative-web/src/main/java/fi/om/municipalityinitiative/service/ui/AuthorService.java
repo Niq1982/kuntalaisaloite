@@ -6,7 +6,6 @@ import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
-import fi.om.municipalityinitiative.dto.json.PublicApiAuthors;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
@@ -214,11 +213,6 @@ public class AuthorService {
     @Transactional(readOnly = true)
     public PublicAuthors findPublicAuthors(Long initiativeId) {
         return new PublicAuthors(findAuthors(initiativeId));
-    }
-
-    @Transactional(readOnly = true)
-    public PublicApiAuthors findPublicApiAuthors(Long initiativeId) {
-        return new PublicApiAuthors(findAuthors(initiativeId));
     }
 
     @Transactional(readOnly = false)

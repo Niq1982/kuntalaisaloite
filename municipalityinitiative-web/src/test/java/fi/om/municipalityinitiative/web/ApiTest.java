@@ -116,7 +116,7 @@ public class ApiTest extends WebTestBase {
                 .withName(collaborativeCitizenInitiativeNameHelsinki));
        open(urls.initiatives() + "/" + id);
 
-        assertThat(getElement(By.tagName("pre")).getText(), is("{\"authors\":{\"privateNames\":0," +
+        assertThat(getElement(By.tagName("pre")).getText(), is("{\"authors\":{\"privateNames\":0,\"publicAuthors\":[]," +
                 "\"publicNames\":0}," +
                 "\"collaborative\":true," +
                 "\"id\":\"http://localhost:8090/api/api/v1/initiatives/"+id +"\"," +
