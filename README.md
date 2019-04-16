@@ -1,3 +1,5 @@
+# This is no longer the official repository and active development doesn't happen in this fork
+
 # What and why
 
 Kuntalaisaloite.fi / Invånarinitiativ.fi is a web service for launching municipal citizen's initiatives and gathering participants for these initiatives. The web service has been implemented by the Ministry of Justice Finland together with Solita Oy.
